@@ -1,0 +1,38 @@
+{
+  "editor.snippetSuggestions": "bottom",
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/*.fnt": true,
+    "**/*.jpg": true,
+    "**/*.pac": true,
+    "**/*.png": true,
+    "**/*.meta": true,
+    "**/*.prefab": true,
+    "**/*.scene": true,
+    "**/*.anim": true,
+    "**/CVS": true,
+    "engine": true,
+    "engine-native": true,
+    "library": true,
+    "local": true,
+    "native": true,
+    "preview-template": true,
+    "settings": true,
+    "study": true,
+    "temp": true,
+    "build": true,
+    "build-release": true,
+    "hotupdate": true,
+    "Proto":true
+  },
+  "search.exclude": {
+    "**/*.code-search": true,
+    "**/bower_components": true,
+    "**/plugin-import-2x": true
+  },
+  "python.analysis.typeCheckingMode": "basic",
+  "git.ignoreLimitWarning": true
+}

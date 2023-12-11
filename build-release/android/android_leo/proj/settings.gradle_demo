@@ -1,0 +1,19 @@
+include ':libcocos',':libservice',':game'
+project(':libcocos').projectDir = new File(COCOS_ENGINE_PATH,'cocos/platform/android/libcocos2dx')
+project(':game').projectDir = new File(NATIVE_DIR, 'app')
+if(PROP_ENABLE_INSTANT_APP == "true" || PROP_ENABLE_INSTANT_APP == "yes") {
+    include ':instantapp'
+    project(':instantapp').projectDir = new File(NATIVE_DIR, 'instantapp')
+}
+
+rootProject.name = "game"
+include ':libsdk'
+project(':libsdk').projectDir = new File(NATIVE_DIR, 'sdk/libsdk')
+include ':libbugly'
+project(':libbugly').projectDir = new File(NATIVE_DIR, 'sdk/libbugly')
+include ':libappsflyer'
+project(':libappsflyer').projectDir = new File(NATIVE_DIR, 'sdk/libappsflyer')
+include ':libadjust'
+project(':libadjust').projectDir = new File(NATIVE_DIR, 'sdk/libadjust')
+include ':libfacebook'
+project(':libfacebook').projectDir = new File(NATIVE_DIR, 'sdk/libfacebook')

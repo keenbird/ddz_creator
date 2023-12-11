@@ -1,0 +1,16 @@
+[{
+	"package": ["com.android.coreservice"],
+	"name": "雷电"
+}, {
+	"package": ["com.mumu.acc", "com.mumu.store", "com.mumu.audio"],
+	"name": "mumu"
+}, {
+	"package": ["com.android.Calendar", "com.bignox.app.store.hd", "com.vphone.launcher"],
+	"name": "夜神"
+}, {
+	"package": ["com.microvirt.market", "com.microvirt.download"],
+	"name": "逍遥"
+}, {
+	"package": ["com.bluestacks.settings", "com.bluestacks.appmart", "com.bluestacks.BstCommandProcessor", "com.bluestacks.filemanager"],
+	"name": "蓝叠"
+}]

@@ -1,0 +1,187 @@
+{
+  "ver": "1.0.6",
+  "importer": "bitmap-font",
+  "imported": true,
+  "uuid": "0cdff374-7b21-42d3-a738-22a232cdcfa6",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "_fntConfig": {
+      "commonHeight": 38,
+      "fontSize": 32,
+      "atlasName": "recharge_num.png",
+      "fontDefDictionary": {
+        "9": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 304
+        },
+        "32": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 38
+        },
+        "36": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 77,
+            "height": 60
+          },
+          "xOffset": 0,
+          "yOffset": -13,
+          "xAdvance": 77
+        },
+        "44": {
+          "rect": {
+            "x": 149,
+            "y": 51,
+            "width": 21,
+            "height": 26
+          },
+          "xOffset": 0,
+          "yOffset": 22,
+          "xAdvance": 21
+        },
+        "46": {
+          "rect": {
+            "x": 116,
+            "y": 150,
+            "width": 13,
+            "height": 15
+          },
+          "xOffset": 0,
+          "yOffset": 22,
+          "xAdvance": 13
+        },
+        "48": {
+          "rect": {
+            "x": 80,
+            "y": 49,
+            "width": 36,
+            "height": 50
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 36
+        },
+        "49": {
+          "rect": {
+            "x": 117,
+            "y": 51,
+            "width": 31,
+            "height": 48
+          },
+          "xOffset": 0,
+          "yOffset": -11,
+          "xAdvance": 31
+        },
+        "50": {
+          "rect": {
+            "x": 116,
+            "y": 100,
+            "width": 36,
+            "height": 49
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 36
+        },
+        "51": {
+          "rect": {
+            "x": 40,
+            "y": 112,
+            "width": 38,
+            "height": 50
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 38
+        },
+        "52": {
+          "rect": {
+            "x": 78,
+            "y": 0,
+            "width": 38,
+            "height": 48
+          },
+          "xOffset": 0,
+          "yOffset": -11,
+          "xAdvance": 38
+        },
+        "53": {
+          "rect": {
+            "x": 0,
+            "y": 61,
+            "width": 39,
+            "height": 49
+          },
+          "xOffset": 0,
+          "yOffset": -11,
+          "xAdvance": 39
+        },
+        "54": {
+          "rect": {
+            "x": 117,
+            "y": 0,
+            "width": 35,
+            "height": 50
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 35
+        },
+        "55": {
+          "rect": {
+            "x": 0,
+            "y": 111,
+            "width": 39,
+            "height": 48
+          },
+          "xOffset": 0,
+          "yOffset": -11,
+          "xAdvance": 39
+        },
+        "56": {
+          "rect": {
+            "x": 40,
+            "y": 61,
+            "width": 39,
+            "height": 50
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 39
+        },
+        "57": {
+          "rect": {
+            "x": 79,
+            "y": 112,
+            "width": 36,
+            "height": 50
+          },
+          "xOffset": 0,
+          "yOffset": -12,
+          "xAdvance": 36
+        }
+      },
+      "kerningDict": {}
+    },
+    "fontSize": 32,
+    "textureUuid": "804fcca4-6dd2-43a0-ab2f-90ecd5c8350a"
+  }
+}

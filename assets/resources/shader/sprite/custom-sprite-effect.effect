@@ -1,0 +1,161 @@
+//Copyright (c) 2017-2020 Xiamen Yaji Software Co., Ltd.
+CCEffect %{
+  techniques:
+  - passes:
+    - vert: sprite-vs:vert
+      frag: sprite-fs:frag
+      depthStencilState:
+        depthTest: false
+        depthWrite: false
+      blendState:
+        targets:
+        - blend: true
+          blendSrc: src_alpha
+          blendDst: one_minus_src_alpha
+          blendDstAlpha: one_minus_src_alpha
+      rasterizerState:
+        cullMode: none
+      properties:
+        fRadiusRect: { value: 0.1, range: [0, 0.5], displayName: "圆角半径" }
+        fRadiusRectBlur: { value: 50.0, displayName: "模糊参数" }
+        fRadiusCircular: { value: 0.5, range: [0, 0.5], displayName: "半径" }
+        fRadiusCircularBlur: { value: 25.0, displayName: "模糊参数" }
+        alphaThreshold: { value: 0.5 }
+}%
+
+CCProgram sprite-vs %{
+  precision highp float;
+  #include <builtin/uniforms/cc-global>
+  #if USE_LOCAL
+    #include <builtin/uniforms/cc-local>
+  #endif
+  #if SAMPLE_FROM_RT
+    #include <common/common-define>
+  #endif
+  in vec3 a_position;
+  in vec2 a_texCoord;
+  in vec4 a_color;
+
+  out vec4 color;
+  out vec2 uv0;
+
+  vec4 vert () {
+    vec4 pos = vec4(a_position, 1);
+
+    #if USE_LOCAL
+      pos = cc_matWorld * pos;
+    #endif
+
+    #if USE_PIXEL_ALIGNMENT
+      pos = cc_matView * pos;
+      pos.xyz = floor(pos.xyz);
+      pos = cc_matProj * pos;
+    #else
+      pos = cc_matViewProj * pos;
+    #endif
+
+    uv0 = a_texCoord;
+    #if SAMPLE_FROM_RT
+      CC_HANDLE_RT_SAMPLE_FLIP(uv0);
+    #endif
+    color = a_color;
+
+    return pos;
+  }
+}%
+
+CCProgram sprite-fs %{
+  precision highp float;
+  #include <builtin/internal/embedded-alpha>
+  #include <builtin/internal/alpha-test>
+
+  in vec4 color;
+
+  #if USE_TEXTURE
+    in vec2 uv0;
+    #pragma builtin(local)
+    layout(set = 2, binding = 12) uniform sampler2D cc_spriteTexture;
+  #endif
+
+  //圆形裁剪参数
+  #if MASK_CIRCULAR
+    uniform MASK_CIRCULAR_DATA {
+      //圆角半径
+      float fRadiusCircular;
+      //模糊参数
+      float fRadiusCircularBlur;
+    };
+  #endif
+
+  //正方形裁剪参数
+  #if MASK_RECT
+    uniform MASK_RECT_DATA {
+      //圆角半径
+      float fRadiusRect;
+      //模糊参数
+      float fRadiusRectBlur;
+    };
+  #endif
+
+  vec4 frag () {
+    vec4 o = vec4(1, 1, 1, 1);
+    //开启图片宏
+    #if USE_TEXTURE
+      //图片透明度
+      o *= CCSampleWithAlphaSeparated(cc_spriteTexture, uv0);
+
+      //置灰
+      #if IS_GRAY
+        float gray  = 0.2126 * o.r + 0.7152 * o.g + 0.0722 * o.b;
+        o.r = o.g = o.b = gray;
+      #endif
+
+      //位置[0, 1]
+      float x = uv0.x;
+      float y = uv0.y;
+      //模糊参数
+      float blur = 0.0;
+      //距离参数
+      float fDistance = 0.0;
+      //将 UV 坐标转换到以图像中心为原点的坐标系
+      vec2 uv = vec2(x - 0.5, y - 0.5);
+
+      //图像裁剪（圆形）
+      #if MASK_CIRCULAR
+        //计算 UV 坐标与图像中心的距离
+        fDistance = length(uv);
+        //超长的像素不要
+        if (fDistance > fRadiusCircular) {
+          discard;
+        } else {
+          blur = fRadiusCircularBlur;
+          //虚边
+          o.w *= (fRadiusCircular - fDistance) * blur;
+        }
+      #endif
+
+      //图像裁剪（矩形）
+      #if MASK_RECT
+        float absX = abs(x - 0.5);
+        float absY = abs(y - 0.5);
+        float diff = 0.5 - fRadiusRect;
+        fDistance = length(vec2(absX - diff, absY - diff));
+        if (absX > diff && absY > diff && fDistance > fRadiusRect) {
+          discard;
+        } else {
+          blur = fRadiusRectBlur;
+          //虚边
+          if (absX > diff && absY > diff) {
+            o.w *= (fRadiusRect - fDistance) * blur;
+          } else {
+            o.w *= (0.5 - max(absX, absY)) * blur;
+          }
+        }
+      #endif
+    #endif
+
+    o *= color;
+    ALPHA_TEST(o);
+    return o;
+  }
+}%

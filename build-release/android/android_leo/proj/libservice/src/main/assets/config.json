@@ -1,0 +1,8 @@
+{
+	"bSelectServer": false,
+	"bLockWin": false,
+	"bDisplayStats": false,
+	"bGameUpdate": true,
+	"bCheckMd5": false,
+	"bServerProxy": true
+}

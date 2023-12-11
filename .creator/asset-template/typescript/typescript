@@ -1,0 +1,18 @@
+import { _decorator } from 'cc';
+const { ccclass } = _decorator;
+ 
+@ccclass('<%Name%>')
+export class <%Name%> extends (fw.FWComponent) {
+	initData() {
+	
+	}
+	protected initEvents(): boolean | void {
+	
+	}
+	protected initView(): boolean | void {
+	
+	}
+	protected initBtns(): boolean | void {
+	
+	}
+}

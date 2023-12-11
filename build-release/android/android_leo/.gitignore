@@ -1,0 +1,14 @@
+/script-backup
+/data
+/debug
+/release
+/proj/build
+/proj/.idea
+/proj/.gradle/
+/proj/cfg.cmake
+/proj/zz_autobuild.log
+/proj/local.properties
+/proj/gradle.properties
+/proj/libservice/build/
+/remote/
+/publish/

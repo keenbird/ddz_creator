@@ -1,0 +1,89 @@
+// 低版本修复wasm 加载不了的bug
+// fix: WebAssembly.instantiate not working well on V8.
+if(!globalThis.PDVersion || globalThis.PDVersion < 2) {
+  (function injectWebAssembly() {
+    if (!globalThis.WebAssembly) {
+      console.warn('WebAssembly is not supported!');
+      return;
+    }
+  
+    console.info('injectWebAssembly ...');
+    const oldWebAssemblyInstantiate = WebAssembly.instantiate;
+    const oldWebAssemblyCompile = WebAssembly.compile;
+  
+    WebAssembly.compile = function (bufferSource) {
+      return new Promise((resolve, reject) => {
+        if (!bufferSource) {
+          reject('WebAssembly.compile: Invalid buffer source!');
+        } else if (CC_EDITOR) {
+          // FIX EDITOR ERROR: WebAssembly.Compile is disallowed on the main thread, if the buffer size is larger than 4KB. Use WebAssembly.compile, or compile on a worker thread.
+          resolve(oldWebAssemblyCompile.call(WebAssembly, bufferSource));
+        } else {
+          resolve(new WebAssembly.Module(bufferSource));
+        }
+      });
+    };
+  
+    WebAssembly.instantiate = function (bufferSourceOrModule, importObject) {
+      let ret;
+  
+      if (bufferSourceOrModule instanceof WebAssembly.Module) {
+        ret = oldWebAssemblyInstantiate(bufferSourceOrModule, importObject);
+      } else {
+        ret = new Promise((resolve, reject) => {
+          WebAssembly.compile(bufferSourceOrModule).then(mod => {
+            oldWebAssemblyInstantiate(mod, importObject).then(instance => {
+              resolve({
+                instance: instance,
+                module: mod
+              });
+            }).catch(reject);
+          }).catch(reject);
+        });
+      }
+  
+      return ret;
+    };
+  })();
+}
+
+let cc;
+export class Application {
+    constructor () {
+        this.settingsPath = '<%= settingsJsonPath %>'; // settings.json 文件路径，通常由编辑器构建时传入，你也可以指定自己的路径
+        this.showFPS = <%= showFPS %>; // 是否打开 profiler, 通常由编辑器构建时传入，你也可以指定你需要的值
+    }
+
+    init (engine) {
+        cc = engine;
+        cc.game.onPostBaseInitDelegate.add(this.onPostInitBase.bind(this)); // 监听引擎启动流程事件 onPostBaseInitDelegate
+        cc.game.onPostSubsystemInitDelegate.add(this.onPostSystemInit.bind(this)); // 监听引擎启动流程事件 onPostSubsystemInitDelegate
+    }
+
+    onPostInitBase () {
+        // cc.settings.overrideSettings('assets', 'server', '');
+        // 实现一些自定义的逻辑
+    }
+
+    onPostSystemInit () {
+        // 实现一些自定义的逻辑
+    }
+
+    start () {
+        return cc.game.init({ // 以需要的参数运行引擎
+            debugMode: <%= debugMode %> ? cc.DebugMode.INFO : cc.DebugMode.ERROR,
+            settingsPath: this.settingsPath, // 传入 settings.json 路径
+            overrideSettings: { // 对配置文件中的部分数据进行覆盖，第二部分会详细介绍这个字段
+                // assets: {
+                //      preloadBundles: [{ bundle: 'main', version: 'xxx' }],
+                // }
+                assets: {
+                    preloadBundles: [ { bundle: 'main', } ],
+                },
+                profiling: {
+                    showFPS: this.showFPS,
+                }
+            }
+        }).then(() => cc.game.run());
+    }
+}

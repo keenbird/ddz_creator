@@ -1,0 +1,50 @@
+
+#///////////////////////////
+# Cocos Creator 3D Project
+#///////////////////////////
+/library/
+/temp/
+/local/
+/profiles/
+
+#///////////////////////////
+# python
+#///////////////////////////
+*.pyc
+__pycache__
+
+#//////////////////////////
+# WebStorm
+#//////////////////////////
+.idea/
+
+# java 内存分析生成文件
+*.hprof
+
+#打包
+/build/
+/build/windows
+/build/android/data
+/build/android/assets/
+/build/android/proj/build/
+/build/android/proj/.idea/
+/build/android/proj/.gradle/
+/build/android/proj/cfg.cmake
+/build/android/proj/zz_autobuild.log
+/build/android/proj/local.properties
+/build/android/proj/gradle.properties
+/build/android/proj/libservice/build/
+/build/android/proj/libservice/src/main/assets/config.json
+/build/android/remote/
+/build/android/publish/
+
+#热更
+/hotupdate/
+
+#其它
+ignore_test_*
+/Proto
+/build.log
+/public/cacheJsonFile.json
+/public/gui/guiConfig.json
+node_modules

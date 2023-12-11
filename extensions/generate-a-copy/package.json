@@ -1,0 +1,24 @@
+{
+    "package_version": 2,
+    "version": "1.0.0",
+    "name": "generate-a-copy",
+    "description": "i18n:generate-a-copy.description",
+    "main": "./dist/main.js",
+    "devDependencies": {
+        "typescript": "^4.3.4"
+    },
+    "author": "Cocos Creator",
+    "editor": ">=3.7.1",
+    "scripts": {
+        "build": "tsc -b",
+        "watch": "tsc -w"
+    },
+    "contributions": {
+        "assets": {
+            "menu": {
+                "methods": "./dist/assets-menu.js",
+                "assetMenu": "onAssetMenu"
+            }
+        }
+    }
+}

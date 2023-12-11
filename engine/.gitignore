@@ -1,0 +1,6 @@
+*pyc
+/bin/.cache
+/native/simulator
+
+node_modules
+dev

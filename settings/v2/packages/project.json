@@ -1,0 +1,50 @@
+{
+  "general": {
+    "designResolution": {
+      "width": 1280,
+      "height": 720,
+      "fitWidth": false,
+      "fitHeight": true
+    }
+  },
+  "layer": [
+    {
+      "name": "Layer1",
+      "value": 2
+    },
+    {
+      "name": "Layer2",
+      "value": 4
+    },
+    {
+      "name": "Layer0",
+      "value": 1
+    },
+    {
+      "name": "Layer3",
+      "value": 8
+    },
+    {
+      "name": "Layer4",
+      "value": 16
+    },
+    {
+      "name": "Layer5",
+      "value": 32
+    },
+    {
+      "name": "Layer6",
+      "value": 64
+    }
+  ],
+  "custom_joint_texture_layouts": [],
+  "__version__": "1.0.4",
+  "fbx": {
+    "legacyFbxImporter": {
+      "visible": true
+    }
+  },
+  "physics": {
+    "allowSleep": false
+  }
+}

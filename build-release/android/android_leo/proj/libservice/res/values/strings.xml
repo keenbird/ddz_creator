@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="app_name">Teen Patti Gold LEO</string>
+    <integer name="sdk_type">1</integer>
+
+    <string name="facebook_app_id">1147047612655722</string>
+    <string name="facebook_client_token">eec9a9b5208f910d27eab75a9d6fd28e</string>
+    <string name="facebook_app_scheme">fb1147047612655722</string>
+    <string name="facebook_content_provider">com.facebook.app.FacebookContentProvider1147047612655722</string>
+
+    <string name="ADJUST_APP_TOKEN">jda6dnyzosn4</string>
+<!--        <string name="OPERATORSID">2</string>-->
+<!--        <string name="CHANNEL_SUB">channel_default</string>-->
+<!--        <string name="CHANNEL">lm_1000001</string>-->
+
+<!--    <string name="BUGLY_APPID">a616baef76</string>-->
+<!--    <bool name="BUGLY_ENABLE_DEBUG">false</bool>-->
+<!--    <string name="BUGLY_APP_CHANNEL">default</string>-->
+
+    <string name="LEO_Policy">http://ydqp.uuy.com/index/policy</string>
+    <string name="LEO_THC">http://ydqp.uuy.com/index/service</string>
+
+</resources>

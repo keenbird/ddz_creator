@@ -1,0 +1,795 @@
+
+enum EVENT_ID {
+	EVENT_PLAZA_TIPS_ERROR, //大厅踢人
+	EVENT_GATEWAY_TIPS_ERROR,//中心服错误
+	
+	EVENT_BACK_PLAZA_PLANE, //大厅回退上一个界面
+	EVENT_CLEAN_USER_DATA, //清理center数据
+
+	EVENT_WINGO_CHANGELAYER, //win go切换界面
+	EVENT_WINGO_HOMELAYERRECORD, //win go刷新homelayer record
+	EVENT_WINGO_OPENPRICE, //win go开奖通知 
+
+	EVENT_RUMMY_LEFTMENU, //rummy从侧边栏 
+
+	EVENT_LOGIN_SOCKETOOK, //登录中心网络连接成功事件
+	EVENT_LOGIN_SOCKETCLOSE, //登录中心网络关闭事件
+	EVENT_LOGIN_SOCKETERROR, //登录中心网络连接错误事件
+	EVENT_LOGIN_LOGINEND, //登录中心登录事件
+	EVENT_LOGIN_REGEDIT, //登录中心注册事件
+	EVENT_LOGIN_TIPS, //登录中心提示信息事件
+	EVENT_LOGIN_VISITOR, //登录中心游客登录事件
+	EVENT_LOGIN_RESET_PWD, //登录中心重置密码成功
+	EVENT_LOGIN_HAVE_BIND, //提示已绑定手机号
+	// EVENT_LOGIN_END, //登录成功
+	EVENT_LOGIN_FAIL, //登录失败返回
+	EVENT_LOGIN_PHP_SUCCESS, //登录PHP成功返回
+	EVENT_LOGIN_PHP_FAIL, //登录失败返回
+	EVENT_LOGIN_FAIL_TIPS, //登录失败返回
+	EVENT_LOGIN_VERSION, //登录获得版本
+	EVENT_LOGIN_FAIL_RECHECKOUT, //登录请求版本失败重新获取
+	EVENT_LOGIN_NOTICE_UPDATE,//登录公告内容更新
+
+	EVENT_PLAZA_FIRSTRECHRGE_LASTTIME, //首充有效倒计时
+
+	EVENT_PLAZA_SOCKETOOK, //广场中心网络连接成功事件
+	EVENT_PLAZA_SOCKETCLOSE, //广场中心网络关闭事件
+	EVENT_PLAZA_SOCKETERROR, //广场中心网络连接错误事件
+	EVENT_PLAZA_LOGINEND, //广场中心登录事件
+	EVENT_PLAZA_TIPS, //广场中心提示信息事件
+	EVENT_PLAZA_POPACTIVITY, //活动弹框消息
+	EVENT_PLAZA_OTHERINFO, //广场中心其他信息事件	
+	EVENT_PLAZA_FASTBTN, //广场中心快捷按钮	
+
+	EVENT_PLAZA_ACTOR_PRIVATE, //广场中心玩家私有数据更新
+	EVENT_PLAZA_ACTOR_VARIABLE, //广场中心玩家易变属性更新
+	EVENT_ACTOR_MODIFY_RETURN, //玩家修改资料成功后返回
+	EVENT_ACTOR_BINDING_PHONE, //玩家绑定手机成功后返回
+	EVENT_ACTOR_PERFECT_INFORMATION, //玩家绑定name email成功后返回
+	EVENT_FIRST_RECHARGE_INFO, //首冲配置信息返回
+	EVENT_ACTOR_PERFECT_PAYINFORMATION, //玩家绑定支付用信息
+
+	EVENT_WITHDRAW_ACCOUNT, //提现账号
+	EVENT_WITHDRAW_ACCOUNT_ADD, //添加提现账号
+
+	EVENT_ICON_SELECT_RETURN, //安卓返回消息，头像选择完成
+	EVENT_ICON_UPLOAD_SUCCEED, //头像上传成功
+
+	EVENT_PLAZA_CHAT_ROOM, //广场中心房间聊天
+	EVENT_PLAZA_CHAT_PRIVATE, //广场中心私聊
+	EVENT_PLAZA_CHAT_FRIEND, //广场中心好友聊天
+	EVENT_PLAZA_CHAT_FRIEND_STATUS, //广场中心好友聊天 已读状态更新
+	EVENT_PLAZA_CHAT_HORN, //广场中心喇叭
+	EVENT_PLAZA_CHAT_SYSTEM, //广场中心系统消息
+	EVENT_PLAZA_CHAT_CUSTOMIZE, //广场中心系统消息
+	EVENT_PLAZA_NEW_SYSTEM, //广场系统消息(富文本);
+	EVENT_PLAZA_NEW_HORN, //广场心喇叭消息(富文本);
+
+	EVENT_PLAZA_CONTAINER_INFO, //广场中心获取玩家容器
+	EVENT_PLAZA_CONTAINER_CHANGE, //广场中心容器改变信息
+	EVENT_PLAZA_CONTAINER_DELETEITEM, //广场中心容器删除包容对象
+
+	EVENT_PLAZA_TASK_INFO, //任务管理,任务进度
+	EVENT_PLAZA_TASK_VIEW, //任务管理,任务视图
+	EVENT_PLAZA_TASK_ADD, //任务管理,新增任务
+	EVENT_PLAZA_TASK_CHANGE, //任务管理,任务改变
+	EVENT_PLAZA_TASK_CHALLENGE, //每日挑战
+	EVENT_PLAZA_TASK_SEVEN, //七日任务
+	//EVENT_PLAZA_TASK_FINISH, //任务管理,完成任务
+	//EVENT_PLAZA_TASK_DELETE, //广场中心任务删除消息
+	EVENT_PLAZA_TASK_SUBSYDIY, //任务管理,破产补助
+	EVENT_PLAZA_TASK_SUBSYDIY_DATA, //任务管理,破产补助数据
+	EVENT_PLAZA_TASK_DIAMOND_SUBSYDIY, //任务管理,钻石破产补助
+	EVENT_PLAZA_REDPACKET_WIN_INFO, //累胜红包信息
+
+	EVENT_PLAZA_YULE_TOTAL_WIN_GOLD_TASK_STATUS_CHANGE, //娱乐场累胜红包任务状态改变
+	EVENT_PLAZA_YULE_TOTAL_WIN_GOLD_NUM_CHANGE, //娱乐场累胜金币发生改变
+	EVENT_PLAZA_YULE_TOTAL_WIN_GOLD_TASK_CTRL_CHANGE, //娱乐场控制开关发生变化
+	EVENT_PLAZA_YULE_TOTAL_WIN_GOLD_TASK_SZ_OPEN, //累计上庄任务开启
+
+	EVENT_PLAZA_REDPACKET_WIN_FINISH_RET, //玩家点击领取红包结果
+	EVENT_PLAZA_REDPACKET_WIN_USER_INFO, //玩家当前红包进度
+	EVENT_PLAZA_REDPACKET_WIN_USER_INFO_UPDATE, //强制玩家当前红包进度(领取红包结果)
+	EVENT_PLAZA_BANKRUPT_REAWARD, //破产分享奖励
+	EVENT_PLAZA_ACTIVITY_INFO, //活动下发
+	EVENT_PLAZA_SIGN_INFO, //广场中心签到信息更新完成
+	EVENT_PLAZA_SIGN_CLICKOK, //广场中心签到成功
+	EVENT_PLAZA_SIGN_VIPMONTH_CLICKOK, //广场中心vip累计签到成功
+	EVENT_PLAZA_SIGN_FILLINOK, //广场中心补签成功
+	EVENT_PLAZA_SIGN_REFRESH, //广场中心跨天刷新
+	EVENT_PLAZA_SIGN_RESET, //广场中心跨月重置
+	EVENT_PLAZA_SIGN_CONTINUE, //签到界面连续签到奖励
+
+	EVENT_PLAZA_SUPER_VIP_USERCONFIG_RE, //至尊月卡用户数据下发
+	EVENT_PLAZA_SUPER_VIP_CONFIG, //至尊月卡配置信息下发(月卡弹窗)
+	EVENT_PLAZA_SUPER_VIP_FASTPAYCONFIG_RE, //至尊月卡快充配置信息下发
+	EVENT_PLAZA_SUPER_VIP_CLOSE, //至尊月卡关闭信息下发
+	EVENT_PLAZA_NEWUSER_SIGN_CONFIG, //新手七天登陆配置下发
+	EVENT_PLAZA_HAPPYSEVEN_CLOSE, //新手七天乐关闭消息
+	EVENT_PLAZA_NEWUSER_SIGN_USERINFO, //新手七天登陆用户数据下发
+
+	EVENT_PLAZA_SEVENSIGN_CONFIG, //七天登陆配置下发
+	EVENT_PLAZA_SEVENSIGN_USERINFO, //七天登陆用户数据下发
+	EVENT_PLAZA_SEVENSTGN_CLOSE, //七天登录关闭消息
+	EVENT_PLAZA_SIGNED_REWARD, //签到奖励返回消息        //add by liuwencheng 2016.12.14
+	EVENT_PLAZA_VIPCONFIG_RE, //广场vip配置下发
+
+	EVENT_PLAZA_MALL_RANDOM_GIFT_INFO, //广场中心商城 随机金币商品
+	EVENT_PLAZA_MALL_VIEW_RETURN, //广场中心商城
+	EVENT_PLAZA_MALL_BUY, //广场中心商城
+	EVENT_PLAZA_MALL_RMBORDER, //广场中心商城
+	EVENT_PLAZA_MALL_RMBORDER_MEGAGIFT, //广场中心商城
+	EVENT_PLAZA_MALL_TIPS, //广场中心商城
+
+	EVENT_GOOD_INFO_RETURN, //商品信息返回
+
+	EVENT_RELATION_FIND_RETURN, //社交，查找好友返回
+	EVENT_RELATION_ADD_END, //社交，添加好友返回
+	EVENT_RELATION_UPDATE_REWARD, //社交，打赏列表更新
+	EVENT_RELATION_TIPS, //社交，提示信息
+	EVENT_RELATION_NEW_NOTICE, //社交，下发新通知
+	EVENT_RELATION_DELETE_END, //社交，删除好友返回
+	EVENT_RELATION_UPDATE_NOTICE, //社交，更新一条通知
+	EVENT_RELATION_NOTICE_INFO, //社交，通知信息提示
+	EVENT_RELATION_RECOMMONEFRIEND, //社交，获取推荐好友
+	EVENT_RELATION_FRIENDSTATE, //社交,好友状态更新
+	EVENT_RELATION_FRIENDDETAIL, //社交,好友详细信息
+	EVENT_RELATION_UPDATECOUNT, //更新通知个数
+	EVENT_RELATION_FRIENDSICON, //社交，玩家头像更新
+	EVENT_RELATION_FRIENDFLOWER, //社交,送花返回
+
+	EVENT_EMAIL_VIEW_RETURN, //邮件，邮件概述返回
+	EVENT_EMAIL_TEXT_RETURN, //邮件，邮件正文返回
+	EVENT_EMAIL_PICK_RETURN, //邮件，邮件附件获取返回
+	EVENT_EMAIL_EMAIL_ADD, //邮件，增加一封新邮件
+	EVENT_EMAIL_VIEW_STATE, //邮件，邮件概述状态改变
+
+	EVENT_EXCHANGE_CTRL, //兑换，兑换开关返回
+	EVENT_EXCHANGE_VIEW_RETURN, //兑换，兑换列表返回
+	EVENT_EXCHANGE_HISTORY_RETURN, //兑换，兑换历史返回
+	EVENT_EXCHANGE_HISTORY_ADDNEW, //兑换，新增历史记录
+	EVENT_EXCHANGE_HISTORY_UPDATE, //兑换，历史状态更新
+	EVENT_EXCHANGE_RET_QUALIFICATION, //兑换，校验权限
+	EVENT_EXCHANGE_BARCODE_RETURN, //兑换，条形码兑换返回
+	EVENT_EXCHANGE_FRAGMENT_RETURN, //兑换，碎片兑换返回
+	EVENT_EXCHANGE_GOODS_RETURN, //兑换，实物兑换返回
+	EVENT_EXCHANGE_SCAN_QR_RETURN, //兑换，扫描二维码返回
+	EVENT_EXCHANGE_REEGIONALISM_RETURN, //兑换，安卓部分选择省市信息返回
+
+	EVENT_ROOM_GOLD_RETURN, //房间，金币房间列表返回
+	EVENT_ROOM_MATCH_RETURN, //房间，金币房间列表返回
+	EVENT_ROOM_BIG_MATCH_RETURN, //房间，大奖赛（打立出局）列表
+	EVENT_ROOM_CUSTOMCOMP_ID_LIST_RETURN, //房间，自定义组合列表的ID返回
+	EVENT_ROOM_CUSTOMCOMP_RETURN, //房间，自定义组合房间列表返回
+	EVENT_ROOM_CREATE_RETURN, //房间，创建房间信息返回
+	EVENT_ROOM_ONLINECOUNT_RETURN, //房间在线人数返回
+	EVENT_ROOM_CUSTOMONLINECOUNT_RETURN, //自定定义房间人数返回
+	EVENT_ROOM_CUSTOMCOMP_GAMELIST_RETURN, //游戏列表返回(针对lua监听)
+	EVENT_ROOM_CUSTOMCOMP_GAMEROOMLIST_RETURN, //游戏房间列表返回(针对lua监听)
+	EVENT_ROOM_KIND_ID_CHANGE, //游戏房间kindid 改变
+	EVENT_REVIEW_CONTROL_CHANGE, //审核模式 改变
+	EVENT_ROOM_COMBINE_CHANGE, //游戏房间自定义分组
+
+	EVENT_BATTERY_RETURN, //电量返回
+	EVENT_WIFI_STATE_RETURN, //wifi强度返回
+	EVENT_GETREWARDTIPS, //获取奖励返回
+	EVENT_PLAZAOFFLINE, //广场断线消息
+	EVENT_VERIFICATION_MSG, //获取验证码返回
+	EVENT_UPDATE_STATE_RETURN, //更新进度返回
+	DOWNLOAD_APK_PERCENT, //下载APK进度返回
+
+	EVENT_PLAZA_GETJINNIU_CONFIG, //获取到金牛基本配置信息
+	EVENT_PLAZA_GET_USER_JINNIU_CONFIG, //获取到玩家金牛的数据
+	EVENT_PLAZA_JINNIU_CAN_GET_GOLD, //金牛倒计时结束，可以领取
+	EVENT_PLAZA_JINNIU_GET_GOLD_END, //金牛领取金币完成
+	EVENT_PLAZA_JINNIU_GET_GOLD_SUCCESS, //领取金币成功
+	EVENT_JINNIU_CTRL, //金牛开关
+	/////////////////////////////////////////////
+	EVENT_PLAZA_CHOU_JIANG_INFO, //得到幸运大抽奖信息更新。
+	EVENT_PLAZA_CHOU_JIANG_RESULT, //得到幸运大抽奖结果
+	EVENT_PLAZA_CHOU_JIANG_CTRL, //幸运大抽奖开关
+	/////////////////////////////////////////////
+	EVENT_YAO_QING_ALL, //所有事件。
+	EVENT_YAO_QING_ConfigInfo, //获得邀请配置信息。
+	EVENT_YAO_QING_Close, //邀请关闭
+	EVENT_YAO_QING_FriendInfo, //邀请的好友状态信息。
+	EVENT_YAO_QING_AddFriendInfo, //新增的邀请好友信息
+	EVENT_YAO_QING_UpdateFriendInfo, //更新的邀请好友信息
+	EVENT_YAO_QING_GetAwardResult, //获取奖励结果
+	EVENT_YAO_QING_UseKeyResult, //使用邀请码结果。
+	EVENT_YAO_QING_ModuleSwitch, //功能开关
+	/////////////////////////////////////////////
+	//游戏房间内数据
+	EVENT_PLAYROOM_CHANGESTATE, //房间桌子状态改变
+	EVENT_PLAY_TALBEREF, //桌子刷新
+	EVENT_GAME_RECONNECT, //房间内断线重连
+	EVENT_GLOBALLATTERY_UPDATE, //全局彩池更新
+	EVENT_PLAYER_CLICK_TO_SIT, //百人场玩家点击坐下
+	EVENT_PLAYER_EXIST_BANKER_CLICK, //百人场玩家点击推出庄家
+	EVENT_PLAYER_BANKER_AUTO_BET_CHANGE, //百人自动下注状态变更
+	EVENT_PLAYER_BANKER_SET_AUTO_BET, //百人设置自动下注数据
+	EVENT_BAIREN_YJTASK_GETREWARDRET, //酷跑赢金数据
+	//EVENT_PLAYROOM_USEMAGIC, //使用魔法表情
+
+	EVENT_PLAY_ACTOR_PUBLIC, //玩家公有数据
+	EVENT_PLAY_ROBOT_ACTOR_PUBLIC, //机器人公有数据
+	EVENT_PLAY_ACTOR_PRIVATE, //玩家私有数据
+	EVENT_PLAY_ACTOR_VARIABLE, //玩家属性更新
+	EVENT_PLAY_ACTOR_DESTORY, //玩家销毁
+	EVENT_PLAY_ROBOT_ACTOR_DESTORY, //机器人销毁
+	EVENT_PLAY_ACTOR_SELFONTABLE,//自己上桌					
+	EVENT_PLAY_ACTOR_ONTABLE, //玩家上桌
+	EVENT_PLAY_ACTOR_OUTTABLE, //玩家离桌
+	EVENT_PLAY_ACTOR_TIPSUPROOM, //提示升场
+	EVENT_PLAY_ACTOR_RAISE_HAND, //玩家举手
+	EVENT_PLAY_ACTOR_TIPSDOWNROOM, //提示降场
+	EVENT_PLAY_ACTOR_TIPSBUYGIFTBAG, //提示购买一元礼包
+	EVENT_PLAY_ACTOR_TIPSSUBSIDY, //提示领取救济金
+	EVENT_PLAY_ACTOR_TIPSEXCHANGE, //提示前往兑换红包
+	EVENT_PLAY_ACTOR_RAISEHANDS, //用户举手
+	EVENT_PLAY_ACTOR_DROP, //用户断线
+	EVENT_PLAY_ACTOR_DROPEND, //用户断线重连	
+
+	EVENT_SERVER_TIP_TIPSSUBSIDY, //SERVER提示CLIENT可以领取救济金
+	//EVENT_SERVER_TIP_DIAMOND_TIPSSUBSIDY, //SERVER提示钻石场CLIENT可以领取救济金
+	EVENT_PLAY_ACTOR_DIAMOND_TIPSSUBSIDY, //提示钻石场领取救济金
+	EVENT_SERVER_TIP_POPDIAMONDGIFTRECHARGE, //SERVER提示钻石场领钻石补助礼包
+	EVENT_SERVER_MATCH_SETTLE, //SERVER提示比赛场玩家不充值，结算
+	EVENT_PLAY_CHAT_ROOM, //房间聊天
+	EVENT_PLAY_CHAT_PRIVATE, //私聊
+	EVENT_PLAY_CHAT_TABLE, //游戏桌内聊天
+	EVENT_PLAY_CHAT_ROOMPHRASES, //房间内聊天短语
+	EVENT_PLAY_CHAT_GAMEPHRASES, //游戏内聊天短语
+	EVENT_PLAY_CHAT_MAGICFACE, //房间内互动表情
+	EVENT_PLAY_CHAT_SYSTEM, //系统消息
+	EVENT_JACKPOT_REFRESH,//奖池刷新
+
+	/////////////////////////////////////////////
+	//比赛数据
+	EVENT_MATCH_GETMATCHINFO, //比赛数据
+	EVENT_MATCH_NOWACTORCOUNTCHANGE, //报名人数变化
+	EVENT_MATCH_ENROLLSUCCESS, //报名成功
+	EVENT_MATCH_SETTLE, //结算
+	EVENT_MATCH_RANKDATA, //排行榜
+	EVENT_MATCH_LAST_RANKDATA, //排行榜
+	EVENT_MATCH_WAIT_TABLE_COUNT, //等待桌子数
+	EVENT_MATCH_FIRST_RANK, //初赛排名
+	EVENT_MATCH_STAGE_CHANGE, //比赛阶段变更
+	EVENT_MATCH_NOTICE_ENROLL, //比赛报名通知
+
+	EVENT_DALI_MATCH_LAST_RANKDATA, //大奖赛上期排行榜
+	EVENT_DALI_MATCH_RECONNECT, //大奖赛断线重连
+	EVENT_DALI_MATCH_SELFINGAME, //大奖赛更新是否在游戏标记
+	EVENT_DALI_MATCH_PREFAIL, //大奖赛预赛淘汰
+	EVENT_DALI_MATCH_STARTFAIL, //大奖赛比赛没有开始
+
+	EVENT_MATCH_ERRORTIPS, //错误提示
+	EVENT_MATCH_STATUS, //比赛状态
+	EVENT_CHALLENGE_MATCH_END, //赛事挑战结束
+	EVENT_CHALLENGE_MATCH_RANK, //赛事挑战排行
+	EVENT_CHALLENGE_MATCH_FRACTION, //赛事挑战分数
+	EVENT_MATCH_COUNTDOWN, //倒计时
+	EVENT_MATCH_FAIL, //在线宝箱
+	EVENT_TREASUREBOX_GETBOXINFO, //宝箱数据
+	EVENT_TREASUREBOX_COUNTCHAGE, //局数刷新
+	EVENT_TREASUREBOX_UPGRADESUCCEED, //升级成功
+	EVENT_TREASUREBOX_REWARD, //获得奖励
+	EVENT_TREASUREBOX_TIPS,
+	EVENT_TREASUREBOX_CLOSE,
+	EVENT_TREASUREBOX_GETALLBOXINFO,
+	EVENT_TREASUREBOX_UPGADEBROADCAST, //抢红包
+	EVENT_REDPACKET_PACKETINFO, //收到红包配置
+	EVENT_REDPACKET_CLOSE, //红包关闭
+	EVENT_REDPACKET_REWARD, //红包奖励
+	EVENT_SHOW_QIANG_HAND, //抢庄看牌的 手图 //add by liuwencheng 2016.12.7
+	EVENT_GUIDE_AWARD, //新手引导奖励
+	EVENT_GUIDE_INFO, //新手引导信息
+	EVENT_GUIDE_EXECUTE, //用户执行新手引导
+	EVENT_GUIDE_CLOSE_REWARDLAYER, //新手引导期间，关闭rewardlayer
+	EVENT_GUIDE_SHOW_REWARDLAYER, //新手引导期间，关闭rewardlayer
+	EVENT_GUIDE_CHECK_SHOW, //检测并显示新手引导
+	EVENT_GUIDE_FINISH, //新手引导完成
+	EVENT_SEVENSIGN_FINISH, //签到完成
+	EVENT_LIMIT_BUY_CONFIG, //限时抢购配置
+	EVENT_LIMIT_BUY_STATUS, //限时抢购状态
+	EVENT_LIMIT_BUY_CLOSE, //限时抢购关闭
+	EVENT_ACTIVITY_NOTIFY_NUM, //活动数目
+
+	EVENT_YULE_TREASUREBOX_WAIT, //娱乐宝箱等待开启
+	EVENT_YULE_TREASUREBOX_START, //娱乐宝箱开始
+	EVENT_YULE_TREASUREBOX_CLOSE, //娱乐宝箱结束
+	EVENT_YULE_TREASUREBOX_OPEN_FAIL, //娱乐宝箱开启失败
+
+	EVENT_TANZHU_CFG, //水果弹珠累胜红包配置
+	EVENT_TANZHU_TASK_UPDATE, //水果弹珠累胜数据更新
+	EVENT_TANZHU_TASK_REWARD, //水果弹珠累胜领奖
+
+	/////////////////////////////////////////////
+	//幸运卡
+	EVENT_PLAZA_LUCKCARD_CONFIG, //幸运卡配置（日卡周卡月卡季卡等）
+	EVENT_PLAZA_LUCKCARD_BUY_ODER, //服务器下发购买幸运卡的订单，客户端拿到这个订单去支付RMB
+	EVENT_PLAZA_LUCKCARD_BUY_RESULT, //购买幸运卡的结果
+	EVENT_PLAZA_LUCKCARD_DAILY_APPLY_RET, //获取每日奖励的结果
+	EVENT_PLAZA_LUCKCARD_USER_RET, //玩家的幸运卡信息
+	EVENT_PLAZA_LUCKCARD_CONTROL, //玩家的幸运卡控制开关
+
+	//玩家vip信息更新
+	EVENT_PLAZA_VIPGIFT_INFO, //vipGift信息更新
+
+	EVENT_PLAZA_GIFT_BAG_CONFIG, //礼包配置（日卡周卡月卡季卡等）
+	EVENT_PLAZA_GIFT_BAG_BUY_RESULT, //购买礼包的结果
+	EVENT_PLAZA_DIAMOND_GIFT_BAG_CONFIG, //钻石补助礼包配置
+	EVENT_PLAZA_DIAMOND_GIFT_BAG_BUY_RESULT, //购买钻石补助礼包的结果
+
+	EVENT_PLAZA_BANKRUPUTGIFT_CONFIG, //破产特惠礼包配置（日卡周卡月卡季卡等）
+	EVENT_PLAZA_BANKRUPUTGIFT_BUY_RESULT, //购买幸运卡的结果
+	EVENT_PLAZA_BANKRUPUTGIFT_TIME, //购买幸运卡的结果	
+
+	EVENT_PLAZA_RECHARGE_CONFIG, //超值返利礼包配置（日卡周卡月卡季卡等）
+	EVENT_PLAZA_RECHARGE_BUY_RESULT, //购买超值返利的结果
+	EVENT_PLAZA_RECHARGE_SHOW, //购买超值返利的结果
+	EVENT_PLAZA_DIAMOND_BUY_RESULT, //购买钻石特惠的结果
+	/////////////////////////////////////////////
+	//此处为lua添加项
+	EVENT_LOGIN_SELECT_SERVER, //选择服务器
+	EVENT_PLAZA_ACTOR_FEEDBACK, //反馈通知事件
+	EVENT_PLAZA_ACTOR_MODIFYPWDRET, //修改密码通知事件
+	EVENT_PLAZA_ACTOR_RESETPWD, //用户重置密码通知事件
+	EVENT_PLAZA_ACTOR_FIRST_LOGIN_REWARD, //首登录奖励
+
+	EVENT_PLAZA_FIRSTRECHARGE, //首冲订单下发通知事件
+	EVENT_PLAZA_FIRSTRECHARGEOK, //首冲订单成功
+	EVENT_PLAZA_CHAOZHIGIFTOK, //超值礼包订单成功
+
+	//快充
+	EVENT_PLAZA_QUICKCHARGE, //快充订单下发通知事件-
+	EVENT_ACTOR_SHAREGAMECONFIG_INFO, //游戏分享配置数据的返回
+
+	//游戏前后台推送通知事件
+	EVENT_APP_ENTER_BACKGROUND, //游戏退到后台通知事件
+	EVENT_APP_ENTER_FOREGROUND, //游戏回到前台通知事件
+
+	//游戏部分添加项
+	EVENT_GAME_GOLDRECHARGE, //房间金币不足充值
+	EVENT_GAME_GO_TO_EXCHANGE, //前去兑换中心
+	EVENT_GAME_CLOSE_GO_TO_EXCHANGE, //关闭前去兑换中心
+	/////////////////////////////////////////////
+
+	//EVENT_PLAZA_SHARE_GET_CJ_REWARD, //分享赚钱 抽奖数据 领奖
+	EVENT_PLAZA_SHARE_MY_SHARE_DATA, //分享赚钱 我的分享数据
+	EVENT_PLAZA_SHARE_OPEN, //分享赚钱 开关
+	EVENT_PLAZA_SHARE_TOTAL_DATA, //分享赚钱 累计分享数据
+	EVENT_PLAZA_SHARE_FREECASH_CHANGE, //free cash分享数据更新
+
+	EVENT_PLAZA_GOLDDICE_GETDATA, //摇色子豹子数据和奖励标记
+	EVENT_PLAZA_GOLDDICE_OPENRET, //摇色子打开返回
+	EVENT_PLAZA_GOLDDICE_JOIN_RESULT, //摇色子结果返回
+	EVENT_PLAZA_GOLDDICE_CTRL, //摇色子开关	//娱乐排行榜
+	EVENT_YULE_RANK_CONFIG, //摇色子开关
+	EVENT_YULE_RANK_COUNTDOWN, //摇色子开关
+	EVENT_YULE_RANK_CURRANK, //摇色子开关
+
+	EVENT_YULE_RANK_LASTRANK, //摇色子开关
+	EVENT_YULE_RANK_TIPS, //摇色子开关	
+	EVENT_YULE_RANK_CTRL, //摇色子开关	
+	EVENT_YULE_RANK_USE_GOLD, //摇色子开关	
+
+	EVENT_TIMELUCK_CONFIG, //时来运转配置
+	EVENT_TIMELUCK_RESULT, //时来运转结果
+	EVENT_TIMELUCK_BROADCAST, //时来运转广播
+	EVENT_TIMELUCK_RECORD, //时来运转中奖纪录
+	EVENT_TIMELUCK_SURPLUSTIME, //时来运转剩余次数
+
+	EVENT_PLAZA_JINDAN_OPEN_RET, //金蛋奖励打开返回
+	EVENT_PLAZA_JINDAN_RET, //砸金蛋返回
+	EVENT_PLAZA_JINDAN_GIFTBAG_RET, //金蛋礼包返回
+	EVENT_PLAZA_JINDAN_CTRL, //金蛋控制
+	EVENT_PLAZA_JINDAN_TASKCONFIG, //金蛋任务配置
+	EVENT_PLAZA_JINDAN_EXCHANGE_RET, //金蛋兑换返回
+	EVENT_FRUIT_TASK_CONFIG, //水果宝箱任务
+	EVENT_FRUIT_TASK_DATA,
+	EVENT_BOX_REWARD_RESPONSE,
+
+	//存钱罐
+	EVENT_SAVINGPOT_CONFIG, //存钱罐信息详情
+	EVENT_SAVINGPOT_INFO, //请求个人信息
+	EVENT_SAVINGPOT_REDPOINT, //提示红点
+	EVENT_SAVINGPOT_BUY, //购买
+	EVENT_BY_SAVINGPOT_CONFIG, //捕鱼存钱罐信息详情
+	EVENT_BY_SAVINGPOT_INFO, //捕鱼请求个人信息
+	EVENT_BY_SAVINGPOT_REDPOINT, //捕鱼提示红点
+	EVENT_BY_SAVINGPOT_BUY, //捕鱼购买
+	EVENT_BY_SAVINGPOT_RECORD, //捕鱼存钱罐记录
+	EVENT_BY_SAVINGPOT_RECORD_UPDATE, //捕鱼存钱罐记录更新
+
+	//一本万利
+	EVENT_BIGPROFIT_CONFIG, //配置信息
+	EVENT_BIGPROFIT_INFO, //任务信息
+	EVENT_BIGPROFIT_CLOSE, //关闭
+	EVENT_BIGPROFIT_CTRL, //控制开关
+	EVENT_BIGPROFIT_NOTICE_EXPIRED, //通知客户端过期的通行证奖励已经发放到邮箱
+
+	EVENT_MALL_REDPOINT, //商城提示红点
+
+	EVENT_MATCH_CONFIG, //比赛配置
+	EVENT_FRIENDROOM_CONFIG, //好友房配置
+	EVENT_FRIENDROOM_RECORD, //好友房记录
+	EVENT_FRIENDROOM_INFO, //好友房信息
+	EVENT_FRIENDROOM_CTRL_SHOW, //好友房开关
+	EVENT_FRIENDROOM_REPLAY_DEL_RET, //好友房开关
+	EVENT_FRIENDROOM_GAME_END, //好友房开关
+
+	EVENT_DONGBEI_RANK, //东北排名
+	EVENT_DONGBEI_MY_EXTEND, //东北我的分享
+	EVENT_DONGBEI_MY_INCOME, //东北我的收入记录
+	//==============斗地主比赛场================
+	EVENT_LANDLORD_MATCH_UPDATE_POINT, //斗地主更新玩家积分
+	EVENT_LANDLORD_MATCH_OUT_ROOM, //斗地主退出房间
+	EVENT_LANDLORD_MATCH_QUICK_RECHARGE, //比赛场充值
+
+	EVENT_MATCH_FREE_COUNT, //比赛免费次数
+	EVENT_MATCH_ACTOR_COUNT, //玩家人数
+	EVENT_MATCH_PRIZE_INFO, //比赛奖励记录
+
+	EVENT_XXL_CHALLENGE_GUANKA, //消消乐挑战某关
+	EVENT_XXL_SHOW_CHALLENGE_GUANKA, //显示挑战关卡
+	EVENT_XXL_GUANKA_CONFIG, //消消乐配置
+	EVENT_XXL_GUANKA_USERDATA, //消消乐用户数据
+
+	EVENT_PLAZA_LAYER_CHANGE, //大厅界面变化
+	EVENT_PLAZA_FIRST_START, //第一次进入大厅
+	EVENT_PLAZA_LAYER_BONUSMASK, //大厅点击图像
+	EVENT_PLAZA_BONUSGET_SUCCEED, //领取返利成功
+
+	//复仇礼包
+	EVENT_PLAZA_REVENGE_GIFT_BAG_CONFIG, //复仇礼包配置
+	EVENT_PLAZA_REVENGE_BUY_RESULT, //购买复仇礼包的结果
+	EVENT_PLAZA_REVENGE_TIME, //复仇礼包倒计时时间
+	EVENT_PLAZA_REVENGE_UPDATE, //更新复仇数据
+	EVENT_PLAZA_REVENGE_PRIZE, //成功获取复仇任务奖励
+
+	//活跃度
+	EVENT_PLAZA_TASKLIVENESS_CFG, //活跃度配置
+	EVENT_PLAZA_TASKLIVENESS_DATA, //活跃度数据
+	EVENT_PLAZA_TASKLIVENESS_GETREWARDRET, //领取奖励结果
+
+	//月度礼包
+	EVENT_PLAZA_MONTH_BAG_CONFIG, //月度礼包配置
+	EVENT_PLAZA_MONTH_BUY_RESULT, //购买月度礼包结果
+	EVENT_PLAZA_MONTH_SHOW, //月度礼包控制开关
+
+	//捕鱼
+	EVENT_PLAZA_BUYU_SHOW, //捕鱼渠道开关控制
+	EVENT_PLAZA_BUYU_ROOMIFNO, //捕鱼房间信息
+	EVENT_PLAZA_IS_CHANGING_TO_GAME, //是否正在切换
+
+	EVENT_LANDLORD_USE_MAGICFACE, //斗地主使用魔法表情
+
+	//大厅功能管理
+	EVENT_PLAZA_CUSTOM_CONTROL_CFG,
+
+	//过山车宝箱任务
+	EVENT_GSC_TASK_CONFIG,
+	EVENT_GSC_TASK_DATA,
+	EVENT_GSC_BOX_REWARD_RESPONSE,
+	//过山车宝箱任务 end
+
+	//一元礼包
+	EVENT_NEW_ONE_YUAN_INFOR,
+	EVENT_NEW_ONE_YUAN_CONFIG,
+
+	//观看视屏领取奖励
+	EVENT_PLAZA_VIDEO_REWARD, //刷新视屏领奖
+	//实名认证
+	EVENT_PLAZA_SHIMING_SUCCEED, //实名认证成功
+	EVENT_PLAZA_SHIMING_INTERCEPT, //实名认证拦截大厅功能
+	EVENT_PLAZA_SHIMINGINFO_TO_BUYU, //实名认证信息告诉捕鱼
+
+	//超级夺宝
+	EVENT_MONOPOLY_DATA, //关卡数据
+	EVENT_MONOPOLY_CONFIG, //关卡配置
+	EVENT_MONOPOLY_ROUNDPRIZE, //超级夺宝圈数奖励
+	EVENT_MONOPOLY_BROADCAST, //超级夺宝广播
+	EVENT_MONOPOLY_ROLLPLAY_RESULT, //摇色子结果
+	EVENT_MONOPOLY_NEPTUNE_BOX_GUESS, //超级夺宝 海王宝箱结果返回
+	EVENT_MONOPOLY_NEPTUNE_BOX_ABANDON, //海王宝箱弃权
+	EVENT_MONOPOLY_NEPTUNE_BOX_REWARD, //海王宝箱奖励
+
+	//////////战车////////////
+	EVENT_GAME_FORWARD_PLAYING,
+	EVENT_PLAZA_RESSYS_REFRESH_DEVRIS_VIEW, //刷新战车系统中碎片界面
+	EVENT_PLAZA_RESSYS_REFRESH_CHARIOT_VIEW, //刷新战车系统中战车界面
+	EVENT_PLAZA_RECYCLE_REFRESH_NORMAL_TASK, //刷新回收站普通任务
+	EVENT_PLAZA_RECYCLE_REFRESH_SPECIAL_TASK, //刷新回收站公共任务
+	EVENT_PLAZA_RECYCLE_SEND_REFRESH_TASK, //发送刷新回收站任务
+	EVENT_PLAZA_RECYCLE_RED_POINT_TIPS, //回收站任务完成红点
+
+	EVENT_PLAZA_PARKING_LOT_REFRESH_VIEW, //停车场刷新
+	EVENT_PLAZA_PARKING_LOT_UNLOCK_STALL, //停车场解锁车位返回
+	EVENT_PLAZA_PARKING_LOT_VEGETEAL_LOG, //停车场好友偷菜日志界面刷新
+	EVENT_PLAZA_PARKING_LOT_VEGETEAL, //停车场好友偷菜界面刷新
+	EVENT_PLAZA_PARKING_LOT_VEGETEAL_REFRESH_FRIEND, //停车场单个好友偷菜信息刷新
+	EVENT_PLAZA_PARKING_LOT_GOLD_YIELD, //停车场金币收益
+	//////////战车////////////
+
+	//////////战车////////////
+
+	//////////车库系统////////////////////
+	EVENT_GARAGE_UNLOCK_CONFIG, //战车解锁配置
+	EVENT_GARAGE_UPGRADE_CONFIG, //战车升级配置
+	EVENT_GARAGE_CAR_UNLOCK_RETURN, //战车解锁返回
+	EVENT_GARAGE_CAR_UPGRADE_RETURN, //战车升级返回
+	EVENT_GARAGE_CAR_CHANGE_RETURN, //战车更换返回
+	EVENT_GARAGE_ADVERT_RETURN, //战车视频次数返回
+	EVENT_GARAGE_SELECT_SHOW_CAR,
+	EVENT_GARAGE_CAR_CHANGE,
+	EVENT_GARAGE_SELECT_SHOW_AIDE,
+	//////////车库系统////////////////////
+
+	//////////副炮中心////////////////////
+	EVENT_PLAZA_SECONDGUN_REFRESH, //副炮数据更新
+	EVENT_PLAZA_SECONDGUN_CURAIDEID, //副炮ID更新
+	//////////副炮中心////////////////////
+
+	////////////房间奖池////////////
+	EVENT_GAME_POOL_CFG, //奖池配置
+	EVENT_GAME_POOL_UPDATE, //更新当前奖池金币
+	EVENT_GAME_POOL_REWARD, //获得奖励
+	EVENT_GAME_POOL_RECORD, //获奖记录
+	////////////房间奖池////////////
+
+	////////////////userStatus ////////////////////
+	EVENT_USER_STATUS_ADD, //添加道具状态
+	EVENT_USER_STATUS_DEL, //移除道具状态
+	EVENT_USER_STATUS_CHANGE, //道具状态变化
+	//////////碎片交换////////////////////
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_DETAIL_RET, //发布详情返回
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_ADD, //新增碎片发布
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_DEL, //删除碎片发布
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_HISTORY_RET, //发布历史记录返回
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_HISTORY_ADD, //新增发布历史记录
+	EVENT_FRAGMENT_EXCHANGE_RETURN, //碎片交换结果返回
+	EVENT_FRAGMENT_EXCHANGE_BAG_SELECT, //碎片背包选择返回
+
+	EVENT_FRAGMENT_EXCHANGE_SELECT_SEARCH_INFO, //碎片查找信息
+	EVENT_FRAGMENT_EXCHANGE_FRAGMENT_ITEM_RESULT, //碎片选取结果
+
+	EVENT_FRAGMENT_EXCHANGE_PUBLISH_UPDATE,
+	//////////碎片交换////////////////////
+
+	//////////运营礼包////////////////////
+	EVENT_PLAZA_MEIRITEHUI_BUY_FINISH, //每日特惠购买成功
+	EVENT_OPEN_MEIRITEHUIVIEW, //打开每日特惠界面
+	EVENT_MEIRITEHUI_CTRL, //每日特惠开关
+	EVENT_OPEN_MONTHCRDVIEW, //打开月卡界面					
+	//////////运营礼包////////////////////
+	EVENT_TASK_SUBSIDY_REWARD, //领取破产补助结果		
+
+	//////////关卡选择////////////////////
+	EVENT_PLAZA_LEVEL_INFO_REFRESH, //关卡星星数刷新
+	EVENT_LEVEL_CUR_LVL_INFO, //刷新未解锁关卡信息
+	EVENT_LEVEL_POWER_COUNTDOWN, //体力增长倒计时
+	EVENT_LEVEL_STAR_PRIZE_REFRESH, //星星领奖后刷新 
+	EVENT_LEVEL_POWER_CONFIG, //体力配置
+	EVENT_LEVEL_VUA_USING_AND_GOTO_PALY, //无人机装备成功后进入游戏
+	EVENT_LEVEL_VUA_TIPS_CLEAN, //无人机装备红点清除
+
+	EVENT_PAYLAYER_CLOSE, //关闭支付方式选择弹窗，用于游戏内
+	EVENT_EXCHANGE_SUCCESS_CLOSE, //关闭兑换成功提示窗
+	EVENT_PLAZA_SELL_SELECTED,
+	EVENT_PLAZA_RESOURCE_CONFIG,
+	EVENT_AGREE_USER_AGREEMENT, //同意用户须知
+
+	//////新手任务 start////////////
+	EVENT_GETFREEBONUSTIPS,
+	//////新手任务 end////////////
+
+	//////mega礼包 start////////////
+	EVENT_MEGAGIFT_CONFIG,
+	EVENT_MEGAGIFT_BUY_RESULT,
+	//////mega礼包 end////////////
+
+	//////支付任务 start////////////
+	EVENT_PAYTASK_BUY_RESULT,
+	EVENT_TASK_REWARD_GET,
+	EVENT_PAYTASK_INFO_CHANGE,
+	//////支付任务 end////////////
+
+	EVENT_GAME_MALL_RMBORDER, //游戏中下单回调消息
+
+	EVENT_CHECK_WITHDRAW_GUIDE, //移除提现引导
+	EVENT_PAY_SUCCESS, //充值成功
+
+	//7天签到
+	EVENT_PLAZA_SEVEN_ACTIVE_DATA, //签到用户数据
+	EVENT_PLAZA_SEVEN_ACTIVE_REWARD_RET, //签到奖励领取
+	//圣诞节
+	EVENT_PLAZA_CHRISTMAS_RED_DATA, //圣诞红点数据
+	//
+	EVENT_RECHARGE_PROTECT_CFG, //充值保护配置
+	EVENT_RECHARGE_PROTECT_REWARD, //充值保护领奖返回
+
+	//转盘
+	EVENT_WHEEL_REWARD, //抽奖返回
+	EVENT_WHEEL_USERDATA, //用户数据
+	//新转盘
+	EVENT_NEW_WHEEL_REWARD, //抽奖返回
+	EVENT_NEW_WHEEL_USERDATA, //用户数据
+	EVENT_NEW_WHEEL_CONFIG,
+	//支付渠道刷新 
+	EVENT_PAY_CHANNEL_LIST, //支付渠道刷新
+
+	//通用任务 
+	EVENT_NEWPLAYERGIFT_TASK_CALLBACK, //通用任务
+
+	//消消乐排名刷新 
+	EVENT_XXL_RANKING_DATA, //消消乐排名刷新
+
+	//Lucky3Patti 小游戏事件
+	POPUP_TYPE_LUCKY3PATTI_MAIN,
+	EVENT_3PATTI_ENTER, //进入3Patti
+	EVENT_LUCKY3PATTI_DATA, //3Patti初始数据
+	EVENT_LUCKY3PATTI_START, //3Patti开始下注
+	EVENT_LUCKY3PATTI_END, //3Patti一局结束
+	EVENT_LUCKY3PATTI_JETTON, //3Patti下注
+	EVENT_LUCKY3PATTI_JETTON_RET,
+
+	EVENT_LUCKY3PATTI_SYNCDATA, //3Patti同步数据
+	EVENT_LUCKY3PATTI_HANDLE_AMOUNT, //3Patti操作下注值
+	EVENT_LUCKY3PATTI_TIPS, //提示消息
+	EVENT_LUCKY3PATTI_REBET, //批量下注
+	EVENT_LUCKY3PATTI_HISTORY, //自己下注历史界面
+
+	EVENT_LUCKY3PATTI_RECORDS, //趋势图界面
+	EVENT_LUCKY3PATTI_QUESTION, //玩法规则界面
+	EVENT_LUCKY3PATTI_JACKPOT, //奖池界面
+	EVENT_LUCKY3PATTI_CHANGE_BET_CHIP, //修改下注筹码事件
+	EVENT_LUCKY3PATTI_COINS_FLY,
+	EVENT_LUCKY3PATTI_BALANCE,
+	EVENT_LUCKY3PATTI_BALANCE_PRE,
+	EVENT_LUCKY3PATTI_UPDATE_BIGWINNER,
+	EVENT_LUCKY3PATTI_INIT,
+
+	////////////百人AB//////////
+	EVENT_BRAB_NOTIFY_SHOW_FIRE, //百人ab通知显示火焰
+	////////////百人AB//////////
+
+	////////////-TP关卡任务//////////
+	EVENT_TP_LV_REWARD,
+	EVENT_TP_LV_DATA,
+	EVENT_TP_LV_CFG,
+	////////////-TP关卡任务//////////
+
+	//-------leo红点 start------------
+    EVENT_GETFREEBONUSTIPSLEO,
+    //-------leo红点 end------------
+
+	////////////大厅排行榜//////////
+	EVENT_PLAZABAG_GETRANKDATA,
+	////////////大厅排行榜//////////
+
+	// --10 天任务
+	EVENT_TEN_DAY_TASK_ACTIVITY_DATA,
+	EVENT_TEN_DAY_TASK_RUN_TURNTABLE,
+	EVENT_TEN_DAY_TASK_ACTIVITY_RET,
+	EVENT_TEN_DAY_TASK_SHOW_TURNTABLE,
+
+	EVENT_ROOM_WIN_GOLD_LOG, //百人区域赢金日志
+
+	EVENT_GAME_ROOM_C_JOIN_QUEUE_RET, //请求搓桌返回
+    EVENT_GAME_ROOM_JOIN_SUCCESS, //搓桌成功
+
+}
+fw.getEventID({ enum: EVENT_ID });
+export { EVENT_ID }
+
+//C++，java，objc底层推送的事件ID
+// enum C_EVENT_ID {
+// 	EVENT_ICON_SELECT_RETURN = 23,
+// 	EVENT_EXCHANGE_SCAN_QR_RETURN = 88,
+// 	//断线重连事件
+// 	SHOW_RECONNECT = -2003,
+// 	STOP_RECONNECT = -2002,
+
+// 	//关闭和显示加载界面
+// 	CLOSE_LOADING = -2000,
+// 	SHOW_LOADING = -2001,
+
+// 	//以下有些没用
+// 	//sdk登录成功回调
+// 	SDK_LOGINSUCCESS = -5000,
+// 	//sdk自动登录
+// 	SDK_ATUOLOGIN = -4999,
+// 	//sdk退出成功
+// 	SDK_LOGOUTSUCCESS = -4998,
+// 	//微信分享返回
+// 	SDK_WX_SHAREBACK = -4997,
+// 	//个推
+// 	SDK_PUSHEVENTID = -10000,
+
+// 	//电池电量
+// 	SDK_BATTERYSTATE = -4996, //(返回的值 是电量0 - 100)
+// 	//网络信号强度
+// 	SDK_WIFISTATE = -4995, //(返回的值 是信号等级0 - 4)
+// 	//移动信号强度
+// 	SDK_NETSTATE = -4994, //(返回的值 是信号等级0 - 4)
+// }
+// fw.getEventID({ enum: C_EVENT_ID });
+// export { C_EVENT_ID }
+
+export const report_event = {
+	app_open: {
+		dec: "应用启动",
+		params: {},
+	},
+	app_update: {
+		dec: "应用更新",
+		params: {},
+	},
+	app_update_success: {
+		dec: "应用更新成功",
+		params: {},
+	},
+	login: {
+		dec: "登录成功",
+		params: {
+			userID: "0",
+			loginType: "0",
+			loginType_str: "0",
+		},
+	},
+	rechar_page: {
+		dec: "充值页面",
+		params: {},
+	},
+	rechar_success: {
+		dec: "充值成功",
+		params: {
+			purchaseAmount: "0.0", // 金额
+			currency: "INR", // 货币标识
+			RID: "0", // 商品id
+			order_id: "0", //订单id
+			userID: "0" // 用户id
+		} //参数模板
+	},
+	register: {
+		dec: "注册成功",
+		params: {
+			userID: "0", //用户id
+			account: "0",
+			loginType: "0",
+			loginType_str: "0"
+		} //参数模板
+	},
+	start_game: {
+		dec: "开始游戏",
+		params: {
+			gameName: "ddz", // 游戏名称
+		} //参数模板
+	},
+	widraw_page: {
+		dec: "提现界面",
+		params: {} //参数模板
+	},
+	widraw_success: {
+		dec: "提现成功",
+		params: {
+			purchaseAmount: "0.0", //金额
+			currency: "INR",//货币标识
+		} //参数模板
+	},
+	register_login: {
+		dec: "注册登录",
+		params: {
+			uid: "0", //用户id
+		} //参数模板
+	}
+}
+
+export type report_event_type = typeof report_event
+export type report_event_name = keyof report_event_type
+
+function reportEvent<T extends report_event_name, P extends report_event_type[T]["params"]>(event: T, params: P) {
+
+	// app.native.adjust.reportEvent(event, params);
+}

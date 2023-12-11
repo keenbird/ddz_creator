@@ -1,0 +1,15 @@
+{
+    "name": "script-init-sequence",
+    "title": "script-init-sequence",
+    "package_version": 2,
+    "version": "1.0.0",
+    "author": "Cocos Creator",
+    "description": "i18n:script-init-sequence.description",
+    "contributions": {
+        "builder": "./dist/builder.js"
+    },
+    "dependencies": {
+        "@types/fs-extra": "^5.0.4",
+        "@types/node": "^14.5.2"
+    }
+}

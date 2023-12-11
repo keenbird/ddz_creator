@@ -1,0 +1,35 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "name": "Launch Edge",
+            "request": "launch",
+            "type": "msedge",
+            "url": "http://localhost:7457",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "type": "pwa-chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:7457",
+            "webRoot": "${workspaceFolder}",
+            // "runtimeArgs": [
+            //     "--disable-web-security",
+            //     "--user-data-dir=C://MyChromeDevUserData"
+            // ],
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Cocos Creator Launch Chrome against localhost",
+            "url": "http://localhost:7457",
+            "webRoot": "${workspaceFolder}",
+            // "runtimeArgs": [
+            //     "--disable-web-security",
+            //     "--user-data-dir=C://MyChromeDevUserData"
+            // ],
+        }
+    ]
+}
