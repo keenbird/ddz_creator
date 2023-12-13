@@ -78,7 +78,7 @@ class _FWComponent extends Component {
         //TODO
     }
     /**一般情况下不建议子类重写，界面从 “未显示” 调整为 “显示” */
-    public onEnable(): void {
+    private onEnable(): void {
         // //是否刷新横竖屏
         // if (this.bHaveScreenOrientation) {
         //     //记录上一个界面的方向
@@ -102,7 +102,7 @@ class _FWComponent extends Component {
         //子类实现
     }
     /**一般情况下不建议子类重写，界面从 “显示” 调整为 “未显示” */
-    public onDisable(): void {//是否刷新横竖屏
+    private onDisable(): void {//是否刷新横竖屏
         // //是否刷新横竖屏
         // if (this.bHaveScreenOrientation && !this.bUpdateOnlyDestroy) {
         //     //还原上一个界面的方向
@@ -188,7 +188,7 @@ class _FWComponent extends Component {
         return false;
     }
     /**销毁 */
-    public onDestroy() {
+    private onDestroy() {
         // //是否刷新横竖屏
         // if (this.bHaveScreenOrientation && this.bUpdateOnlyDestroy) {
         //     //还原上一个界面的方向
