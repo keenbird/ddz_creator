@@ -10,7 +10,6 @@ import { gameItemsBase } from '../gameItems/script/gameItemsBase';
 import { bubble } from '../../../resources/ui/bubble/script/bubble';
 import { COMPILATION_SDKTYPE } from '../../../app/config/ModuleConfig';
 import { guide_hand_1 } from '../../../resources/ui/guide/script/guide_hand_1';
-import { lucky3pattiController } from '../../lucky3patti/lucky3pattiController';
 import { plaza_secondary_base } from '../secondary/script/plaza_secondary_base';
 
 /**二级界面类型 */
@@ -23,7 +22,6 @@ export enum SecondaryType {
 export class plaza_main extends (fw.FWComponent) {
 	/**二级界面 */
 	secondaryView: ccNode
-	private m_lucky3ptCtrl: lucky3pattiController
 	rechargeProtect_anim_uuid: string
 	mIsFromLogin: any;
 	loginCashTimer: number;
@@ -56,9 +54,7 @@ export class plaza_main extends (fw.FWComponent) {
 		// super.doLifeFunc();
 	}
 	initData() {
-		if (center.lucky3pt.getIsShow() && fw.isNull(this.m_lucky3ptCtrl)) {
-			this.m_lucky3ptCtrl = new lucky3pattiController();
-		}
+		
 	}
 	protected initView(): boolean | void {
 		//缓存大厅，不清理
@@ -249,148 +245,148 @@ export class plaza_main extends (fw.FWComponent) {
 
 
 				//  弹一次10日任务 
-				if (center.task.isShowTenDayTask(false)) {
-					app.popup.showDialog({
-						viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-					});
-				}
+				// if (center.task.isShowTenDayTask(false)) {
+				// 	app.popup.showDialog({
+				// 		viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
+				// 	});
+				// }
 
 
-				let nBuffNum = center.user.getBuffNum()
-				if (nBuffNum > 1) {
-					if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
-						app.popup.showDialog({
-							viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
-						});
-					}
-				} else {
-					if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
-						center.taskActive.savePopupSignSevenActiveFromLogin()
-						if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
-							app.popup.showDialog({
-								viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
-							});
-						}
-					}
-				}
+				// let nBuffNum = center.user.getBuffNum()
+				// if (nBuffNum > 1) {
+				// 	if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
+				// 		app.popup.showDialog({
+				// 			viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
+				// 		});
+				// 	}
+				// } else {
+				// 	if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
+				// 		center.taskActive.savePopupSignSevenActiveFromLogin()
+				// 		if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
+				// 			app.popup.showDialog({
+				// 				viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
+				// 			});
+				// 		}
+				// 	}
+				// }
 
-				// 提现引导
-				app.popup.showDialog({
-					viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
-				});
+				// // 提现引导
+				// app.popup.showDialog({
+				// 	viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
+				// });
 
 			} else if (this.mIsFromLogin) {
 				// 正常登录流程
-				center.user.popGift(false, true, false)
+				// center.user.popGift(false, true, false)
 
-				let runningNotice = center.activity.getRunningNoticeList()
-				if (this.mIsFromLogin && runningNotice.length > 0) {
-					let entity = runningNotice[0]
-					if (entity.content != "") {
-						if (center.activity.getNoticeMessagePopNum(entity.nrid) < 5) {
-							center.activity.addNoticeMessagePopNum(entity.nrid)
-							center.activity.setOneInfoItemHaveRead(entity.nrid)
-							center.activity.notifyUnReadNum()
-							let content = entity.content
-							app.popup.showDialog({
-								viewConfig: fw.BundleConfig.plaza.res[`notice/notice_dialog`],
-								callback: (view, dataEx) => {
-									(<plaza_noticeDialog>(view.getComponent(`NoticeDialog`))).data = content
-								}
-							});
-						}
-					}
-				}
+				// let runningNotice = center.activity.getRunningNoticeList()
+				// if (this.mIsFromLogin && runningNotice.length > 0) {
+				// 	let entity = runningNotice[0]
+				// 	if (entity.content != "") {
+				// 		if (center.activity.getNoticeMessagePopNum(entity.nrid) < 5) {
+				// 			center.activity.addNoticeMessagePopNum(entity.nrid)
+				// 			center.activity.setOneInfoItemHaveRead(entity.nrid)
+				// 			center.activity.notifyUnReadNum()
+				// 			let content = entity.content
+				// 			app.popup.showDialog({
+				// 				viewConfig: fw.BundleConfig.plaza.res[`notice/notice_dialog`],
+				// 				callback: (view, dataEx) => {
+				// 					(<plaza_noticeDialog>(view.getComponent(`NoticeDialog`))).data = content
+				// 				}
+				// 			});
+				// 		}
+				// 	}
+				// }
 
-				if (app.sdk.isSdkOpen("sharepopup")) {
-					app.popup.showDialog({
-						viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLeoNewLayer`]
-					});
-				} else {
-					if (center.task.isFreeBonusOpen()) {
-						let lastLoginTime = app.file.getIntegerForKey("lastLoginTime", 0)
-						let nowTiem = app.func.time()
-						let cDateCurrectTime = new Date()
-						let cDateTodayTime = new Date(js.formatStr("%s-%s-%s", cDateCurrectTime.getFullYear(), cDateCurrectTime.getMonth(), cDateCurrectTime.getDate())).getTime()
-						let isTodayFirstLogin = false
-						if (cDateTodayTime >= lastLoginTime) {
-							isTodayFirstLogin = true
-						}
-						app.file.setIntegerForKey("lastLoginTime", nowTiem)
-						if (isTodayFirstLogin && !this.mCheckRegLogin) {
-							app.popup.showDialog({
-								viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLayer`],
-							});
-						} else if (center.share.isFreeCashOpen()) {
-							this.showFreeCashPop()
-						}
+				// if (app.sdk.isSdkOpen("sharepopup")) {
+				// 	app.popup.showDialog({
+				// 		viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLeoNewLayer`]
+				// 	});
+				// } else {
+				// 	if (center.task.isFreeBonusOpen()) {
+				// 		let lastLoginTime = app.file.getIntegerForKey("lastLoginTime", 0)
+				// 		let nowTiem = app.func.time()
+				// 		let cDateCurrectTime = new Date()
+				// 		let cDateTodayTime = new Date(js.formatStr("%s-%s-%s", cDateCurrectTime.getFullYear(), cDateCurrectTime.getMonth(), cDateCurrectTime.getDate())).getTime()
+				// 		let isTodayFirstLogin = false
+				// 		if (cDateTodayTime >= lastLoginTime) {
+				// 			isTodayFirstLogin = true
+				// 		}
+				// 		app.file.setIntegerForKey("lastLoginTime", nowTiem)
+				// 		if (isTodayFirstLogin && !this.mCheckRegLogin) {
+				// 			app.popup.showDialog({
+				// 				viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLayer`],
+				// 			});
+				// 		} else if (center.share.isFreeCashOpen()) {
+				// 			this.showFreeCashPop()
+				// 		}
 
-					} else if (center.share.isFreeCashOpen()) {
-						this.showFreeCashPop()
-					}
-				}
+				// 	} else if (center.share.isFreeCashOpen()) {
+				// 		this.showFreeCashPop()
+				// 	}
+				// }
 
-				await center.luckyCard.showVipCardView() //周卡 月卡功能
+				// await center.luckyCard.showVipCardView() //周卡 月卡功能
 
-				// 激活且可领取
-				if (center.scratchCard.isActive() && center.scratchCard.canGetScratchcardReward()) {
-					await this.showScratchCardPop()
-				}
-
-
-				//  弹一次10日任务 
-				if (center.task.isShowTenDayTask(false)) {
-					app.popup.showDialog({
-						viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-					});
-				}
+				// // 激活且可领取
+				// if (center.scratchCard.isActive() && center.scratchCard.canGetScratchcardReward()) {
+				// 	await this.showScratchCardPop()
+				// }
 
 
-				let nBuffNum = center.user.getBuffNum()
-				if (nBuffNum > 1) {
-					if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
-						app.popup.showDialog({
-							viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
-						});
-					}
-				} else {
-					if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
-						center.taskActive.savePopupSignSevenActiveFromLogin()
-						if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
-							app.popup.showDialog({
-								viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
-							});
-						}
-					}
-				}
+				// //  弹一次10日任务 
+				// if (center.task.isShowTenDayTask(false)) {
+				// 	app.popup.showDialog({
+				// 		viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
+				// 	});
+				// }
+
+
+				// let nBuffNum = center.user.getBuffNum()
+				// if (nBuffNum > 1) {
+				// 	if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
+				// 		app.popup.showDialog({
+				// 			viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
+				// 		});
+				// 	}
+				// } else {
+				// 	if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
+				// 		center.taskActive.savePopupSignSevenActiveFromLogin()
+				// 		if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
+				// 			app.popup.showDialog({
+				// 				viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
+				// 			});
+				// 		}
+				// 	}
+				// }
 
 			} else {
-				let withdrawGuideGame = center.user.checkWithdrawGuide()
-				if (withdrawGuideGame) {
-					// 提现引导
-					app.popup.showDialog({
-						viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
-						data: {
-							withdrawGuideGame: true,
-						}
-					});
-				} else {
-					center.user.popGift(true, false, false);
+				// let withdrawGuideGame = center.user.checkWithdrawGuide()
+				// if (withdrawGuideGame) {
+				// 	// 提现引导
+				// 	app.popup.showDialog({
+				// 		viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
+				// 		data: {
+				// 			withdrawGuideGame: true,
+				// 		}
+				// 	});
+				// } else {
+				// 	center.user.popGift(true, false, false);
 
-					// 破产弹窗
-					if (center.task.isCanGetSubsydy()) {
-						app.popup.showDialog({
-							viewConfig: fw.BundleConfig.plaza.res[`bankruptcy/bankruptcy`],
-						});
-					}
+				// 	// 破产弹窗
+				// 	if (center.task.isCanGetSubsydy()) {
+				// 		app.popup.showDialog({
+				// 			viewConfig: fw.BundleConfig.plaza.res[`bankruptcy/bankruptcy`],
+				// 		});
+				// 	}
 
-					//  弹一次10日任务 
-					if (center.task.isShowTenDayTask(false)) {
-						app.popup.showDialog({
-							viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-						});
-					}
-				}
+				// 	//  弹一次10日任务 
+				// 	if (center.task.isShowTenDayTask(false)) {
+				// 		app.popup.showDialog({
+				// 			viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
+				// 		});
+				// 	}
+				// }
 			}
 			this.mIsFromLogin = false
 			break
@@ -1088,10 +1084,7 @@ export class plaza_main extends (fw.FWComponent) {
 	}
 	onViewDestroy() {
 		super.onViewDestroy();
-		if (!fw.isNull(this.m_lucky3ptCtrl)) {
-			this.m_lucky3ptCtrl.onViewDestroy();
-			this.m_lucky3ptCtrl = null;
-		}
+		
 	}
 }
 
