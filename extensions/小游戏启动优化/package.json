@@ -1,0 +1,136 @@
+{
+  "package_version": 2,
+  "version": "1.1.4",
+  "name": "mini-game-launch-fast",
+  "description": "i18n:mini-game-launch-fast.description",
+  "main": "./dist/main.js",
+  "devDependencies": {
+    "@types/node": "^16.0.1",
+    "typescript": "^4.3.4"
+  },
+  "author": "dream93",
+  "editor": ">=3.6.0",
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -w"
+  },
+  "contributions": {
+    "builder": "./dist/builder.js",
+    "profile": {
+      "project": {
+        "bgColor": {
+          "default": [
+            0,
+            0,
+            0,
+            255
+          ]
+        },
+        "imageFile": {
+          "default": ""
+        },
+        "imageRatio": {
+          "default": 0.5
+        },
+        "imageMode": {
+          "default": "1"
+        },
+        "barRatio": {
+          "default": 0.45
+        },
+        "barOffset": {
+          "default": -0.25
+        },
+        "barBgColor": {
+          "default": [
+            100,
+            111,
+            118,
+            255
+          ]
+        },
+        "barColor": {
+          "default": [
+            61,
+            197,
+            222,
+            255
+          ]
+        }
+      }
+    },
+    "project": {
+      "tab1": {
+        "label": "启动优化",
+        "content": {
+          "bgColor": {
+            "label": "背景颜色",
+            "ui": "ui-color"
+          },
+          "imageFile": {
+            "label": "图片路径",
+            "ui": "ui-file",
+            "attributes": {
+              "type": "file",
+              "protocols": "project"
+            }
+          },
+          "imageRatio": {
+            "label": "图片展示比例",
+            "ui": "ui-slider",
+            "description": "相对屏幕宽度或高度（根据适配方式决定）的比例",
+            "attributes": {
+              "min": 0,
+              "max": 1,
+              "step": 0.1
+            }
+          },
+          "imageMode": {
+            "label": "适配方式",
+            "ui": "ui-select",
+            "description": "填充适配有可能超出边界，内容适配可能有留白",
+            "items": [
+              {
+                "value": "0",
+                "label": "填充适配"
+              },
+              {
+                "value": "1",
+                "label": "内容适配"
+              }
+            ]
+          },
+          "barRatio": {
+            "label": "进度条展示比例",
+            "ui": "ui-slider",
+            "description": "相对屏幕宽度的比例",
+            "attributes": {
+              "min": 0,
+              "max": 1,
+              "step": 0.1
+            }
+          },
+          "barOffset": {
+            "label": "进度条位置",
+            "ui": "ui-slider",
+            "description": "距离中心点的位置，向上为正，向下为负",
+            "attributes": {
+              "min": -1,
+              "max": 1,
+              "step": 0.1
+            }
+          },
+          "barBgColor": {
+            "label": "进度条背景颜色",
+            "ui": "ui-color"
+          },
+          "barColor": {
+            "label": "进度条颜色",
+            "ui": "ui-color"
+          }
+        }
+      }
+    }
+  },
+  "_storeId": "6c18db0cf7b7df1ed52f6f84c9910688"
+}

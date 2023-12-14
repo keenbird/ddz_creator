@@ -47,40 +47,40 @@ export class Application extends FWSceneBase {
         globalThis.app = this;
     }
     initView() {
-        if (app.func.isAndroid()) {
-            fw.print("isAndroid");
-        } else if (app.func.isIOS()) {
-            fw.print("isIOS");
-        } else {
-            fw.print("isWindows");
-        }
-        jsb?.device.setKeepScreenOn(true);
-        //初始化语言
-        fw.language.init(app.file.getStringForKey(`LanguageType`, fw.LanguageType.en, { all: true }));
-        //是否显示FPS等相关数据
-        if (!fw.isNull(profiler)) {
-            fw.DEBUG.bDisplayStats ? profiler.showStats() : profiler.hideStats();
-        }
-        //调整缓存路径
-        app.file.setAllHotUpdatePath();
-        //场景首次初始化
-        fw.scene.setBaseNode(this.node);
-        //设置常驻节点
-        director.addPersistRootNode(this.node);
-        //部分独立组件--------began-----------
-        if (sys.isNative) {
-            this.nativeBase = sys.isNative && app.func.isAndroid() ? NativeAndroid : app.func.isIOS() ? NativeIOS : NativeWindows;
-        } else {
-            this.nativeBase = NativeWindows;
-        }
-        this.native;
-        //数据管理组件 负责网络通信 和 数据保存
-        this.obtainComponent(CenterManager);
-        //点击事件和事件分发
-        this.event;
-        //部分独立组件--------end-------------
-        //预加载部分资源
-        this.preloadRes();
+        // if (app.func.isAndroid()) {
+        //     fw.print("isAndroid");
+        // } else if (app.func.isIOS()) {
+        //     fw.print("isIOS");
+        // } else {
+        //     fw.print("isWindows");
+        // }
+        // jsb?.device.setKeepScreenOn(true);
+        // //初始化语言
+        // fw.language.init(app.file.getStringForKey(`LanguageType`, fw.LanguageType.en, { all: true }));
+        // //是否显示FPS等相关数据
+        // if (!fw.isNull(profiler)) {
+        //     fw.DEBUG.bDisplayStats ? profiler.showStats() : profiler.hideStats();
+        // }
+        // //调整缓存路径
+        // app.file.setAllHotUpdatePath();
+        // //场景首次初始化
+        // fw.scene.setBaseNode(this.node);
+        // //设置常驻节点
+        // director.addPersistRootNode(this.node);
+        // //部分独立组件--------began-----------
+        // if (sys.isNative) {
+        //     this.nativeBase = sys.isNative && app.func.isAndroid() ? NativeAndroid : app.func.isIOS() ? NativeIOS : NativeWindows;
+        // } else {
+        //     this.nativeBase = NativeWindows;
+        // }
+        // this.native;
+        // //数据管理组件 负责网络通信 和 数据保存
+        // this.obtainComponent(CenterManager);
+        // //点击事件和事件分发
+        // this.event;
+        // //部分独立组件--------end-------------
+        // //预加载部分资源
+        // this.preloadRes();
     }
     public get native() {
         return this.obtainComponent<NativeBase>(this.nativeBase);
