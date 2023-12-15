@@ -90,21 +90,14 @@ export class FWAssetManager extends fw.FWComponent {
         app.func.doPromise<T>((resolve, reject) => {
             //优先加载子包
             this.loadBundle(bundleResConfig,(bundle) => {
-                //加载的资源为SpriteFrame时，做多语言处理
                 let assetInfo = app.assetManager.getAssetInfoByPath(bundleResConfig);
                 if (assetInfo && assetInfo.ctor == SpriteFrame) {
-                    //存在多语言图片时，使用多语言图片
-                    let languagePath = bundleResConfig.path.replace(/(#\w+)?(\/spriteFrame)?$/, `#${fw.language.languageType}$2`);
+                    let languagePath = bundleResConfig.path.replace(/(#\w+)?(\/spriteFrame)?$/, `$2`);
                     if (app.assetManager.getAssetInfoByPath(languagePath, bundleResConfig.bundleName)) {
                         bundleResConfig.path = languagePath;
-                    } else {
-                        //没有对应语言时，使用原图
-                        languagePath = bundleResConfig.path.replace(/(#\w+)?(\/spriteFrame)?$/, `$2`);
-                        if (app.assetManager.getAssetInfoByPath(languagePath, bundleResConfig.bundleName)) {
-                            bundleResConfig.path = languagePath;
-                        }
                     }
                 }
+                console.log("load Res:  bunble:" +bundleResConfig.bundleName+" path:" + bundleResConfig.path)
                 let cache: T = bundle.get(bundleResConfig.path, type);
                 if (cache) {
                     resolve(cache);

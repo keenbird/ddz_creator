@@ -12,7 +12,6 @@ const config = {
         //可动态调用，无需声明
         //大厅
         main: <BundleConfigType>{},
-        login: <BundleConfigType>{},
         plaza: <BundleConfigType>{},
         update: <BundleConfigType>{},
         resources: <BundleConfigType>{},
@@ -37,8 +36,7 @@ const config = {
         //普通
         AB: <OneSceneConfig>{ bGame: true },
         //大厅
-        login: <OneSceneConfig>{ frameRate: 30, },
-        plaza: <OneSceneConfig>{ frameRate: 30, preloadList: sys.isBrowser ? [] : [`activity`, 'megaGift', 'shop'] },
+        plaza: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, preloadList: sys.isBrowser ? [] : ['activity',  'shop'] },
         update: <OneSceneConfig>{ frameRate: 30, },
         app: <OneSceneConfig>{ frameRate: 30, bSubPackage: false, },
     }

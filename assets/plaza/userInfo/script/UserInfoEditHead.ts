@@ -17,16 +17,7 @@ export class UserInfoEditHead extends FWDialogViewBase {
 	/**最小缩放尺寸 */
 	adaptMaxScale: number = 0
 	protected initView(): boolean | void {
-		//--多语言处理--began------------------------------------------
-		//文本
-		this.Items.Label_title.obtainComponent(fw.FWLanguage).bindLabel({
-			[fw.LanguageType.en]: `Upload Avatar`,
-			[fw.LanguageType.brasil]: `Carregar Avatar`,
-		}[fw.language.languageType]);
-		this.Items.Label_sure.obtainComponent(fw.FWLanguage).bindLabel(`Confirm`);
-		this.Items.Label_select.obtainComponent(fw.FWLanguage).bindLabel(`Select`);
-		//精灵
-		//--多语言处理--end--------------------------------------------
+		
 		//图片名称
 		let serverPicID = center.user.getActorMD5Face();
 		let picName = (`${serverPicID}`).match(/[\w\.]*$/)[0];

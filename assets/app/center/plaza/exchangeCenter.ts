@@ -168,56 +168,30 @@ export class exchangeCenter extends PlazeMainInetMsg {
 
     OnRecv_ExchangeTips(data: proto.plaza_exchange.exchange_tips_s) {
         let languageConfig: { [nID: number]: string };
-        if (fw.language.languageType == fw.LanguageType.en) {
-            languageConfig = {
-                [14]: `Withdrawal account UPI is empty`, //提现账户UPI为空
-                [15]: `Withdrawal is successful, under review`, //提现成功审核中
-                [16]: `Insufficient cash withdrawal`, //可提现金额不足
-                [17]: `You have no withdrawals this month, please withdraw again next month`, //超出当月可提现次数
-                [18]: `Mobile phone number is empty`, //手机号码为空
-                [19]: `Bank card number cannot be empty`, //银行卡号不能为空
-                [20]: `IFSC code cannot be empty`, //IFSC code 不能为空
-                [21]: `You need to play games to increase the amount you can withdraw`, //可提现金额需要的流水不足
-                [22]: `Please enter receiving account ID`, //转账玩家id为空
-                [23]: `Insufficient transferable amount`, //转账金额不足
-                [24]: `The number of transfers has been used up`, //转账次数已用完
-                [25]: `You need to play games to increase the amount you can withdraw`, //转账现金额需要的流水不足
-                [26]: `Please enter a valid account ID`, //对方授权不够
-                [28]: `Only VIP players can use this feature.`, //提现需要充值
-                [29]: `The withdrawal limit on the day has been reached, please try again tomorrow.`, //当天提现次数不足
-                [30]: `The withdrawal limit on the day has been reached, please try again tomorrow.`, //每天提现金额不足
-                [31]: `The name entered is invalid.`, //填写名字非法
-                [32]: `The entered mobile number is invalid.`, //填写手机号非法
-            }
-        } else {
-            languageConfig = {
-                [14]: `A conta de retirada UPI está vazia.`, //提现账户UPI为空
-                [15]: `A retirada foi realizada com sucesso e está em análise.`, //提现成功审核中
-                [16]: `Retirada de dinheiro insuficiente.`, //可提现金额不足
-                [17]: `You have no withdrawals this month, please withdraw again next month`, //超出当月可提现次数
-                [18]: `O número de telefone celular está vazio.`, //手机号码为空
-                [19]: `O número do cartão bancário não pode estar vazio.`, //银行卡号不能为空
-                [20]: `O código IFSC não pode estar vazio.`, //IFSC code 不能为空
-                [21]: `Você precisa jogar jogos para aumentar o valor que você pode sacar.`, //可提现金额需要的流水不足
-                [22]: `Por favor, insira o ID da conta de destino.`, //转账玩家id为空
-                [23]: `Quantidade transferível insuficiente.`, //转账金额不足
-                [24]: `O número de transferências foi esgotado.`, //转账次数已用完
-                [25]: `Você precisa jogar jogos para aumentar o valor que você pode sacar.`, //转账现金额需要的流水不足
-                [26]: `Por favor, insira um ID de conta válido.`, //对方授权不够
-                [28]: `Apenas jogadores VIP podem usar essa funcionalidade.`, //提现需要充值
-                [29]: `O limite de saque diário foi atingido. Por favor, tente novamente amanhã.`, //当天提现次数不足
-                [30]: `O limite de saque diário foi atingido. Por favor, tente novamente amanhã.`, //每天提现金额不足
-                [31]: `O nome inserido é inválido.`, //填写名字非法
-                [32]: `O número de celular inserido é inválido.`, //填写手机号非法
-            }
+        languageConfig = {
+            [14]: `Withdrawal account UPI is empty`, //提现账户UPI为空
+            [15]: `Withdrawal is successful, under review`, //提现成功审核中
+            [16]: `Insufficient cash withdrawal`, //可提现金额不足
+            [17]: `You have no withdrawals this month, please withdraw again next month`, //超出当月可提现次数
+            [18]: `Mobile phone number is empty`, //手机号码为空
+            [19]: `Bank card number cannot be empty`, //银行卡号不能为空
+            [20]: `IFSC code cannot be empty`, //IFSC code 不能为空
+            [21]: `You need to play games to increase the amount you can withdraw`, //可提现金额需要的流水不足
+            [22]: `Please enter receiving account ID`, //转账玩家id为空
+            [23]: `Insufficient transferable amount`, //转账金额不足
+            [24]: `The number of transfers has been used up`, //转账次数已用完
+            [25]: `You need to play games to increase the amount you can withdraw`, //转账现金额需要的流水不足
+            [26]: `Please enter a valid account ID`, //对方授权不够
+            [28]: `Only VIP players can use this feature.`, //提现需要充值
+            [29]: `The withdrawal limit on the day has been reached, please try again tomorrow.`, //当天提现次数不足
+            [30]: `The withdrawal limit on the day has been reached, please try again tomorrow.`, //每天提现金额不足
+            [31]: `The name entered is invalid.`, //填写名字非法
+            [32]: `The entered mobile number is invalid.`, //填写手机号非法
         }
 
         let tips = data.tips ?? "";
         if(tips == "") {
-            tips = languageConfig[data.tips_id] ?? `${({
-                [fw.LanguageType.en]: `Please contact customer service or try again later. `,
-                [fw.LanguageType.brasil]: `Contate o suporte ou tente novamente mais tarde. `,
-            })[fw.language.languageType]}${data.tips_id}`
+            tips = languageConfig[data.tips_id] ?? `${`Please contact customer service or try again later. `}${data.tips_id}`
         }
         app.popup.showToast(tips ?? "");
     }

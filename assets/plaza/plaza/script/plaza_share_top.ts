@@ -24,12 +24,7 @@ export class plaza_share_top extends (fw.FWComponent) {
 		});
 	}
 	protected initView(): boolean | void {
-		//--多语言处理--began------------------------------------------
-		//文本
-		//精灵
-		this.Items.Sprite_withdraw_txt.obtainComponent(fw.FWLanguage).bindSprite(`plaza_btn_withdraw_txt`);
-		this.Items.Node_more.Items.Sprite_icon_txt.obtainComponent(fw.FWLanguage).bindSprite(`plaza_more_txt`);
-		//--多语言处理--end--------------------------------------------
+	
 
 		//金额
 		this.updateGold();

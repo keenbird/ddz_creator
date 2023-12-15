@@ -27,11 +27,7 @@ export class chipMask_GameBase extends (fw.FWComponent) {
 		}
 	}
 	protected initView(): boolean | void {
-		//--多语言处理--began------------------------------------------
-		//文本
-		this.Items.RichText.obtainComponent(fw.FWLanguage).bindLabel(`ChipMaskRich`);
-		//精灵
-		//--多语言处理--end--------------------------------------------
+
 		this.updateView();
 	}
 	protected initBtns(): boolean | void {

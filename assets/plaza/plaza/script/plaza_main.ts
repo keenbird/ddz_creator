@@ -187,16 +187,7 @@ export class plaza_main extends (fw.FWComponent) {
 		center.giftBag.getMaxPaymentHis();
 	}
 	initLanguage() {
-		//--多语言处理--began------------------------------------------
-		//文本
-		this.Items.Node_email.Items.Label_bubble.obtainComponent(fw.FWLanguage).bindLabel(`New Message`);
-		//精灵
-		this.Items.Node_service.Items.Sprite_icon_txt.obtainComponent(fw.FWLanguage).bindSprite(`plaza_btn_service_txt`);
-		this.Items.Node_activity.Items.Sprite_icon_txt.obtainComponent(fw.FWLanguage).bindSprite(`plaza_btn_activity_txt`);
-		this.Items.Sprite_addCash_text.obtainComponent(fw.FWLanguage).bindSprite(`plaza_addCash_txt`);
-		this.Items.Sprite_share_text.obtainComponent(fw.FWLanguage).bindSprite(`plaza_btn_share_txt`);
-		this.Items.Node_freeCash.Items.Sprite_txt.obtainComponent(fw.FWLanguage).bindSprite(`plaza_btn_freeCash_txt`);
-		//--多语言处理--end--------------------------------------------
+		
 	}
 	/**更多（箭头） */
 	initArrowBtn() {

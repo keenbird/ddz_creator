@@ -955,10 +955,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                     fw.scene.changeScene(fw.SceneConfigs.plaza);
                 }
                 app.popup.showTip({
-                    text: {
-                        [fw.LanguageType.en]: `You have a game in progress, would you like to return to it?`,
-                        [fw.LanguageType.brasil]: `Você tem um jogo em andamento, gostaria de voltar para ele?`,
-                    }[fw.language.languageType],
+                    text: `You have a game in progress, would you like to return to it?`,
                     closeCallback: closeFunc,
                     btnList: [
                         {

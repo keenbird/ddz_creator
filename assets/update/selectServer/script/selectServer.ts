@@ -1,4 +1,4 @@
-import { _decorator, Label, v3, Sprite, color, UITransform, view, Node as ccNode, Event, BufferAsset, Asset, assetManager, Graphics, Vec2, Vec3, Color, size, tween, TweenAction, SetAction, delayTime, instantiate, Camera, SpriteFrame, RenderTexture } from 'cc';
+ import { _decorator, Label, v3, Sprite, color, UITransform, view, Node as ccNode, Event, BufferAsset, Asset, assetManager, Graphics, Vec2, Vec3, Color, size, tween, TweenAction, SetAction, delayTime, instantiate, Camera, SpriteFrame, RenderTexture } from 'cc';
 const { ccclass, executeInEditMode, property } = _decorator;
 import { EDITOR } from 'cc/env';
 

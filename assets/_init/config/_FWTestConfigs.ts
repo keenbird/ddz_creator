@@ -3,7 +3,7 @@ import './../__init'
 
 let testConfig = {
     /**选服开关 */
-    bSelectServer: true,
+    bSelectServer: false,
     /**锁定Win32 */
     bLockWin: false,
     /**显隐FPS等信息 */

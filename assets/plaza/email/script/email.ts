@@ -24,16 +24,7 @@ export class email extends FWDialogViewBase {
 		center.email.send_PLAZA_EMAIL_VIEW();
 	}
 	protected initView(): boolean | void {
-		//--多语言处理--began------------------------------------------
-		//文本
-		this.Items.Label_all.obtainComponent(fw.FWLanguage).bindCustom(``, () => {
-			this.Items.Label_all.string = {
-				[fw.LanguageType.en]: `Claim&Read All`,
-				[fw.LanguageType.brasil]: `Ler e resgatar tudo`,
-			}[fw.language.languageType];
-		});
-		//精灵
-		//--多语言处理--end--------------------------------------------
+
 		//调整标题
 		this.changeTitle({ title: `Email` });
 		//隐藏部分界面
@@ -139,18 +130,14 @@ export class email extends FWDialogViewBase {
 			this.Items.Sprite_select_state.angle = 90;
 			this.Items.Node_select_list.active = false;
 		});
-		let refer = {
-			[fw.LanguageType.en]: `Refer&Earn`,
-			[fw.LanguageType.brasil]: `Indique e Ganhe`,
-		}[fw.language.languageType];
+		let refer = `Refer&Earn`;
 		let classes = [
-			{ name: fw.language.get(`ALL`), nClassType: center.email.EmailClassType.All, },
-			{ name: fw.language.get(`Withdraw`), nClassType: center.email.EmailClassType.Withdraw, },
-			{ name: fw.language.get(`Recharge`), nClassType: center.email.EmailClassType.Recharge, },
-			{ name: fw.language.get(`Service`), nClassType: center.email.EmailClassType.Service, },
-			{ name: refer, nClassType: center.email.EmailClassType.Refer, },
-			{ name: fw.language.get(`Bonus`), nClassType: center.email.EmailClassType.Bonus, },
-			{ name: fw.language.get(`Other`), nClassType: center.email.EmailClassType.Other, },
+			`ALL`,
+			`Withdraw`,
+			`Recharge`,
+			`Service`,
+			`Bonus`,
+			`Other`,
 		];
 		let index = 0;
 		let childs = this.Items.Sprite_select_list.children;

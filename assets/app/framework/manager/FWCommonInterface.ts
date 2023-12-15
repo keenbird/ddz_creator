@@ -11,10 +11,7 @@ export class FWCommonInterface extends fw.FWComponent {
         if ((<any>this).nLastFeedbackTime) {
             let nDiffTime = 30 - (app.func.time() - (<any>this).nLastFeedbackTime);
             if (nDiffTime > 0) {
-                app.popup.showToast(({
-                    [fw.LanguageType.en]: `Feedback too frequently, try again in ${nDiffTime} seconds.`,
-                    [fw.LanguageType.brasil]: `Feedback com muita frequência, tente novamente em ${nDiffTime} segundos.`,
-                })[fw.language.languageType]);
+                app.popup.showToast(`Feedback too frequently, try again in ${nDiffTime} seconds.`);
                 return;
             }
         }

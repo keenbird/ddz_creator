@@ -102,20 +102,7 @@ export class LoginCenter extends LoginMainInetMsg {
         }
     }
 
-    // facebook 登录
-    loginFacebook(account, password, is_reg) {
-        fw.print("loginCenter:loginFacebook")
-        this.m_eLoginType = LOGINTYPE.FB
-        this.m_strLoginAccount = account
-        this.m_strLoginMd5Password = password
-        this.m_strLoginMachineName = app.native.device.getMachineName()
-        this.m_strLoginBuffHD = account
-        this.m_strLoginUUID = app.native.device.getUUID()
-        this.m_bReg = is_reg
-
-
-        this.loginToServer()
-    }
+  
 
     // 游客带账号登录，pc 测试用
     loginGuestLua(name, onlyoneKey, password, is_reg) {
@@ -155,6 +142,29 @@ export class LoginCenter extends LoginMainInetMsg {
         this.m_strLoginUUID = app.native.device.getUUID()
         this.m_bReg = is_reg
         this.loginToServer()
+    }
+
+    // 微信登录
+    loginWeChat(is_reg) {
+        fw.print("loginCenter:loginAccount")
+        this.m_eLoginType = LOGINTYPE.WEIXIN
+        this.m_strLoginAccount = szInfo
+        this.m_strLoginMd5Password = app.md5.hashStr(loginPwd)
+        this.m_strLoginMachineName = app.native.device.getMachineName()
+        this.m_strLoginBuffHD = app.native.device.getHDID()
+        this.m_strLoginUUID = app.native.device.getUUID()
+        this.m_bReg = is_reg
+        wx.login({
+            success (res) {
+                if (res.code) {
+                //发起网络请求
+                this.loginToServer()
+                } else {
+                console.log('登录失败！' + res.errMsg)
+                }
+            }
+            })
+        
     }
     //oyhp php游客登录
     visitorLogin(account: string) {
@@ -507,7 +517,14 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     selectServer(serverData: server_config) {
-        fw.scene.changeScene(fw.SceneConfigs.login);
+        
+        if (fw.DEBUG.bSelectServer) {
+            app.popup.showMain({
+                viewConfig: fw.BundleConfig.update.res["login/login_main"],
+            });
+        } else {
+            this.loginPlaza()
+        }
         // //保存配置
         // app.file.setStringForKey("LastSelectServer", JSON.stringify(serverData), { all: true });
         // //设置service配置
@@ -516,8 +533,24 @@ export class LoginCenter extends LoginMainInetMsg {
         // app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
         // //刷新大厅列表排序
         // center.roomList.loadRoomSortInfo();
-    }
 
+        
+    }
+    loginPlaza(){
+        //显示预加载界面
+        app.popup.showDialog({
+            viewConfig: fw.BundleConfig.resources.res[`ui/load/loadBar`],
+            data: {
+                list: {
+                    bundleConfig: fw.SceneConfigs.plaza,
+                    preloadList: ['activity', 'plaza', 'shop'],
+                },
+                callback: () => {
+                    fw.scene.changeScene(fw.SceneConfigs.plaza);
+                },
+            }
+        });
+    }
     changeToUpdate(result) {
         if (fw.DEBUG.bServerProxy) {
             let list: any[] = result.data.list;
@@ -612,10 +645,7 @@ export class LoginCenter extends LoginMainInetMsg {
 							center.login.loginPhone(response.account, response.password, response.is_reg == 1);
 						}
 					} else {
-						app.popup.showToast(response.info || ({
-							[fw.LanguageType.en]: `Login failed`,
-							[fw.LanguageType.brasil]: `Falha no login`,
-						})[fw.language.languageType]);
+						app.popup.showToast(response.info || `Login failed`);
 						app.event.dispatchEvent(EventParam.FWDispatchEventParam(EVENT_ID.EVENT_LOGIN_PHP_FAIL));
 					}
 				} else {

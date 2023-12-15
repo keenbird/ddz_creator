@@ -27,6 +27,7 @@ import { NativeAndroid } from './native/NativeAndroid';
 import { NativeWindows } from './native/NativeWindows';
 import { NativeWechat } from './native/NativeWechat';
 import { FWSceneBase } from './view/FWSceneBase';
+import { servers_default } from '../../app/config/HttpConfig';
 
 @ccclass('Application')
 export class Application extends FWSceneBase {
@@ -215,11 +216,19 @@ export class Application extends FWSceneBase {
         return am;
     }
     /**去往更新场景 */
-    gotoUpdateScene() {
-        fw.scene.changePlazaUpdate();
+    gotoUpdateScene() { 
+        
+        if (fw.DEBUG.bSelectServer) {
+            app.popup.showMain({
+                viewConfig: fw.BundleConfig.update.res["selectServer/selectServer"]
+            });
+        } else {
+            center.login.selectServer(servers_default);
+        }
         //关闭闪屏界面
-        this.native.device.hideSplashView();
+        // this.native.device.hideSplashView();
     }
+    
     /**预加载部分资源 */
     preloadRes() {
         let nNowCount = 0;

@@ -1619,7 +1619,9 @@ declare namespace wx {
     /**
      * 调用接口获取登录凭证（code）进而换取用户登录态信息，包括用户的唯一标识（openid） 及本次登录的 会话密钥（session_key）等。用户数据的加解密通讯需要依赖会话密钥完成。
      */
-    function login(object: { timeout?: number, success?: (res: { code: string }) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
+    function login(object: { timeout?: number, success?: (res: {
+        errMsg: string; code: string 
+}) => void, fail?: (res?: any) => void, complete?: (res?: any) => void }): void;
 
     /**
      * 只有开放数据域能调用，获取主域和开放数据域共享的 sharedCanvas

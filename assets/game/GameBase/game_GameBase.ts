@@ -49,10 +49,7 @@ export class game_GameBase extends FWSceneBase {
         this.chatConfig ??= {
             text: [
                 {
-                    content: ({
-                        [fw.LanguageType.en]: `abc`,
-                        [fw.LanguageType.brasil]: `abc`,
-                    })[fw.language.languageType],
+                    content: `abc`,
                 },
             ],
             emoji: [

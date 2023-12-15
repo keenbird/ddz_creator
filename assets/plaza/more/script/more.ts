@@ -104,33 +104,6 @@ export class more extends FWDialogViewBase {
 	}
 	/**多语言按钮 */
 	initLanguageBtns() {
-		//菜单
-		let func = (data: LanguageMenuBtnParam) => {
-			fw.language.init(data.nLanguageType);
-			this.initMenuBtns();
-		}
-		let btns: LanguageMenuBtnParam[] = [
-			{
-				nLanguageType: fw.LanguageType.en,
-				node: this.Items.Node_english,
-				callback: func
-			},
-			{
-				nLanguageType: fw.LanguageType.brasil,
-				node: this.Items.Node_brasil,
-				callback: func
-			},
-		]
-		let defaultIndex = 0;
-		app.func.positiveTraversal(btns, (element, index) => {
-			if (element.nLanguageType == fw.language.languageType) {
-				defaultIndex = index;
-				return true;
-			}
-		});
-		app.func.createMenu<LanguageMenuBtnParam>({
-			btns,
-			defaultIndex,
-		});
+		
 	}
 }

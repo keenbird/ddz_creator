@@ -2,7 +2,7 @@
 import { EditBox, Label, Layout, RichText, _decorator, tween } from 'cc';
 const { ccclass } = _decorator;
 
-import { LoginNotice } from './LoginNotice';
+// import { LoginNotice } from './LoginNotice';
 import { EVENT_ID } from '../../../app/config/EventConfig';
 import { httpConfig } from '../../../app/config/HttpConfig';
 import { DF_SYMBOL, LOGINTYPE, PATHS } from '../../../app/config/ConstantConfig';
@@ -117,43 +117,7 @@ export class login_main extends (fw.FWComponent) {
 		});
 	}
 	protected initView(): boolean | void {
-		//--多语言处理--began------------------------------------------
-		//文本
-		this.Items.Text_xieyi.obtainComponent(fw.FWLanguage).bindCustom(``, () => {
-			this.Items.Text_xieyi.getComponent(RichText).string = {
-				[fw.LanguageType.en]: `<color=#C4C4C4>By logging in You Accept That You Art </color> <color=#DDAD15>18+</color> <color=#C4C4C4> and Agree to Our </color><color=#DDAD15 click="openTHC"><u>*T&C</u></color> <color=#C4C4C4> and </color><color=#DDAD15 click="openPolicy"><u>Privacy Policy</u></color>`,
-				[fw.LanguageType.brasil]: `<color=#C4C4C4>Ao logar, você confirma ter mais de </color> <color=#DDAD15>18</color> <color=#C4C4C4> anos e concorda com o nosso </color><color=#DDAD15 click="openTHC"><u>*T&C</u></color> <color=#C4C4C4> e nossa </color><color=#DDAD15 click="openPolicy"><u>Política de Privacidade</u></color>`,
-			}[fw.language.languageType];
-		});
-		this.Items.Text_get_title.obtainComponent(fw.FWLanguage).bindCustom(`Get`, (str) => {
-			this.Items.Text_get_title.string = str;
-			this.Items.Text_get_title.getComponent(Label).updateRenderData(true);
-			this.Items.Sprite_get_bg.getComponent(Layout).updateLayout(true);
-		});
-		this.Items.Text_youke.obtainComponent(fw.FWLanguage).bindCustom(``, () => {
-			this.Items.Text_youke.string = {
-				[fw.LanguageType.en]: `Play as Guest`,
-				[fw.LanguageType.brasil]: `Login de visitante`,
-			}[fw.language.languageType];
-			this.Items.Text_youke.getComponent(Label).updateRenderData(true);
-			this.Items.Node_youke_layout.getComponent(Layout).updateLayout(true);
-		});
-		this.Items.Sprite_num.Items.PLACEHOLDER_LABEL.obtainComponent(fw.FWLanguage).bindCustom(``, () => {
-			this.Items.Sprite_num.Items.PLACEHOLDER_LABEL.string = {
-				[fw.LanguageType.en]: `Enter Phone number`,
-				[fw.LanguageType.brasil]: `Insira o nº de celular`,
-			}[fw.language.languageType];
-		});
-		this.Items.Node_input_OTP.Items.PLACEHOLDER_LABEL.obtainComponent(fw.FWLanguage).bindCustom(``, () => {
-			this.Items.Node_input_OTP.Items.PLACEHOLDER_LABEL.string = {
-				[fw.LanguageType.en]: `Verification code`,
-				[fw.LanguageType.brasil]: `Código de verificação`,
-			}[fw.language.languageType];
-		});
-		this.Items.Label_login.obtainComponent(fw.FWLanguage).bindLabel("Login");
-		this.Items.Label_getOTP.obtainComponent(fw.FWLanguage).bindLabel("Send");
-		//精灵
-		//--多语言处理--end--------------------------------------------
+		
 		//添加测试登录界面
 		if (fw.DEBUG.bSelectServer || app.func.isWin32()) {
 			this.addView({
@@ -251,16 +215,16 @@ export class login_main extends (fw.FWComponent) {
 	}
 
 	public onViewEnter(): void {
-		let bAutoLogin = (fw.scene.getIntentData() as any).bAutoLogin
-		if(!app.func.isBrowser() && bAutoLogin) {
-			this.autoLogin()
-		}
+		// let bAutoLogin = (fw.scene.getIntentData() as any).bAutoLogin
+		// if(!app.func.isBrowser() && bAutoLogin) {
+		// 	this.autoLogin()
+		// }
 	}
 
 	/**登录公告 */
 	updateLoginNoticeView(data: any) {
 		this.Items.login_notice.active = true;
-		this.Items.login_notice.obtainComponent(LoginNotice).updateNoticeView(data);
+		// this.Items.login_notice.obtainComponent(LoginNotice).updateNoticeView(data);
 	}
 	/**登录过程 */
 	loginProcess(title: string = "", nProgress?: number) {
