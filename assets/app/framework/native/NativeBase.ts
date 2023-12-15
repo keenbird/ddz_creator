@@ -2,10 +2,7 @@ import { _decorator, native } from 'cc';
 const { ccclass } = _decorator;
 
 import { DeviceBase } from './DeviceBase';
-import { BuglyBase } from './module/BuglyBase';
-import { AdjustBase } from './module/AdjustBase';
-import { FacebookBase } from './module/FacebookBase';
-import { LeoBase } from './module/LeoBase';
+
 import { MODULE_NAME } from '../../config/ModuleConfig';
 
 @ccclass('NativeBase')
@@ -51,14 +48,7 @@ export abstract class NativeBase extends (fw.FWComponent) {
     }
     /**device */
     abstract get device(): DeviceBase;
-    /**adjust */
-    abstract get adjust(): AdjustBase;
-    /**bugly */
-    abstract get bugly(): BuglyBase;
-    /**facebook */
-    abstract get facebook(): FacebookBase;
-    /**leo */
-    abstract get leo(): LeoBase;
+
 }
 
 /**类型声明调整 */

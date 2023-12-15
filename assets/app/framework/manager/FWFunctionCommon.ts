@@ -87,6 +87,37 @@ export class FWFunctionCommon extends (fw.FWComponent) {
             return this.getRunningPlatform() === sys.Platform.WECHAT_GAME;
         }
     }
+    /**weChat环境下细分IOS和安卓 */
+    public  getWechatPlatform() : string {
+        wx.getSystemInfo({
+            success(res) {
+                return res.platform
+            },
+            fail: function (err?: any): void {
+                throw new Error("Function not implemented.");
+            },
+            complete: function (res?: any): void {
+                throw new Error("Function not implemented.");
+            }
+        })
+        return ""
+    }
+
+    // public getWechatPlatform(): Promise<string> {
+    //     return new Promise((resolve, reject) => {
+    //       wx.getSystemInfo({
+    //           success(res) {
+    //               resolve(res.platform);
+    //           },
+    //           fail() {
+    //               reject(new Error("Failed to get system info"));
+    //           },
+    //           complete: function (res?: any): void {
+    //               throw new Error("Function not implemented.");
+    //           }
+    //       });
+    //     });
+    //   }
     /**
      * @deprecated
      * 后续会删除，请改用fw.isValid

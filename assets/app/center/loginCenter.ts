@@ -180,10 +180,10 @@ export class LoginCenter extends LoginMainInetMsg {
                 } else if (data.info) {
                     app.popup.showToast({ text: data.info })
                 } else {
-                    app.popup.showTip({ text: fw.language.get("data error, please login again") })
+                    app.popup.showTip({ text: "data error, please login again" })
                 }
             } else {
-                app.popup.showTip({ text: fw.language.get("Something went wrong with login, please login again") })
+                app.popup.showTip({ text: "Something went wrong with login, please login again" })
             }
         }
         app.http.post({
@@ -258,9 +258,9 @@ export class LoginCenter extends LoginMainInetMsg {
         let tips = dict.tips
         let msg = tips == "" ? ERRID_MSG.get(dict.type) : tips;
         if (msg) {
-            app.popup.showToast(fw.language.get(msg))
+            app.popup.showToast(msg)
         } else {
-            app.popup.showToast(fw.language.get("UNKOWN ERROR"))
+            app.popup.showToast("UNKOWN ERROR")
         }
     }
     // 登录结果

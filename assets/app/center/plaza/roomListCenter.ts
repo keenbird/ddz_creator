@@ -554,33 +554,33 @@ export class RoomListCenter extends PlazeMainInetMsg {
 
     @fw.Decorator.TryCatch(false)
     loadDownloadRoomInfo() {
-        if (app.func.isBrowser()) {
-            let roomInfoList = JSON.safeParse(app.file.getStringForKey(this.roomInfoFile, "", { all: true }))
-            if (roomInfoList) {
-                return this.safeUpdateRoomInfoByPhp(roomInfoList)
-            }
-            return false
-        }
-        let roomInfoList = JSON.safeParse(app.file.getStringFromFile({ finalPath: this.roomInfoFile }))
-        if (roomInfoList) {
-            return this.safeUpdateRoomInfoByPhp(roomInfoList)
-        }
+        // if (app.func.isBrowser()) {
+        //     let roomInfoList = JSON.safeParse(app.file.getStringForKey(this.roomInfoFile, "", { all: true }))
+        //     if (roomInfoList) {
+        //         return this.safeUpdateRoomInfoByPhp(roomInfoList)
+        //     }
+        //     return false
+        // }
+        // let roomInfoList = JSON.safeParse(app.file.getStringFromFile({ finalPath: this.roomInfoFile }))
+        // if (roomInfoList) {
+        //     return this.safeUpdateRoomInfoByPhp(roomInfoList)
+        // }
         return false
     }
 
     loadDefaultRoomInfo() {
         //调整本地project的下载地址
-        let resConfig = fw.BundleConfig.resources.res["tableinfo"];
-        this.loadBundleRes(resConfig,(res: JsonAsset) => {
-            try {
-                let roomInfoList = res.json
-                if (roomInfoList) {
-                    return this.updateRoomInfoByPhp(roomInfoList)
-                }
-            } catch (error) {
-                fw.printError(error)
-            }
-        })
+        // let resConfig = fw.BundleConfig.resources.res["tableinfo"];
+        // this.loadBundleRes(resConfig,(res: JsonAsset) => {
+        //     try {
+        //         // let roomInfoList = res.json
+        //         // if (roomInfoList) {
+        //         //     return this.updateRoomInfoByPhp(roomInfoList)
+        //         // }
+        //     } catch (error) {
+        //         fw.printError(error)
+        //     }
+        // })
     }
 
     safeUpdateRoomInfoByPhp(data) {

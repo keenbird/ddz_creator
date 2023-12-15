@@ -65,7 +65,7 @@ export class GatewayCenter extends GatewayMainInetMsg {
         if (msg) {
             app.popup.showToast(msg)
         } else {
-            app.popup.showToast(fw.language.get("UNKOWN ERROR"))
+            app.popup.showToast("UNKOWN ERROR")
         }
     }
     /**错误 */
