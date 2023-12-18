@@ -520,7 +520,7 @@ export class LoginCenter extends LoginMainInetMsg {
         
         if (fw.DEBUG.bSelectServer) {
             app.popup.showMain({
-                viewConfig: fw.BundleConfig.update.res["login/login_main"],
+                viewConfig: fw.BundleConfig.plaza.res["login/login_main"],
             });
         } else {
             this.loginPlaza()
@@ -538,18 +538,19 @@ export class LoginCenter extends LoginMainInetMsg {
     }
     loginPlaza(){
         //显示预加载界面
-        app.popup.showDialog({
-            viewConfig: fw.BundleConfig.resources.res[`ui/load/loadBar`],
-            data: {
-                list: {
-                    bundleConfig: fw.SceneConfigs.plaza,
-                    preloadList: ['activity', 'plaza', 'shop'],
-                },
-                callback: () => {
-                    fw.scene.changeScene(fw.SceneConfigs.plaza);
-                },
-            }
-        });
+        fw.scene.changeScene(fw.SceneConfigs.plaza);
+        // app.popup.showDialog({
+        //     viewConfig: fw.BundleConfig.resources.res[`ui/load/loadBar`],
+        //     data: {
+        //         list: {
+        //             bundleConfig: fw.SceneConfigs.plaza,
+        //             preloadList: ['activity', 'plaza', 'shop'],
+        //         },
+        //         callback: () => {
+        //             fw.scene.changeScene(fw.SceneConfigs.plaza);
+        //         },
+        //     }
+        // });
     }
     changeToUpdate(result) {
         if (fw.DEBUG.bServerProxy) {
@@ -566,12 +567,12 @@ export class LoginCenter extends LoginMainInetMsg {
         }
         //检测更新
         app.popup.showLoading();
-        app.popup.showMain({
-            viewConfig: fw.BundleConfig.update.res["update/update_main"],
-            callback: (view: ccNode) => {
-                app.popup.closeLoading();
-            }
-        });
+        // app.popup.showMain({
+        //     viewConfig: fw.BundleConfig.update.res["update/update_main"],
+        //     callback: (view: ccNode) => {
+        //         app.popup.closeLoading();
+        //     }
+        // });
     }
 
 

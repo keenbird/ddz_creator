@@ -5,7 +5,7 @@ const { ccclass } = _decorator;
 import { httpConfig } from '../../config/HttpConfig';
 import { GameData } from '../../../_init/config/_FWGameConfigs';
 import { _FWHotUpdateManager, _UpdateGame } from '../../../_init/hotupdate/_FWHotUpdateManager';
-import { IEndUpdateCallbackData } from '../../../update/update';
+// import { IEndUpdateCallbackData } from '../../../update/update';
 
 @ccclass('FWGameManager')
 export class FWGameManager extends (fw.FWComponent) {
@@ -65,36 +65,20 @@ export class FWGameManager extends (fw.FWComponent) {
                 callback: () => {
                     //检测更新
                     app.popup.showLoading();
-                    app.popup.showMain({
-                        viewConfig: fw.BundleConfig.update.res["update/update_game"],
-                        callback: (view: ccNode) => {
-                            app.popup.closeLoading();
-                            view.getComponent(_UpdateGame)
-                                .startUpdate(needUpdateHotUpdateManagerQueue)
-                                .then((callbackData: IEndUpdateCallbackData) => {
-                                    if (callbackData.isCancelUpdate) {
-                                        fw.scene.changeScene(fw.SceneConfigs.plaza);
-                                    } else {
-                                        needCheckGameQueue.forEach(v => {
-                                            let bundleName = v.bundleConfig.bundleName;
-                                            //卸载此前加载的子包
-                                            app.assetManager.unloadBundle(bundleName);
-                                        });
-                                        //删除路径缓存
-                                        app.file.purgeCachedEntries();
-                                        if (data.callback) {
-                                            //恢复关闭的loading
-                                            app.popup.showLoading();
-                                            data.callback(true);
-                                        } else {
-                                            fw.scene.changeScene(fw.SceneConfigs.plaza);
-                                        }
-                                    }
-                                }).catch(() => {
-                                    fw.scene.changeScene(fw.SceneConfigs.plaza);
-                                });
-                        }
+                    needCheckGameQueue.forEach(v => {
+                        let bundleName = v.bundleConfig.bundleName;
+                        //卸载此前加载的子包
+                        app.assetManager.unloadBundle(bundleName);
                     });
+                    //删除路径缓存
+                    app.file.purgeCachedEntries();
+                    if (data.callback) {
+                        //恢复关闭的loading
+                        app.popup.showLoading();
+                        data.callback(true);
+                    } else {
+                        fw.scene.changeScene(fw.SceneConfigs.plaza);
+                    }
                 }
             });
         } else {

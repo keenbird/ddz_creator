@@ -232,7 +232,7 @@ class _FWSceneManager extends (fw.FWClass) {
         //     //调整主界面
         //     if (fw.DEBUG.bSelectServer) {
         //         app.popup.showMain({
-        //             viewConfig: fw.BundleConfig.update.res["selectServer/selectServer"]
+        //             viewConfig: fw.BundleConfig.plaza.res["selectServer/selectServer"]
         //         });
         //     } else {
         //         center.login.selectServer(servers_default);

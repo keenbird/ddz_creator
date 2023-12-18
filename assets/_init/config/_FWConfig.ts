@@ -13,7 +13,6 @@ const config = {
         //大厅
         main: <BundleConfigType>{},
         plaza: <BundleConfigType>{},
-        update: <BundleConfigType>{},
         resources: <BundleConfigType>{},
     },
     /**作为游戏所需的配置，gameId为后台子集分类值，客户端自定义的版本号要从10000起步，因为后台有业务逻辑 */
