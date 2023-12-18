@@ -208,9 +208,10 @@ class _FWSceneManager extends (fw.FWClass) {
             });
         }
         if (this.sceneConfig.preloadList) {
-            //显示预加载界面
+            var dialogName = (app.runtime.lastSceneType == "" && sceneConfig.sceneName == "plaza" ) ? "ui/load/loadBar" : "ui/load/load"
+            //显示加载进度条界面
             app.popup.showDialog({
-                viewConfig: fw.BundleConfig.resources.res[`ui/load/load`],
+                viewConfig: fw.BundleConfig.resources.res[dialogName],
                 data: {
                     list: {
                         bundleConfig: this.sceneConfig.bundleConfig,
@@ -219,6 +220,7 @@ class _FWSceneManager extends (fw.FWClass) {
                     callback: toDo,
                 }
             });
+         
         } else {
             toDo();
         }
@@ -232,7 +234,7 @@ class _FWSceneManager extends (fw.FWClass) {
         //     //调整主界面
         //     if (fw.DEBUG.bSelectServer) {
         //         app.popup.showMain({
-        //             viewConfig: fw.BundleConfig.plaza.res["selectServer/selectServer"]
+        //             viewConfig: fw.BundleConfig.resources.res["selectServer/selectServer"]
         //         });
         //     } else {
         //         center.login.selectServer(servers_default);

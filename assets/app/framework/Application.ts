@@ -219,8 +219,8 @@ export class Application extends FWSceneBase {
     gotoUpdateScene() { 
         
         if (fw.DEBUG.bSelectServer) {
-            app.popup.showMain({
-                viewConfig: fw.BundleConfig.plaza.res["selectServer/selectServer"]
+            app.popup.showDialog({
+                viewConfig: fw.BundleConfig.resources.res["selectServer/selectServer"]
             });
         } else {
             center.login.selectServer(servers_default);
