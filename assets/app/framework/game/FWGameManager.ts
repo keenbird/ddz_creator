@@ -173,9 +173,9 @@ export class FWGameManager extends (fw.FWComponent) {
         //显示加载中
         app.popup.showLoading();
         //先检测游戏版本
-        this.checkGameUpdate({
-            gameConfig: this.gameConfig,
-            callback: (isUpdate: boolean) => {
+        // this.checkGameUpdate({
+        //     gameConfig: this.gameConfig,
+        //     callback: (isUpdate: boolean) => {
                 this.checkAndLoadGameBundles({
                     gameConfig: this.gameConfig,
                     callback: () => {
@@ -196,14 +196,14 @@ export class FWGameManager extends (fw.FWComponent) {
                         }
                     }
                 });
-            }
-        }).catch((error) => {
-            //关闭加载中
-            app.popup.closeLoading();
-            app.popup.showTip({
-                text: fw.getErroMessage(error)
-            });
-        });
+    //         }
+    //     }).catch((error) => {
+    //         //关闭加载中
+    //         app.popup.closeLoading();
+    //         app.popup.showTip({
+    //             text: fw.getErroMessage(error)
+    //         });
+    //     });
     }
     /**清理资源缓存 */
     clearSearchResCache() {
