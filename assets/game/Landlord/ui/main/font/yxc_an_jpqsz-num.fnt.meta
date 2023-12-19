@@ -1,0 +1,88 @@
+{
+  "ver": "1.0.6",
+  "importer": "bitmap-font",
+  "imported": true,
+  "uuid": "5c600511-f5b6-4c06-9a95-fdf48eb07ddd",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "_fntConfig": {
+      "commonHeight": 35,
+      "fontSize": 32,
+      "atlasName": "yxc_an_jpqsz-num.png",
+      "fontDefDictionary": {
+        "9": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 8
+        },
+        "32": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 1
+        },
+        "49": {
+          "rect": {
+            "x": 21,
+            "y": 70,
+            "width": 12,
+            "height": 33
+          },
+          "xOffset": 0,
+          "yOffset": 2,
+          "xAdvance": 12
+        },
+        "50": {
+          "rect": {
+            "x": 0,
+            "y": 35,
+            "width": 21,
+            "height": 34
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 21
+        },
+        "51": {
+          "rect": {
+            "x": 0,
+            "y": 70,
+            "width": 20,
+            "height": 34
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 20
+        },
+        "52": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 24,
+            "height": 34
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 24
+        }
+      },
+      "kerningDict": {}
+    },
+    "fontSize": 32,
+    "textureUuid": "d93454a6-011a-4dc3-bece-1880245d380d"
+  }
+}

@@ -195,27 +195,28 @@ export class giftBagCenter extends PlazeMainInetMsg {
                 user_id: center.user.getUserID(),
                 timestamp: app.func.time(),
             }
-            params.sign = app.http.getSign(params)
-            app.http.post({
-                url: httpConfig.path_pay + "User/getUserMaxPayment",
-                params: params,
-                callback: (bSuccess, response) => {
-                    if (bSuccess) {
-                        if (1 == response.status) {
-                            let maxPaymentHis = response.data.maxpay
-                            if (maxPaymentHis < 0 ) {
-                                maxPaymentHis = 0
-                            }
-                            resolve(maxPaymentHis);
-                        } else {
-                            reject(new Error(`getMaxPaymentHis failed status:${response.status}!`));
-                        }
-                    } else {
-                        reject(new Error("getMaxPaymentHis failed to pull PHP configuration!"));
-                        fw.print("getMaxPaymentHis failed to pull PHP configuration!");
-                    }
-                }
-            });
+            resolve(0);
+            // params.sign = app.http.getSign(params)
+            // app.http.post({
+            //     url: httpConfig.path_pay + "User/getUserMaxPayment",
+            //     params: params,
+            //     callback: (bSuccess, response) => {
+            //         if (bSuccess) {
+            //             if (1 == response.status) {
+            //                 let maxPaymentHis = response.data.maxpay
+            //                 if (maxPaymentHis < 0 ) {
+            //                     maxPaymentHis = 0
+            //                 }
+            //                 resolve(maxPaymentHis);
+            //             } else {
+            //                 reject(new Error(`getMaxPaymentHis failed status:${response.status}!`));
+            //             }
+            //         } else {
+            //             reject(new Error("getMaxPaymentHis failed to pull PHP configuration!"));
+            //             fw.print("getMaxPaymentHis failed to pull PHP configuration!");
+            //         }
+            //     }
+            // });
         })
     }
 }

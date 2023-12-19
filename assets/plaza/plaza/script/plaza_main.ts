@@ -42,12 +42,12 @@ export class plaza_main extends (fw.FWComponent) {
 			fw.scene.changeScene(fw.SceneConfigs.login);
 		});
 		this.Items.Button_test_002.onClickAndScale(() => {
-			app.gameManager.gotoGame(`AB`, {
+			app.gameManager.gotoGame(`Landlord`, {
                 nServerID: 0,
             });
-			fw.scene.changeScene(fw.SceneConfigs.AB);
+			fw.scene.changeScene(fw.SceneConfigs.Landlord);
 			app.popup.showMain({
-				viewConfig: fw.BundleConfig.AB.res[`ui/main/main`],
+				viewConfig: fw.BundleConfig.Landlord.res[`ui/main/main`],
 			});
 		});
 		//正常逻辑

@@ -23,7 +23,7 @@ const config = {
         /**AB */
         AB: <OneGameConfig>{ gameId: 1, relyGame: 10000 },
         /**普通 end------------------------------------------------------------- */
-
+        Landlord: <OneGameConfig>{ gameId: 2, relyGame: 10000 },
         /**基础 began------------------------------------------------------------- */
         /**游戏基础 */
         GameBase: <OneGameConfig>{ gameId: 10000, },
@@ -34,9 +34,9 @@ const config = {
     scene: {
         //普通
         AB: <OneSceneConfig>{ bGame: true },
+        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true},
         //大厅
         plaza: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, preloadList: sys.isBrowser ? [] : ['activity',  'shop'] },
-        update: <OneSceneConfig>{ frameRate: 30, },
         app: <OneSceneConfig>{ frameRate: 30, bSubPackage: false, },
     }
 }

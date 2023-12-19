@@ -1,0 +1,155 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "3ad89": {
+      "importer": "sprite-frame",
+      "uuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3@3ad89",
+      "displayName": "",
+      "id": "3ad89",
+      "name": "2022_baojing2_00000",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 78,
+        "trimY": 154,
+        "width": 72,
+        "height": 96,
+        "rawWidth": 80,
+        "rawHeight": 100,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "26f52abe-3a9d-4131-9863-2e09b1f7dc7b@6c48a",
+        "atlasUuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f38dc": {
+      "importer": "sprite-frame",
+      "uuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3@f38dc",
+      "displayName": "",
+      "id": "f38dc",
+      "name": "2022_baojing_00000",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": true,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 150,
+        "height": 180,
+        "rawWidth": 150,
+        "rawHeight": 180,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "26f52abe-3a9d-4131-9863-2e09b1f7dc7b@6c48a",
+        "atlasUuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "c6b5d": {
+      "importer": "sprite-frame",
+      "uuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3@c6b5d",
+      "displayName": "",
+      "id": "c6b5d",
+      "name": "DDZ_dizhupai_paibei",
+      "userData": {
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 154,
+        "width": 74,
+        "height": 96,
+        "rawWidth": 74,
+        "rawHeight": 96,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "26f52abe-3a9d-4131-9863-2e09b1f7dc7b@6c48a",
+        "atlasUuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "2022_baojingqi.png",
+    "format": 2,
+    "uuid": "9730d441-e7f2-4e94-bfa2-d654048f26c3",
+    "textureUuid": "26f52abe-3a9d-4131-9863-2e09b1f7dc7b@6c48a"
+  }
+}
