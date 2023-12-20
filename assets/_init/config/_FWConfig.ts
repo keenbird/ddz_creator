@@ -34,7 +34,7 @@ const config = {
     scene: {
         //普通
         AB: <OneSceneConfig>{ bGame: true },
-        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true},
+        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true,preloadList:[]},
         //大厅
         plaza: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, preloadList: sys.isBrowser ? [] : ['activity',  'shop'] },
         app: <OneSceneConfig>{ frameRate: 30, bSubPackage: false, },

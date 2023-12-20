@@ -41,14 +41,19 @@ export class plaza_main extends (fw.FWComponent) {
 		this.Items.Button_test_001.onClickAndScale(() => {
 			fw.scene.changeScene(fw.SceneConfigs.login);
 		});
+		var intentData: IntentParam = {}
 		this.Items.Button_test_002.onClickAndScale(() => {
 			app.gameManager.gotoGame(`Landlord`, {
                 nServerID: 0,
             });
-			fw.scene.changeScene(fw.SceneConfigs.Landlord);
-			app.popup.showMain({
-				viewConfig: fw.BundleConfig.Landlord.res[`ui/main/main`],
-			});
+			intentData.bCleanAllView = true
+			intentData.callback = (err, scene) => {
+				app.popup.showMain({
+					viewConfig: fw.BundleConfig.Landlord.res[`ui/main/main`],
+				});
+			}
+			fw.scene.changeScene(fw.SceneConfigs.Landlord,intentData);
+			
 		});
 		//正常逻辑
 		// super.doLifeFunc();
