@@ -1,0 +1,155 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "6bc77": {
+      "importer": "sprite-frame",
+      "uuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d@6bc77",
+      "displayName": "",
+      "id": "6bc77",
+      "name": "ct1_2_00000",
+      "userData": {
+        "atlasUuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 862,
+        "height": 560,
+        "rawWidth": 862,
+        "rawHeight": 560,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "138e0aac-bfc1-4601-a53a-ea0c6ae8babb@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "b0ed7": {
+      "importer": "sprite-frame",
+      "uuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d@b0ed7",
+      "displayName": "",
+      "id": "b0ed7",
+      "name": "ct1_3_00000",
+      "userData": {
+        "atlasUuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 564,
+        "width": 650,
+        "height": 318,
+        "rawWidth": 700,
+        "rawHeight": 400,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "138e0aac-bfc1-4601-a53a-ea0c6ae8babb@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "3a484": {
+      "importer": "sprite-frame",
+      "uuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d@3a484",
+      "displayName": "",
+      "id": "3a484",
+      "name": "light_11_00000",
+      "userData": {
+        "atlasUuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 654,
+        "trimY": 564,
+        "width": 232,
+        "height": 232,
+        "rawWidth": 232,
+        "rawHeight": 232,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "138e0aac-bfc1-4601-a53a-ea0c6ae8babb@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "2022cuntian_guang.png",
+    "format": 2,
+    "textureUuid": "138e0aac-bfc1-4601-a53a-ea0c6ae8babb@6c48a",
+    "uuid": "2f5915e8-e794-4a71-a140-1dbdec7be20d"
+  }
+}

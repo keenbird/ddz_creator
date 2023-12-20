@@ -1,0 +1,247 @@
+{
+  "ver": "1.0.8",
+  "importer": "sprite-atlas",
+  "imported": true,
+  "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {
+    "376bd": {
+      "importer": "sprite-frame",
+      "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034@376bd",
+      "displayName": "",
+      "id": "376bd",
+      "name": "2022feiji_1",
+      "userData": {
+        "atlasUuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": -1,
+        "trimX": 538,
+        "trimY": 556,
+        "width": 1144,
+        "height": 567,
+        "rawWidth": 1144,
+        "rawHeight": 569,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "43fd1": {
+      "importer": "sprite-frame",
+      "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034@43fd1",
+      "displayName": "",
+      "id": "43fd1",
+      "name": "2022feiji_2",
+      "userData": {
+        "atlasUuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": true,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 1684,
+        "trimY": 556,
+        "width": 248,
+        "height": 250,
+        "rawWidth": 248,
+        "rawHeight": 250,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "01f30": {
+      "importer": "sprite-frame",
+      "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034@01f30",
+      "displayName": "",
+      "id": "01f30",
+      "name": "2022feiji_3",
+      "userData": {
+        "atlasUuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": true,
+        "offsetX": -2,
+        "offsetY": 0,
+        "trimX": 2,
+        "trimY": 2,
+        "width": 1233,
+        "height": 534,
+        "rawWidth": 1239,
+        "rawHeight": 534,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "19aea": {
+      "importer": "sprite-frame",
+      "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034@19aea",
+      "displayName": "",
+      "id": "19aea",
+      "name": "2022feiji_5",
+      "userData": {
+        "atlasUuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 538,
+        "trimY": 1125,
+        "width": 174,
+        "height": 90,
+        "rawWidth": 174,
+        "rawHeight": 90,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "4b62d": {
+      "importer": "sprite-frame",
+      "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034@4b62d",
+      "displayName": "",
+      "id": "4b62d",
+      "name": "2022feiji_8",
+      "userData": {
+        "atlasUuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034",
+        "trimType": "auto",
+        "trimThreshold": 1,
+        "rotated": false,
+        "offsetX": 0,
+        "offsetY": 0,
+        "trimX": 538,
+        "trimY": 2,
+        "width": 1439,
+        "height": 552,
+        "rawWidth": 1439,
+        "rawHeight": 552,
+        "borderTop": 0,
+        "borderBottom": 0,
+        "borderLeft": 0,
+        "borderRight": 0,
+        "packable": true,
+        "pixelsToUnit": 100,
+        "pivotX": 0.5,
+        "pivotY": 0.5,
+        "meshType": 0,
+        "vertices": {
+          "rawPosition": [],
+          "indexes": [],
+          "uv": [],
+          "nuv": [],
+          "minPos": [],
+          "maxPos": []
+        },
+        "isUuid": true,
+        "imageUuidOrDatabaseUri": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a"
+      },
+      "ver": "1.0.11",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "atlasTextureName": "2022feijizi.png",
+    "format": 2,
+    "textureUuid": "25a76c66-2238-4589-bd84-01f97e2ddd76@6c48a",
+    "uuid": "8c7f6fc7-aa6b-4848-9ee6-a1ba13ce1034"
+  }
+}
