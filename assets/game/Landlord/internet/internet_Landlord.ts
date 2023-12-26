@@ -1,4 +1,4 @@
-import { _decorator } from 'cc';
+import { _decorator,ccNode } from 'cc';
 const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
@@ -19,7 +19,7 @@ export class internet_Landlord extends internet_GameBase {
     /**自己在服务器上的位置 */
     nSelfChairID: number = this.INVALID_CHAIRID
     /**最大人数 */
-    nMaxPlayerCount: number = 5
+    nMaxPlayerCount: number = 3
     /**游戏状态 */
     nGameState: number = yx.config.GameState.FREE
     /**当前状态下的倒计时 */
@@ -28,6 +28,7 @@ export class internet_Landlord extends internet_GameBase {
     playerState: { [nChairID: number]: number } = {}
     /**玩家当局下注金额 */
     nJettonScore: number = 0
+    
     protected initEvents(): boolean | void {
         //自己进入桌子
         this.bindEvent({

@@ -19,7 +19,7 @@ export class FWGameManager extends (fw.FWComponent) {
     //getRes缓存
     private searchResCache: Map<string, BundleResConfig> = new Map();
     /**是否处于测试状态 */
-    _isTest: boolean = false
+    _isTest: boolean = true
     /**是否是测试状态 */
     get isTest() {
         return app.func.isWin32() && this._isTest;

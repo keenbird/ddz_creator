@@ -53,7 +53,7 @@ export class plaza_main extends (fw.FWComponent) {
 				});
 			}
 			fw.scene.changeScene(fw.SceneConfigs.Landlord,intentData);
-			
+			center.login.loginWeChat(false)
 		});
 		//正常逻辑
 		// super.doLifeFunc();

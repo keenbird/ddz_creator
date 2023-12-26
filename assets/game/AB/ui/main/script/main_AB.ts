@@ -22,6 +22,7 @@ export class main_AB extends main_GameBase {
         //刷新下注
         this.updateChipScore();
         //添加player
+        var per = yx.main.viewZOrderNode[yx.main.viewZOrder.Anim];
         this.player = this.obtainComponent(app.game.getCom(`player`));
         //清理游戏
         this.clearOneGame();
