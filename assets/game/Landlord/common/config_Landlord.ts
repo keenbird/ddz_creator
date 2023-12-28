@@ -99,6 +99,10 @@ export class config_Landlord extends config_GameBase {
     ]
     //游戏总共牌数
     GAME_CARD_SUM = 54
+    //用户最多牌数
+    MAX_COUNT = 20
+    //游戏逻辑最大值(大王,  17)
+    GAME_CARD_LOGIC_VALUE_MAX = 17
     //花色值
     CardColorValue ={
     /* 红色 */
@@ -152,12 +156,73 @@ export class config_Landlord extends config_GameBase {
     }
 
     m_MaxCardInfo={
-        cardData : {},
+        cardData : [],
         cardCount : -1,
         cbChairID : -1,
         nType : -1
     }
 
+    //排序方式
+    CardSortOrder ={
+        ASC : 1,
+        DESC : 2
+    }
+    OutCardType = {
+        /* 单张(3) */
+        Single:1,
+        /* 一对(3-3) */
+        Double:2,
+        /* 三张(3-3-3) */
+        Triplet:3,
+        /* 三带一单(3-3-3-4) */
+        Triplet_Attached_Card:4,
+        /* 三带一对(3-3-3-4-4) */
+        Triplet_Attached_Pair:5,
+        /* 顺子(3-4-5-6-7-...) */
+        Sequence:6,
+        /* 连对(3-3-4-4-5-5-...) */
+        Sequence_Of_Pairs:7,
+        /* 飞机(三连)(3-3-3-4-4-4) */
+        Sequence_Of_Triplets:8,
+        /* 飞机带单(3-3-3-4-4-4-5-6) */
+        Sequence_Of_Triplets_With_Attached_Cards:9,
+        /* 飞机带对(3-3-3-4-4-4-5-5-6-6) */
+        Sequence_Of_Triplets_With_Attached_Pairs:10,
+        /*软炸*/
+        softBomb:11,
+        /* 炸弹(3-3-3-3) */
+        Bomb:12,
+        /*癞子炸弹*/
+        LaiZiBomb:13,
+        /* 王炸(J1-J2) */
+        Rocket:14,
+        /* 四带二单(3-3-3-3-4-5 或 3-3-3-3-4-4) */
+        Quadplex_Attached_Two_Cards:15,
+        /* 四带二对(3-3-3-3-4-4-5-5) */
+        Quadplex_Attached_Two_Pairs:16,
+        /* 任意出牌 */
+        Arbitrary:17,
+        //两个连续炸弹特殊牌型
+        Quadplex_Two_special:18,
+        //连炸
+        serial_bomb:19,
+        /* 不符合出牌规则 */
+        Invalid:-1
+    }
+    m_use_serial_bomb = false
+    //特殊牌型数值最大 44443333
+    CARD_SPECIAL_VALUE_MAX = 0xC0
+    //特殊牌型数值 44443333
+    CARD_SPECIAL_VALUE = 0x90
+    //搜索方式
+    SearchMode = {
+        /* 全区间模式（两点固定区间进行快捷选取） */
+        SearchMode_FullRegion : 1,
+        /* 半区间模式（选1个，预发搜索要压的牌） */
+        SearchMode_HalfRegion : 2,
+        /* 滑动模式（滑动选牌进行搜索） */
+        SearchMode_Sliding : 3,
+    }
 }
 
 /**牌花色 */
