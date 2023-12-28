@@ -25,7 +25,6 @@ export class main_Landlord extends main_GameBase {
     m_HandCardNode: ccNode[] = [];
     m_mapGMPos: Vec3[]= [];
     m_vecCardsPosition: Vec3[]= [];
-    m_vecCardsRect: Rect[]= [];
     m_vecSelectedCache: any[]= [];
     mDragCardNode: ccNode;
     m_vecPopCache: any[]= [];
@@ -281,17 +280,16 @@ export class main_Landlord extends main_GameBase {
 
             var preTouchEventType = touchEventType
             
-            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y){// &&  this:getGameStatus() == DDZ_DEF.GameStatus.GameStatus_Playing ){
+            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y + 20){// &&  this:getGameStatus() == DDZ_DEF.GameStatus.GameStatus_Playing ){
                 touchEventType = "outCard" // 出牌
             }else{
                 touchEventType = "selCard"
             }
-            // m_vecCardsRect
-            for(var i=0;i<this.m_vecCardsRect.length;i++){
+            for(var i=0;i<this.m_HandCardNode.length;i++){
                 var card = this.m_HandCardNode[i]
-                var cardRect = this.m_vecCardsRect[i]
+                var cardRect = card.getComponent("card_Landlord").getTouchRect()
                 var tempRect = cardRect
-                if(i != this.m_vecCardsRect.length){
+                if(i != (this.m_HandCardNode.length-1)){
                     tempRect.width = yx.config.CARD_PADDING_OF_HAND_CARDS
                 }
                 var isIntersect =  tempRect.intersects(rect);
@@ -362,12 +360,12 @@ export class main_Landlord extends main_GameBase {
                 var  touchPos = touch.touch._point
                 var moveDelta = new Vec2(touchPos.x - m_TouchPointStart.x, touchPos.y - m_TouchPointStart.y)
                 if(Math.abs(moveDelta.x) <= yx.config.CARD_GESTURE_TAP_OFFSET_MAX && Math.abs(moveDelta.y) <= yx.config.CARD_GESTURE_TAP_OFFSET_MAX ){
-                    var rectVectorSize = self.m_vecCardsRect.length
+                    var rectVectorSize = self.m_HandCardNode.length
                     var cardData = 0x00
                     var pCard = null
                     for(var i=(rectVectorSize-1);i>=0;i--){
                         var card = self.m_HandCardNode[i]
-                        var cardRect = self.m_vecCardsRect[i]
+                        var cardRect = card.getComponent("card_Landlord").getTouchRect()
                         var isContains = cardRect.contains(m_TouchPointStart)
                         if (isContains && card ){
                             cardData = card.getComponent("card_Landlord").getCardData()
@@ -375,7 +373,6 @@ export class main_Landlord extends main_GameBase {
                             var popState = card.getComponent("card_Landlord").getStatusPop()
                             card.getComponent("card_Landlord").setPop(! popState)
                             card.getComponent("card_Landlord").setSelected(false)
-                            self.updateCardsRect(card)
                             break
                         }
                     }
@@ -391,7 +388,7 @@ export class main_Landlord extends main_GameBase {
                     //弃牌阶段禁用 滑动出牌
                     if  (self.getGameStatus() == yx.config.GameStatus.GameStatus_Playing){
                         //区间搜索出牌
-					    self.regionSearch(cardData)
+					    // self.regionSearch(cardData)
                     }else{
                         var pSelectedCard = [cardData]
                         var nSelectedLen = pSelectedCard.length
@@ -405,7 +402,6 @@ export class main_Landlord extends main_GameBase {
                     for(var i=0;i<self.m_vecSelectedCache.length;i++){
                         var isPop = self.m_vecSelectedCache[i].getComponent("card_Landlord").getStatusPop()
                         self.m_vecSelectedCache[i].getComponent("card_Landlord").setPop(! isPop)
-                        self.updateCardsRect(self.m_vecSelectedCache[i])
                     }
                 }
     
@@ -519,7 +515,6 @@ export class main_Landlord extends main_GameBase {
                 if(card.getComponent("card_Landlord").getStatusPop()){
                     card.getComponent("card_Landlord").setPop(false)
                     card.getComponent("card_Landlord").setSelected(false)
-                    this.updateCardsRect(card)
                 }else{
                     card.getComponent("card_Landlord").setSelected(false)
                 }
@@ -621,33 +616,6 @@ export class main_Landlord extends main_GameBase {
         this.m_vecSelectedCache = []
     }
     
-    updateCardsRect(updateCard:ccNode){
-        var cardIndex = -1
-        cardIndex = yx.func.cardIndexFromVectorByData( this.m_HandCardNode, updateCard.getComponent("card_Landlord").getCardData())
-        if(cardIndex == -1){
-            return
-        }
-        
-        var tmpRect =  this.m_vecCardsRect[cardIndex]
-        if (updateCard.getComponent("card_Landlord").getStatusPop() == true ){
-            tmpRect = new Rect(
-                this.m_vecCardsRect[cardIndex].x, 
-                yx.config.CARD_POP_OFFSET_Y, 
-                 this.m_vecCardsRect[cardIndex].width, 
-                 this.m_vecCardsRect[cardIndex].height
-            )
-        }else{
-            tmpRect = new Rect(
-                this.m_vecCardsRect[cardIndex].x, 
-                0, 
-                 this.m_vecCardsRect[cardIndex].width, 
-                 this.m_vecCardsRect[cardIndex].height
-            )
-        }
-         
-
-         this.m_vecCardsRect[cardIndex] = tmpRect
-    }
     
     getGameStatus() : number{
         return this.m_enumGameStatus
@@ -698,16 +666,16 @@ export class main_Landlord extends main_GameBase {
             this.m_mapGMPos.push(pos1)
         }
 
-        for(var i=0;i<=(nCardCount - 1);i++){
-            var pos2 = new Vec3(cardPaddingOfHandCards * i+10-app.winSize.width/2, 0,1)
-            this.m_vecCardsPosition.push(pos2)
-
-            var rect = new Rect(cardPaddingOfHandCards * i+35, 0, yx.config.CARD_SIZE.width, yx.config.CARD_SIZE.height)
-            this.m_vecCardsRect.push(rect)
-        }
-       
         this.Items.node_handCard.obtainComponent(UITransform).setContentSize(new Size(gmWidth,this.Items.cardTouchLayout.obtainComponent(UITransform).height))
         this.Items.node_handCard.setPosition((app.winSize.width - gmWidth) / 2, this.Items.node_handCard.getPosition().y)
+
+        for(var i=0;i<=(nCardCount - 1);i++){
+            var pos2 = new Vec3(cardPaddingOfHandCards * i+10-app.winSize.width/2-yx.config.CARD_PADDING_TOTAL_OF_HAND_CARDS/2, 0,1)
+            this.m_vecCardsPosition.push(pos2)
+
+        }
+       
+        
     }
 
     //获取单张牌
@@ -913,7 +881,6 @@ export class main_Landlord extends main_GameBase {
             let endPos = new Vec2()
             endPos.x = bgPos.x + (baseBg.worldPosition.x -  bg.worldPosition.x)
             endPos.y = bgPos.y + (baseBg.worldPosition.y -  bg.worldPosition.y)
-            console.log("LH1",endPos.x,bgPos.x,baseBg.worldPosition.x,bg.worldPosition.x)
             endPosArr.push(endPos)
 
             let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)

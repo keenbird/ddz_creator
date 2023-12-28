@@ -1,4 +1,4 @@
-import { Size, _decorator ,Node as ccNode,Animation,instantiate,Prefab,v3, Color,Sprite } from 'cc';
+import { Size, _decorator ,Node as ccNode,Animation,instantiate,Prefab,v3, Color,Sprite, Rect } from 'cc';
 import { forEach } from '../../../../../../engine/cocos/asset/asset-manager/utilities';
 import { yx } from '../../../yx_Landlord';
 const { ccclass } = _decorator;
@@ -162,6 +162,10 @@ export class card_Landlord extends (fw.FWComponent) {
 		if(!isPop){
 			// this.showBombEffect(false)
 		}
+	}
+	getTouchRect():Rect{
+		var rect = new Rect(this.m_pCardNode.worldPosition.x, this.m_pCardNode.worldPosition.y, yx.config.CARD_SIZE.width, yx.config.CARD_SIZE.height)
+		return rect
 	}
 	//获取弹起状态
 	getStatusPop():boolean  {

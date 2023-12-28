@@ -125,11 +125,11 @@ export class config_Landlord extends config_GameBase {
     CARD_TYPE_LAIZI = "laizi"		//癞子
 
     //偏移值Y（选中牌之后弹起的高度）
-    CARD_POP_OFFSET_Y = 46
+    CARD_POP_OFFSET_Y = 30
     //手牌左右距离总和
     CARD_PADDING_TOTAL_OF_HAND_CARDS = 35
     /** 扑克牌的尺寸 */
-    CARD_SIZE = new Size(180, 229)
+    CARD_SIZE = new Size(161, 212)
     /** 间距（手牌之间的间隔, 17张铺满来算的） */
     CARD_PADDING_OF_HAND_CARDS =  ((app.winSize.width - this.CARD_PADDING_TOTAL_OF_HAND_CARDS - this.CARD_SIZE.width) / (17 - 1))
     //--滑动出牌高度Y
