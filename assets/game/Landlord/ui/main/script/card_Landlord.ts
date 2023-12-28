@@ -167,7 +167,11 @@ export class card_Landlord extends (fw.FWComponent) {
 	getStatusPop():boolean  {
 		return this.m_bPop
 	}
-
+	//获取m_pCardNode
+	getCardNode():ccNode  {
+		return this.m_pCardNode
+	}
+	
 	setSelected(isSel:boolean)  {
 		if(this.m_bSelected== isSel){
 			return
@@ -256,9 +260,10 @@ export class card_Landlord extends (fw.FWComponent) {
 		var aniWidth = 418
 		var aniHeight = 274
 		var delX = this.cardBgSize.width - cardSize.width - 4
+		delX = startCard.getComponent("card_Landlord").isJoker() ? delX + 5 : delX
 		var startX = startCard.getPosition().x 
 		var cardX = this.node.getPosition().x
-		var delY = this.cardBgSize.height - cardSize.height + 2.5
+		var delY = this.cardBgSize.height - cardSize.height + 1
 		scaleX = (cardX - startX + cardSize.width)/aniWidth 
 		scaleY = cardSize.height/aniHeight
 	

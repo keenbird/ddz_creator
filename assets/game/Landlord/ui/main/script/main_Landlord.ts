@@ -101,6 +101,7 @@ export class main_Landlord extends main_GameBase {
         // this.updateTableCard(null, false);
         // this.setOperateVisible(false, true);
         this.resetActionBarOnFree();
+        this.resetNodeLookCard();
         this.resetActionBar();
         this.showTrustLayout(false)
         this.showCardRecorder(false)
@@ -110,14 +111,28 @@ export class main_Landlord extends main_GameBase {
         this.resetBaseCardPool();
         this.setBaseScorePool( 1 );
         this.showNoCardBiggerTip(false)
-        this.Items.Node_lookCard.active = false
+        
         //player隐藏
         this.player.clearOneGame();
         
         //--------------test-------------//
         // this.schedule(function(){
             this.didReceiveSendCard()
+            this.showBasePool(true);
+            this.showLastThreeCardAndMove([78,79,50])
+            this.showDipaiBieshu(true,true,3)
         // }, 5);
+        
+    }
+    //初始化三张牌的状态
+    resetNodeLookCard(){
+        this.Items.btn_cardLook.active = false
+        this.Items.node_showThreeNormal.active = false
+        this.Items.node_showThreeAniNode.active = true
+        this.Items.node_showThreeAniNode.removeAllChildren()
+        for(let i=0;i<3;i++){
+            this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i].active = true
+        }
         
     }
     //清理所有等待时间的按钮
@@ -150,10 +165,18 @@ export class main_Landlord extends main_GameBase {
     showGameTip(type: any){
         this.Items.special_tip.active = false
         this.Items.game_tip.active = false
+        var runFun = function(node:ccNode){
+            tween(node)
+                .delay(1)
+                .hide()
+                .start()
+        }
         if(type == "special"){
             this.Items.special_tip.active = true
+            runFun(this.Items.special_tip)
         }else if(type == "game"){
             this.Items.game_tip.active = true
+            runFun(this.Items.game_tip)
         }
     }
     //是否展示Top底牌栏
@@ -163,11 +186,29 @@ export class main_Landlord extends main_GameBase {
     //是否展示底牌倍数
     showDipaiBieshu(isShow: boolean,isAni : boolean, beishu ?: number){
         if(isShow){
+            this.Items.Text_dipaibeishu.string = beishu+""
             if(isAni){
-
+                this.Items.Img_dipaiBeisu.active = false
+                this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua_1`], (res: Prefab) => {
+                    let aniNode = instantiate(res);
+                    if(!fw.isNull(aniNode)){
+                        this.Items.Img_dipaiBeisu.active = true
+                        this.Items.Img_dipaiBeisu.addChild(aniNode)
+                        aniNode.Items["Text_dipaibeishu"].string = "" + beishu +"倍"
+                        aniNode.eulerAngles  = new Vec3(0,0,15)
+                        aniNode.setPosition(0,1)
+                        var tScale = yx.config.changeOldResScale
+                        aniNode.scale = v3(tScale, tScale, tScale)
+                        const a = aniNode.getComponent(Animation);
+                        
+                        a.on(Animation.EventType.FINISHED, () => {
+                            aniNode.removeFromParent(true)
+                        });
+                        a.play(`ani_beishubianhua_1`);
+                    }
+                });
             }else{
                 this.Items.Img_dipaiBeisu.active = true
-                this.Items.Text_dipaibeishu.string = beishu+""
             }
         }else{
             this.Items.Img_dipaiBeisu.active = false
@@ -275,8 +316,7 @@ export class main_Landlord extends main_GameBase {
                     this.mDragCardNode.setSiblingIndex(999)
                     this.mDragCardNode.setScale(new Vec3(0.8,0.8,0.8))
                     var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
-                    var cbTempCardData =tempCache
-				// var cbTempCardData = this:getGameLogicOBJ():resortZOrderForOutCard(tempCache, #tempCache)
+				    var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length)
                     var length = tempCache.length
                     var startX = -((length - 1) * yx.config.CARD_PADDING_OF_HAND_CARDS + yx.config.CARD_SIZE.width) / 2 
                     for(var i=0;i<length;i++){
@@ -285,6 +325,9 @@ export class main_Landlord extends main_GameBase {
                             card.setSiblingIndex(i)
                             this.mDragCardNode.addChild(card)
                             card.setPosition(startX+(i)*yx.config.CARD_PADDING_OF_HAND_CARDS,-yx.config.CARD_SIZE.height/2)
+                            if(i==length-1){
+                                card.getComponent("card_Landlord").setLogoVisible(true)
+                            }
                         }else{
 
                         }
@@ -294,13 +337,13 @@ export class main_Landlord extends main_GameBase {
                         this.mDragCardNode.removeFromParent()
                         this.mDragCardNode = null
                     }
-                    var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
-                    var cbTempCardData = tempCache.slice();
-                    // var cbTempCardData = this.getGameLogicOBJ():resortZOrderForOutCard(tempCache, #tempCache)
-                    tempCache = []
-                    if(cbTempCardData.length != 0){
+                    // var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
+                    // var cbTempCardData = tempCache.slice();
+                    // // var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, #tempCache)
+                    // tempCache = []
+                    // if(cbTempCardData.length != 0){
 
-                    }
+                    // }
                 }
             }
 
@@ -393,15 +436,15 @@ export class main_Landlord extends main_GameBase {
                     self.mDragCardNode = null
                 }
                 var tempCache = yx.func.cardDatasFromVector(self.m_vecPopCache)
-                var cbTempCardData = tempCache.slice();
-                // var cbTempCardData = self:getGameLogicOBJ():resortZOrderForOutCard(tempCache, #tempCache)
+               
+                var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length)
                 tempCache = []
                 if(cbTempCardData.length != 0){
                     var maxCardInfo = yx.config.m_MaxCardInfo
                     var isLarger = false
 	                var cardDataType = -1
-                    // cardDataType = self.logic.GetCardType(cbTempCardData, cbTempCardData.length)
-                    // isLarger = self.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
+                    cardDataType = self.logic.GetCardType(cbTempCardData, cbTempCardData.length)
+                    isLarger = self.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
                     if  (cardDataType == -1 || ! isLarger){
                         self.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
                         self.schedule(function(){
@@ -437,7 +480,7 @@ export class main_Landlord extends main_GameBase {
 
     //发牌命令
     didReceiveSendCard(){
-        var cardData = [12, 17,18,19,1,2,3,4,5,6,7,8,9,10,11,20,21,0x4E,0x4F ]
+        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21,0x4E,0x4F ]
         this.m_HandCardData = cardData
         for(var i=0;i<cardData.length;i++){
             var node = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_Hands)
@@ -487,7 +530,77 @@ export class main_Landlord extends main_GameBase {
     }
 
     slidingSearch(){
+        //获取选中扑克的数据
+        var pSelectedCard = yx.func.cardDatasFromVector(self.m_vecSelectedCache)
+        var nSelectedLen = pSelectedCard.length
 
+        //获取弹起扑克的数据
+        var pPopCard = yx.func.cardDatasFromVector(self.m_vecPopCache)
+        var nPopCardLen = pPopCard.length
+        var popCardType = this.logic.GetCardType(pPopCard,nPopCardLen)
+        if(popCardType == yx.config.OutCardType.Sequence){
+            return
+        }
+    
+	    var [pUnionCard,nUnionCardLen] = this.logic.mergeCardData(pSelectedCard, nSelectedLen, pPopCard, nPopCardLen)
+
+        //如果是特殊牌型弹出提示语(双炸、飞机带炸)
+	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen,true)
+        if(unionCardType == yx.config.OutCardType.Quadplex_Two_special ){
+            //显示特殊牌型提示语
+            this.showGameTip("special")
+            //tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
+        }else if(unionCardType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs){
+            //四带两对 两对是炸弹
+		    var AnalyseResult = this.logic.AnalyzeCardData(pUnionCard,nUnionCardLen)
+		
+            if(AnalyseResult.cbQuadrupleCount > 1){
+                this.showGameTip("special")
+                // tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
+            }
+        }else if(unionCardType == yx.config.OutCardType.Quadplex_Attached_Two_Cards){
+            //四带二 (带王炸)
+		    var AnalyseResult = this.logic.AnalyzeCardData(pUnionCard,nUnionCardLen)
+		
+            if(AnalyseResult.bContainsRocket == true){
+                this.showGameTip("special")
+                // tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
+            }
+        }else if(unionCardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards){
+            //--飞机带炸弹(炸弹在飞机本身)
+		    var AnalyseResult = this.logic.AnalyzeCardData(pUnionCard,nUnionCardLen)
+		
+            if(AnalyseResult.cbQuadrupleCount > 0 || AnalyseResult.bContainsRocket == true ){
+                this.showGameTip("special")
+                // tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
+            }
+        }else if(unionCardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+            //飞机带炸弹(炸弹是对子)
+		    var AnalyseResult = this.logic.AnalyzeCardData(pUnionCard,nUnionCardLen)
+		
+            if(AnalyseResult.cbQuadrupleCount > 0){
+                this.showGameTip("special")
+                // tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
+            }
+        }
+
+        var outType = this.logic.GetCardType(yx.config.m_MaxCardInfo.cardData,yx.config.m_MaxCardInfo.cardCount,false)
+	    //只有顺子、连对进行划牌搜索
+        if(outType == yx.config.OutCardType.Sequence 
+            || outType == yx.config.OutCardType.Sequence_Of_Pairs 
+            || outType == yx.config.OutCardType.Arbitrary 
+        ){
+            var selectCardType = this.logic.GetCardType(pSelectedCard,nSelectedLen)
+		    //只有在划的牌不能组成牌型时再去搜索
+            if(selectCardType == yx.config.OutCardType.Invalid){
+                var bFind,searchResult,cbHitCount = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, self.m_MaxCardInfo.cardData, self.m_MaxCardInfo.cardCount, DDZ_DEF.SearchMode.SearchMode_Sliding,false, DDZ_DEF.OutCardType.Invalid)
+                // if cbHitCount > 0 then
+                //     self:putDownAllHandCard()
+                //     --有具体的压牌牌型，按最小能压的来出
+                //     LandlordUtils:popCardsByData(searchResult[1].cbResultCard, searchResult[1].cbCardCount,self.m_vecHandsCache,nil, self.m_pGameLogic:getLaiZiCardData())
+                // end
+            }
+        }
     }
     
     updateCardsRect(updateCard:ccNode){
@@ -601,6 +714,7 @@ export class main_Landlord extends main_GameBase {
         var cbHandCache = this.m_HandCardNode
         var cardsPos = this.m_vecCardsPosition
         var  unitDelayTime = animationTime /cbHandCache.length
+        let self = this
         var actionCallFuncOfGM = function(idx:number){
             var length = cbHandCache.length
             if(sendCB){
@@ -611,11 +725,17 @@ export class main_Landlord extends main_GameBase {
                 tem.getComponent("card_Landlord").setLogoVisible(true)    
             }
         }
+        var showLight = function(idx:number){
+            var length = cbHandCache.length
+            if(idx==length-1){
+                self.showBoomLightAni()
+            }
+        }
         if(type == 3){
             var initPMPos = this.getGameManagerPostion(cbHandCache.length)
             this.Items.node_handCard.setPosition(initPMPos)
 
-            for(var i=0;i<cbHandCache.length ;i++){
+            for(let i=0;i<cbHandCache.length ;i++){
                 var card = cbHandCache[i]
                 this.Items.node_handCard.addChild(card)
                 var originPos = new Vec3(0,0)
@@ -633,7 +753,6 @@ export class main_Landlord extends main_GameBase {
                 card.getSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
 
                 var  delayTime = unitDelayTime * (i+1) 
-                var  idx = i
                 tween(card)
                     .delay(delayTime)
                     .call(() => {
@@ -649,7 +768,7 @@ export class main_Landlord extends main_GameBase {
                 tween(this.Items.node_handCard)
                     .delay(delayTime)
                     .call(() => {
-                        actionCallFuncOfGM(idx)
+                        actionCallFuncOfGM(i)
                     })
                     .start();
             }
@@ -658,7 +777,7 @@ export class main_Landlord extends main_GameBase {
             var initPMPos = this.getGameManagerPostion(1)
             this.Items.node_handCard.setPosition(initPMPos)
 
-            for(var i=0;i<cbHandCache.length ;i++){
+            for(let i=0;i<cbHandCache.length ;i++){
                 var card = cbHandCache[i]
                 this.Items.node_handCard.addChild(card)
                 var originPos = new Vec3(0,0)
@@ -678,7 +797,6 @@ export class main_Landlord extends main_GameBase {
                 var gmPos = this.getGameManagerPostion(i)
                 var delayTime = unitDelayTime * (i + 1)
                 var  delayTime = unitDelayTime * (i+1)
-                var idx = i
                 tween(card)
                     .delay(delayTime)
                     .call(() => {
@@ -695,15 +813,102 @@ export class main_Landlord extends main_GameBase {
                     .delay(unitDelayTime * i)
                     .to(unitDelayTime, { position:gmPos })
                     .call(() => {
-                        actionCallFuncOfGM(idx)
+                        actionCallFuncOfGM(i)
                     })
                     .delay(0.2)
                     .call(() => {
+                        showLight(i)
                     })
                     .start();
             }
         }
     }
+
+    showBoomLightAni(){
+        var rocketArr = [ ]
+        var boomArr = []
+        for(var i=0;i<this.m_HandCardNode.length;i++){
+            var card = this.m_HandCardNode[i]
+            var isJoker = card.getComponent("card_Landlord").isJoker()
+            if(isJoker){
+                rocketArr.push(card)
+            }else{
+                if(boomArr.length == 0){
+                    boomArr.push(card)
+                }else{
+                    if(card.getComponent("card_Landlord").getCardFaceValue() == boomArr[0].getComponent("card_Landlord").getCardFaceValue()){
+                        boomArr.push(card)
+                    }else{
+                        boomArr = []
+                        boomArr.push(card)
+                    }
+                }
+            }
+            if(boomArr.length == 4){
+                card.getComponent("card_Landlord").showBombLight(boomArr[0])
+                boomArr = []
+            }
+        }
+        if(rocketArr.length == 2){
+            rocketArr[1].getComponent("card_Landlord").showBombLight(rocketArr[0])
+            rocketArr = []
+        }
+        
+    }
+
+    //展示三张牌揭开后的动画
+    showLastThreeCardAndMove(lastThreeCache:number[]){
+        this.Items.node_showThreeNormal.active = true
+        let startPosArr = []
+        let endPosArr = []
+        let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2)=>{
+            tween(card)
+                .hide()
+                .delay(0.4)
+                .show()
+                .to(0.4, { scale: new Vec3(1.6,1.6,1.6) })
+                
+                .parallel(
+                    tween().to(0.5, { scale: new Vec3(1.05,1.05,1.05)}),
+                    tween().to(0.5, { position: new Vec3(endPos.x-2, endPos.y, 1) })
+                )
+                .call(() => {
+                    card.removeFromParent()
+                    baseBg.addChild(card)
+                    card.setPosition(-2,0)
+                })
+                .start()
+            
+            tween(bg)
+                .show()
+                .to(0.4, { scale: new Vec3(0,1,0) })
+                .hide()
+                .start()
+        }
+        for(let i=0;i<3;i++){
+            let bg = this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i]
+            bg.active = true
+            let bgPos = bg.getPosition()
+            startPosArr.push(bgPos)
+
+            let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
+            let endPos = new Vec2()
+            endPos.x = bgPos.x + (baseBg.worldPosition.x -  bg.worldPosition.x)
+            endPos.y = bgPos.y + (baseBg.worldPosition.y -  bg.worldPosition.y)
+            console.log("LH1",endPos.x,bgPos.x,baseBg.worldPosition.x,bg.worldPosition.x)
+            endPosArr.push(endPos)
+
+            let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+            card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
+            this.Items.node_showThreeAniNode.addChild(card)
+            card.setScale(new Vec3(0,1.6,1.6))
+            card.setPosition(bgPos.x,bgPos.y )
+            
+            showFun(card,bg,baseBg,endPos)
+        }
+        
+    }
+
     //-----------------------------老代码 ------------------------------------//
     /**刷新倍率动画 */
     updateMultipleAnim() {
