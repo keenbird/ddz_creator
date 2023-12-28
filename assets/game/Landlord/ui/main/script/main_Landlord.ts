@@ -117,6 +117,7 @@ export class main_Landlord extends main_GameBase {
         
         //--------------test-------------//
         // this.schedule(function(){
+            this.m_enumGameStatus = yx.config.GameStatus.GameStatus_Playing
             this.didReceiveSendCard()
             this.showBasePool(true);
             this.showLastThreeCardAndMove([78,79,50])
@@ -508,8 +509,22 @@ export class main_Landlord extends main_GameBase {
         this.m_vecPopCache = []
     }
 
-    putDownAllHandCard(){
-         this.m_vecPopCache = []
+    putDownAllHandCard(vec?:ccNode[]){
+         if(!vec){
+            vec = this.m_HandCardNode
+         }
+         for(var i=0;i<vec.length;i++){
+            var card = vec[i]
+            if(!fw.isNull(card)){
+                if(card.getComponent("card_Landlord").getStatusPop()){
+                    card.getComponent("card_Landlord").setPop(false)
+                    card.getComponent("card_Landlord").setSelected(false)
+                    this.updateCardsRect(card)
+                }else{
+                    card.getComponent("card_Landlord").setSelected(false)
+                }
+            }
+         }
     }
 
     displayHandsAnalyseTips(isShow:boolean, type?:number){
@@ -530,6 +545,7 @@ export class main_Landlord extends main_GameBase {
     }
 
     slidingSearch(){
+        let self = this
         //获取选中扑克的数据
         var pSelectedCard = yx.func.cardDatasFromVector(self.m_vecSelectedCache)
         var nSelectedLen = pSelectedCard.length
@@ -583,9 +599,10 @@ export class main_Landlord extends main_GameBase {
                 // tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
             }
         }
-
+       
         var outType = this.logic.GetCardType(yx.config.m_MaxCardInfo.cardData,yx.config.m_MaxCardInfo.cardCount,false)
 	    //只有顺子、连对进行划牌搜索
+        
         if(outType == yx.config.OutCardType.Sequence 
             || outType == yx.config.OutCardType.Sequence_Of_Pairs 
             || outType == yx.config.OutCardType.Arbitrary 
@@ -593,14 +610,15 @@ export class main_Landlord extends main_GameBase {
             var selectCardType = this.logic.GetCardType(pSelectedCard,nSelectedLen)
 		    //只有在划的牌不能组成牌型时再去搜索
             if(selectCardType == yx.config.OutCardType.Invalid){
-                var bFind,searchResult,cbHitCount = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, self.m_MaxCardInfo.cardData, self.m_MaxCardInfo.cardCount, DDZ_DEF.SearchMode.SearchMode_Sliding,false, DDZ_DEF.OutCardType.Invalid)
-                // if cbHitCount > 0 then
-                //     self:putDownAllHandCard()
-                //     --有具体的压牌牌型，按最小能压的来出
-                //     LandlordUtils:popCardsByData(searchResult[1].cbResultCard, searchResult[1].cbCardCount,self.m_vecHandsCache,nil, self.m_pGameLogic:getLaiZiCardData())
-                // end
+                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.config.m_MaxCardInfo.cardData, yx.config.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,false, yx.config.OutCardType.Invalid)
+                if (cbHitCount > 0 ){
+                    this.putDownAllHandCard()
+                    //有具体的压牌牌型，按最小能压的来出
+                    yx.func.popCardsByData(searchResult[0].cbResultCard, searchResult[0].cbCardCount,self.m_HandCardNode,null, this.logic.getLaiZiCardData())
+                }
             }
         }
+        this.m_vecSelectedCache = []
     }
     
     updateCardsRect(updateCard:ccNode){
@@ -642,7 +660,7 @@ export class main_Landlord extends main_GameBase {
         // if (this.m_vecPopCache.length == 0 ){
         //     this.disableAction(self.m_pActionDisCardSprite, true)
         // }else{
-        //     self:disableAction(self.m_pActionDisCardSprite, false)
+        //     this.disableAction(self.m_pActionDisCardSprite, false)
         // }
            
     }

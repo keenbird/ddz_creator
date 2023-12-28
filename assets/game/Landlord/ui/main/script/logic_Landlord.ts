@@ -484,7 +484,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return [cbThreeCardData,cbThreeCount]
 	}
-	SearchOutCard(cbHandCardData:number[],cbHandCardCount:number,cbTurnCardData:number[],cbTurnCardCount:number,mode:number,bSearchType:any,SearchOutCardType:number){
+	getLaiZiCardData():number{
+		return 0
+	}
+	SearchOutCard(cbHandCardData:number[],cbHandCardCount:number,cbTurnCardData:number[],cbTurnCardCount:number,mode:number,bSearchType:any,SearchOutCardType:number):[boolean,any[],number]{
+		let self = this
 		if (cbHandCardCount == 0) {
 			return [false,null,0]
 		}
@@ -973,10 +977,10 @@ export class logic_Landlord extends (fw.FWComponent) {
                             	//更重要没利用上物理K 服务端判断牌型出错
 								var bGetMaxValue = false
 								//获取数值
-								var cbOutLogicValue = bSearchType == false ? this.GetCardLogicValue(cbOutCardData[cbTurnCardCount]) : 0
+								var cbOutLogicValue = bSearchType == false ? self.GetCardLogicValue(cbOutCardData[cbTurnCardCount-1]) : 0
 								//搜索连牌
 								for(var i=0;i<cbTempSingCount;i++){
-									var cbHandLogicValue = this.GetCardLogicValue(cbTempSingData[i])
+									var cbHandLogicValue = self.GetCardLogicValue(cbTempSingData[i])
 									if(cbHandLogicValue > cbOutLogicValue){
 										var cbLaiZiCountTemp = cbLaiZiCount
 										var cbLineCount = 0
@@ -985,10 +989,10 @@ export class logic_Landlord extends (fw.FWComponent) {
 										hitResult[cbHitCardCount-1].cbResultCard = []
 										while(j < cbTempSingCount){
 											var cbLeftCount = cbSameCount
-                                        	var cbLogicValue = this.GetCardLogicValue(cbTempSingData[j]) - cbLineCount
+                                        	var cbLogicValue = self.GetCardLogicValue(cbTempSingData[j]) - cbLineCount
 											if(cbLogicValue == cbHandLogicValue){
 												//获取同牌
-												var cbLeftCount1,cbResultCard = this.GetSameCard(cbHandCardDataCopy,cbHandCardCountCopy,cbTempSingData[j],cbSameCount)
+												var [cbLeftCount1,cbResultCard] = self.GetSameCard(cbHandCardDataCopy,cbHandCardCountCopy,cbTempSingData[j],cbSameCount)
 												cbLeftCount = cbLeftCount1
 												for(var x=0;x<cbResultCard.length;x++){
 													hitResult[cbHitCardCount-1].cbResultCard.push(cbResultCard[x])
@@ -1011,12 +1015,12 @@ export class logic_Landlord extends (fw.FWComponent) {
 											//完成判断
 											if(cbCount == cbTurnCardCount){
 												//判断到A
-												if(cbMaxValue == this.GetCardLogicValue(hitResult[cbHitCardCount-1].cbResultCard[cbCount-1]) ){
+												if(cbMaxValue == self.GetCardLogicValue(hitResult[cbHitCardCount-1].cbResultCard[cbCount-1]) ){
 													bGetMaxValue = true
 												}
 
 												hitResult[cbHitCardCount-1].cbCardCount = cbTurnCardCount
-												this.SortCardData(hitResult[cbHitCardCount-1].cbResultCard,hitResult[cbHitCardCount-1].cbCardCount,yx.config.CardSortOrder.DESC)
+												self.SortCardData(hitResult[cbHitCardCount-1].cbResultCard,hitResult[cbHitCardCount-1].cbCardCount,yx.config.CardSortOrder.DESC)
 												cbHitCardCount = cbHitCardCount + 1
 												if(cbHitCardCount > yx.config.MAX_COUNT ){
 													return [true,hitResult,cbHitCardCount-1]
@@ -1142,11 +1146,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 								var bGetMaxValue = false
 
 								//获取数值
-								var cbOutLogicValue = bSearchType == false ? this.GetCardLogicValue(cbOutCardData[cbMinIndex]) : 0
+								var cbOutLogicValue = bSearchType == false ? self.GetCardLogicValue(cbOutCardData[cbMinIndex]) : 0
 								//搜索连牌
 								for(var i=0;i<cbTempSingCount;i++){
 									//获取数值
-                                	var cbHandLogicValue = this.GetCardLogicValue(cbTempSingData[i])
+                                	var cbHandLogicValue = self.GetCardLogicValue(cbTempSingData[i])
 
                                 	//检测判断
 									if(cbHandLogicValue > cbOutLogicValue){
@@ -1158,10 +1162,10 @@ export class logic_Landlord extends (fw.FWComponent) {
 										var j = i
 										while(j<= cbTempSingCount){
 											var cbLeftCount = cbSameCount
-											var cbLogicValue = this.GetCardLogicValue(cbTempSingData[j]) - cbLineCount
+											var cbLogicValue = self.GetCardLogicValue(cbTempSingData[j]) - cbLineCount
 											if(cbLogicValue == cbHandLogicValue){
                                             	//获取同牌
-                                            	var cbLeftCount1,cbResultCard = this.GetSameCard(cbHandCardDataCopy,cbHandCardCountCopy,cbTempSingData[j],cbSameCount)
+                                            	var [cbLeftCount1,cbResultCard] = self.GetSameCard(cbHandCardDataCopy,cbHandCardCountCopy,cbTempSingData[j],cbSameCount)
 												cbLeftCount = cbLeftCount1
 												for(var x=0;x<cbResultCard.length;x++){
 													hitResult[cbHitCardCount-1].cbResultCard.push(cbResultCard[x])
@@ -1183,17 +1187,17 @@ export class logic_Landlord extends (fw.FWComponent) {
 											//完成判断
 											if(cbCount == cbTurnLineCount * cbSameCount){
 												// 判断到 A
-                                            	var bGetA = cbMaxValue == this.GetCardLogicValue(hitResult[cbHitCardCount-1].cbResultCard[cbCount-1])
+                                            	var bGetA = cbMaxValue == self.GetCardLogicValue(hitResult[cbHitCardCount-1].cbResultCard[cbCount-1])
 
 												//--获取单牌判断
-												var [a,b] =this.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,cbTurnLineCount,cbTurnOutType)
+												var [a,b] =self.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,cbTurnLineCount,cbTurnOutType)
 												if(a == 1){
 													if(bGetA){
 														bGetMaxValue = true
 													}
 
 													hitResult[cbHitCardCount-1].cbCardCount = cbTurnCardCount
-													this.SortCardData(hitResult[cbHitCardCount-1].cbResultCard,hitResult[cbHitCardCount-1].cbResultCard.length,yx.config.CardSortOrder.DESC)
+													self.SortCardData(hitResult[cbHitCardCount-1].cbResultCard,hitResult[cbHitCardCount-1].cbResultCard.length,yx.config.CardSortOrder.DESC)
 													cbHitCardCount = cbHitCardCount + 1
 													if(cbHitCardCount > yx.config.MAX_COUNT){
 														return [true,hitResult,cbHitCardCount-1]
@@ -1844,6 +1848,24 @@ export class logic_Landlord extends (fw.FWComponent) {
 		var resultCount = cbGetCount == 0 ? 1 : 0
 		return [resultCount,cbResultCard]
 	}
+	//获取同牌
+	GetSameCard(cbHandCardData:number[],cbHandCardCount:number,cbCard:number,cbMaxCount:number):[number,number[]]{
+		var cbCount = 0
+		var cbResultCard = []
+		var cbCardValue = this.GetCardLogicValue(cbCard)
+		for (var i=0;i< cbHandCardCount;i++ ){
+			if (cbCardValue == this.GetCardLogicValue(cbHandCardData[i]) ){
+				cbCount = cbCount + 1
+				cbResultCard[cbCount-1] = cbHandCardData[i]
+				if (cbMaxCount == cbCount ){
+					break
+				}
+			}
+		}
+
+		//剩余牌数
+		return [cbMaxCount - cbCount,cbResultCard]
+	}
 	//--移除牌
 	RemoveCard(cbRemoveCard:number[],cbRemoveCount:number,cbHandCardData:number[],cbHandCardCount:number):[boolean,number[],number]{
 		if(cbRemoveCount > cbHandCardCount){
@@ -2140,7 +2162,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 			if(cbSameCount == 1){
 				result.cbSingleCount = result.cbSingleCount + 1
 				var cbIndex = result.cbSingleCount
-            	result.cbSingleCardData[cbIndex*cbSameCount] = cbCardData[i]        //保存扑克数据
+            	result.cbSingleCardData[cbIndex*cbSameCount-1] = cbCardData[i]        //保存扑克数据
 
 			// --对子
 			}else if(cbSameCount == 2){
@@ -2487,6 +2509,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 	GetCardColorShape(cbCardData:number) {
 		return cbCardData &  yx.config.CARD_COLOR_MASK
 	}
+	
 	AnalysebCardData(cbCardData:number[],cbCardCount:number) {
 		var AnalyseResult = this.createTagAnalyseResultEx()
 		var i = 0
