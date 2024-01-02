@@ -15,6 +15,8 @@ import { logic_Landlord } from './logic_Landlord';
 export class main_Landlord extends main_GameBase {
     /**筹码索引 */
     nChipIndex: number = -1
+    /**地主ID */
+    nLandlordId: number = -1
     /**player */
     player: player_Landlord = null
     /**logic */
@@ -119,8 +121,14 @@ export class main_Landlord extends main_GameBase {
             this.m_enumGameStatus = yx.config.GameStatus.GameStatus_Playing
             this.didReceiveSendCard()
             this.showBasePool(true);
-            this.showLastThreeCardAndMove([78,79,50])
-            this.showDipaiBieshu(true,true,3)
+        
+            this.scheduleOnce(function(){
+                this.showLastThreeCardAndMove([78,79,50],0)
+                this.showDipaiBieshu(true,true,3)
+                this.didReceiveOutCard()
+                this.showXbeiAni(3,15)
+            }, 4);
+        
         // }, 5);
         
     }
@@ -222,21 +230,57 @@ export class main_Landlord extends main_GameBase {
         }
     }
     //设置底牌倍数
-    setBaseScorePool(beishu : number){
+    setBaseScorePool(beishu : number,isAni?:boolean){
         this.Items.BMFont_MutipleValue.string = "" + beishu
-        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua_0`], (res: Prefab) => {
+        if(isAni){
+            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua_0`], (res: Prefab) => {
+                let aniNode = instantiate(res);
+                if(!fw.isNull(aniNode)){
+                    this.Items.BMFont_MutipleValue.addChild(aniNode)
+                    aniNode.Items["BitmapFontLabel_19"].string = "" + beishu
+                    var tScale = yx.config.changeOldResScale
+                    aniNode.scale = v3(tScale, tScale, tScale)
+                    const a = aniNode.getComponent(Animation);
+                    
+                    a.on(Animation.EventType.FINISHED, () => {
+                        aniNode.removeFromParent(true)
+                    });
+                    a.play(`ani_beishubianhua_0`);
+                }
+            });
+        }
+        
+    }
+    //展示X倍动画
+    showXbeiAni(beishu : number,Allbeishu : number){
+        this.Items.BMFont_MutipleValue.string = "" + beishu
+        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua`], (res: Prefab) => {
             let aniNode = instantiate(res);
             if(!fw.isNull(aniNode)){
-                this.Items.BMFont_MutipleValue.addChild(aniNode)
-                aniNode.Items["BitmapFontLabel_19"].string = "" + beishu
+                this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
+                aniNode.Items["BitmapFontLabel_1"].string = "X" + beishu
                 var tScale = yx.config.changeOldResScale
                 aniNode.scale = v3(tScale, tScale, tScale)
+                aniNode.setPosition(new Vec3(0,70,1))
                 const a = aniNode.getComponent(Animation);
-                
+ 
                 a.on(Animation.EventType.FINISHED, () => {
                     aniNode.removeFromParent(true)
                 });
-                a.play(`ani_beishubianhua_0`);
+                a.play(`ani_beishubianhua`);
+                
+                var targetWorldPos = this.Items.BMFont_MutipleValue.worldPosition
+                var aniWorldPos = aniNode.worldPosition
+                tween(aniNode)
+                    .delay(0.8)
+                    .parallel(
+                        tween().to(0.3, { scale: new Vec3(tScale, tScale, tScale)}),
+                        tween().by(0.3, { position: new Vec3(targetWorldPos.x-aniWorldPos.x, targetWorldPos.y-aniWorldPos.y, 1) })
+                    )
+                    .call(()=>{
+                        this.setBaseScorePool(Allbeishu,true)
+                    })
+                    .start()
             }
         });
     }
@@ -280,7 +324,7 @@ export class main_Landlord extends main_GameBase {
 
             var preTouchEventType = touchEventType
             
-            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y + 20){// &&  this:getGameStatus() == DDZ_DEF.GameStatus.GameStatus_Playing ){
+            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y + 20){// &&  this:getGameStatus() == yx.config.GameStatus.GameStatus_Playing ){
                 touchEventType = "outCard" // 出牌
             }else{
                 touchEventType = "selCard"
@@ -474,14 +518,153 @@ export class main_Landlord extends main_GameBase {
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_END, _onTouchEnded, this);
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_CANCEL, _onTouchCancel, this);
     }
+    //玩家出牌命令
+    didReceiveOutCard(){
+        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21 ]
+        var cardType = yx.config.OutCardType.Sequence
+        var leaveCardCount = 5
+        var nChairID = 1
+        
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        if(ClientChairID == 0){
+            yx.func.removeCardByData(cardData,this.m_HandCardNode,this.m_HandCardData)
+            this.resetHandCardPos()
+        }else{
+            this.player.setPlayerCardNumVisible(nChairID,true,leaveCardCount,true) 
+        }
+        
+        this.ShowOutCard(nChairID,cardData,cardType)
+    }
+    //重设手牌位置
+    resetHandCardPos(){
+        yx.func.sortCard(this.m_HandCardNode)
+        this.resetCardsPosition(this.m_HandCardNode.length)
+        var cardsPos = this.m_vecCardsPosition
+        for(var i=0;i<this.m_HandCardNode.length;i++){
+            this.m_HandCardNode[i].setPosition(cardsPos[i])
+            this.m_HandCardNode[i].setSiblingIndex(this.m_HandCardNode[i].getComponent("card_Landlord").getCardLocalZOrder())
+            this.m_HandCardNode[i].getComponent("card_Landlord").showMarkAsLandlord(false)
+            if(i==this.m_HandCardNode.length-1){
+                this.m_HandCardNode[i].getComponent("card_Landlord").showMarkAsLandlord(yx.func.getClientChairIDByServerChairID(this.nLandlordId) == 0)
+            }
+        }
+    }
+    //展示出牌动画
+    ShowOutCard(nChairID:number,cardData:number[],cardType:number){
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var posVecs = yx.func.getCardPositionForOutCard(ClientChairID,cardData.length)
+        var outCardParent:ccNode = this.player.getOutCardParent(nChairID,true)
+        var cardArr = []
+        const tScale = yx.config.CARD_SCALE_OUT_CARDS
+        for(var i=0;i<cardData.length;i++){
+            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_OutCard)
+            card.setScale(new Vec3(tScale,tScale,tScale))
+            outCardParent.addChild(card)
+            cardArr.push(card)
+            if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+                card.setPosition(ClientChairID == 1 ? posVecs[cardData.length - 1] : posVecs[0])
+                tween(card)
+                    .to(0.2,{ position:posVecs[i] })
+                    .start()
+            }else{
+                card.setPosition(posVecs[i])
+            }
+        }
+        //牌堆整体表现
+        if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+            outCardParent.obtainComponent(UIOpacity).opacity =1 
+            tween(outCardParent.obtainComponent(UIOpacity))
+                .to(0.05,{ opacity:255 })
+                .start()
+        }else if(cardType == yx.config.OutCardType.Bomb || cardType == yx.config.OutCardType.LaiZiBomb || cardType == yx.config.OutCardType.Rocket || cardType == yx.config.OutCardType.serial_bomb){
+            outCardParent.obtainComponent(UIOpacity).opacity =1 
+            tween(outCardParent.obtainComponent(UIOpacity))
+                .to(0.05,{ opacity:255 })
+                .start()
+            tween(outCardParent)
+                .call(() => {
+                    outCardParent.setScale(new Vec3(1.5,1.5,1.5))
+                })
+                .delay(0.05)
+                .to(0.2,{ scale:new Vec3(0.95,0.95,0.95) }, { easing: 'sineOut' })
+                .to(0.1,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
+                .start()
+        } else{
+            outCardParent.obtainComponent(UIOpacity).opacity =1 
+            tween(outCardParent.obtainComponent(UIOpacity))
+                .to(0.05,{ opacity:255 })
+                .start()
+            tween(outCardParent)
+                .call(() => {
+                    outCardParent.setScale(new Vec3(0.8,0.8,0.8))
+                })
+                .delay(0.05)
+                .to(0.2,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
+                .start()
+        }
+        //牌型特效
+        this.playCardTypeEffect(nChairID,cardType,posVecs)
+        
+    }
+    //牌型特效
+    playCardTypeEffect(nChairID:number,cardType:number,posVecs:Vec3[],callback?:Function){
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var aniName:string
+        var parentNode:ccNode = this.viewZOrderNode[this.viewZOrder.Anim]
+        var pos:Vec3= new Vec3(0,0,0)
+        if(cardType == yx.config.OutCardType.Sequence){
+            parentNode = this.player.getOutCardParent(nChairID)
+            var pos1 = posVecs[Math.floor((posVecs.length-1)/2)]
+            pos = new Vec3(pos1.x,pos1.y+40,pos1.z)
+            aniName = "ani_node_shunzi"
+        }else if(cardType == yx.config.OutCardType.Sequence_Of_Pairs){
+            parentNode = this.player.getOutCardParent(nChairID)
+            var pos1 = posVecs[Math.floor((posVecs.length-1)/2)]
+            pos = new Vec3(pos1.x,pos1.y+40,pos1.z)
+            aniName = "ani_node_liandui"
+        }else if(cardType >= yx.config.OutCardType.Sequence_Of_Triplets && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+            aniName = "ani_node_feiji"
+        }else if(cardType == yx.config.OutCardType.softBomb || cardType == yx.config.OutCardType.Bomb || cardType == yx.config.OutCardType.LaiZiBomb ){
+            aniName = "ani_node_zhadan"
+        }else if(cardType == yx.config.OutCardType.Rocket  ){
+            aniName = "ani_node_huojian"
+        }else if(cardType == yx.config.OutCardType.serial_bomb || cardType == yx.config.OutCardType.Quadplex_Two_special ){
+            aniName = "ani_node_lianzha"
+        }
 
+        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
+            let aniNode = instantiate(res);
+            if(!fw.isNull(aniNode)){
+                parentNode.addChild(aniNode)
+                if(aniName == "ani_node_shunzi" || aniName == "ani_node_liandui" ){
+                    if(ClientChairID == 1){
+                        aniNode.Items.Node_zuo.active = false
+                    }else{
+                        aniNode.Items.Node_you.active = false
+                    }
+                }
+                aniNode.setPosition(pos)
+                var tScale = yx.config.changeOldResScale
+                aniNode.scale = v3(tScale, tScale, tScale)
+                const a = aniNode.getComponent(Animation);
+                
+                a.on(Animation.EventType.FINISHED, () => {
+                    aniNode.removeFromParent(true)
+                });
+                a.play(aniName);
+            }
+        });
+    }
     //发牌命令
     didReceiveSendCard(){
-        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21,0x4E,0x4F ]
+        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21]
         this.m_HandCardData = cardData
         for(var i=0;i<cardData.length;i++){
             var node = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_Hands)
-            this.m_HandCardNode.push(node)
+            if(!fw.isNull(node)){
+                this.m_HandCardNode.push(node)
+            }
+            
             // this.Items.node_handCard.addChild(node)
         }
         yx.func.sortCard(this.m_HandCardNode)
@@ -648,6 +831,8 @@ export class main_Landlord extends main_GameBase {
         var gmWidth = 0
         var cardPaddingOfHandCards = 0
         var delX = 24
+        this.m_mapGMPos = []
+        this.m_vecCardsPosition = []
         if(nCardCount <= 17)  {
             yx.config.CARD_PADDING_TOTAL_OF_HAND_CARDS = 35
             gmWidth = (nCardCount - 1) * yx.config.CARD_PADDING_OF_HAND_CARDS + yx.config.CARD_SIZE.width
@@ -683,9 +868,13 @@ export class main_Landlord extends main_GameBase {
         // let res = this.loadBundleResSync(app.game.getRes('ui/main/reuse/node_poker'),Prefab)
         let res = this.loadBundleResSync(fw.BundleConfig.Landlord.res['ui/main/reuse/node_poker'], Prefab);
         //实例化对象
-        let node = instantiate(res);
-        let card_Landlord = node.getComponent("card_Landlord");
-        card_Landlord.setCardData(cardValue,cardType)
+        let node :ccNode = null
+        if(res){
+            node= instantiate(res);
+            let card_Landlord = node.getComponent("card_Landlord");
+            card_Landlord.setCardData(cardValue,cardType)
+        }
+        
 
         return node
     }
@@ -723,40 +912,49 @@ export class main_Landlord extends main_GameBase {
 
             for(let i=0;i<cbHandCache.length ;i++){
                 var card = cbHandCache[i]
-                this.Items.node_handCard.addChild(card)
-                var originPos = new Vec3(0,0)
-                var targetPos = new Vec3(0,0)
-                if(i!=0){
-                    originPos = new Vec3(cardsPos[i - 1].x+app.winSize.width/2,cardsPos[i - 1].y,cardsPos[i - 1].z) 
-                }else{
-                    originPos = new Vec3(cardsPos[i ].x+app.winSize.width/2,cardsPos[i ].y,cardsPos[i].z) 
+                if(!fw.isNull(card)){
+                    this.Items.node_handCard.addChild(card)
+                    var originPos = new Vec3(0,0)
+                    var targetPos = new Vec3(0,0)
+                    if(i!=0){
+                        originPos = new Vec3(cardsPos[i - 1].x+app.winSize.width/2,cardsPos[i - 1].y,cardsPos[i - 1].z) 
+                    }else{
+                        originPos = new Vec3(cardsPos[i ].x+app.winSize.width/2,cardsPos[i ].y,cardsPos[i].z) 
+                    }
+                    targetPos = cardsPos[i]
+
+                    card.setPosition(originPos)
+                    card.obtainComponent(UIOpacity).opacity =1 
+                    // card.setCascadeOpacityEnabled(true)
+                    card.setSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
+
+                    var  delayTime = unitDelayTime * (i+1) 
+                    tween(card)
+                        .delay(delayTime)
+                        .call(() => {
+                            // card.obtainComponent(UIOpacity).opacity =255 
+                            for(var p = 0;p<yx.internet.nMaxPlayerCount;p++){
+                                const ClientChairID = yx.func.getClientChairIDByServerChairID(p);
+                                if(ClientChairID != 0){
+                                    this.player.setPlayerCardNumVisible(p,true,i+1,true)
+                                }
+                            }
+                        })
+                        .to(unitDelayTime, { position:targetPos })
+                        .start();
+                    tween(card.obtainComponent(UIOpacity))
+                        .delay(delayTime)
+                        .to(0, { opacity: 255 })
+                                .start()
+                        .start();
+                    tween(this.Items.node_handCard)
+                        .delay(delayTime)
+                        .call(() => {
+                            actionCallFuncOfGM(i)
+                        })
+                        .start();
                 }
-                targetPos = cardsPos[i]
-
-                card.setPosition(originPos)
-                card.obtainComponent(UIOpacity).opacity =1 
-                // card.setCascadeOpacityEnabled(true)
-                card.getSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
-
-                var  delayTime = unitDelayTime * (i+1) 
-                tween(card)
-                    .delay(delayTime)
-                    .call(() => {
-                        // card.obtainComponent(UIOpacity).opacity =255 
-                    })
-                    .to(unitDelayTime, { position:targetPos })
-                    .start();
-                tween(card.obtainComponent(UIOpacity))
-                    .delay(delayTime)
-                    .to(0, { opacity: 255 })
-                            .start()
-                    .start();
-                tween(this.Items.node_handCard)
-                    .delay(delayTime)
-                    .call(() => {
-                        actionCallFuncOfGM(i)
-                    })
-                    .start();
+                
             }
         }else if(type == 2){
             unitDelayTime = unitDelayTime * 0.68
@@ -765,51 +963,61 @@ export class main_Landlord extends main_GameBase {
 
             for(let i=0;i<cbHandCache.length ;i++){
                 var card = cbHandCache[i]
-                this.Items.node_handCard.addChild(card)
-                var originPos = new Vec3(0,0)
-                var targetPos = new Vec3(0,0)
-                if(i!=0){
-                    originPos = new Vec3(cardsPos[i - 1].x,cardsPos[i - 1].y,cardsPos[i - 1].z) 
-                }else{
-                    originPos = new Vec3(cardsPos[i ].x,cardsPos[i ].y,cardsPos[i].z) 
-                }
-                targetPos = cardsPos[i]
+                if(!fw.isNull(card)){
+                    this.Items.node_handCard.addChild(card)
+                    var originPos = new Vec3(0,0)
+                    var targetPos = new Vec3(0,0)
+                    if(i!=0){
+                        originPos = new Vec3(cardsPos[i - 1].x,cardsPos[i - 1].y,cardsPos[i - 1].z) 
+                    }else{
+                        originPos = new Vec3(cardsPos[i ].x,cardsPos[i ].y,cardsPos[i].z) 
+                    }
+                    targetPos = cardsPos[i]
 
-                card.setPosition(originPos)
-                card.obtainComponent(UIOpacity).opacity =1 
-                // card.setCascadeOpacityEnabled(true)
-                card.getSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
+                    card.setPosition(originPos)
+                    card.obtainComponent(UIOpacity).opacity =1 
+                    // card.setCascadeOpacityEnabled(true)
+                    card.getSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
+                    
+                    var gmPos = this.getGameManagerPostion(i)
+                    var delayTime = unitDelayTime * (i + 1)
+                    var  delayTime = unitDelayTime * (i+1)
+                    tween(card)
+                        .delay(delayTime)
+                        .call(() => {
+                            // card.obtainComponent(UIOpacity).opacity =255 
+                            for(var p = 0;p<yx.internet.nMaxPlayerCount;p++){
+                                const ClientChairID = yx.func.getClientChairIDByServerChairID(p);
+                                if(ClientChairID != 0){
+                                    this.player.setPlayerCardNumVisible(p,true,i+1,true)
+                                }
+                            }
+                        })
+                        .to(unitDelayTime, { position:targetPos })
+                        .start();
+                    tween(card.obtainComponent(UIOpacity))
+                        .delay(delayTime)
+                        .to(0, { opacity: 255 })
+                                .start()
+                        .start();
+                    tween(this.Items.node_handCard)
+                        .delay(unitDelayTime * i)
+                        .to(unitDelayTime, { position:gmPos })
+                        .call(() => {
+                            actionCallFuncOfGM(i)
+                        })
+                        .delay(0.2)
+                        .call(() => {
+                            showLight(i)
+                        })
+                        .start();
+                }
                 
-                var gmPos = this.getGameManagerPostion(i)
-                var delayTime = unitDelayTime * (i + 1)
-                var  delayTime = unitDelayTime * (i+1)
-                tween(card)
-                    .delay(delayTime)
-                    .call(() => {
-                        // card.obtainComponent(UIOpacity).opacity =255 
-                    })
-                    .to(unitDelayTime, { position:targetPos })
-                    .start();
-                tween(card.obtainComponent(UIOpacity))
-                    .delay(delayTime)
-                    .to(0, { opacity: 255 })
-                            .start()
-                    .start();
-                tween(this.Items.node_handCard)
-                    .delay(unitDelayTime * i)
-                    .to(unitDelayTime, { position:gmPos })
-                    .call(() => {
-                        actionCallFuncOfGM(i)
-                    })
-                    .delay(0.2)
-                    .call(() => {
-                        showLight(i)
-                    })
-                    .start();
             }
         }
     }
-
+    
+    //展示炸弹手牌亮光
     showBoomLightAni(){
         var rocketArr = [ ]
         var boomArr = []
@@ -841,13 +1049,41 @@ export class main_Landlord extends main_GameBase {
         }
         
     }
-
+    //插入三张牌
+    insertThreeCard(lastThreeCache:number[],nChairID:number){
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        if(ClientChairID == 0){
+            var arr = []
+            for(var i=0;i<lastThreeCache.length;i++){
+                var node = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_Hands)
+                this.m_HandCardNode.push(node)
+                this.m_HandCardData.push(lastThreeCache[i])
+                this.Items.node_handCard.addChild(node)
+                arr.push(node)
+            }
+            this.resetHandCardPos()
+            for(let i=0;i<arr.length;i++){
+                let card = arr[i]
+                card.getComponent("card_Landlord").setPop(true)
+                tween(card)
+                    .delay(1)
+                    .to(0.3,{ position:new Vec3(card.getPosition().x,0,1)})
+                    .call(()=>{
+                        card.getComponent("card_Landlord").setPop(false)
+                    })
+                    .start()
+            }
+        }else{
+            this.player.setPlayerCardNumVisible(nChairID,true,20,false) 
+        }
+    }
     //展示三张牌揭开后的动画
-    showLastThreeCardAndMove(lastThreeCache:number[]){
+    showLastThreeCardAndMove(lastThreeCache:number[],nChairID:number){
+        let self = this
         this.Items.node_showThreeNormal.active = true
         let startPosArr = []
         let endPosArr = []
-        let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2)=>{
+        let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2,isLast:boolean)=>{
             tween(card)
                 .hide()
                 .delay(0.4)
@@ -868,10 +1104,16 @@ export class main_Landlord extends main_GameBase {
             tween(bg)
                 .show()
                 .to(0.4, { scale: new Vec3(0,1,0) })
+                .call(() => {
+                    if(isLast){
+                        self.insertThreeCard(lastThreeCache,nChairID)
+                    }
+                    
+                })
                 .hide()
                 .start()
         }
-        for(let i=0;i<3;i++){
+        for(let i=0;i<lastThreeCache.length;i++){
             let bg = this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i]
             bg.active = true
             let bgPos = bg.getPosition()
@@ -889,7 +1131,7 @@ export class main_Landlord extends main_GameBase {
             card.setScale(new Vec3(0,1.6,1.6))
             card.setPosition(bgPos.x,bgPos.y )
             
-            showFun(card,bg,baseBg,endPos)
+            showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
         }
         
     }

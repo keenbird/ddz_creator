@@ -223,6 +223,12 @@ export class config_Landlord extends config_GameBase {
         /* 滑动模式（滑动选牌进行搜索） */
         SearchMode_Sliding : 3,
     }
+    //间距（打出的牌之间的间隔）
+    CARD_PADDING_OF_OUT_CARDS = 35
+    //出牌缩小比例
+    CARD_SCALE_OUT_CARDS = 0.6
+    /** 扑克牌的尺寸 */
+    OUT_CARD_SIZE = new Size(107, 141)
 }
 
 /**牌花色 */

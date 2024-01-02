@@ -1,4 +1,4 @@
-import { _decorator, Node as ccNode,Animation } from 'cc';
+import { _decorator, Node as ccNode,Animation, Vec2,Vec3 } from 'cc';
 const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
@@ -175,6 +175,46 @@ export class func_Landlord extends func_GameBase {
                 }
             }
         }
+    }
+    //根据传入牌值数组去掉手牌
+    removeCardByData(cardData:number[],handCardNode:ccNode[],handCardData:number[]){
+        for(let i=0;i<cardData.length;i++){
+            this.removeCardByValue(cardData[i],handCardNode)
+            let idx = handCardData.indexOf(cardData[i])
+            if(idx != -1){
+                handCardData.splice(idx,1)
+            }
+        }
+    }
+    //根据传入牌值获取手牌
+    removeCardByValue(cardValue:number,handCardNode:ccNode[]){
+        for(var i=handCardNode.length-1;i>=0;i--){
+            if(handCardNode[i].getComponent("card_Landlord").getCardData() == cardValue){
+                let card = handCardNode[i]
+                handCardNode.splice(i,1)
+                card.removeFromParent(true)
+                return true
+            }
+        }
+        return false
+    }
+    //获取出牌的坐标
+    getCardPositionForOutCard(ClientChairID:number,cardCount:number):Vec3[]{
+        var posVecs:Vec3[] = []
+        if(ClientChairID == 0){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i-(cardCount-1)/2)-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS*0.5,0,1))
+            }
+        }else if(ClientChairID == 1){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(cardCount -i - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,0,1))
+            }
+        }else if(ClientChairID == 2){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i),0,1))
+            }
+        }
+        return posVecs
     }
 
    // /**

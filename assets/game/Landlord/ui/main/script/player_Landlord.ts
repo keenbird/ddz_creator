@@ -10,6 +10,7 @@ import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
 import { player_GameBase } from '../../../../GameBase/ui/main/script/player_GameBase';
 import { TextAsset } from '../../../../../../engine/typedoc-index';
 import { scale } from '../../../../../../engine/cocos/primitive';
+import { bool } from '../../../../../app/config/NetConfig';
 
 @ccclass('player_Landlord')
 export class player_Landlord extends player_GameBase {
@@ -108,7 +109,10 @@ export class player_Landlord extends player_GameBase {
         this.scheduleOnce(() => {
             this.setPlayerCartoonVisible(null, true , 1);
         },3)
-        this.setPlayerDizhuVisible(0,true)
+        
+        this.scheduleOnce(function(){
+            this.setPlayerDizhuVisible(0,true)
+        }, 5);
         //------------test----------------//
 
         // //隐藏部分简单界面
@@ -154,6 +158,24 @@ export class player_Landlord extends player_GameBase {
             }
         }
     }
+    //获取出牌节点
+    getOutCardParent(nChairID: number,isCleanChild?:boolean):ccNode{
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var node : ccNode
+        if(ClientChairID == 0){
+            node =  this.Items.Node_bottom.Items.node_OutCardPos
+        }else{
+            const player = this.getPlayerNode({ nChairID: nChairID });
+            if (player) {
+                node =  player.Items.node_outcard_pos
+            }
+        }
+        if(isCleanChild){
+            node.removeAllChildren()
+        }
+        return node
+    }
+
 
     //设置玩家实时流水提示
     setSettlementScoreVisible(nChairID: number, bVisible: boolean, num?: number, isAni?: boolean) {
@@ -292,15 +314,16 @@ export class player_Landlord extends player_GameBase {
         }
     }
     //设置对两家牌数
-    setPlayerCardNumVisible(nChairID: number, bVisible: boolean, cardNum?: number) {
+    setPlayerCardNumVisible(nChairID: number, bVisible: boolean, cardNum?: number, noBaojin?: boolean) {
         let self = this
+        noBaojin = noBaojin ? noBaojin : false
         let func = (nChairIDEx: number) => {
             let showFun = (cardNode :ccNode) => {
                 cardNode.active = bVisible
                 
                 if(bVisible && cardNum ){
                     cardNode.Items.BMFont_SurplusValue.string = cardNum + ""
-                    if(cardNum > 0 && cardNum <= 2){
+                    if(cardNum > 0 && cardNum <= 2 && !noBaojin){
                         cardNode.Items.ani_jinbaoqi.active = true
                         const a = cardNode.Items.ani_jinbaoqi.getComponent(Animation);
                         // a.stop()
@@ -313,7 +336,7 @@ export class player_Landlord extends player_GameBase {
             var node : ccNode
             if(ClientChairID != 0){
                 const player = this.getPlayerNode({ nChairID: nChairIDEx });
-                if (player) {
+                if (player ) {
                     node =  player.Items.Sprite_SurplusCard
                     showFun(node)
                 }
@@ -421,6 +444,9 @@ export class player_Landlord extends player_GameBase {
     }
     //设置玩家是否为地主的标志
     setPlayerDizhuVisible(nChairIDEx: number, isAni: boolean) {
+        if(yx.main){
+            yx.main.nLandlordId = nChairIDEx
+        }
         var noAniShow = () =>{
             for (let nChairID = 0, j = yx.internet.nMaxPlayerCount; nChairID < j; ++nChairID) {
                 const player = this.getPlayerNode({ nChairID: nChairID });
@@ -429,8 +455,12 @@ export class player_Landlord extends player_GameBase {
     
                     if(nChairIDEx == nChairID){
                         player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`ui/main/texture/player/yxc_tb_dizhu/spriteFrame`));
+                        
                     }else{
                         player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`ui/main/texture/player/yxc_tb_nongming/spriteFrame`));
+                    }
+                    if(yx.func.getClientChairIDByServerChairID(nChairID) == 0){
+                        yx.main.resetHandCardPos()
                     }
                 }
             }
