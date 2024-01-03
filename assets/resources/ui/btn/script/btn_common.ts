@@ -17,20 +17,20 @@ export class btn_common extends (fw.FWComponent) {
 	 */
 	/**一般用于“同意”，“OK”，“好的” ...等同意类按钮，也可自定义使用 */
 	private initStyle_1(data: BtnStyleParam) {
-		data.text = data.text ?? `Ok`;
-		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/img/atlas/btn_1/spriteFrame`];
+		data.text = data.text ?? `确定`;
+		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/an_dh/spriteFrame`];
 		this.initStyle(data, true);
 	}
 	/**一般用于“拒绝”，“No”，“不了” ...等拒绝类按钮，也可自定义使用 */
 	private initStyle_2(data: BtnStyleParam) {
-		data.text = data.text ?? `No`;
-		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/img/atlas/btn_2/spriteFrame`];
+		data.text = data.text ?? `拒绝`;
+		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/an_hong/spriteFrame`];
 		this.initStyle(data, true);
 	}
 	/**一般用于“了解”，“知道了” ...等中立类按钮，也可自定义使用 */
 	private initStyle_3(data: BtnStyleParam) {
-		data.text = data.text ?? `Ok`;
-		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/img/atlas/btn_3/spriteFrame`];
+		data.text = data.text ?? `了解`;
+		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/an_lv/spriteFrame`];
 		this.initStyle(data, true);
 	}
 	/**初始化界面 */

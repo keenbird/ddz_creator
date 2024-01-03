@@ -103,8 +103,10 @@ export class player_Landlord extends player_GameBase {
         this.setPlayerCardNumVisible(null, false );
         //隐藏所有玩家玩偶形象
         this.setPlayerCartoonVisible(null, false );
+        //隐藏所有玩家气泡
+        this.setPlayerChatBubble(null, false );
         
-        //------------test----------------//
+        //------------test----------------//    
         this.setPlayerCartoonVisible(null, true , 2);
         this.scheduleOnce(() => {
             this.setPlayerCartoonVisible(null, true , 1);
@@ -121,7 +123,6 @@ export class player_Landlord extends player_GameBase {
             if (player) {
                 player.Items.Image_dizhu_icon.active = false;
                 player.Items.node_trusteeship.active = false;
-                player.Items.ImageView_BubbleBG.active = false;
             }
         }
     }
@@ -340,6 +341,71 @@ export class player_Landlord extends player_GameBase {
                     node =  player.Items.Sprite_SurplusCard
                     showFun(node)
                 }
+            }
+            
+            
+        }
+        if (fw.isNull(nChairID)) {
+            for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
+                func(k);
+            }
+        } else {
+            func(nChairID);
+        }
+    }
+    //设置玩家聊天气泡
+    setPlayerChatBubble(nChairID: number, bVisible: boolean, content?: string, isAni?: boolean) {
+        let func = (nChairIDEx: number) => {
+            let showFun = (BubbleNode :ccNode) => {
+                BubbleNode.active = bVisible
+                
+                if(bVisible && content ){
+                    BubbleNode.Items.Text_BubbleContent.string = content + ""
+                    this.scheduleOnce(function(){
+                        BubbleNode.obtainComponent(UITransform).setContentSize(new Size(BubbleNode.getComponent(UITransform).width,BubbleNode.Items.Text_BubbleContent.getComponent(UITransform).height +20))
+                    }, 0.1);
+                }
+
+                if(isAni){
+                    if(bVisible){
+                        BubbleNode.obtainComponent(UIOpacity).opacity =1 
+                        tween(BubbleNode.obtainComponent(UIOpacity))
+                            .to(0.2,{ opacity:255 })
+                            .delay(2.5)
+                            .to(0.2,{ opacity:1 })
+                            .call(()=>{
+                                BubbleNode.active = false
+                            })
+                            .start()    
+                    }else{
+                        tween(BubbleNode.obtainComponent(UIOpacity))
+                            .to(0.2,{ opacity:0 })
+                            .call(()=>{
+                                BubbleNode.active = false
+                            })
+                            .start()    
+                    }
+                }else if(bVisible){
+                    tween(BubbleNode.obtainComponent(UIOpacity))
+                        .delay(2.5)
+                        .to(0.2,{ opacity:0 })
+                        .call(()=>{
+                            BubbleNode.active = false
+                        })
+                        .start()    
+                }
+            }
+            const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
+
+            var node : ccNode
+            if(ClientChairID != 0){
+                const player = this.getPlayerNode({ nChairID: nChairIDEx });
+                if (player ) {
+                    node =  player.Items.ImageView_BubbleBG
+                    showFun(node)
+                }
+            }else{
+                showFun(this.Items.Img_BubbleBG)
             }
             
             

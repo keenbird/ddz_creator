@@ -6,11 +6,7 @@ import { PlazaGameConfig } from './plaza_game_config';
 import { ACTOR } from '../../../app/config/cmd/ActorCMD';
 import { EVENT_ID } from '../../../app/config/EventConfig';
 import { DF_RATE } from '../../../app/config/ConstantConfig';
-import { gameItemsBase } from '../gameItems/script/gameItemsBase';
 import { bubble } from '../../../resources/ui/bubble/script/bubble';
-import { COMPILATION_SDKTYPE } from '../../../app/config/ModuleConfig';
-import { guide_hand_1 } from '../../../resources/ui/guide/script/guide_hand_1';
-import { plaza_secondary_base } from '../secondary/script/plaza_secondary_base';
 
 /**二级界面类型 */
 export enum SecondaryType {
@@ -428,10 +424,7 @@ export class plaza_main extends (fw.FWComponent) {
 		this.Items.ScrollView.getComponent(Widget).left = 400;
 		let item = instantiate(prefab);
 		//保存数据
-		let gameItem = item.getComponent(gameItemsBase);
-		this.Items.Node_special.addChild(item);
-		//刷新显示
-		gameItem.updateView(data);
+
 		// 新注册用户去掉大厅中slot的引导手指
 		// if (this.mCheckRegLogin && !fw.isValid(this.guideNode)) {
 		// 	this.node.loadBundleRes(fw.BundleConfig.resources.res[`ui/guide/guide_hand_2`],(res: Prefab) => {
@@ -468,8 +461,7 @@ export class plaza_main extends (fw.FWComponent) {
 					this.Items.content_big.addChild(item);
 				}
 				item.active = true;
-				let gameItem = item.getComponent(gameItemsBase);
-				gameItem.updateView(element);
+	
 				item.onClickAndScale(() => {
 					this.onClickGame(element);
 				});
@@ -480,38 +472,7 @@ export class plaza_main extends (fw.FWComponent) {
 				childs[index].active = false;
 			}
 		}
-		//小入口
-		if (this.gameItemsBase) {
-			let showData = smallGame.filter(this.isPlazaRoomOpen.bind(this))
-			if (showData.length % 2 == 1) {
-				showData.push(PlazaGameConfig.MoreGame)
-			}
-			let index = 0;
-			let nCount = 0;
-			let childs = this.Items.content_small.children;
-			showData.forEach(element => {
-				let item = childs[index];
-				if (!item) {
-					item = new ccNode();
-					item.obtainComponent(UITransform).setContentSize(250, 245);
-					item.scheduleOnce(() => {
-						const animNode = instantiate(this.gameItemsBase);
-						animNode.parent = item;
-						animNode.active = true;
-						animNode.getComponent(gameItemsBase).updateView(element);
-					}, 0.15 * ++nCount);
-					this.Items.content_small.addChild(item);
-				}
-				item.onClickAndScale(() => {
-					this.onClickGame(element);
-				});
-				++index;
-			});
-			// 隐藏多余的入口
-			for (let index = showData.length; index < childs.length; index++) {
-				childs[index].active = false;
-			}
-		}
+
 
 		this.Items.ScrollView.getComponent(ScrollView).scrollToLeft();
 	}
@@ -539,7 +500,6 @@ export class plaza_main extends (fw.FWComponent) {
 			parent: this.Items.Node_secondary,
 			callback: (view, dataEx) => {
 				//调整数据
-				view.getComponent(plaza_secondary_base).setData(data);
 				//调整显示
 				data.visible && data.visible(view, data.active);
 				//执行回调
@@ -811,70 +771,7 @@ export class plaza_main extends (fw.FWComponent) {
 		let shareNode = this.Items.Sprite_share;
 		shareNode.active = bShareShow;
 		let shareData = (<any>shareNode).shareData ??= {};
-		if (bShareShow) {
-			let shareUpdate = () => {
-				let bFreeBonusOpen = center.task.isFreeBonusOpen();
-				let isFreeCashOpen = center.share.isFreeCashOpen();
-				let isNotTips = (0 == app.file.getIntegerForKey(`PlazaShareGuide`, 0));
-				let bVisible = !bFreeBonusOpen && !isFreeCashOpen && isNotTips;
-				this.Items.Node_bubble.active = bVisible;
-				if (bVisible) {
-					if (!fw.isValid(shareData.guide)) {
-						this.Items.Node_guide_main.loadBundleRes(fw.BundleConfig.resources.res[`ui/guide/guide_hand_1`], (res: Prefab) => {
-							let node = instantiate(res);
-							this.Items.Node_guide_main.addChild(node);
-							shareData.guide = node;
-							node.getComponent(guide_hand_1).playAnim();
-							node.active = false;
-							this.scheduleOnce(() => {
-								node.active = true;
-								node.setWorldPosition(shareNode.getWorldPosition());
-							});
-						});
-					}
-				} else {
-					if (fw.isValid(shareData.guide)) {
-						shareData.guide.removeFromParent(true);
-						shareData.guide = null;
-					}
-				}
-				shareNode.Items.Node_bubble.active = bVisible;
-			}
-			this.bindEvent({
-				eventName: [
-					EVENT_ID.EVENT_GETFREEBONUSTIPS,
-					EVENT_ID.EVENT_PLAZA_SHARE_FREECASH_CHANGE,
-				],
-				callback: shareUpdate
-			});
-			shareUpdate();
-
-			let shareBtnLeoTips = () => {
-				let bLeo = app.native.device.getSDKtype() == COMPILATION_SDKTYPE.LEO
-				let bVisible = bLeo && app.native.leo.isShowRedPoint() && !this.Items.Node_bubble.active
-				shareNode.Items.Node_bubble_leo.active = bVisible;
-			}
-			this.bindEvent({
-				eventName: [
-					EVENT_ID.EVENT_GETFREEBONUSTIPSLEO,
-				],
-				callback: shareBtnLeoTips
-			});
-			shareBtnLeoTips();
-			shareNode.onClickAndScale(() => {
-				if (center.user.isSwitchOpen(`btShareSwitch`)) {
-					if (center.user.isSwitchOpen(`btLEOShare`) && app.sdk.isSdkOpen(`leoshare`)) {
-						app.sdk.startWebViewPageShare();
-					} else {
-						app.popup.showDialog({
-							viewConfig: fw.BundleConfig.plaza.res[`myRefer/myRefer`]
-						});
-					}
-				}
-				app.file.setIntegerForKey(`PlazaShareGuide`, 1);
-				shareUpdate();
-			});
-		}
+	
 	}
 	initBtnVipGift() {
 		this.Items.vipGift_anim.obtainComponent(sp.Skeleton).setAnimation(0, "animation", true);

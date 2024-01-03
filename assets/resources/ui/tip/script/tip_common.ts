@@ -20,7 +20,7 @@ export class tip_common extends FWTipViewBase {
             if (fw.isValid(this.popupData.title)) {
                 this.Items.Label_title.string = this.popupData.title;
             } else {
-                this.Items.Label_title.string = fw.language.get("Tip");
+                this.Items.Label_title.string = "提示";
             }
         }
         //调整文本显示

@@ -1234,7 +1234,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -238.095,
+      "x": -80,
       "y": 236.441,
       "z": 0
     },
@@ -1283,7 +1283,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 11.433,
+      "x": 43.789,
       "y": 2.745,
       "z": 0
     },
@@ -1324,11 +1324,11 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 260,
-      "height": 63.28
+      "height": 63.279999999999994
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 1,
       "y": 0.5
     },
     "_id": ""
@@ -1358,14 +1358,14 @@
       "b": 6,
       "a": 255
     },
-    "_string": "哈哈哈哈哈哈哈哈哈哈哈哈哈\n哈哈哈哈哈哈哈哈哈哈哈哈哈",
+    "_string": "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
     "_actualFontSize": 20,
     "_fontSize": 20,
     "_fontFamily": "Arial",
     "_lineHeight": 28,
-    "_overflow": 0,
+    "_overflow": 3,
     "_enableWrapText": true,
     "_font": null,
     "_isSystemFontUsed": true,
@@ -1407,12 +1407,12 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 354,
+      "width": 330,
       "height": 84
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
-      "x": 0.5,
+      "x": 0,
       "y": 0.5
     },
     "_id": ""

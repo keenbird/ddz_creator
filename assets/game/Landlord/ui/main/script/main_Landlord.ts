@@ -32,6 +32,7 @@ export class main_Landlord extends main_GameBase {
     m_vecPopCache: any[]= [];
     m_RegionData :any;
     m_enumGameStatus: number;
+    schedule_updateTime:any;
     protected initData(): boolean | void {
         this.m_HandCardData = []
         this.m_HandCardNode = []
@@ -43,7 +44,8 @@ export class main_Landlord extends main_GameBase {
         this.player = this.obtainComponent(app.game.getCom(`player`));
         // //清理游戏
         this.clearOneGame();
-        
+        //初始化时间
+        this.initTimeLabel();
     }
     protected initEvents(): boolean | void {
         //玩家金币金币变更
@@ -69,27 +71,29 @@ export class main_Landlord extends main_GameBase {
     }
     protected initBtns(): boolean | void {
         /**Andar */
-        // this.Items.Node_andar.onClickAndScale(() => {
-        //     this.onOperate(yx.config.JettonArea.BTN_BETA);
-        // });
-        // this.Items.Label_andar.string = fw.language.get(`ANDAR`);
-        /**Bahar */
-        // this.Items.Node_bahar.onClickAndScale(() => {
-        //     this.onOperate(yx.config.JettonArea.BTN_BETB);
-        // });
-        // this.Items.Label_bahar.string = fw.language.get(`BAHAR`);
-        /**Skip */
-        // this.Items.Node_skip.onClickAndScale(() => {
-        //     this.onOperate(yx.config.JettonArea.BTN_SKIP, 0);
-        // });
-        // this.Items.Label_skip.string = fw.language.get(`SKIP`);
+        this.Items.Sprite_BtnMore.onClickAndScale(() => {
+            this.onMoveBgClick()
+        });
+
+        this.Items.btn_return.onClickAndScale(() => {
+            // fw.scene.changeScene(fw.SceneConfigs.plaza);
+            app.gameManager.exitGame();
+        });
+        this.Items.btn_cardRecord.onClickAndScale(() => {
+            // yx.internet.MSG_BACK_C({1});
+        });
+ 
+
+        this.Items.Sprite_BtnTrusteeship.onClickAndScale(() => {
+            this.showTrustLayout(true)
+        });
         /**trusteeship */
         this.Items.Node_trusteeship.onClickAndScale(() => {
-            yx.internet.MSG_BACK_C({});
+            // yx.internet.MSG_BACK_C({});
+            this.showTrustLayout(false)
         });
-        // this.Items.Label_trusteeship.string = fw.language.get(`I'm back`);
-        // this.Items.Label_trusteeship_tips.string = fw.language.get(`You have been put on Auto-Play for missing a turn`);
         this.initCardTouchLayerEvent()
+        this.initEmptySpaceEvent()
     }
     /**清理一局游戏 */
     clearOneGame() {
@@ -128,7 +132,8 @@ export class main_Landlord extends main_GameBase {
                 this.didReceiveOutCard()
                 this.showXbeiAni(3,15)
             }, 4);
-        
+            app.popup.showToast("assssssssssssssssssssssssss");
+            app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
         
     }
@@ -295,26 +300,34 @@ export class main_Landlord extends main_GameBase {
             }
         }
     }
+    //创建最底层的触摸,用来关闭部分界面
+    initEmptySpaceEvent(){
+        var _onTouchBegan = function(touch, event){
+            this.onMoveBgClick(true)
+        }
 
-    //创建触摸屏
+        this.Items.Sprite_bg.on(NodeEventType.TOUCH_START, _onTouchBegan, this);       
+    }
+    //创建卡牌触摸屏
     initCardTouchLayerEvent(){
+        let self = this
         var touchEventType = "selCard" //选牌
         var m_TouchPointStart = new Vec2(0,0)
         var _onTouchBegan = function(touch, event){
             console.log("touch:",touch)
-            console.log("event:",event)
+            
             // --移除多种牌型选择框
             // if this.m_gameLayer then
             //     this.m_gameLayer:removeChooseCardNode()
             // end
             // var size = this.Items.cardTouchLayout.getComponent(UITransform).getContentSize()
             // var rect = new Rect(0, 0, size.width, size.height)
-            m_TouchPointStart = touch.touch._startPoint
+            m_TouchPointStart = touch.getUILocation()
         }
 
         var _onTouchMove = function(touch, event){
     
-            var touchPos = touch.touch._point
+            var touchPos = touch.getUILocation()
             var rectX = (touchPos.x < m_TouchPointStart.x) ? touchPos.x : m_TouchPointStart.x
             var rectY = (touchPos.x < m_TouchPointStart.x) ? touchPos.y : m_TouchPointStart.y
             var rectW = Math.abs(m_TouchPointStart.x - touchPos.x)
@@ -392,16 +405,15 @@ export class main_Landlord extends main_GameBase {
 
             if(touchEventType == "outCard"){
                 if(!fw.isNull(this.mDragCardNode) ){
-                    var worldPosy =  touch.touch._point.y -this.Items.node_handCard.worldPosition.y
-                    var worldPosx =  touch.touch._point.x -this.Items.node_handCard.worldPosition.x 
+                    var worldPosy =  touch.getUILocation().y -this.Items.node_handCard.worldPosition.y
+                    var worldPosx =  touch.getUILocation().x -this.Items.node_handCard.worldPosition.x 
                     this.mDragCardNode.setPosition(worldPosx,worldPosy)
                 }
             }
         }
-        let self = this
         var _onTouchEnded = function(touch, event){
             var tmpFun = function(){
-                var  touchPos = touch.touch._point
+                var  touchPos = touch.getUILocation()
                 var moveDelta = new Vec2(touchPos.x - m_TouchPointStart.x, touchPos.y - m_TouchPointStart.y)
                 if(Math.abs(moveDelta.x) <= yx.config.CARD_GESTURE_TAP_OFFSET_MAX && Math.abs(moveDelta.y) <= yx.config.CARD_GESTURE_TAP_OFFSET_MAX ){
                     var rectVectorSize = self.m_HandCardNode.length
@@ -1134,6 +1146,31 @@ export class main_Landlord extends main_GameBase {
             showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
         }
         
+    }
+    //展示更多按钮
+    onMoveBgClick(isActive?:boolean){
+        if(isActive != null && isActive != this.Items.menu_bg.active){
+            return
+        }
+        this.Items.menu_bg.active = !this.Items.menu_bg.active
+    }
+    //初始化时间
+    initTimeLabel(){
+        let self = this
+        var setTimeLabel = function(){
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const time = `${hours}:${minutes}`;
+            self.Items.Text_Time.string = time
+        }
+
+        setTimeLabel();
+        if (this.schedule_updateTime) {
+            this.clearIntervalTimer(this.schedule_updateTime);
+            this.schedule_updateTime = null;
+        }
+        this.schedule_updateTime = this.setInterval(setTimeLabel, 1)
     }
 
     //-----------------------------老代码 ------------------------------------//
