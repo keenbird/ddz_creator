@@ -19,7 +19,9 @@ export class login_main extends (fw.FWComponent) {
 	protected doLifeFunc(): void {
 		//测试
 		this.Items.Button_test_001.onClickAndScale(() => {
-			fw.scene.changeScene(fw.SceneConfigs.plaza);
+			// fw.scene.changeScene(fw.SceneConfigs.plaza);
+			// this.onClickYouKe()
+			center.login.loginGuestLua("test0", "test0", "130388F324329CE5CDC1A823A9BD800C", true)
 		});
 		//正常逻辑
 		// super.doLifeFunc();

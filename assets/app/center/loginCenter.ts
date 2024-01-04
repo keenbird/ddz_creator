@@ -69,7 +69,7 @@ export class LoginCenter extends LoginMainInetMsg {
             return
         }
 
-
+        console.log("LH1")
         let loginData = proto.login_server.login_new_c.create()
         loginData.buff_bios = app.native.device.getBiosID();
         loginData.buff_cpu = app.native.device.getCpuID();
@@ -350,7 +350,7 @@ export class LoginCenter extends LoginMainInetMsg {
         let sceneConfig = fw.scene.getSceneConfig();
         if (sceneConfig == fw.SceneConfigs.update) {
             app.popup.showTip({
-                text: fw.language.get("Network connection timed out"),
+                text: "Network connection timed out",
                 btnList: [
                     {
                         styleId: 3,
@@ -364,7 +364,7 @@ export class LoginCenter extends LoginMainInetMsg {
         //登录
         if (sceneConfig == fw.SceneConfigs.login) {
             app.popup.showTip({
-                text: fw.language.get("Network connection timed out"),
+                text: "Network connection timed out",
                 btnList: [
                     {
                         styleId: 3,
@@ -383,8 +383,8 @@ export class LoginCenter extends LoginMainInetMsg {
             fw.scene.changePlazaUpdate();
         }
         app.popup.showTip({
-            title: fw.language.get(`Notice`),
-            text: fw.language.get(`Network connection interrupted, please retry.`),
+            title: `Notice`,
+            text: `Network connection interrupted, please retry.`,
             btnList: [
                 {
                     text: `OK`,
@@ -402,7 +402,7 @@ export class LoginCenter extends LoginMainInetMsg {
             fw.scene.changePlazaUpdate();
         }
         app.popup.showTip({
-            text: fw.language.get("Login timed out"),
+            text: "Login timed out",
             btnList: [
                 {
                     styleId: 3,
@@ -525,14 +525,14 @@ export class LoginCenter extends LoginMainInetMsg {
         } else {
             this.loginPlaza()
         }
-        // //保存配置
-        // app.file.setStringForKey("LastSelectServer", JSON.stringify(serverData), { all: true });
-        // //设置service配置
-        // app.socket.initServerConfig(serverData);
-        // //请求Sdk开关
-        // app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
-        // //刷新大厅列表排序
-        // center.roomList.loadRoomSortInfo();
+        //保存配置
+        app.file.setStringForKey("LastSelectServer", JSON.stringify(serverData), { all: true });
+        //设置service配置
+        app.socket.initServerConfig(serverData);
+        //请求Sdk开关
+        app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
+        //刷新大厅列表排序
+        center.roomList.loadRoomSortInfo();
 
         
     }
@@ -571,7 +571,7 @@ export class LoginCenter extends LoginMainInetMsg {
                 this.updateServerProxy(callback)
             }
             app.popup.showTip({
-                text: msg || fw.language.get("The network connection timed out, please try again. Error code: PHP101"),
+                text: msg || "The network connection timed out, please try again. Error code: PHP101",
                 btnList: [
                     {
                         styleId: 1,

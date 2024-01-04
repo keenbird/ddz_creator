@@ -107,8 +107,8 @@ export const servers: Array<server_config> = [
         url_feedback: "http://127.0.0.1/"
     },
     {
-        Name: "test1",
-        url_login: "192.168.121.34",
+        Name: "黄鹏",
+        url_login: "192.168.30.44",
         port_min: 5001,
         port_max: 5001,
         url_facedown: "http://192.168.125.109/Static/",
