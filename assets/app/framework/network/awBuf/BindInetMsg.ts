@@ -226,7 +226,7 @@ export class BindInetMsg extends (fw.FWComponent) {
     }
     /**发送消息 */
     protected sendData(nSubID: number, structName: string | any, dict?: any) {
-        fw.print("sendData", structName, dict)
+        fw.print("sendData", this.nMainID,nSubID,structName, dict)
         return this.rootInetMsg.sendData(this.getSendData(nSubID, structName, dict));
     }
     /**获取发送消息数据 */

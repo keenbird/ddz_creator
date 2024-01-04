@@ -67,7 +67,7 @@ export class AwBufWebSock extends WebSock {
     _setAddr_(buffer: ArrayBuffer, nVal: number) {
         //说是这个字段不要了所以去掉
         S_ByteStream.setBuffers(buffer)
-        S_ByteStream.writeSInt64(nVal);
+        S_ByteStream.writeUInt16(buffer.byteLength);
     }
     //加密
     _encryptData_(buffer: ArrayBuffer) {

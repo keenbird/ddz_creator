@@ -24,8 +24,8 @@ export class GS_HeadNull extends GS_Head {
 
 export const S_GS_HeadNull = new GS_HeadNull()
 
-export const GS_HeadNull_Size = 11;
-export const MAX_NET_PACKAGE_SIZE = 1024 * 32 - 8;
+export const GS_HeadNull_Size = 22;
+export const MAX_NET_PACKAGE_SIZE = 65535 - 8; //65535 uShort最大长度  -8作为缓冲区
 
 export enum Root_cmd {
     CMDROOT_GATEWAY_MSG = 0, //代理前端消息
