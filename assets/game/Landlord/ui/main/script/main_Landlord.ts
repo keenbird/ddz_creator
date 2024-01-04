@@ -94,6 +94,7 @@ export class main_Landlord extends main_GameBase {
         });
         this.initCardTouchLayerEvent()
         this.initEmptySpaceEvent()
+        this.initActionBar()
     }
     /**清理一局游戏 */
     clearOneGame() {
@@ -132,8 +133,8 @@ export class main_Landlord extends main_GameBase {
                 this.didReceiveOutCard()
                 this.showXbeiAni(3,15)
             }, 4);
-            app.popup.showToast("assssssssssssssssssssssssss");
-            app.popup.showTip({ text: "Something went wrong with login, please login again" })
+            // app.popup.showToast("assssssssssssssssssssssssss");
+            // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
         
     }
@@ -308,6 +309,75 @@ export class main_Landlord extends main_GameBase {
 
         this.Items.Sprite_bg.on(NodeEventType.TOUCH_START, _onTouchBegan, this);       
     }
+    //初始化玩家操作按钮
+    initActionBar(){
+        //叫地主
+        this.Items.Node_BarStatusCallLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
+            
+        });
+        //不叫地主
+        this.Items.Node_BarStatusCallLandlord.Items.Sprite_BtnNegative.onClickAndScale(() => {
+            
+        });
+        //抢地主
+        this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
+            
+        });
+        //不抢地主
+        this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnNegative.onClickAndScale(() => {
+            
+        });
+        //抢地主
+        this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
+            
+        });
+        //出牌
+        this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnDiscard.onClickAndScale(() => {
+            
+        });
+        //不出
+        this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnPass.onClickAndScale(() => {
+            
+        });
+        //提示
+        this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnTip.onClickAndScale(() => {
+            
+        });
+        //要不起
+        this.Items.Node_BarStatusCannotAfford.Items.Sprite_BtnDiscard.onClickAndScale(() => {
+            
+        });
+        //加倍
+        this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.onClickAndScale(() => {
+            
+        });
+        //不加倍
+        this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.onClickAndScale(() => {
+            
+        });
+        //明牌
+        this.Items.Node_BarStatusPublicCard.Items.Sprite_BtnPublic.onClickAndScale(() => {
+            
+        });
+        //出牌
+        this.Items.Node_BarStatusPublicOutCard.Items.Sprite_BtnOutCard.onClickAndScale(() => {
+            
+        });
+
+        //--------------------onfree----------------------//
+        //开始游戏
+        this.Items.Node_BarStyleForPrivate.Items.Sprite_ContinueBtn.onClickAndScale(() => {
+            
+        });
+        //换桌
+        this.Items.Node_BarStyleForHappy.Items.Sprite_ChangeRoom.onClickAndScale(() => {
+            
+        });
+        //准备
+        this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.onClickAndScale(() => {
+            
+        });
+    }
     //创建卡牌触摸屏
     initCardTouchLayerEvent(){
         let self = this
@@ -315,7 +385,7 @@ export class main_Landlord extends main_GameBase {
         var m_TouchPointStart = new Vec2(0,0)
         var _onTouchBegan = function(touch, event){
             console.log("touch:",touch)
-            
+            touch.preventSwallow = true;
             // --移除多种牌型选择框
             // if this.m_gameLayer then
             //     this.m_gameLayer:removeChooseCardNode()
@@ -323,10 +393,11 @@ export class main_Landlord extends main_GameBase {
             // var size = this.Items.cardTouchLayout.getComponent(UITransform).getContentSize()
             // var rect = new Rect(0, 0, size.width, size.height)
             m_TouchPointStart = touch.getUILocation()
+            touchEventType = "selCard"
         }
 
         var _onTouchMove = function(touch, event){
-    
+            console.log("_onTouchMove")
             var touchPos = touch.getUILocation()
             var rectX = (touchPos.x < m_TouchPointStart.x) ? touchPos.x : m_TouchPointStart.x
             var rectY = (touchPos.x < m_TouchPointStart.x) ? touchPos.y : m_TouchPointStart.y
@@ -411,7 +482,10 @@ export class main_Landlord extends main_GameBase {
                 }
             }
         }
+        
         var _onTouchEnded = function(touch, event){
+            console.log("_onTouchEnded")
+            touch.preventSwallow = true;
             var tmpFun = function(){
                 var  touchPos = touch.getUILocation()
                 var moveDelta = new Vec2(touchPos.x - m_TouchPointStart.x, touchPos.y - m_TouchPointStart.y)
@@ -500,7 +574,7 @@ export class main_Landlord extends main_GameBase {
                     isLarger = self.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
                     if  (cardDataType == -1 || ! isLarger){
                         self.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
-                        self.schedule(function(){
+                        self.scheduleOnce(function(){
                             self.displayHandsAnalyseTips(false)
                             self.putDownAllHandCard()
                         },0.4)
@@ -518,17 +592,90 @@ export class main_Landlord extends main_GameBase {
         }
 
         var _onTouchCancel = function(){
+            console.log("_onTouchCancel")
             this.markRegionCardData(0x00)
             if(!fw.isNull(this.mDragCardNode) ){
                 this.mDragCardNode.removeFromParent()
                 this.mDragCardNode = null
             }
         }
-
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_START, _onTouchBegan, this);
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_MOVE, _onTouchMove, this);
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_END, _onTouchEnded, this);
         this.Items.cardTouchLayout.on(NodeEventType.TOUCH_CANCEL, _onTouchCancel, this);
+    }
+    //展示操作按钮
+    showOperateBtn(type:number,time:number,callback?:Function,data?:any){
+        this.resetActionBar()
+        let barNode:ccNode = null
+        switch(type){
+            /* 叫地主状态(不叫 or 叫地主) */
+            case yx.config.ActionBarStatus.ActionBarStatus_CallLandlord: {
+                barNode = this.Items.Node_BarStatusCallLandlord
+            }
+            /* 抢地主状态(不抢 or 抢地主) */
+            case yx.config.ActionBarStatus.ActionBarStatus_GrabLandlord: {
+                barNode = this.Items.Node_BarStatusGrabLandlord
+            }
+            /* 要得起状态(不打 or 出牌 or 提示) */
+            case yx.config.ActionBarStatus.ActionBarStatus_CanAfford: {
+                barNode = this.Items.Node_BarStatusCanAfford
+            }
+            /* 要不起 */
+            case yx.config.ActionBarStatus.ActionBarStatus_CannotAfford: {
+                barNode = this.Items.Node_BarStatusCannotAfford
+            }
+            /* 加倍(不加倍 or 加倍) */
+            case yx.config.ActionBarStatus.ActionBarStatus_Double: {
+                barNode = this.Items.Node_BarStatusCannotAfford
+                if(data){
+                    var bmt = this.Items.Node_BarStatusCannotAfford.Items.Node_BarStatusDouble.Items.BMFont_Title
+                    bmt.string = "加倍x" + data
+                }
+            }
+            /* 明牌(明牌xn) */
+            case yx.config.ActionBarStatus.ActionBarStatus_PublicCard: {
+                barNode = this.Items.Node_BarStatusPublicCard
+                if(data){
+                    var bmt = this.Items.Node_BarStatusCannotAfford.Items.BMFont_Title
+                    bmt.string = "明牌x" + data
+                }
+            }
+            /* 只能 出牌 */
+            case yx.config.ActionBarStatus.ActionBarStatus_PublicOutCard: {
+                barNode = this.Items.Node_BarStatusPublicOutCard
+            }
+            default: {
+        
+            }
+        }
+        if(!fw.isNull(barNode)){
+            barNode.active = true
+            yx.func.setTimerSchedule(barNode.Items["node_clock"], time, callback);
+        }
+    }
+    //展示空闲状态按钮(开始游戏,准备,换桌)
+    showStartGameBtn(type:number){
+        this.resetActionBarOnFree()
+        switch(type){
+            /* 只有开始游戏 */
+            case yx.config.FreeActionBarStatus.FreeActionBarStatus_Start: {
+                this.Items.Node_BarStyleForPrivate.active = true
+            }
+            /* 可换桌可准备 */
+            case yx.config.FreeActionBarStatus.FreeActionBarStatus_ChangeAndReady: {
+                this.Items.Node_BarStyleForHappy.active = true
+                this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.active = true
+            }
+            /* 已准备可换桌 */
+            case yx.config.FreeActionBarStatus.FreeActionBarStatus_Change: {
+                this.Items.Node_BarStyleForHappy.active = true
+                this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.active = false
+            }
+            default: {
+        
+            }
+        }
     }
     //玩家出牌命令
     didReceiveOutCard(){
@@ -726,7 +873,7 @@ export class main_Landlord extends main_GameBase {
                 this.Items.nobiggerLabel.string = "不符合出牌规则"
             }
         }else{
-            this.Items.node_no_card_bigger_than_others.active = true
+            this.Items.node_no_card_bigger_than_others.active = false
         }
     }
 

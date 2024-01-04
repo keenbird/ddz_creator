@@ -1,6 +1,5 @@
 import { _decorator } from 'cc';
 import { yx } from '../../../yx_Landlord';
-import { guide_hand_2 } from '../../../../../resources/ui/guide/script/guide_hand_2';
 import { RenderEntityBoolSharedBufferView } from '../../../../../../engine/cocos/2d/renderer/render-entity';
 const { ccclass } = _decorator;
  
@@ -506,9 +505,6 @@ export class logic_Landlord extends (fw.FWComponent) {
 		var cbOutCardData = this.resortZOrderForOutCard(cbTurnCardData,cbTurnCardCount,false) //clone(cbTurnCardData)
 		var cbOutCardCount = cbTurnCardCount
 
-		//分析出牌牌型
-		//分析当前牌型的组成
-		var analyseResultOfTurnCard = this.AnalysebCardData(cbOutCardData, cbOutCardCount)
 
 		var cbTurnCardHeadLogicValue = 0x00
 		if(cbTurnCardData.length > 0 && cbTurnCardCount > 0 && ! bSearchType){
@@ -520,13 +516,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 		var unorderResult = this.AnalyzeCardDataUnOrder(analyseResult,yx.config.CardSortOrder.DESC)
 		//--计算手牌癞子数量
 		var cbLaiZiCount = 0
-		var cbLaiZiCard = []
 		
 		var cbTurnOutType = bSearchType == true ? SearchOutCardType : this.GetCardType(cbOutCardData,cbOutCardCount)
 		//-- 找大于连炸的牌
 		if(cbTurnOutType == yx.config.OutCardType.serial_bomb){
 			var cbLogicValue = this.GetCardLogicValue(cbOutCardData[0])
-			var cbQuadrupleCardData = analyseResult.cbQuadrupleCardData
 			var cbQuadrupleCount = analyseResult.cbQuadrupleCount
 			var cbOutCardQuadrupleCount = cbOutCardCount / 4
 			if(cbOutCardQuadrupleCount <= cbQuadrupleCount ){

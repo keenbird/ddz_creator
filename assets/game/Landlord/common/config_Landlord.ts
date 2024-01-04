@@ -229,6 +229,41 @@ export class config_Landlord extends config_GameBase {
     CARD_SCALE_OUT_CARDS = 0.6
     /** 扑克牌的尺寸 */
     OUT_CARD_SIZE = new Size(107, 141)
+
+    /* 动作条状态 */
+    ActionBarStatus : {
+        /* 叫地主状态(不叫 or 叫地主) */
+        ActionBarStatus_CallLandlord : 0x20,
+        /* 抢地主状态(不抢 or 抢地主) */
+        ActionBarStatus_GrabLandlord : 0x30,
+        /* 加倍(不加倍 or 加倍) */
+        ActionBarStatus_Double : 0x40,
+        /* 要得起状态(不打 or 出牌 or 提示) */
+        ActionBarStatus_CanAfford : 0x50,
+        /* 要不起 */
+        ActionBarStatus_CannotAfford : 0x60,
+        /* 取消托管 */
+        ActionBarStatus_CancelTrusteeship : 0x70,
+        /* 明牌(明牌xn) */
+        ActionBarStatus_PublicCard : 0x80,
+        /* 只能 出牌 */
+        ActionBarStatus_PublicOutCard : 0x90,
+        /* 弃牌 */
+        ActionBarStatus_Discard : 0xA0,
+        /* 掩码 */
+        ActionBarStatus_Mask : 0xF0
+    }
+    /* 空闲动作条状态 */
+    FreeActionBarStatus : {
+        /* 只有开始游戏 */
+        FreeActionBarStatus_Start : 0x10,
+        /* 可换桌可准备 */
+        FreeActionBarStatus_ChangeAndReady : 0x20,
+        /* 已准备可换桌 */
+        FreeActionBarStatus_Change : 0x30,
+        /* 掩码 */
+        FreeActionBarStatus_Mask : 0xF0
+    }
 }
 
 /**牌花色 */

@@ -590,6 +590,8 @@
       "__id__": 0
     },
     "fileId": "ecHw0EkNdMKpgL0IgR0MkI",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -1395,6 +1397,8 @@
       "__id__": 0
     },
     "fileId": "0fJlriQWVEVLZ3W8rvqFBO",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2970,7 +2974,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Node_BarStatusCannotAfford",
+    "_name": "Node_BarStatusDouble",
     "_objFlags": 0,
     "_parent": {
       "__id__": 1
@@ -2986,7 +2990,7 @@
         "__id__": 163
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [],
     "_prefab": {
       "__id__": 171
@@ -3022,7 +3026,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Node_BarStatusDouble",
+    "_name": "Sprite_BtnNegative",
     "_objFlags": 0,
     "_parent": {
       "__id__": 138
@@ -4488,7 +4492,7 @@
         "__id__": 233
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": {
       "__id__": 241
