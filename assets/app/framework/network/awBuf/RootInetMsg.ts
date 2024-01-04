@@ -40,12 +40,12 @@ export class RootInetMsg {
         return app.socket.main.send(buf);
     }
 
-    getSendData(nMainID, func) {
+    getSendData(nMainID,len, func) {
         this._writeByteStream.setBuffers(this._writeArrayBuffer);
         let pSendStream = this._writeByteStream;
-        pSendStream.writeSInt64(0);
-        pSendStream.writeSInt8(this.nCmdRootID);
-        pSendStream.writeSInt8(nMainID);
+        pSendStream.writeSInt16(0);
+        pSendStream.writeSInt16(0); //版本
+        pSendStream.writeSInt16(nMainID);
         func(pSendStream)
         return pSendStream.buffers.slice(0, pSendStream.curIndex);
     }

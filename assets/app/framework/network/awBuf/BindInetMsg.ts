@@ -48,9 +48,9 @@ export class BindInetMsg extends (fw.FWComponent) {
             structName = data.name;
         } else if (data.cmd != null) {
             if (data.callback) {
-                structName = `${this.nRootID}_${this.nMainID}_${data.cmd}_recv`;
+                structName = `${this.nMainID}_${data.cmd}_recv`;
             } else {
-                structName = `${this.nRootID}_${this.nMainID}_${data.cmd}_send`;
+                structName = `${this.nMainID}_${data.cmd}_send`;
             }
         } else {
             fw.printError(`bindMessage error`);
@@ -240,13 +240,15 @@ export class BindInetMsg extends (fw.FWComponent) {
             }
             structName = "SendProtobufMsg"
         }
-        return this.rootInetMsg.getSendData(this.nMainID, (pSendStream: ByteStream) => {
+        return this.rootInetMsg.getSendData(this.nMainID,dict.nBuffLen, (pSendStream: ByteStream) => {
             this.package(pSendStream, nSubID, structName, dict)
         });
     }
     /**打包消息数据 */
     package(pSendStream: ByteStream, nSubID: number, structName: string, dict: any) {
-        pSendStream.writeSInt8(nSubID);
+        pSendStream.writeSInt16(nSubID);
+        pSendStream.writeSInt64(0); // 玩家uid
+        pSendStream.writeSInt32(0); //在房间里时房间svr id
         if (this.structParse.writeTableToByteStream(structName, dict, pSendStream) != true) {
             throw new Error(`${this.constructor.name} : sendData structName:${structName}`);
         }
