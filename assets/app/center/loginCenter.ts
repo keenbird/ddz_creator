@@ -8,7 +8,7 @@ import { Node as ccNode, math } from 'cc';
 import { EventParam } from "../framework/manager/FWEventManager";
 
 export class LoginCenter extends LoginMainInetMsg {
-    cmd = proto.login_server.GS_LOGIN_MSG
+    cmd = proto.client_proto.LOGIN_SUB_MSG_ID
     // 登录信息
     m_eLoginType = LOGINTYPE.GUEST
     m_strLoginAccount = ""
@@ -46,16 +46,16 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     initRegister() {
-        this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINERROR, proto.login_server.login_error_s)
-        this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINERROR, this.OnRecv_LoginFail.bind(this))
+        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINERROR, proto.login_server.login_error_s)
+        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINERROR, this.OnRecv_LoginFail.bind(this))
 
-        this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINEND, proto.login_server.login_end_s)
-        this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINEND, this.OnRecv_LoginEnd.bind(this))
+        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINEND, proto.login_server.login_end_s)
+        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINEND, this.OnRecv_LoginEnd.bind(this))
 
-        this.bindMsgStructPB(this.cmd.LOGIN_MSGID_TIPS, proto.login_server.login_tips_s)
-        this.bindRecvFunc(this.cmd.LOGIN_MSGID_TIPS, this.OnRecv_Tips.bind(this))
+        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_TIPS, proto.login_server.login_tips_s)
+        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_TIPS, this.OnRecv_Tips.bind(this))
 
-        this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINNEW, proto.login_server.login_new_c)
+        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINNEW, proto.login_server.login_new_c)
     }
 
     /**上一次登录的UserID */
@@ -70,34 +70,26 @@ export class LoginCenter extends LoginMainInetMsg {
         }
 
         console.log("LH1")
-        let loginData = proto.login_server.login_new_c.create()
-        loginData.buff_bios = app.native.device.getBiosID();
-        loginData.buff_cpu = app.native.device.getCpuID();
-        loginData.buff_hd = this.m_strLoginBuffHD;
-        loginData.channel = app.native.device.getChannel();
-        loginData.game_version = 0;
-        loginData.local_phone_num = "";
-        loginData.login_buffer = this.m_strLoginAccount;
-        loginData.login_password = this.m_strLoginMd5Password;
-        loginData.login_type = this.m_eLoginType;
-        loginData.mac = app.native.device.getMacAddress();
-        loginData.machine_name = this.m_strLoginMachineName;
-        loginData.operators_id = Number.parseInt(app.native.device.getOperatorsID());
-        loginData.system_type = app.native.device.getSystemType();
-        loginData.user_sub_type = app.native.device.getOperatorsSubID();
-        loginData.version = app.native.device.getVersion();
-        loginData.idfa = app.native.device.getIDFA();
+        let loginData = proto.client_proto.LoginReq.create()
 
-        if (loginData.login_type == LOGINTYPE.GUEST && loginData.buff_hd.length <= 0) {
-            loginData.login_type = LOGINTYPE.UUID
-            loginData.buff_hd = app.native.device.getUUID()
-        }
+        loginData.channel = app.native.device.getChannel();
+        loginData.gameVersion = 0;
+        loginData.loginToken = "";
+        loginData.loginAccount = this.m_strLoginAccount;
+        loginData.loginPassword = this.m_strLoginMd5Password;
+        loginData.loginType = this.m_eLoginType;
+      
+        loginData.version = app.native.device.getVersion();
+
+        // if (loginData.loginType == LOGINTYPE.GUEST && loginData.buff_hd.length <= 0) {
+        //     loginData.loginType = LOGINTYPE.UUID
+        // }
 
         app.file.setIntegerForKey("LoginType", this.m_eLoginType, { all: true })
         app.file.setStringForKey("LoginAccount", this.m_strLoginAccount, { all: true })
         app.file.setStringForKey("LoginMd5Pwd", this.m_strLoginMd5Password, { all: true })
 
-        if (this.sendData(this.cmd.LOGIN_MSGID_LOGINNEW, loginData)) {
+        if (this.sendData(this.cmd.LSMI_LOGIN_REQ, loginData)) {
             this.startLoginingTimer()
         }
     }

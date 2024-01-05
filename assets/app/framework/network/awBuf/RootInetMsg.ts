@@ -24,9 +24,10 @@ export class RootInetMsg {
     OnRecvDataRoot(data: ArrayBuffer) {
         this._readByteStream.setBuffers(data);
         let pByteStream = this._readByteStream;
-        let nAddr = pByteStream.readUInt64();
-        let RootID = pByteStream.readUInt8();
-        let nMainID = pByteStream.readUInt8();
+        let wMsgLen = pByteStream.readUInt16();
+        let wVersion = pByteStream.readUInt16();
+        let uRoomSvrId = pByteStream.readUInt32();
+        let nMainID = pByteStream.readUInt16();
 
         let pMsgListener = this.m_mapMainMsgListener[nMainID]
         if (pMsgListener == null) {
@@ -40,11 +41,12 @@ export class RootInetMsg {
         return app.socket.main.send(buf);
     }
 
-    getSendData(nMainID,len, func) {
+    getSendData(nMainID, func) {
         this._writeByteStream.setBuffers(this._writeArrayBuffer);
         let pSendStream = this._writeByteStream;
         pSendStream.writeSInt16(0);
         pSendStream.writeSInt16(0); //版本
+        pSendStream.writeSInt32(0); //房间时ser id
         pSendStream.writeSInt16(nMainID);
         func(pSendStream)
         return pSendStream.buffers.slice(0, pSendStream.curIndex);

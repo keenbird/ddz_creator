@@ -2,23 +2,23 @@ import { ByteStream } from "../framework/network/lib/NetInterface";
 
 // 请求对象
 export class GS_Head {
-    nAddr: number;  //代理使用的头码信息
+    wMsgLen: number;  //代理使用的头码信息
+    wBodyLen: number;  //代理使用的头码信息
     wVersion: number;  //消息头版本号
     MainID: number;  //主消息码
     SubID: number;  //子消息码
-    ullUserID: number;  //玩家uid
     uRoomSvrId: number;  //玩家uid
 }
 
 export class GS_HeadNull extends GS_Head {
     private _byteStream = new ByteStream();
     initByteStream(buffers: ByteStream) {
-        this.nAddr = buffers.readSInt16();
+        this.wMsgLen = buffers.readSInt16();
         this.wVersion = buffers.readSInt16();
+        this.uRoomSvrId = buffers.readSInt32();
         this.MainID = buffers.readSInt16();
         this.SubID = buffers.readSInt16();
-        this.ullUserID = buffers.readSInt64();
-        this.uRoomSvrId = buffers.readSInt32();
+        this.wBodyLen = buffers.readSInt32();
     }
     initArrayBuffer(buffers: ArrayBuffer) {
         this._byteStream.setBuffers(buffers);
@@ -28,7 +28,7 @@ export class GS_HeadNull extends GS_Head {
 
 export const S_GS_HeadNull = new GS_HeadNull()
 
-export const GS_HeadNull_Size = 22;
+export const GS_HeadNull_Size = 16;
 export const MAX_NET_PACKAGE_SIZE = 65535 - 8; //65535 uShort最大长度  -8作为缓冲区
 
 export enum Root_cmd {

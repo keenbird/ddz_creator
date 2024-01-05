@@ -240,15 +240,14 @@ export class BindInetMsg extends (fw.FWComponent) {
             }
             structName = "SendProtobufMsg"
         }
-        return this.rootInetMsg.getSendData(this.nMainID,dict.nBuffLen, (pSendStream: ByteStream) => {
+        return this.rootInetMsg.getSendData(this.nMainID, (pSendStream: ByteStream) => {
             this.package(pSendStream, nSubID, structName, dict)
         });
     }
     /**打包消息数据 */
     package(pSendStream: ByteStream, nSubID: number, structName: string, dict: any) {
         pSendStream.writeSInt16(nSubID);
-        pSendStream.writeSInt64(0); // 玩家uid
-        pSendStream.writeSInt32(0); //在房间里时房间svr id
+        pSendStream.writeSInt32(dict.nBuffLen); //包体原始长度
         if (this.structParse.writeTableToByteStream(structName, dict, pSendStream) != true) {
             throw new Error(`${this.constructor.name} : sendData structName:${structName}`);
         }

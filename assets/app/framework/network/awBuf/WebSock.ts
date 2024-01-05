@@ -64,7 +64,7 @@ export class AwBufWebSock extends WebSock {
         return false;
     }
     //添加固定字段
-    _setAddr_(buffer: ArrayBuffer, nVal: number) {
+    _setAddr_(buffer: ArrayBuffer) {
         //说是这个字段不要了所以去掉
         S_ByteStream.setBuffers(buffer)
         S_ByteStream.writeUInt16(buffer.byteLength);
@@ -76,7 +76,7 @@ export class AwBufWebSock extends WebSock {
         if (data_len <= GS_HeadNull_Size) {
             return;
         }
-        this._setAddr_(buffer, 0);
+        this._setAddr_(buffer);
         let uInt8Array = new Uint8Array(buffer);
         for (let index = GS_HeadNull_Size, uindex = 0; index < data_len; index++, uindex = ++uindex % 8) {
             uInt8Array[index] ^= ENCRYPT_KEY[uindex];
@@ -88,7 +88,7 @@ export class AwBufWebSock extends WebSock {
         if (data_len <= GS_HeadNull_Size) {
             return buffer;
         }
-        this._setAddr_(buffer, 0);
+        // this._setAddr_(buffer, 0);
         let state = {
             inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
             outputBuffer: new Uint8Array(4)
@@ -104,7 +104,7 @@ export class AwBufWebSock extends WebSock {
                 for (let index = 0; index < state.outputBuffer.length; index++) {
                     newBuffer[GS_HeadNull_Size + index] = state.outputBuffer[index];
                 }
-                this._setAddr_(buff, data_len - GS_HeadNull_Size);
+                this._setAddr_(buff);
                 return buff;
             }
         }
@@ -118,10 +118,10 @@ export class AwBufWebSock extends WebSock {
         }
         S_GS_HeadNull.initArrayBuffer(buffer);
         let pHead = S_GS_HeadNull;
-        if (pHead.nAddr == 0) {
+        if (pHead.wBodyLen == 0) {
             return buffer;
         }
-        let new_len = pHead.nAddr;
+        let new_len = pHead.wBodyLen;
         let state = {
             inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
             outputBuffer: new Uint8Array(4)
