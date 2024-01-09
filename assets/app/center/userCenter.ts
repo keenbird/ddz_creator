@@ -263,201 +263,201 @@ export class UserCenter extends PlazeMainInetMsg {
         super.initEvents()
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_ACTOR);
     }
-    initRegister() {
-        //玩家私有数据
-        this.bindMessage({
-            struct: proto.plaza_actorprop.ator_private_info_s,
-            cmd: this.cmd.PLAZA_ACTOR_PRIVATE,
-            callback: this.OnRecv_ActorPrivateInfo.bind(this)
-        });
-        //玩家易变属性
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_variable_s,
-            cmd: this.cmd.PLAZA_ACTOR_VARIABLE,
-            callback: this.OnRecv_ActorVariable.bind(this)
-        });
-        //玩家修改资料
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_modify_data_c,
-            cmd: this.cmd.PLAZA_ACTOR_MODIFYDATA,
-        });
-        //玩家修改资料返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_modify_data_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_MODIFYDATERET,
-            callback: this.OnRecv_ActorModifyDateRet.bind(this)
-        });
-        //提示客户端
-        this.bindMessage({
-            struct: proto.plaza_actorprop.ator_tips_s,
-            cmd: this.cmd.PLAZA_ACTOR_TIPS,
-            callback: this.OnRecv_ActorTips.bind(this)
-        });
-        //获取验证码(无需等待返回,客户端直接倒计时1分钟)
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_get_ver_c,
-            cmd: this.cmd.PLAZA_ACTOR_GETVERIFICATION,
-        });
-        //绑定手机
-        this.bindMessage({
-            struct: proto.plaza_actorprop.bind_phone_c,
-            cmd: this.cmd.PLAZA_ACTOR_BINDPHONE,
-        });
-        //绑定手机返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.bind_phone_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_BINDPHONERET,
-            callback: this.OnRecv_BindPhoneRet.bind(this)
-        });
-        //反馈信息
-        this.bindMessage({
-            struct: proto.plaza_actorprop.feed_back_c,
-            cmd: this.cmd.PLAZA_ACTOR_FEEDBACK,
-        });
-        //反馈信息返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.feed_back_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_FEEDBACKRET,
-            callback: this.OnRecv_FeedbackRet.bind(this)
-        });
-        //首次登陆游戏
-        this.bindMessage({
-            struct: proto.plaza_actorprop.first_login_s,
-            cmd: this.cmd.PLAZA_ACTOR_FIRSTLOGIN,
-            callback: this.OnRecv_FirstLogin.bind(this)
-        });
-        //用户修改密码
-        this.bindMessage({
-            struct: proto.plaza_actorprop.modify_pwd_c,
-            cmd: this.cmd.PLAZA_ACTOR_MODIFYPWD,
-        });
-        //用户修改密码返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.modify_pwd_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_MODIFYPWDRET,
-            callback: this.OnRecv_ModifyPwdRet.bind(this)
-        });
-        //用户重置密码
-        this.bindMessage({
-            struct: proto.plaza_actorprop.reset_pwd_c,
-            cmd: this.cmd.PLAZA_ACTOR_RESETPWD,
-        });
-        //用户重置密码返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.reset_pwd_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_RESETPWDRET,
-            callback: this.OnRecv_ResetPwdRet.bind(this)
-        });
-        //获得绑定验证码(无需等待返回,客户端直接倒计时1分钟)
-        this.bindMessage({
-            struct: proto.plaza_actorprop.get_reset_verification_c,
-            cmd: this.cmd.PLAZA_ACTOR_GETRESETVERIFICATION,
-        });
-        //VIP描述信息下发
-        this.bindMessage({
-            struct: proto.plaza_actorprop.vip_info_s,
-            cmd: this.cmd.PLAZA_ACTOR_VIPINFO,
-            callback: this.OnRecv_VipInfo.bind(this)
-        });
-        //玩家修改头像
-        this.bindMessage({
-            struct: proto.plaza_actorprop.face_change_s,
-            cmd: this.cmd.PLAZA_ACTOR_FACECHANGE,
-            callback: this.OnRecv_FaceChange.bind(this)
-        });
-        //用户的杂项数据配置
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_other_info_s,
-            cmd: this.cmd.PLAZA_ACTOR_OTHERINFO,
-            callback: this.OnRecv_OtherInfo.bind(this)
-        });
-        //获得分享配置
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_get_share_cfg_c,
-            cmd: this.cmd.PLAZA_ACTOR_GETSHARECONFIG,
-        });
-        //下发分享配置
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_send_share_cfg_s,
-            cmd: this.cmd.PLAZA_ACTOR_SENDSHARECONFIG,
-            callback: this.OnRecv_ActorSendShareConfig.bind(this)
-        });
-        //新支付通路下发
-        this.bindMessage({
-            struct: proto.plaza_actorprop.pay_config_new_s,
-            cmd: this.cmd.PLAZA_ACTOR_PAYCONFIGNEW,
-            callback: this.OnRecv_PayConfigNew.bind(this)
-        });
-        //新支付通路的商品ID序列对应匹配配置下发
-        this.bindMessage({
-            struct: proto.plaza_actorprop.pay_key_torid_new_c,
-            cmd: this.cmd.PLAZA_ACTOR_PAYKEYTORIDNEW,
-            callback: this.OnRecv_PayKeyToRIDNew.bind(this)
-        });
-        //新VIP描述信息下发
-        this.bindMessage({
-            struct: proto.plaza_actorprop.vip_data_s,
-            cmd: this.cmd.PLAZA_ACTOR_VIPDATA,
-            callback: this.OnRecv_VipBonus.bind(this)
-        });
-        //客户端开启功能
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_client_open_flag_c,
-            cmd: this.cmd.PLAZA_ACTOR_CLIENTOPENFLAG,
-        });
-        //客户端开启功能反馈
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_client_open_flag_ret_s,
-            cmd: this.cmd.PLAZA_ACTOR_CLIENTOPENFLAGRET,
-            callback: this.OnRecv_GuideRewardInfo.bind(this)
-        });
-        //设置新手引导标志位
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_plaza_set_bit_flag_c,
-            cmd: this.cmd.PLAZA_ACTOR_SET_BIT_FLAG
-        });
-        //新手引导集合位
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_plaza_bit_set_update_s,
-            cmd: this.cmd.PLAZA_ACTOR_BIT_FLAG_UPDATE,
-            callback: this.onRecv_ActorBitFlg.bind(this)
-        });
-        //支付控制信息（红宝石，爱玩目前没使用）
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_pay_new_control_info_s,
-            cmd: this.cmd.PLAZA_ACTOR_PAY_NEW_CONTROL_INFO,
-            callback: this.OnRecv_PayWay.bind(this)
-        });
-        //大厅功能管理配置
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_plaza_custom_control_cfg_s,
-            cmd: this.cmd.PLAZA_ACTOR_CUSTOM_CONTROL_CFG,
-            callback: this.OnRecv_CustomControlCfg.bind(this)
-        });
-        //游戏弱引导数据
-        this.bindMessage({
-            struct: proto.plaza_actorprop.actor_game_weak_guide_info_s,
-            cmd: this.cmd.PLAZA_ACTOR_GAMEWEAK_GUIDE_INFO,
-            callback: this.OnRecv_GameWeakGuideInfo.bind(this)
-        });
-        //功能开关
-        this.bindMessage({
-            struct: proto.plaza_actorprop.system_module_switch_s,
-            cmd: this.cmd.PLAZA_ACTOR_MODULESWITCH,
-            callback: this.OnRecv_PLAZA_ACTOR_MODULESWITCH.bind(this)
-        });
-        //领取vip奖励
-        this.bindMessage({
-            struct: proto.plaza_actorprop.vip_get_reward_c,
-            cmd: this.cmd.PLAZA_ACTOR_VIP_GETREWARD
-        });
-        //领取vip奖励返回
-        this.bindMessage({
-            struct: proto.plaza_actorprop.vip_get_reward_res_s,
-            cmd: this.cmd.PLAZA_ACTOR_VIP_GETREWARD_RES,
-            callback: this.OnRecv_VipRewardInfo.bind(this)
-        });
-    }
+    // initRegister() {
+    //     //玩家私有数据
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.ator_private_info_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_PRIVATE,
+    //         callback: this.OnRecv_ActorPrivateInfo.bind(this)
+    //     });
+    //     //玩家易变属性
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_variable_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_VARIABLE,
+    //         callback: this.OnRecv_ActorVariable.bind(this)
+    //     });
+    //     //玩家修改资料
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_modify_data_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYDATA,
+    //     });
+    //     //玩家修改资料返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_modify_data_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYDATERET,
+    //         callback: this.OnRecv_ActorModifyDateRet.bind(this)
+    //     });
+    //     //提示客户端
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.ator_tips_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_TIPS,
+    //         callback: this.OnRecv_ActorTips.bind(this)
+    //     });
+    //     //获取验证码(无需等待返回,客户端直接倒计时1分钟)
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_get_ver_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_GETVERIFICATION,
+    //     });
+    //     //绑定手机
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.bind_phone_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_BINDPHONE,
+    //     });
+    //     //绑定手机返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.bind_phone_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_BINDPHONERET,
+    //         callback: this.OnRecv_BindPhoneRet.bind(this)
+    //     });
+    //     //反馈信息
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.feed_back_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_FEEDBACK,
+    //     });
+    //     //反馈信息返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.feed_back_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_FEEDBACKRET,
+    //         callback: this.OnRecv_FeedbackRet.bind(this)
+    //     });
+    //     //首次登陆游戏
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.first_login_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_FIRSTLOGIN,
+    //         callback: this.OnRecv_FirstLogin.bind(this)
+    //     });
+    //     //用户修改密码
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.modify_pwd_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYPWD,
+    //     });
+    //     //用户修改密码返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.modify_pwd_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYPWDRET,
+    //         callback: this.OnRecv_ModifyPwdRet.bind(this)
+    //     });
+    //     //用户重置密码
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.reset_pwd_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_RESETPWD,
+    //     });
+    //     //用户重置密码返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.reset_pwd_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_RESETPWDRET,
+    //         callback: this.OnRecv_ResetPwdRet.bind(this)
+    //     });
+    //     //获得绑定验证码(无需等待返回,客户端直接倒计时1分钟)
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.get_reset_verification_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_GETRESETVERIFICATION,
+    //     });
+    //     //VIP描述信息下发
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.vip_info_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_VIPINFO,
+    //         callback: this.OnRecv_VipInfo.bind(this)
+    //     });
+    //     //玩家修改头像
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.face_change_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_FACECHANGE,
+    //         callback: this.OnRecv_FaceChange.bind(this)
+    //     });
+    //     //用户的杂项数据配置
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_other_info_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_OTHERINFO,
+    //         callback: this.OnRecv_OtherInfo.bind(this)
+    //     });
+    //     //获得分享配置
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_get_share_cfg_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_GETSHARECONFIG,
+    //     });
+    //     //下发分享配置
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_send_share_cfg_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_SENDSHARECONFIG,
+    //         callback: this.OnRecv_ActorSendShareConfig.bind(this)
+    //     });
+    //     //新支付通路下发
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.pay_config_new_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_PAYCONFIGNEW,
+    //         callback: this.OnRecv_PayConfigNew.bind(this)
+    //     });
+    //     //新支付通路的商品ID序列对应匹配配置下发
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.pay_key_torid_new_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_PAYKEYTORIDNEW,
+    //         callback: this.OnRecv_PayKeyToRIDNew.bind(this)
+    //     });
+    //     //新VIP描述信息下发
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.vip_data_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_VIPDATA,
+    //         callback: this.OnRecv_VipBonus.bind(this)
+    //     });
+    //     //客户端开启功能
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_client_open_flag_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_CLIENTOPENFLAG,
+    //     });
+    //     //客户端开启功能反馈
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_client_open_flag_ret_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_CLIENTOPENFLAGRET,
+    //         callback: this.OnRecv_GuideRewardInfo.bind(this)
+    //     });
+    //     //设置新手引导标志位
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_plaza_set_bit_flag_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_SET_BIT_FLAG
+    //     });
+    //     //新手引导集合位
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_plaza_bit_set_update_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_BIT_FLAG_UPDATE,
+    //         callback: this.onRecv_ActorBitFlg.bind(this)
+    //     });
+    //     //支付控制信息（红宝石，爱玩目前没使用）
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_pay_new_control_info_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_PAY_NEW_CONTROL_INFO,
+    //         callback: this.OnRecv_PayWay.bind(this)
+    //     });
+    //     //大厅功能管理配置
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_plaza_custom_control_cfg_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_CUSTOM_CONTROL_CFG,
+    //         callback: this.OnRecv_CustomControlCfg.bind(this)
+    //     });
+    //     //游戏弱引导数据
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.actor_game_weak_guide_info_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_GAMEWEAK_GUIDE_INFO,
+    //         callback: this.OnRecv_GameWeakGuideInfo.bind(this)
+    //     });
+    //     //功能开关
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.system_module_switch_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_MODULESWITCH,
+    //         callback: this.OnRecv_PLAZA_ACTOR_MODULESWITCH.bind(this)
+    //     });
+    //     //领取vip奖励
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.vip_get_reward_c,
+    //         cmd: this.cmd.PLAZA_ACTOR_VIP_GETREWARD
+    //     });
+    //     //领取vip奖励返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_actorprop.vip_get_reward_res_s,
+    //         cmd: this.cmd.PLAZA_ACTOR_VIP_GETREWARD_RES,
+    //         callback: this.OnRecv_VipRewardInfo.bind(this)
+    //     });
+    // }
     /**获取属性事件名 =>（ACTOR[ACTOR.ACTOR_PROP_GOLD] 或者 `ACTOR_EVENT_${`szMD5FaceFile`}`） */
     getActorEventName(actorName: string) {
         return ACTOR[actorName] ?? `ACTOR_EVENT_${actorName}`;
@@ -660,14 +660,14 @@ export class UserCenter extends PlazeMainInetMsg {
                 if (bSuccess) {
                     if (response.status == 1) {
                         callback?.(true, response);
-                        app.popup.showToast(fw.language.get(`OTP sent successfully`));
+                        app.popup.showToast(`OTP sent successfully`);
                     } else {
                         callback?.(false, response);
-                        app.popup.showTip({ text: response.info ?? fw.language.get(`OTP sending failed, please try again`) });
+                        app.popup.showTip({ text: response.info ?? `OTP sending failed, please try again` });
                     }
                 } else {
                     callback?.(false, response);
-                    app.popup.showTip({ text: fw.language.get(`OTP sending failed, please try again`) });
+                    app.popup.showTip({ text: `OTP sending failed, please try again` });
                 }
             }
         });
@@ -699,13 +699,13 @@ export class UserCenter extends PlazeMainInetMsg {
                     if (1 == response.status) {
                         center.login.bindPhoneSuccess(response.data.account, response.data.password);
                         this.updateUserPhoneBind(phone);
-                        app.popup.showToast(fw.language.get("Binding succeeded"));
+                        app.popup.showToast("Binding succeeded");
                         app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_ACTOR_BINDING_PHONE });
                     } else {
-                        app.popup.showToast(response.info ?? fw.language.get("Binding failed"));
+                        app.popup.showToast(response.info ?? "Binding failed");
                     }
                 } else {
-                    app.popup.showToast(fw.language.get("Binding failed"));
+                    app.popup.showToast("Binding failed");
                 }
             }
         });
@@ -729,13 +729,13 @@ export class UserCenter extends PlazeMainInetMsg {
                     if (1 == response.status) {
                         this.updateUserInfoBind(response.data?.email, response.data?.realname)
                         this.updateUserPhoneBind(center.user.getActorProp("szPhone"))
-                        app.popup.showToast(fw.language.get("Perfect information success"))
+                        app.popup.showToast("Perfect information success")
                         app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_ACTOR_PERFECT_INFORMATION })
                     } else {
-                        app.popup.showToast(response.info ?? fw.language.get("Perfect information failed"))
+                        app.popup.showToast(response.info ?? "Perfect information failed")
                     }
                 } else {
-                    app.popup.showToast(fw.language.get("Perfect information failed"))
+                    app.popup.showToast("Perfect information failed")
                 }
             }
         });
@@ -766,13 +766,13 @@ export class UserCenter extends PlazeMainInetMsg {
                             this.mUserInfoFromWebData.withdrawphone = phone;
                         }
                         this.updateUserInfoBind(email, name);
-                        app.popup.showToast(fw.language.get("Perfect information success"));
+                        app.popup.showToast("Perfect information success");
                         app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_ACTOR_PERFECT_PAYINFORMATION });
                     } else {
-                        app.popup.showToast(response.info ?? fw.language.get("Perfect information failed"));
+                        app.popup.showToast(response.info ?? "Perfect information failed");
                     }
                 } else {
-                    app.popup.showToast(fw.language.get("Perfect information failed"));
+                    app.popup.showToast("Perfect information failed");
                 }
             }
         });
@@ -887,6 +887,22 @@ export class UserCenter extends PlazeMainInetMsg {
     isXianWanXiaoHao() {
         return (this._actorProp[ACTOR.ACTOR_PROP_RIGHT] & 0x02) == 0x02
     }
+    /**
+     * 玩家登录属性储存
+     * @param dict 
+     */
+    setLoginActor(dict: proto.client_proto.LoginAttrNtf){
+        this._actorProp["szName"] = dict.nickname;
+        this._actorProp["szPhone"] = dict.phone;
+        this._actorProp[ACTOR.ACTOR_PROP_UID] = dict.userId;
+        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex;
+        this._actorProp["szMD5FaceFile"] = dict.imgUrl;
+        this._actorProp["szFaceType"] = dict.imgType;
+        this._actorProp["szFaceSysId"] = dict.imgId;
+        this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS] = dict.diamond;
+        this._actorProp[ACTOR.ACTOR_PROP_GOLD] = dict.gold;
+        this.mActorProrUseChannelid = app.func.toNumber(dict.channel);//玩家渠道ID
+    }
 
     /**
      * 玩家私有属性消息
@@ -977,7 +993,7 @@ export class UserCenter extends PlazeMainInetMsg {
             center.activity.initNoticeMessagePopNum();
         } else if (fw.scene.sceneConfig.bGame) {
             // if (!this.checkReconnectRoom() && !this.checkReconnectRoomLogout()) {
-            //     app.popup.showTip({ text: fw.language.get("The Internet link is successful and has returned to the lobby") })
+            //     app.popup.showTip({ text: "The Internet link is successful and has returned to the lobby" })
             //     fw.scene.changeScene(fw.SceneConfigs.plaza);
             // }
         }
@@ -1108,9 +1124,9 @@ export class UserCenter extends PlazeMainInetMsg {
         let tips = dict.msg
         let msg = tips == "" ? ERRID_MSG.get(dict.tips_id) : tips;
         if (msg) {
-            app.popup.showToast(fw.language.get(msg));
+            app.popup.showToast(msg);
         } else {
-            app.popup.showToast(fw.language.get("UNKOWN ERROR"));
+            app.popup.showToast("UNKOWN ERROR");
         }
     }
 
@@ -1163,7 +1179,7 @@ export class UserCenter extends PlazeMainInetMsg {
         fw.print("反馈消息只是通知")
         fw.print(dict, "OnRecv_FeedbackRet")
 
-        app.popup.showToast(fw.language.get("We have received your feedback, thank you for your valuable comments, we will deal with it as soon as possible, and I wish you a happy game."))
+        app.popup.showToast("We have received your feedback, thank you for your valuable comments, we will deal with it as soon as possible, and I wish you a happy game.")
 
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_PLAZA_ACTOR_FEEDBACK,

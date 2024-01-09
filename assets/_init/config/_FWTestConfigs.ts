@@ -14,6 +14,10 @@ let testConfig = {
     bCheckMd5: false,
     /**是否启用php代理服务器ip端口 */
     bServerProxy: false,
+    /**渠道号 */
+    sChannelID: "1",
+    /**包名 */
+    sPackageName: "1",
 }
 if (sys.isNative) {
     let path = "config.json"

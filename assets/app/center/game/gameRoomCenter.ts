@@ -14,10 +14,10 @@ let ROOMGROUP_BIGAWARD_MATCH = "5"    //大奖赛
 
 let D_GameVersion = 11
 export class GameRoomCenter extends GameServerMainInetMsg {
-    cmd = proto.game_room.GS_GAME_ROOM_MSG;
+    // cmd = proto.game_room.GS_GAME_ROOM_MSG;
     declare m_RoomInfo: GameRoomInfo;
     declare m_RoomQuickRecharge: RoomQuickRecharge;
-    declare m_MagicFaceVec: proto.game_room.IMagicInfo[];
+    // declare m_MagicFaceVec: proto.game_room.IMagicInfo[];
     declare nJackpotNum: number;
     declare m_ActorTableID: Map<number, number>;
     /**roomInfo的EnterRule类型 */
@@ -93,53 +93,53 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         });
     }
 
-    initRegister() {
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_INFO, proto.game_room.room_info_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_INFO, this.OnRecv_RoomInfo.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLESTATE, proto.game_room.table_state_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLESTATE, this.OnRecv_RoomTableState.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPS, proto.game_room.tips_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPS, this.OnRecv_Tips.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, proto.game_room.add_friend_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, this.OnRecv_AddFindRequest.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_MAGICINFO, proto.game_room.magic_info_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_MAGICINFO, this.OnRecv_MagicInfo.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_CS_USEMAGICFACE, proto.game_room.use_magic_cs);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_CS_USEMAGICFACE, this.OnRecv_UseMagic.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSUPROOM, proto.game_room.tips_up_room_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSUPROOM, this.OnRecv_TipsUpRoom.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYDATA, proto.game_room.lottery_data_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYDATA, {
-            callback: this.OnRecv_LotteryData.bind(this),
-            printLog: false,
-        });
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYPLAY, proto.game_room.lottery_player_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYPLAY, this.OnRecv_LotteryPlay.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, proto.game_room.tips_down_room_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, this.OnRecv_TipsDownRoom.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, proto.game_room.quit_match_ret_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, this.OnRecv_MatchSettle.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_DISBAND, proto.game_room.table_disband_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_DISBAND, this.OnRecv_TableDisband.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_FULL, proto.game_room.table_full_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_FULL, this.OnRecv_TableDFull.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, proto.game_room.bairen_rank_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, this.OnRecv_GAME_ROOM_C_BAIREN_RANK_RET.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, proto.game_room.join_queue_s);
-        this.bindRecvFunc(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, this.OnRecv_JoinQueueRet.bind(this));
+    // initRegister() {
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_INFO, proto.game_room.room_info_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_INFO, this.OnRecv_RoomInfo.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLESTATE, proto.game_room.table_state_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLESTATE, this.OnRecv_RoomTableState.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPS, proto.game_room.tips_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPS, this.OnRecv_Tips.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, proto.game_room.add_friend_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, this.OnRecv_AddFindRequest.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_MAGICINFO, proto.game_room.magic_info_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_MAGICINFO, this.OnRecv_MagicInfo.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_CS_USEMAGICFACE, proto.game_room.use_magic_cs);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_CS_USEMAGICFACE, this.OnRecv_UseMagic.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSUPROOM, proto.game_room.tips_up_room_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSUPROOM, this.OnRecv_TipsUpRoom.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYDATA, proto.game_room.lottery_data_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYDATA, {
+    //         callback: this.OnRecv_LotteryData.bind(this),
+    //         printLog: false,
+    //     });
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYPLAY, proto.game_room.lottery_player_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYPLAY, this.OnRecv_LotteryPlay.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, proto.game_room.tips_down_room_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, this.OnRecv_TipsDownRoom.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, proto.game_room.quit_match_ret_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, this.OnRecv_MatchSettle.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_DISBAND, proto.game_room.table_disband_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_DISBAND, this.OnRecv_TableDisband.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_FULL, proto.game_room.table_full_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_FULL, this.OnRecv_TableDFull.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, proto.game_room.bairen_rank_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, this.OnRecv_GAME_ROOM_C_BAIREN_RANK_RET.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, proto.game_room.join_queue_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, this.OnRecv_JoinQueueRet.bind(this));
 
-        // ////////-send struct//////////
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_HANDS, proto.game_room.hands_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ONTABLE, proto.game_room.on_table_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_CHANGETABLE, proto.game_room.change_table_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTTABLE, proto.game_room.out_table_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH, proto.game_room.quit_match_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTROOM, proto.game_room.out_room_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_REQ, proto.game_room.bairen_rank_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ACTOR_IM_BACK, proto.game_room.actor_im_back_c);
-        this.bindMsgStructPB(this.cmd.GAME_ROOM_C_JOIN_QUEUE, proto.game_room.join_queue_c);
-        // ////////-send struct//////////    
-    }
+    //     // ////////-send struct//////////
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_HANDS, proto.game_room.hands_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ONTABLE, proto.game_room.on_table_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_CHANGETABLE, proto.game_room.change_table_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTTABLE, proto.game_room.out_table_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH, proto.game_room.quit_match_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTROOM, proto.game_room.out_room_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_REQ, proto.game_room.bairen_rank_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ACTOR_IM_BACK, proto.game_room.actor_im_back_c);
+    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_JOIN_QUEUE, proto.game_room.join_queue_c);
+    //     // ////////-send struct//////////    
+    // }
 
     //获得自己的桌子ID
     getMyTableID() {
@@ -254,7 +254,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
     //房间太拥挤，请稍后再试
     OnRecv_TableDFull(data: proto.game_room.Itable_full_s) {
-        app.popup.showToast({ text: fw.language.get("The current number of players is full, please try again later") })
+        app.popup.showToast({ text: "The current number of players is full, please try again later" })
         app.popup.closeLoading()
     }
 

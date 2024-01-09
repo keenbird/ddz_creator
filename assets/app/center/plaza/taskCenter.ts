@@ -15,7 +15,7 @@ export enum eTpLvType {
 
 export class TaskCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_task.GS_PLAZA_TASK_MSG
+    // cmd = proto.plaza_task.GS_PLAZA_TASK_MSG
     m_TaskPayCashBackCfg: proto.plaza_task.Igs_paybonus_cfg_s;
     m_TaskPayCashBackInfo: proto.plaza_task.Igs_paybonus_actor_data_s;
     m_TaskViewList: { [key: number]: proto.plaza_task.ITaskViewNew[] };
@@ -62,197 +62,197 @@ export class TaskCenter extends PlazeMainInetMsg {
 
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_info_s,
-            cmd: this.cmd.PLAZA_TASK_INFO,
-            callback: this.OnRecv_TaskInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_change_s,
-            cmd: this.cmd.PLAZA_TASK_CHANGE,
-            callback: this.OnRecv_TaskChange.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_finish_c,
-            cmd: this.cmd.PLAZA_TASK_FINISH,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_reward_s,
-            cmd: this.cmd.PLAZA_TASK_REWARD,
-            callback: this.OnRecv_TaskReward.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_trigger_fuc_s,
-            cmd: this.cmd.PLAZA_TASK_TRIGGERFUNC,
-            callback: this.OnRecv_TaskTriggerFuc.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_view_new_s,
-            cmd: this.cmd.PLAZA_TASK_VIEWNEW,
-            callback: this.OnRecv_TaskViewNew.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_add_new_s,
-            cmd: this.cmd.PLAZA_TASK_ADDNEW,
-            callback: this.OnRecv_TaskAddNew.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_tips_s,
-            cmd: this.cmd.PLAZA_TASK_TIPS,
-            callback: this.OnRecv_Tips.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_freebouns_end_reward_req_c,
-            cmd: this.cmd.PLAZA_TASK_FREEBONUS_END_REWARD_REQUEST,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_freebouns_end_reward_ret_s,
-            cmd: this.cmd.PLAZA_TASK_FREEBONUS_END_REWARD_RET,
-            callback: this.onRecv_GetFreeBonusRet.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_freebonus_cfg_s,
-            cmd: this.cmd.PLAZA_TASK_FREEBONUS_CONFIG,
-            callback: this.onRecv_FreeBonusCfg.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_freebonus_data_s,
-            cmd: this.cmd.CONFIGTYPE_FREEBONUS_INFO,
-            callback: this.onRecv_FreeBonusInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_new_seventask_info_s,
-            cmd: this.cmd.CONFIGTYPE_NEW_SEVENTASK_INFO,
-            callback: this.onRecv_TaskSevenInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_paybonus_cfg_s,
-            cmd: this.cmd.PLAZA_TASK_PAYBONUS_CONFIG,
-            callback: this.onRecv_TaskPayCashBackCfg.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_paybonus_actor_data_s,
-            cmd: this.cmd.PLAZA_TASK_PAYBONUS_USERDATA,
-            callback: this.onRecv_TaskPayCashBackInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.buy_pay_bonus_success_s,
-            cmd: this.cmd.PLAZA_TASK_BUY_PAYBONUS_SUCCESS,
-            callback: this.onRecv_TaskPayResult.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_sgj_guanka_request_c,
-            cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_REWARD,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_sgj_guanka_req_ret_s,
-            cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_REWARD_RET,
-            callback: this.PLAZA_TASK_SGJ_GUANKA_REWARD_RET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_sgj_guanka_data_s,
-            cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_DATA,
-            callback: this.PLAZA_TASK_SGJ_GUANKA_DATA.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_sgj_guanka_cfg_s,
-            cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_CONFIG,
-            callback: this.PLAZA_TASK_SGJ_GUANKA_CONFIG.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_guanggao_req_c,
-            cmd: this.cmd.PLAZA_TASK_GUGANG_GAO_REQUEST,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tp_guanka_req_c,
-            cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_REWARD,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tp_guanka_req_ret_s,
-            cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_REWARD_RET,
-            callback: this.PLAZA_TASK_TEENPATTI_GUANKA_REWARD_RET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tp_guanka_data_s,
-            cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_DATA,
-            callback: this.PLAZA_TASK_TEENPATTI_GUANKA_DATA.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tp_guanka_cfg,
-            cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_CONFIG,
-            callback: this.PLAZA_TASK_TEENPATTI_GUANKA_CONFIG.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tenday_task_act_cfg_s,
-            cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_CONFIG,
-            callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_CONFIG.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tenday_task_act_data_s,
-            cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_DATA,
-            callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_DATA.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tenday_task_act_req_c,
-            cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_REQ,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_tenday_task_ret_s,
-            cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_RET,
-            callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_RET.bind(this),
-        });
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_info_s,
+    //         cmd: this.cmd.PLAZA_TASK_INFO,
+    //         callback: this.OnRecv_TaskInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_change_s,
+    //         cmd: this.cmd.PLAZA_TASK_CHANGE,
+    //         callback: this.OnRecv_TaskChange.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_finish_c,
+    //         cmd: this.cmd.PLAZA_TASK_FINISH,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_reward_s,
+    //         cmd: this.cmd.PLAZA_TASK_REWARD,
+    //         callback: this.OnRecv_TaskReward.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_trigger_fuc_s,
+    //         cmd: this.cmd.PLAZA_TASK_TRIGGERFUNC,
+    //         callback: this.OnRecv_TaskTriggerFuc.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_view_new_s,
+    //         cmd: this.cmd.PLAZA_TASK_VIEWNEW,
+    //         callback: this.OnRecv_TaskViewNew.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_add_new_s,
+    //         cmd: this.cmd.PLAZA_TASK_ADDNEW,
+    //         callback: this.OnRecv_TaskAddNew.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_tips_s,
+    //         cmd: this.cmd.PLAZA_TASK_TIPS,
+    //         callback: this.OnRecv_Tips.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_freebouns_end_reward_req_c,
+    //         cmd: this.cmd.PLAZA_TASK_FREEBONUS_END_REWARD_REQUEST,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_freebouns_end_reward_ret_s,
+    //         cmd: this.cmd.PLAZA_TASK_FREEBONUS_END_REWARD_RET,
+    //         callback: this.onRecv_GetFreeBonusRet.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_freebonus_cfg_s,
+    //         cmd: this.cmd.PLAZA_TASK_FREEBONUS_CONFIG,
+    //         callback: this.onRecv_FreeBonusCfg.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_freebonus_data_s,
+    //         cmd: this.cmd.CONFIGTYPE_FREEBONUS_INFO,
+    //         callback: this.onRecv_FreeBonusInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_new_seventask_info_s,
+    //         cmd: this.cmd.CONFIGTYPE_NEW_SEVENTASK_INFO,
+    //         callback: this.onRecv_TaskSevenInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_paybonus_cfg_s,
+    //         cmd: this.cmd.PLAZA_TASK_PAYBONUS_CONFIG,
+    //         callback: this.onRecv_TaskPayCashBackCfg.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_paybonus_actor_data_s,
+    //         cmd: this.cmd.PLAZA_TASK_PAYBONUS_USERDATA,
+    //         callback: this.onRecv_TaskPayCashBackInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.buy_pay_bonus_success_s,
+    //         cmd: this.cmd.PLAZA_TASK_BUY_PAYBONUS_SUCCESS,
+    //         callback: this.onRecv_TaskPayResult.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_sgj_guanka_request_c,
+    //         cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_REWARD,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_sgj_guanka_req_ret_s,
+    //         cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_REWARD_RET,
+    //         callback: this.PLAZA_TASK_SGJ_GUANKA_REWARD_RET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_sgj_guanka_data_s,
+    //         cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_DATA,
+    //         callback: this.PLAZA_TASK_SGJ_GUANKA_DATA.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_sgj_guanka_cfg_s,
+    //         cmd: this.cmd.PLAZA_TASK_SGJ_GUANKA_CONFIG,
+    //         callback: this.PLAZA_TASK_SGJ_GUANKA_CONFIG.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_guanggao_req_c,
+    //         cmd: this.cmd.PLAZA_TASK_GUGANG_GAO_REQUEST,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tp_guanka_req_c,
+    //         cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_REWARD,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tp_guanka_req_ret_s,
+    //         cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_REWARD_RET,
+    //         callback: this.PLAZA_TASK_TEENPATTI_GUANKA_REWARD_RET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tp_guanka_data_s,
+    //         cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_DATA,
+    //         callback: this.PLAZA_TASK_TEENPATTI_GUANKA_DATA.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tp_guanka_cfg,
+    //         cmd: this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_CONFIG,
+    //         callback: this.PLAZA_TASK_TEENPATTI_GUANKA_CONFIG.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tenday_task_act_cfg_s,
+    //         cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_CONFIG,
+    //         callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_CONFIG.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tenday_task_act_data_s,
+    //         cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_DATA,
+    //         callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_DATA.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tenday_task_act_req_c,
+    //         cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_REQ,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_tenday_task_ret_s,
+    //         cmd: this.cmd.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_RET,
+    //         callback: this.PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_RET.bind(this),
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_task.gs_xxlguankarequest_c,
-            cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_REWARD,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_xxlguankarequest_c,
+    //         cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_REWARD,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_task.gs_xxlguankarequestret_s,
-            cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_REWARD_RET,
-            callback: this.OnRecv_TaskXXLGuankaRewardRet.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_xxlguankadata_s,
-            cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_DATA,
-            callback: this.OnRecv_TaskXXLGuankaData.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_xxlguankaconfig_s,
-            cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_CONFIG,
-            callback: this.OnRecv_TaskXXLGuankaConfig.bind(this),
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_xxlguankarequestret_s,
+    //         cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_REWARD_RET,
+    //         callback: this.OnRecv_TaskXXLGuankaRewardRet.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_xxlguankadata_s,
+    //         cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_DATA,
+    //         callback: this.OnRecv_TaskXXLGuankaData.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_xxlguankaconfig_s,
+    //         cmd: this.cmd.PLAZA_TASK_XXL_GUANKA_CONFIG,
+    //         callback: this.OnRecv_TaskXXLGuankaConfig.bind(this),
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_task.gs_taskcreateorder_c,
-            cmd: this.cmd.PLAZA_TASK_CRETEORDER_NUM,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_taskcreateorderres_s,
-            cmd: this.cmd.PLAZA_TASK_CRETEORDER_NUM_RES,
-            callback: this.OnRecv_PayTaskOrderRes.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_subsidy_info,
-            cmd: this.cmd.PLAZA_TASK_SUBSIDYINFO,
-            callback: this.OnRecv_TaskSubsydyInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_subsidy_data,
-            cmd: this.cmd.PLAZA_TASK_SUBSIDYDATA,
-            callback: this.OnRecv_TaskSubsydyData.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_get_subsidy,
-            cmd: this.cmd.PLAZA_TASK_GETSUBSIDY,
-        });
-        this.bindMessage({
-            struct: proto.plaza_task.gs_task_get_subsidy_ret,
-            cmd: this.cmd.PLAZA_TASK_GETSUBSIDY_RET,
-            callback: this.OnRecv_TaskSubsydyReward.bind(this),
-        });
-    }
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_taskcreateorder_c,
+    //         cmd: this.cmd.PLAZA_TASK_CRETEORDER_NUM,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_taskcreateorderres_s,
+    //         cmd: this.cmd.PLAZA_TASK_CRETEORDER_NUM_RES,
+    //         callback: this.OnRecv_PayTaskOrderRes.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_subsidy_info,
+    //         cmd: this.cmd.PLAZA_TASK_SUBSIDYINFO,
+    //         callback: this.OnRecv_TaskSubsydyInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_subsidy_data,
+    //         cmd: this.cmd.PLAZA_TASK_SUBSIDYDATA,
+    //         callback: this.OnRecv_TaskSubsydyData.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_get_subsidy,
+    //         cmd: this.cmd.PLAZA_TASK_GETSUBSIDY,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_task.gs_task_get_subsidy_ret,
+    //         cmd: this.cmd.PLAZA_TASK_GETSUBSIDY_RET,
+    //         callback: this.OnRecv_TaskSubsydyReward.bind(this),
+    //     });
+    // }
 
     PLAZA_TASK_TEN_DAY_TASK_ACTIVITY_CONFIG(data: proto.plaza_task.gs_tenday_task_act_cfg_s) {
         this.m_TenDayTaskConfig = data
@@ -386,7 +386,7 @@ export class TaskCenter extends PlazeMainInetMsg {
                 }
             }
         } else {
-            app.popup.showToast({ text: fw.language.get("You are not in the lobby") })
+            app.popup.showToast({ text: "You are not in the lobby" })
         }
     }
 
@@ -604,7 +604,7 @@ export class TaskCenter extends PlazeMainInetMsg {
                 dict: nGuanKaID + 1
             })
         } else {
-            app.popup.showToast({ text: fw.language.get("Failed to receive reward") })
+            app.popup.showToast({ text: "Failed to receive reward" })
         }
     }
 
@@ -803,7 +803,7 @@ export class TaskCenter extends PlazeMainInetMsg {
         let nerror = dict.error
 
         if (nerror == 0) {
-            app.popup.showToast(fw.language.get("please try again later"))
+            app.popup.showToast("please try again later")
         } else if (nerror == 1) {
             let RewardTB = {
                 nGoodsID: dict.goods_id || 0,

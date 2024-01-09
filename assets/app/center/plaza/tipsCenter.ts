@@ -5,7 +5,7 @@ import { PlazeMainInetMsg } from '../../framework/network/awBuf/MainInetMsg';
 import proto from '../common';
 export class tipsCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_tips.GS_PLAZA_TIPS_MSG
+    // cmd = proto.plaza_tips.GS_PLAZA_TIPS_MSG
     mOrderCallback: Map<string, Function>
 
     initData() {
@@ -17,31 +17,31 @@ export class tipsCenter extends PlazeMainInetMsg {
 
     }
     
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_tips.tips_s,
-            cmd: this.cmd.PLAZA_TIPS_MSG,
-            callback: this.OnRecv_PLAZA_TIPS_MSG.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_tips.rewardtips_s,
-            cmd: this.cmd.PLAZA_TIPS_REWARD,
-            callback: this.OnRecv_PLAZA_TIPS_REWARD.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_tips.rechargeret_s,
-            cmd: this.cmd.PLAZA_TIPS_RECHARGE_RET,
-            callback: this.OnRecv_PLAZA_TIPS_RECHARGE.bind(this),
-        });
-    }
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_tips.tips_s,
+    //         cmd: this.cmd.PLAZA_TIPS_MSG,
+    //         callback: this.OnRecv_PLAZA_TIPS_MSG.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_tips.rewardtips_s,
+    //         cmd: this.cmd.PLAZA_TIPS_REWARD,
+    //         callback: this.OnRecv_PLAZA_TIPS_REWARD.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_tips.rechargeret_s,
+    //         cmd: this.cmd.PLAZA_TIPS_RECHARGE_RET,
+    //         callback: this.OnRecv_PLAZA_TIPS_RECHARGE.bind(this),
+    //     });
+    // }
     //提示消息
     OnRecv_PLAZA_TIPS_MSG(data: proto.plaza_tips.tips_s) {
         let tips = data.tips
         let msg = tips != "" ? tips : ERRID_MSG.get(data.type)
         if (!msg) {
-            msg = fw.language.get("UNKOWN ERROR")
+            msg = "UNKOWN ERROR"
         }else{
-            msg = fw.language.get(msg)
+            msg = msg
         }
         switch (data.type) {
             case ERRID.STOP_SERVER:

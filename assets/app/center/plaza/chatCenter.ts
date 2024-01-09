@@ -24,7 +24,7 @@ export interface HornData {
 
 export class chatCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_chat.GS_PLAZA_CHAT_MSG
+    // cmd = proto.plaza_chat.GS_PLAZA_CHAT_MSG
     _wLabaQueue:HornData[];
     initData() {
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_CHAT);
@@ -33,15 +33,15 @@ export class chatCenter extends PlazeMainInetMsg {
     cleanUserData() {
         
     }
-    initRegister() {
-        //系统消息
-        this.bindMessage({
-            struct: proto.plaza_chat.chat_system_s,
-            cmd: this.cmd.PLAZA_CHAT_SYSTEM,
-            callback: this.OnRecv_ChatSystem.bind(this),
-            printLog: false
-        });
-    }
+    // initRegister() {
+    //     //系统消息
+    //     this.bindMessage({
+    //         struct: proto.plaza_chat.chat_system_s,
+    //         cmd: this.cmd.PLAZA_CHAT_SYSTEM,
+    //         callback: this.OnRecv_ChatSystem.bind(this),
+    //         printLog: false
+    //     });
+    // }
     getWLabaData() {
         return this._wLabaQueue
     }
@@ -59,7 +59,7 @@ export class chatCenter extends PlazeMainInetMsg {
             let gLen = parseInt(str.substring(curIndex,curIndex+=2));
             let msg_id = parseInt(str.substring(curIndex,curIndex+=gLen));
             let msg_str = `broadcast_msg_${msg_id+1}`
-		    let msg = fw.language.get(msg_str) as string;
+		    let msg = msg_str as string;
             if(msg) {
                 let maxLen = str.length;
                 let datas:string[] = []

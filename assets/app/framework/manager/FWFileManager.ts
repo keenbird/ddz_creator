@@ -528,7 +528,7 @@ export class FWFileManager extends (fw.FWComponent) {
                 //缓存图片
                 native.saveImageData(pixels_new, data.outSize.width, data.outSize.height, filePath).then(() => {
                     //截图完成
-                    app.popup.showToast(fw.language.get("Screenshot complete"));
+                    app.popup.showToast("Screenshot complete");
                     //回调
                     data.outFilePath = filePath;
                     data.callback && data.callback(data, pixels_new);

@@ -43,7 +43,7 @@ const ERRID_MSG: Map<TIPS_ID, string> = new Map([
 
 
 export class LuckyCardCenter extends PlazeMainInetMsg {
-    cmd = proto.plaza_luckcard.GS_PLAZA_LUCKCARD_MSG
+    // cmd = proto.plaza_luckcard.GS_PLAZA_LUCKCARD_MSG
     declare mLuckyCardConfig: proto.plaza_luckcard.ICardConfig[]
     declare mSelfLuckCardInfosNew: UseCardInfo[] //已经购买的卡片信息
     declare mGetLuckyCardConfigFlag: boolean;  //是否下发了周卡月卡配置
@@ -78,109 +78,109 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
         this.notShowBonusReward = false;
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_tips,
-            cmd: this.cmd.PLAZA_LUCKCARD_TIPS,
-            callback: this.onLuckCardTips.bind(this)
-        });
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_tips,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_TIPS,
+    //         callback: this.onLuckCardTips.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_cfg_req,
-            cmd: this.cmd.PLAZA_LUCKCARD_CONFIG_REQ,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_cfg_req,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_CONFIG_REQ,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_cfg,
-            cmd: this.cmd.PLAZA_LUCKCARD_CONFIG,
-            callback: this.onLuckCardConfig.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_cfg,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_CONFIG,
+    //         callback: this.onLuckCardConfig.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_buy,
-            cmd: this.cmd.PLAZA_LUCKCARD_BUY,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_buy,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_BUY,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_buy_oder,
-            cmd: this.cmd.PLAZA_LUCKCARD_BUY_ODER,
-            callback: this.onLuckCardBuyOder.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_buy_oder,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_BUY_ODER,
+    //         callback: this.onLuckCardBuyOder.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_buy_res,
-            cmd: this.cmd.PLAZA_LUCKCARD_BUY_RESULT,
-            callback: this.onLuckCardBuyResult.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_buy_res,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_BUY_RESULT,
+    //         callback: this.onLuckCardBuyResult.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_daily_apply,
-            cmd: this.cmd.PLAZA_LUCKCARD_DAILY_APPLY,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_daily_apply,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_DAILY_APPLY,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_daily_apply_ret,
-            cmd: this.cmd.PLAZA_LUCKCARD_DAILY_APPLY_RET,
-            callback: this.onLuckCardDailyApplyRet.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_daily_apply_ret,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_DAILY_APPLY_RET,
+    //         callback: this.onLuckCardDailyApplyRet.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_user_req,
-            cmd: this.cmd.PLAZA_LUCKCARD_USER_REQ,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_user_req,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_USER_REQ,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.luck_card_user_ret,
-            cmd: this.cmd.PLAZA_LUCKCARD_USER_RET,
-            callback: this.onLuckCardUserRet.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.luck_card_user_ret,
+    //         cmd: this.cmd.PLAZA_LUCKCARD_USER_RET,
+    //         callback: this.onLuckCardUserRet.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.first_recharge_cfg,
-            cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CONFIG,
-            callback: this.onNewFirstRechrgeConfig.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.first_recharge_cfg,
+    //         cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CONFIG,
+    //         callback: this.onNewFirstRechrgeConfig.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.first_recharge_cashback,
-            cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CASHBACK,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.first_recharge_cashback,
+    //         cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CASHBACK,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.first_recharge_cashback_res,
-            cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CASHBACK_RESULT,
-            callback: this.onCashBackResult.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.first_recharge_cashback_res,
+    //         cmd: this.cmd.PLAZA_NEWFIRSTRECHARGE_CASHBACK_RESULT,
+    //         callback: this.onCashBackResult.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.mega_gift_cfg,
-            cmd: this.cmd.PLAZA_MEGA_GIFT_CFG,
-            callback: this.onMegaGiftCfg.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.mega_gift_cfg,
+    //         cmd: this.cmd.PLAZA_MEGA_GIFT_CFG,
+    //         callback: this.onMegaGiftCfg.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.mega_gift_buy,
-            cmd: this.cmd.PLAZA_MEGA_GIFT_BUY,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.mega_gift_buy,
+    //         cmd: this.cmd.PLAZA_MEGA_GIFT_BUY,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.mega_gift_order,
-            cmd: this.cmd.PLAZA_MEGA_GIFT_BUY_ORDER,
-            callback: this.onMegaGiftBuyOrder.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.mega_gift_order,
+    //         cmd: this.cmd.PLAZA_MEGA_GIFT_BUY_ORDER,
+    //         callback: this.onMegaGiftBuyOrder.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.mega_gift_buy_res,
-            cmd: this.cmd.PLAZA_MEGA_GIFT_BUY_RESULT,
-            callback: this.onMegaGiftBuyResult.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.mega_gift_buy_res,
+    //         cmd: this.cmd.PLAZA_MEGA_GIFT_BUY_RESULT,
+    //         callback: this.onMegaGiftBuyResult.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckcard.first_recharge_reward_tips,
-            cmd: this.cmd.PLAZA_FIRST_RECHARGE_REWARDTIPS,
-            callback: this.onFirstRechargeRewardTips.bind(this)
-        });
-    }
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckcard.first_recharge_reward_tips,
+    //         cmd: this.cmd.PLAZA_FIRST_RECHARGE_REWARDTIPS,
+    //         callback: this.onFirstRechargeRewardTips.bind(this)
+    //     });
+    // }
 
     //请求幸运卡配置（日卡周卡月卡季卡等）
     sendGetLuckcardConfig() {
@@ -211,9 +211,9 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
         fw.print("(已处理)此处弹出提示", tips)
         let msg = tips == "" ? ERRID_MSG.get(dict.type_id) : tips;
         if (msg) {
-            app.popup.showToast(fw.language.get(msg));
+            app.popup.showToast(msg);
         } else {
-            app.popup.showToast(fw.language.get("UNKOWN ERROR"));
+            app.popup.showToast("UNKOWN ERROR");
         }
     }
 
@@ -270,7 +270,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
         fw.print("luckyCardManager:onLuckCardBuyResult")
         // -- fw.print(dict,"onLuckCardBuyResult")
         if (dict.is_success == 1) {
-            app.popup.showToast({ text: fw.language.get("Buy success") })
+            app.popup.showToast({ text: "Buy success" })
             this.sendGetUserLuckcard()
             // 这里可以优化根据cardId 去 周卡月卡里面找
             this.mSelfLuckCardInfosFlag = false
@@ -299,7 +299,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
                 eventName: EVENT_ID.EVENT_PLAZA_LUCKCARD_BUY_RESULT,
             })
         } else {
-            app.popup.showToast({ text: fw.language.get("Buy failed") })
+            app.popup.showToast({ text: "Buy failed"})
         }
     }
 
@@ -337,10 +337,10 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
                 })
                 center.mall.payReward(rewardTab,true)
             } else {
-                app.popup.showToast({ text: fw.language.get("Get the reward for success") })
+                app.popup.showToast({ text: "Get the reward for success" })
             }
         } else {
-            app.popup.showToast({ text: fw.language.get("Failed to receive reward") })
+            app.popup.showToast({ text: "Failed to receive reward" })
         }
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_PLAZA_LUCKCARD_DAILY_APPLY_RET,
@@ -703,7 +703,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
                 data: "MegaGift"
             })
         } else {
-            app.popup.showToast({ text: fw.language.get("Buy failed") })
+            app.popup.showToast({ text: "Buy failed" })
         }
     }
 
@@ -716,7 +716,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
     onCashBackResult(dict: proto.plaza_luckcard.first_recharge_cashback_res) {
         fw.print(dict, "======onCashBackResult======== ")
         if (dict.success == 1) {
-            // app.popup.showToast({ text: fw.language.get("Success in getting bonus") })
+            // app.popup.showToast({ text: "Success in getting bonus" })
             let nCashbackNum = dict.cash_back_num / DF_RATE
             app.event.dispatchEvent({
                 eventName: EVENT_ID.EVENT_PLAZA_BONUSGET_SUCCEED,
@@ -730,7 +730,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
                 data: data,
             });
         } else {
-            app.popup.showToast({ text: fw.language.get("Failed to get bonus") })
+            app.popup.showToast({ text: "Failed to get bonus" })
         }
     }
 

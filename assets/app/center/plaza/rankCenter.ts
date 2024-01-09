@@ -21,7 +21,7 @@ export interface RankingData {
 export class rankCenter extends PlazeMainInetMsg {
     rankType = RankType;
     /**命令ID */
-    cmd = proto.plaza_rank.GS_PLAZA_RANKING_MSG
+    // cmd = proto.plaza_rank.GS_PLAZA_RANKING_MSG
 
     rankingArray: RankingData[] = [];
     lastSendTime: number = 0;
@@ -34,17 +34,17 @@ export class rankCenter extends PlazeMainInetMsg {
         
     }
     
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_rank.gs_rankinghead_c,
-            cmd: this.cmd.PLAZA_RANKING_REQ,
-        });
-        this.bindMessage({
-            struct: proto.plaza_rank.gs_rankingdata_s,
-            cmd: this.cmd.PLAZA_RANKING_DATA,
-            callback: this.OnRecv_RankingData.bind(this),
-        });
-    }
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_rank.gs_rankinghead_c,
+    //         cmd: this.cmd.PLAZA_RANKING_REQ,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_rank.gs_rankingdata_s,
+    //         cmd: this.cmd.PLAZA_RANKING_DATA,
+    //         callback: this.OnRecv_RankingData.bind(this),
+    //     });
+    // }
 
     OnRecv_RankingData(data: proto.plaza_rank.gs_rankingdata_s) {
         this.rankingArray[data.ranking_type] = {

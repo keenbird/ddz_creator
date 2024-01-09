@@ -16,7 +16,7 @@ import { GS_PLAZA_MSGID, sfloat, sint, sint64, slong, stchar, uchar, uint64, ulo
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 import proto from "../common"
 export class lucky3PattiCenter extends PlazeMainInetMsg {
-    cmd = proto.plaza_luckypattigame.GS_PLAZA_LUCKYPATTIGAME_MSG
+    // cmd = proto.plaza_luckypattigame.GS_PLAZA_LUCKYPATTIGAME_MSG
     declare private m_isShow: boolean;
     initData() {
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_LUCKYPATTIGAME);

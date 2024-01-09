@@ -88,12 +88,12 @@ export enum GS_PLAZA_MSGID {
 }
 
 export enum GS_GATEWAY_MSGID {
-    GS_GATEWAY_MSGID_COMMAND = 0,
+    GS_GATEWAY_MSGID_COMMAND = 2,
     GS_GATEWAY_MSGID_P2P = 1,
 }
 
 export enum GS_LOGIN_MSGID {
-    GS_LOGIN_MSGID_LOGIN = 0,
+    GS_LOGIN_MSGID_LOGIN = 1,
 }
 
 export enum GS_GAME_MSGID {

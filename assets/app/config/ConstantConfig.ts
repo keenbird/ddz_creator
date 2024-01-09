@@ -191,7 +191,7 @@ export enum ROOM_RULE_ENTER {
     goldLimitMax,
 }
 
-
+//PHP对接用
 export enum LOGINTYPE {
     ACCOUNT = 0, // 账号登录
     PHONE = 1, // 手机号码登录
@@ -201,6 +201,14 @@ export enum LOGINTYPE {
     IOS = 5,	  // ios登录
     UUID = 254, // 伪码登录(手机程序安装的自身的Installtion ID)
     GUEST = 255, // 游客登录
+}
+
+//C++对接用
+export enum CPLUSLOGINTYPE {
+    LTD_NULL = 0, //占位
+    LTD_TOKEN = 1, // token登录的串
+    LTD_PASSWORD = 2, // 账号密码登录
+    LTD_CODE = 3, // 手机验证码登录
 }
 
 export const trucoRoomType = {

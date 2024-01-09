@@ -9,49 +9,49 @@ import { GameServerMainInetMsg } from '../../framework/network/awBuf/MainInetMsg
 @ccclass('GameChatCenter')
 export class GameChatCenter extends GameServerMainInetMsg {
     /**命令ID */
-    cmd = proto.game_chat.GS_GAME_CHAT_MSG;
+    // cmd = proto.game_chat.GS_GAME_CHAT_MSG;
     m_lastTime: number = 0;
     initData() {
         this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_CHAT);
     }
-    initRegister() {
-        //房间聊天
-        this.bindMessage({
-            struct: proto.game_chat.chat_room_cs,
-            cmd: this.cmd.GAME_CHAT_ROOM,
-            callback: this.OnRecv_GameChatRoom.bind(this),
-        });
-        //私聊
-        this.bindMessage({
-            struct: proto.game_chat.chat_private_cs,
-            cmd: this.cmd.GAME_CHAT_PRIVATE,
-            callback: this.OnRecv_GameChatPrivate.bind(this),
-        });
-        //游戏桌内聊天
-        this.bindMessage({
-            struct: proto.game_chat.chat_table_cs,
-            cmd: this.cmd.GAME_CHAT_TABLE,
-            callback: this.OnRecv_GameChatTable.bind(this),
-        });
-        //游戏桌内聊天
-        this.bindMessage({
-            struct: proto.game_chat.chat_room_phrases_cs,
-            cmd: this.cmd.GAME_CHAT_ROOMPHRASES,
-            callback: this.OnRecv_GameChatRoomPhrases.bind(this),
-        });
-        //游戏内聊天短语
-        this.bindMessage({
-            struct: proto.game_chat.chat_game_phrases_cs,
-            cmd: this.cmd.GAME_CHAT_GAMEPHRASES,
-            callback: this.OnRecv_GameChatGamePhrases.bind(this),
-        });
-        //系统消息
-        this.bindMessage({
-            struct: proto.game_chat.chat_system_s,
-            cmd: this.cmd.GAME_CHAT_SYSTEM,
-            callback: this.OnRecv_GameChatSystem.bind(this),
-        });
-    }
+    // initRegister() {
+    //     //房间聊天
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_room_cs,
+    //         cmd: this.cmd.GAME_CHAT_ROOM,
+    //         callback: this.OnRecv_GameChatRoom.bind(this),
+    //     });
+    //     //私聊
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_private_cs,
+    //         cmd: this.cmd.GAME_CHAT_PRIVATE,
+    //         callback: this.OnRecv_GameChatPrivate.bind(this),
+    //     });
+    //     //游戏桌内聊天
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_table_cs,
+    //         cmd: this.cmd.GAME_CHAT_TABLE,
+    //         callback: this.OnRecv_GameChatTable.bind(this),
+    //     });
+    //     //游戏桌内聊天
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_room_phrases_cs,
+    //         cmd: this.cmd.GAME_CHAT_ROOMPHRASES,
+    //         callback: this.OnRecv_GameChatRoomPhrases.bind(this),
+    //     });
+    //     //游戏内聊天短语
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_game_phrases_cs,
+    //         cmd: this.cmd.GAME_CHAT_GAMEPHRASES,
+    //         callback: this.OnRecv_GameChatGamePhrases.bind(this),
+    //     });
+    //     //系统消息
+    //     this.bindMessage({
+    //         struct: proto.game_chat.chat_system_s,
+    //         cmd: this.cmd.GAME_CHAT_SYSTEM,
+    //         callback: this.OnRecv_GameChatSystem.bind(this),
+    //     });
+    // }
     /**房间聊天 */
     OnRecv_GameChatRoom(data: proto.game_chat.Ichat_room_cs) {
         app.event.dispatchEvent({
@@ -101,7 +101,7 @@ export class GameChatCenter extends GameServerMainInetMsg {
     send_GAME_CHAT_GAMEPHRASES(data: proto.game_chat.Ichat_game_phrases_cs) {
         let curTime = app.func.time();
         if (curTime - this.m_lastTime <= 1) {
-            app.popup.showToast(fw.language.get("You sent too fast"));
+            app.popup.showToast("You sent too fast");
             return
         }
         this.m_lastTime = curTime;

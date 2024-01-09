@@ -43,7 +43,7 @@ interface rewardBaseList {
 
 export class scratchCardCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_scratchcard.GS_PLAZA_SCRATCHCARD_MSG
+    // cmd = proto.plaza_scratchcard.GS_PLAZA_SCRATCHCARD_MSG
     mScratchcardDataRefreshDay: number;
     mScratchcardOpen: boolean;
     mScratchcardData: { nLevel: number; nRecharge: number; nDrawStatus: number; nTotalCount: number; nDayCount: number; nAwardLevel: number; awardItem: proto.plaza_scratchcard.IScratchCardAwardItem[]; nActiveRecharge: number; nRoundCount: number; };
@@ -81,25 +81,25 @@ export class scratchCardCenter extends PlazeMainInetMsg {
         }
     }
 
-    initRegister() {
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_INFO, proto.plaza_scratchcard.gs_scratch_card_info_s)
-        this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_INFO, this.PLAZA_SCRATCHCARD_INFO.bind(this))
+    // initRegister() {
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_INFO, proto.plaza_scratchcard.gs_scratch_card_info_s)
+    //     this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_INFO, this.PLAZA_SCRATCHCARD_INFO.bind(this))
 
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_DATA, proto.plaza_scratchcard.gs_scratch_card_data_s)
-        this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_DATA, this.PLAZA_SCRATCHCARD_DATA.bind(this))
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_DATA, proto.plaza_scratchcard.gs_scratch_card_data_s)
+    //     this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_DATA, this.PLAZA_SCRATCHCARD_DATA.bind(this))
 
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_OPEN_RES, proto.plaza_scratchcard.gs_scratch_card_open_res_s)
-        this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_OPEN_RES, this.PLAZA_SCRATCHCARD_OPEN_RES.bind(this))
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_OPEN_RES, proto.plaza_scratchcard.gs_scratch_card_open_res_s)
+    //     this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_OPEN_RES, this.PLAZA_SCRATCHCARD_OPEN_RES.bind(this))
 
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_AWARD_RES, proto.plaza_scratchcard.gs_scratch_card_award_res_s)
-        this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_AWARD_RES, this.PLAZA_SCRATCHCARD_AWARD_RES.bind(this))
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_AWARD_RES, proto.plaza_scratchcard.gs_scratch_card_award_res_s)
+    //     this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_AWARD_RES, this.PLAZA_SCRATCHCARD_AWARD_RES.bind(this))
 
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_TIPS, proto.plaza_scratchcard.gs_scratch_card_tips_s)
-        this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_TIPS, this.PLAZA_SCRATCHCARD_TIPS.bind(this))
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_TIPS, proto.plaza_scratchcard.gs_scratch_card_tips_s)
+    //     this.bindRecvFunc(this.cmd.PLAZA_SCRATCHCARD_TIPS, this.PLAZA_SCRATCHCARD_TIPS.bind(this))
 
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_OPEN, proto.plaza_scratchcard.gs_scratch_card_open_c);
-        this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_AWARD, proto.plaza_scratchcard.gs_scratch_card_award_c);
-    }
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_OPEN, proto.plaza_scratchcard.gs_scratch_card_open_c);
+    //     this.bindMsgStructPB(this.cmd.PLAZA_SCRATCHCARD_AWARD, proto.plaza_scratchcard.gs_scratch_card_award_c);
+    // }
     onActorVariable(variable: proto.plaza_actorprop.IActVariable[]) {
         variable.forEach((v) => {
             if (v.prop_id == ACTOR.ACOTR_PROP_SCRATCHCARD_RECHARGE) {
@@ -195,7 +195,7 @@ export class scratchCardCenter extends PlazeMainInetMsg {
     PLAZA_SCRATCHCARD_TIPS(dict: proto.plaza_scratchcard.gs_scratch_card_tips_s) {
         fw.print("ScratchCardManager:OnRecv_ScratchcardTips")
         fw.print(dict)
-        let msg = fw.language.get(TipsMsg[dict.tips_id + 1])
+        let msg = TipsMsg[dict.tips_id + 1]
         if (msg) {
             app.popup.showToast(msg);
         }

@@ -52,7 +52,7 @@ export class FWFunctionCommon extends (fw.FWComponent) {
             return this.getPlatform() === sys.OS.ANDROID;
         }
     }
-    /**是否是Win32平台（受测试参数fw.DEBUG.bLockWin影响） */
+    /**是否是Win32平台（受测试参数fw.DEBUG.bLockWin影响）在微信开发者工具里为false */
     public isWin32(targetPlatform?: any) {
         if (fw.DEBUG.bLockWin) {
             return true;
@@ -63,7 +63,7 @@ export class FWFunctionCommon extends (fw.FWComponent) {
             return this.getPlatform() === sys.OS.WINDOWS;
         }
     }
-    /**是否是Browser平台 */
+    /**是否是Browser平台 在微信开发者工具里为false*/
     public isBrowser(targetPlatform?: any) {
         if (targetPlatform) {
             return targetPlatform === sys.Platform.DESKTOP_BROWSER;
@@ -71,7 +71,7 @@ export class FWFunctionCommon extends (fw.FWComponent) {
             return sys.isBrowser;
         }
     }
-    /**是否是微信小游戏平台 */
+    /**是否是微信小游戏平台 在微信开发者工具里为ture*/ 
     public isWeChat(targetPlatform?: any) {
         if (targetPlatform) {
             return targetPlatform === sys.Platform.WECHAT_GAME;
@@ -79,14 +79,7 @@ export class FWFunctionCommon extends (fw.FWComponent) {
             return this.getRunningPlatform() === sys.Platform.WECHAT_GAME;
         }
     }
-    /**是否是微信小游戏开放域 */
-    public isWeChatSub(targetPlatform?: any) {
-        if (targetPlatform) {
-            return targetPlatform === sys.Platform.WECHAT_GAME;
-        } else {
-            return this.getRunningPlatform() === sys.Platform.WECHAT_GAME;
-        }
-    }
+    
     /**weChat环境下细分IOS和安卓 */
     public  getWechatPlatform() : string {
         wx.getSystemInfo({

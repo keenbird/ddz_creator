@@ -8,7 +8,7 @@ import proto from "../common";
 
 export class GameUserCenter extends GameServerMainInetMsg {
     event = new EventHelp()
-    cmd = proto.game_actor.GS_GAME_ACTORINFO_MSG;
+    // cmd = proto.game_actor.GS_GAME_ACTORINFO_MSG;
     m_ActorMap:Map<number,any> = new Map();
     initData() {
         this.m_ActorMap.clear();
@@ -28,16 +28,16 @@ export class GameUserCenter extends GameServerMainInetMsg {
         }
     }
 
-    initRegister() {
-        this.bindMsgStructPB(this.cmd.GAME_ACTOR_PRIVATE, proto.game_actor.private_info_s);
-        this.bindRecvFunc(this.cmd.GAME_ACTOR_PRIVATE, this.OnRecv_ActorPrivateInfo.bind(this));
-        this.bindMsgStructPB(this.cmd.GAME_ACTOR_PUBLIC, proto.game_actor.public_info_s);
-        this.bindRecvFunc(this.cmd.GAME_ACTOR_PUBLIC, { callback: this.OnRecv_ActorPublicInfo.bind(this), printLog: false });
-        this.bindMsgStructPB(this.cmd.GAME_ACTOR_VARIABLE, proto.game_actor.variable_s);
-        this.bindRecvFunc(this.cmd.GAME_ACTOR_VARIABLE, { callback: this.OnRecv_ActorVariableInfo.bind(this), printLog: false });
-        this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
-        this.bindRecvFunc(this.cmd.GAME_ACTOR_DESTORY, { callback: this.OnRecv_ActorDestory.bind(this), printLog: false });
-    }
+    // initRegister() {
+    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PRIVATE, proto.game_actor.private_info_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PRIVATE, this.OnRecv_ActorPrivateInfo.bind(this));
+    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PUBLIC, proto.game_actor.public_info_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PUBLIC, { callback: this.OnRecv_ActorPublicInfo.bind(this), printLog: false });
+    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_VARIABLE, proto.game_actor.variable_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_VARIABLE, { callback: this.OnRecv_ActorVariableInfo.bind(this), printLog: false });
+    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
+    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_DESTORY, { callback: this.OnRecv_ActorDestory.bind(this), printLog: false });
+    // }
 
     /**获得某桌人数 */
     getActorCount() {

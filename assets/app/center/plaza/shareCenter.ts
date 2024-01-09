@@ -25,7 +25,7 @@ let shareScene = {
 export class shareCenter extends PlazeMainInetMsg {
 	/**命令ID */
 	cmd = cmds
-	mLinkInfo: proto.plaza_share.IstShareLinkCfg
+	// mLinkInfo: proto.plaza_share.IstShareLinkCfg
 
 	shareScene = shareScene
 	MaxCash: any;
@@ -53,37 +53,37 @@ export class shareCenter extends PlazeMainInetMsg {
 		}
 	}
 
-	initRegister() {
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_baseinfo_s,
-			cmd: this.cmd.PLAZA_SHARE_MSG_BASE_INFO,
-			callback: this.PLAZA_SHARE_MSG_BASE_INFO.bind(this),
-		});
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_ctrl_info_s,
-			cmd: this.cmd.PLAZA_SHARE_MSG_SEND_CTRL_INFO,
-			callback: this.PLAZA_SHARE_MSG_SEND_CTRL_INFO.bind(this),
-		});
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_inviteinfo_s,
-			cmd: this.cmd.PLAZA_SHARE_MSG_INVITE_INFO,
-			callback: this.PLAZA_SHARE_MSG_INVITE_INFO.bind(this),
-		});
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_invitedata_s,
-			cmd: this.cmd.PLAZA_SHARE_MSG_INVITE_DATA,
-			callback: this.PLAZA_SHARE_MSG_INVITE_DATA.bind(this),
-		});
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_withdraw_c,
-			cmd: this.cmd.PLAZA_SHARE_MSG_WITHDRAW,
-		});
-		this.bindMessage({
-			struct: proto.plaza_share.gs_share_withdrawres_s,
-			cmd: this.cmd.PLAZA_SHARE_MSG_WITHDRAW_RES,
-			callback: this.PLAZA_SHARE_MSG_WITHDRAW_RES.bind(this),
-		});
-	}
+	// initRegister() {
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_baseinfo_s,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_BASE_INFO,
+	// 		callback: this.PLAZA_SHARE_MSG_BASE_INFO.bind(this),
+	// 	});
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_ctrl_info_s,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_SEND_CTRL_INFO,
+	// 		callback: this.PLAZA_SHARE_MSG_SEND_CTRL_INFO.bind(this),
+	// 	});
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_inviteinfo_s,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_INVITE_INFO,
+	// 		callback: this.PLAZA_SHARE_MSG_INVITE_INFO.bind(this),
+	// 	});
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_invitedata_s,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_INVITE_DATA,
+	// 		callback: this.PLAZA_SHARE_MSG_INVITE_DATA.bind(this),
+	// 	});
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_withdraw_c,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_WITHDRAW,
+	// 	});
+	// 	this.bindMessage({
+	// 		struct: proto.plaza_share.gs_share_withdrawres_s,
+	// 		cmd: this.cmd.PLAZA_SHARE_MSG_WITHDRAW_RES,
+	// 		callback: this.PLAZA_SHARE_MSG_WITHDRAW_RES.bind(this),
+	// 	});
+	// }
 	/**下发基础信息 */
 	PLAZA_SHARE_MSG_BASE_INFO(dict: proto.plaza_share.gs_share_baseinfo_s) {
 		this.mLinkInfo = dict.linkinfo;
@@ -129,7 +129,7 @@ export class shareCenter extends PlazeMainInetMsg {
 			});
 		}
 		if (ret > 0 && ret <= 9) {
-			app.popup.showTip({ text: fw.language.get(`data error: ${ret}`) })
+			app.popup.showTip({ text: `data error: ${ret}` })
 		}
 	}
 	/**申请提现 */

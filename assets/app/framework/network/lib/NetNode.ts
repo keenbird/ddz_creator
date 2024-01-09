@@ -131,7 +131,7 @@ export class NetNode {
         let rspCmd = this._protocolHelper.getPackageId(msg);
         // fw.printDebug(`NetNode onMessage rspCmd = ` + rspCmd);
 
-        let listeners = this._listener[rspCmd];
+        let listeners = this._listener[0];
         if (null != listeners) {
             for (const rsp of listeners) {
                 // fw.printDebug(`NetNode execute listener cmd ${rspCmd}`);
@@ -201,14 +201,14 @@ export class NetNode {
             fw.printError("NetNode request error! current state is " + this._state);
             if (this._connectOptions) {
                 app.popup.showTip({
-                    text: fw.language.get("The network is abnormal. Please click Reconnect"),
+                    text: "The network is abnormal. Please click Reconnect",
                     cancelCallback:()=>{
                         fw.scene.changePlazaUpdate();
                     },
                     btnList: [
                         {
                             styleId: 1,
-                            text: fw.language.get("Reconnect"),
+                            text: "Reconnect",
                             callback: () => {
                                 this.connect(this._connectOptions);
                             }

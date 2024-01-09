@@ -1030,26 +1030,28 @@ export class InetStruct {
         return false;
     }
     WriteStructToByteStream(pStruct: SStruct, pMember: SMember, pStream: SInetByteStream, tab) {
-        // let pSubStruct = this.m_mapStruct.get(pStruct.mapStructName.get(pMember.strName));
-        // if (pSubStruct == null) {
-        //     fw.printError(`write: error struct:'${pStruct.mapStructName.get(pMember.strName)}' didn't find`);
-        //     return false;
-        // }
+        var s = pStruct.mapStructName.get(pMember.strName)
+        console.log("LH3333",s)
+        let pSubStruct = this.m_mapStruct.get(s);
+        if (pSubStruct == null) {
+            fw.printError(`write: error struct:'${pStruct.mapStructName.get(pMember.strName)}' didn't find`);
+            return false;
+        }
         let bIsError = false;
-        // for (let i = 0; i < pSubStruct.vecMember.length && bIsError == false; ++i) {
-        //     let pSubMember = pSubStruct.vecMember[i];
-        //     let strName = pSubMember.strName;
-        //     let val = tab[strName]
-        //     if (val == null) {
-        //         fw.printError(`write: error memeber:'${pSubMember.strName}' didn't assign!`);
-        //         bIsError = true;
-        //     }
-        //     else {
-        //         if ((this.m_handleFunWrite[pSubMember.eType])(pSubStruct, pSubMember, pStream, val, tab) != true) {
-        //             bIsError = true;
-        //         }
-        //     }
-        // }
+        for (let i = 0; i < pSubStruct.vecMember.length && bIsError == false; ++i) {
+            let pSubMember = pSubStruct.vecMember[i];
+            let strName = pSubMember.strName;
+            let val = tab[strName]
+            if (val == null) {
+                fw.printError(`write: error memeber:'${pSubMember.strName}' didn't assign!`);
+                bIsError = true;
+            }
+            else {
+                if ((this.m_handleFunWrite[pSubMember.eType])(pSubStruct, pSubMember, pStream, val, tab) != true) {
+                    bIsError = true;
+                }
+            }
+        }
         return !bIsError;
     }
 

@@ -33,7 +33,7 @@ export class tip_common extends FWTipViewBase {
                     label_content_rich.string = `<color=#8e4936>${this.popupData.text}</color>`;
                 }
             } else {
-                let tip = fw.language.get("tip...")
+                let tip = "tip..."
                 label_content_rich.string = `<color=#8e4936>${tip}</color>`;
             }
         }

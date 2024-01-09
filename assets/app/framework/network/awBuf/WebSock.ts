@@ -6,7 +6,7 @@ import { WebSock } from "../lib/WebSock";
 
 //客户端与服务器的加密字段
 const ENCRYPT_KEY = (() => {
-    let key = ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B'];
+    let key = [ 'E','F','M','N','J','Q','K','W'];
     let ret = [];
     for (let index = 0; index < key.length; index++) {
         const element = key[index];
@@ -118,10 +118,10 @@ export class AwBufWebSock extends WebSock {
         }
         S_GS_HeadNull.initArrayBuffer(buffer);
         let pHead = S_GS_HeadNull;
-        if (pHead.wBodyLen == 0) {
+        if (pHead.wMsgLen - pHead.wBodyLen== GS_HeadNull_Size) {
             return buffer;
         }
-        let new_len = pHead.wBodyLen;
+        let new_len = pHead.wMsgLen - pHead.wBodyLen - GS_HeadNull_Size;
         let state = {
             inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
             outputBuffer: new Uint8Array(4)

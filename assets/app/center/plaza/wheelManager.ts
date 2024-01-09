@@ -25,8 +25,8 @@ let GoodsTyp = {
 }
 
 export class wheelManager extends PlazeMainInetMsg {
-    m_cfg: proto.common.IJackpotDrawItem[];
-    m_userData: proto.plaza_jackpotdraw.Ijackpot_draw_data;
+    // m_cfg: proto.common.IJackpotDrawItem[];
+    // m_userData: proto.plaza_jackpotdraw.Ijackpot_draw_data;
     m_bOpen: boolean;
     m_bDraw: boolean;
     m_threeTime: boolean;
@@ -53,36 +53,36 @@ export class wheelManager extends PlazeMainInetMsg {
         this.m_nMinGold = 0
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_jackpotdraw.jackpot_draw_info,
-            cmd: PLAZA_JACKPOTDRAW_INFO,
-            callback: this.OnRecv_Info.bind(this)
-        });
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_jackpotdraw.jackpot_draw_info,
+    //         cmd: PLAZA_JACKPOTDRAW_INFO,
+    //         callback: this.OnRecv_Info.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_jackpotdraw.jackpot_draw_data,
-            cmd: PLAZA_JACKPOTDRAW_DATA,
-            callback: this.OnRecv_Data.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_jackpotdraw.jackpot_draw_data,
+    //         cmd: PLAZA_JACKPOTDRAW_DATA,
+    //         callback: this.OnRecv_Data.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_jackpotdraw.jackpot_draw_join,
-            cmd: PLAZA_JACKPOTDRAW_JOIN,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_jackpotdraw.jackpot_draw_join,
+    //         cmd: PLAZA_JACKPOTDRAW_JOIN,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_jackpotdraw.jackpot_draw_join_res,
-            cmd: PLAZA_JACKPOTDRAW_JOIN_RES,
-            callback: this.OnRecv_JoinResult.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_jackpotdraw.jackpot_draw_join_res,
+    //         cmd: PLAZA_JACKPOTDRAW_JOIN_RES,
+    //         callback: this.OnRecv_JoinResult.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_jackpotdraw.jackpot_draw_tips,
-            cmd: PLAZA_JACKPOTDRAW_TIPS,
-            callback: this.OnRecv_Tips.bind(this)
-        });
-    }
+    //     this.bindMessage({
+    //         struct: proto.plaza_jackpotdraw.jackpot_draw_tips,
+    //         cmd: PLAZA_JACKPOTDRAW_TIPS,
+    //         callback: this.OnRecv_Tips.bind(this)
+    //     });
+    // }
 
 
     OnRecv_Info(dictTB: proto.plaza_jackpotdraw.Ijackpot_draw_info) {
@@ -161,7 +161,7 @@ export class wheelManager extends PlazeMainInetMsg {
 
     OnRecv_Tips(dictTB: proto.plaza_jackpotdraw.jackpot_draw_tips) {
         fw.print(dictTB, " =======OnRecv_转盘Tips======== ")
-        app.popup.showToast(fw.language.get(strTips[dictTB.tips_id] ?? ""))
+        app.popup.showToast(strTips[dictTB.tips_id] ?? "")
     }
 
     // --请求抽奖－此时只拿结果，不得到物品。

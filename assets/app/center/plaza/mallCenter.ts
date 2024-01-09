@@ -43,7 +43,7 @@ export class mallCenter extends PlazeMainInetMsg {
     mPhpGetPayChannelAsynFuncTab = [];
 
     /**命令ID */
-    cmd = proto.plaza_mall.GS_PLAZA_MALL_MSG
+    // cmd = proto.plaza_mall.GS_PLAZA_MALL_MSG
     MallTagArray: proto.plaza_mall.IMallTag[]
     mallLimitConfig: proto.common.IMallLimitCfg
     m_BatchGoods: proto.plaza_mall.IMallGoodNew
@@ -77,73 +77,73 @@ export class mallCenter extends PlazeMainInetMsg {
 
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_view_c,
-            cmd: this.cmd.PLAZA_MALL_VIEW,
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_buy_c,
-            cmd: this.cmd.PLAZA_MALL_BUY,
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_rmb_buy_c,
-            cmd: this.cmd.PLAZA_MALL_RMBBUY,
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_rmb_order_s,
-            cmd: this.cmd.PLAZA_MALL_RMBORDER,
-            callback: this.OnRecv_MallRmbOrder.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_tips_s,
-            cmd: this.cmd.PLAZA_MALL_TIPS,
-            callback: this.OnRecv_MallTips.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_batch_goods_s,
-            cmd: this.cmd.PLAZA_MALL_BATCHGOODS,
-            callback: this.OnRecv_BatchGoods.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_rmb_batch_buy_c,
-            cmd: this.cmd.PLAZA_MALL_RMBBATCHBUY,
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_tag_info_s,
-            cmd: this.cmd.PLAZA_MALL_TAG_INFO,
-            callback: this.onRecv_MallTagInfo.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_goods_info_s,
-            cmd: this.cmd.PLAZA_MALL_GOODS_INFO,
-            callback: this.onRecv_MallGoodsInfo.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_recharge_tips_s,
-            cmd: this.cmd.PLAZA_MALL_RECHARGE_TIPS,
-            callback: this.onRecv_MallRechargeTips.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_malll_imit_config_s,
-            cmd: this.cmd.PLAZA_MALL_LIMIT_CONFIG,
-            callback: this.onRecv_MallLimitConfig.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_recharge_protect_cfg_s,
-            cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_CONFIG,
-            callback: this.onRecv_MallProtectConfig.bind(this)
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_recharge_protect_req_c,
-            cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_GET_REQ,
-        });
-        this.bindMessage({
-            struct: proto.plaza_mall.gs_mall_recharge_protect_rsp,
-            cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_GET_RSP,
-            callback: this.onRecv_MallProtectGetRsp.bind(this)
-        });
-    }
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_view_c,
+    //         cmd: this.cmd.PLAZA_MALL_VIEW,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_buy_c,
+    //         cmd: this.cmd.PLAZA_MALL_BUY,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_rmb_buy_c,
+    //         cmd: this.cmd.PLAZA_MALL_RMBBUY,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_rmb_order_s,
+    //         cmd: this.cmd.PLAZA_MALL_RMBORDER,
+    //         callback: this.OnRecv_MallRmbOrder.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_tips_s,
+    //         cmd: this.cmd.PLAZA_MALL_TIPS,
+    //         callback: this.OnRecv_MallTips.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_batch_goods_s,
+    //         cmd: this.cmd.PLAZA_MALL_BATCHGOODS,
+    //         callback: this.OnRecv_BatchGoods.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_rmb_batch_buy_c,
+    //         cmd: this.cmd.PLAZA_MALL_RMBBATCHBUY,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_tag_info_s,
+    //         cmd: this.cmd.PLAZA_MALL_TAG_INFO,
+    //         callback: this.onRecv_MallTagInfo.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_goods_info_s,
+    //         cmd: this.cmd.PLAZA_MALL_GOODS_INFO,
+    //         callback: this.onRecv_MallGoodsInfo.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_recharge_tips_s,
+    //         cmd: this.cmd.PLAZA_MALL_RECHARGE_TIPS,
+    //         callback: this.onRecv_MallRechargeTips.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_malll_imit_config_s,
+    //         cmd: this.cmd.PLAZA_MALL_LIMIT_CONFIG,
+    //         callback: this.onRecv_MallLimitConfig.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_recharge_protect_cfg_s,
+    //         cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_CONFIG,
+    //         callback: this.onRecv_MallProtectConfig.bind(this)
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_recharge_protect_req_c,
+    //         cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_GET_REQ,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_mall.gs_mall_recharge_protect_rsp,
+    //         cmd: this.cmd.PLAZA_MALL_RECHARGE_PROTECT_GET_RSP,
+    //         callback: this.onRecv_MallProtectGetRsp.bind(this)
+    //     });
+    // }
 
     //通过索引Id获取商品信息
     getMallGoodInfo(nRID: number) {
@@ -271,13 +271,13 @@ export class mallCenter extends PlazeMainInetMsg {
     onRecv_MallRechargeTips(dict: proto.plaza_mall.gs_mall_recharge_tips_s) {
         switch (dict.tips_id) {
             case cmds.MALL_RECHARGE_TIPS_1:
-                app.popup.showTip({ text: fw.language.get("Perfect information success") });
+                app.popup.showTip({ text: "Perfect information success" });
                 break;
             case cmds.MALL_RECHARGE_TIPS_2:
-                app.popup.showTip({ text: fw.language.get("Perfect information success") });
+                app.popup.showTip({ text: "Perfect information success" });
                 break;
             case cmds.MALL_RECHARGE_TIPS_3:
-                app.popup.showTip({ text: fw.language.get("Perfect information success") });
+                app.popup.showTip({ text: "Perfect information success" });
                 break;
             case cmds.MALL_RECHARGE_TIPS_4:
                 break;
@@ -309,11 +309,11 @@ export class mallCenter extends PlazeMainInetMsg {
     /**充值保护领奖返回 */
     onRecv_MallProtectGetRsp(dict: proto.plaza_mall.gs_mall_recharge_protect_rsp) {
         let tips = [
-            fw.language.get("Success"),
-            fw.language.get("Activity closed"),
-            fw.language.get("Time has not come"),
-            fw.language.get("Invalid activity"),
-            fw.language.get("Maximum times")
+            "Success",
+            "Activity closed",
+            "Time has not come",
+            "Invalid activity",
+            "Maximum times"
         ];
         if (dict.result == 0) {
             let data: any = {}

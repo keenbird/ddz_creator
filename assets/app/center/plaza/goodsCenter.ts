@@ -13,7 +13,7 @@ enum gold_id {
 
 export class goodsCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_goods.GS_PLAZA_GOODS_MSG
+    // cmd = proto.plaza_goods.GS_PLAZA_GOODS_MSG
     /**金币相关 */
     gold_id = gold_id
     /**物品配置 */
@@ -27,25 +27,25 @@ export class goodsCenter extends PlazeMainInetMsg {
     }
     cleanUserData() {
     }
-    initRegister() {
-        //获得物品配置信息
-        this.bindMessage({
-            struct: proto.plaza_goods.get_goods_info_c,
-            cmd: this.cmd.PLAZA_GOODS_GETINFO,
-        });
-        //物品配置信息返回
-        this.bindMessage({
-            struct: proto.plaza_goods.goods_info_ret_s,
-            cmd: this.cmd.PLAZA_GOODS_INFORETURN,
-            callback: this.PLAZA_GOODS_INFORETURN.bind(this),
-        });
-        //物品ID列表信息
-        this.bindMessage({
-            struct: proto.plaza_goods.good_id_list_s,
-            cmd: this.cmd.PLAZA_GOODS_GOODIDLIST,
-            callback: this.PLAZA_GOODS_GOODIDLIST.bind(this),
-        });
-    }
+    // initRegister() {
+    //     //获得物品配置信息
+    //     this.bindMessage({
+    //         struct: proto.plaza_goods.get_goods_info_c,
+    //         cmd: this.cmd.PLAZA_GOODS_GETINFO,
+    //     });
+    //     //物品配置信息返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_goods.goods_info_ret_s,
+    //         cmd: this.cmd.PLAZA_GOODS_INFORETURN,
+    //         callback: this.PLAZA_GOODS_INFORETURN.bind(this),
+    //     });
+    //     //物品ID列表信息
+    //     this.bindMessage({
+    //         struct: proto.plaza_goods.good_id_list_s,
+    //         cmd: this.cmd.PLAZA_GOODS_GOODIDLIST,
+    //         callback: this.PLAZA_GOODS_GOODIDLIST.bind(this),
+    //     });
+    // }
     /**物品配置信息返回 */
     PLAZA_GOODS_INFORETURN(data: proto.plaza_goods.goods_info_ret_s) {
         data.goods_cfg.forEach((element: proto.plaza_goods.IGoodsInfo) => {

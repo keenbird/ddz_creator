@@ -34,9 +34,9 @@ export class plaza_main extends (fw.FWComponent) {
 		app.runtime.permanentView.set(this.node, true);
 		app.runtime.plaza = this.node;
 		//测试
-		this.Items.Button_test_001.onClickAndScale(() => {
-			fw.scene.changeScene(fw.SceneConfigs.login);
-		});
+		// this.Items.Button_test_001.onClickAndScale(() => {
+		// 	fw.scene.changeScene(fw.SceneConfigs.login);
+		// });
 		var intentData: IntentParam = {}
 		this.Items.Button_test_002.onClickAndScale(() => {
 			app.gameManager.gotoGame(`Landlord`, {
@@ -102,12 +102,12 @@ export class plaza_main extends (fw.FWComponent) {
 					return true;
 				}
 				app.popup.showTip({
-					title: fw.language.get(`Tip`),
-					text: fw.language.get(`Do you really want to quit the game?`),
+					title: `Tip`,
+					text: `Do you really want to quit the game?`,
 					btnList: [
 						{
 							styleId: 1,
-							text: fw.language.get(`Ok`),
+							text: `Ok`,
 							callback: () => {
 								//断开连接
 								center.login.closeConnect();
@@ -117,7 +117,7 @@ export class plaza_main extends (fw.FWComponent) {
 						},
 						{
 							styleId: 2,
-							text: fw.language.get(`Earn money`),
+							text: `Earn money`,
 						},
 					]
 				});
@@ -960,7 +960,7 @@ export class plaza_main extends (fw.FWComponent) {
 				center.roomList.sendGetRoomServerId(center.roomList.KIND_ID[data.kindIdName]);
 			}
 		} else if (data.iconName == "MoreGame") {
-			app.popup.showToast({ text: fw.language.get("The game is under development, please wait") })
+			app.popup.showToast({ text: "The game is under development, please wait" })
 		} else {
 			this.updateSecondary(SecondaryType.Game, { plazaGameConfig: data });
 		}

@@ -26,24 +26,48 @@ export class DeviceWechat extends DeviceBase {
         return 1;
     }
     getVersion(): string {
-        wx.getSystemInfo({
-            success(res) {
-                return res.version;
-            },
-            fail: function (err?: any): void {
-                throw new Error('Function not implemented.');
-            },
-            complete: function (res?: any): void {
-                throw new Error('Function not implemented.');
-            }
-        })
-        return "1.0.0";
+        try {
+            const res = wx.getSystemInfoSync()
+            return res.version
+        } catch (e) {
+        // Do something when catch error
+        }
+
+        // wx.getSystemInfo({
+        //     success(res) {
+        //         return res.version;
+        //     },
+        //     fail: function (err?: any): void {
+        //         // throw new Error('Function not implemented.');
+        //     },
+        //     complete: function (res?: any): void {
+        //         // throw new Error('Function not implemented.');
+        //     }
+        // })
+        // return "1.0.0";
     }
     getMacAddress(): string {
         return "";
     }
     getBiosID(): string {
-        return "";
+        try {
+            const res = wx.getSystemInfoSync()
+            return res.model
+        } catch (e) {
+        // Do something when catch error
+        }
+        // wx.getSystemInfo({
+        //     success(res) {
+        //         return res.model;
+        //     },
+        //     fail: function (err?: any): void {
+        //         // throw new Error('Function fail.' +err);
+        //     },
+        //     complete: function (res?: any): void {
+        //         // throw new Error('Function not implemented.');
+        //     }
+        // })
+        // return "";
     }
     getCpuID(): string {
         return "";
@@ -52,7 +76,24 @@ export class DeviceWechat extends DeviceBase {
         return "";
     }
     getMachineName(): string {
-        return navigator.appName;
+        try {
+            const res = wx.getSystemInfoSync()
+            return res.model
+        } catch (e) {
+        // Do something when catch error
+        }
+        // wx.getSystemInfo({
+        //     success(res) {
+        //         return res.model;
+        //     },
+        //     fail: function (err?: any): void {
+        //         // throw new Error('Function not implemented.');
+        //     },
+        //     complete: function (res?: any): void {
+        //         // throw new Error('Function not implemented.');
+        //     }
+        // })
+        // return navigator.appName;
     }
     getLanguage(): string {
         return sys.language;

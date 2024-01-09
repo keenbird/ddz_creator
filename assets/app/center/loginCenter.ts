@@ -3,7 +3,7 @@ import { LoginMainInetMsg } from "../framework/network/awBuf/MainInetMsg";
 import { httpConfig, server_config, servers_default } from "../config/HttpConfig";
 import { EVENT_ID } from "../config/EventConfig";
 import proto from "./common";
-import { ERRID, ERRID_MSG, LOGINTYPE, LOGINTYPE_STR, PATHS } from "../config/ConstantConfig";
+import { CPLUSLOGINTYPE, ERRID, ERRID_MSG, LOGINTYPE, LOGINTYPE_STR, PATHS } from "../config/ConstantConfig";
 import { Node as ccNode, math } from 'cc';
 import { EventParam } from "../framework/manager/FWEventManager";
 
@@ -32,6 +32,10 @@ export class LoginCenter extends LoginMainInetMsg {
     netWorking: boolean = false;
     m_bRegLogin: boolean;
 
+    m_strSessionKey = ""
+    m_strOpenId = ""
+    m_strToken = ""
+
     initData() {
     }
 
@@ -46,16 +50,21 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     initRegister() {
-        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINERROR, proto.login_server.login_error_s)
-        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINERROR, this.OnRecv_LoginFail.bind(this))
+        // this.bindMsgStructPB(this.cmd.LSMI_LOGIN_REQ, proto.login_server.login_error_s)
+        // this.bindRecvFunc(this.cmd.LSMI_LOGIN_REQ, this.OnRecv_LoginFail.bind(this))
 
-        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINEND, proto.login_server.login_end_s)
-        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_LOGINEND, this.OnRecv_LoginEnd.bind(this))
+        this.bindMsgStructPB(this.cmd.LSMI_LOGIN_RESP, proto.client_proto.LoginResp)
+        this.bindRecvFunc(this.cmd.LSMI_LOGIN_RESP, this.OnRecv_LoginEnd.bind(this))
+
+        this.bindMsgStructPB(this.cmd.LSMI_LOGIN_ATTR_NTF, proto.client_proto.LoginAttrNtf)
+        this.bindRecvFunc(this.cmd.LSMI_LOGIN_ATTR_NTF, this.OnRecv_LoginAttrNtf.bind(this))
+
+        
 
         // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_TIPS, proto.login_server.login_tips_s)
         // this.bindRecvFunc(this.cmd.LOGIN_MSGID_TIPS, this.OnRecv_Tips.bind(this))
 
-        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_LOGINNEW, proto.login_server.login_new_c)
+        this.bindMsgStructPB(this.cmd.LSMI_LOGIN_REQ, proto.client_proto.LoginReq)
     }
 
     /**上一次登录的UserID */
@@ -64,50 +73,49 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     loginToServer() {
+        console.log("LH5")
         if (!app.socket.isWorking()) {
             this.connectServer()
             return
         }
 
-        console.log("LH1")
         let loginData = proto.client_proto.LoginReq.create()
 
-        loginData.channel = app.native.device.getChannel();
-        loginData.gameVersion = 0;
-        loginData.loginToken = "";
+        // loginData.channel = fw.DEBUG.sChannelID;
+        // loginData.gameVersion = app.native.device.getAppVersion();
+        // loginData.loginToken = this.m_strToken;
+        // loginData.loginAccount = this.m_strLoginAccount;
+        // loginData.loginPassword = this.m_strLoginMd5Password;
+        // loginData.loginType = CPLUSLOGINTYPE.LTD_TOKEN;
+        // loginData.packageName = fw.DEBUG.sPackageName;
+        // loginData.deviceId = app.native.device.getBiosID();
+        // loginData.version = app.native.device.getVersion();
+
+        loginData.channel = fw.DEBUG.sChannelID;
+        loginData.gameVersion = "1.0.0"
+        loginData.loginToken = "Y3BfY29kZT13eCZjcF91aWQ9b0xLX2I0azJwcVpVdmlUNEV2YlF4eGJvaVRQOCZleHBpPTE3MDQ4NzM3NzEmc2lnbj1kNDY4YmU4ZmU4MDk5NWZiNWI3MWUwNDNhNDFmOThhZA==";
         loginData.loginAccount = this.m_strLoginAccount;
         loginData.loginPassword = this.m_strLoginMd5Password;
-        loginData.loginType = this.m_eLoginType;
-      
-        loginData.version = app.native.device.getVersion();
+        loginData.loginType = CPLUSLOGINTYPE.LTD_TOKEN;
+        loginData.packageName ="1"
+        loginData.deviceId = "iPhone X"
+        loginData.version = "8.0.5"
 
-        // if (loginData.loginType == LOGINTYPE.GUEST && loginData.buff_hd.length <= 0) {
-        //     loginData.loginType = LOGINTYPE.UUID
-        // }
 
         app.file.setIntegerForKey("LoginType", this.m_eLoginType, { all: true })
         app.file.setStringForKey("LoginAccount", this.m_strLoginAccount, { all: true })
         app.file.setStringForKey("LoginMd5Pwd", this.m_strLoginMd5Password, { all: true })
 
+        console.log("LH6")
         if (this.sendData(this.cmd.LSMI_LOGIN_REQ, loginData)) {
+            console.log("LH7")
             this.startLoginingTimer()
         }
     }
 
   
 
-    // 游客带账号登录，pc 测试用
-    loginGuestLua(name, onlyoneKey, password, is_reg) {
-        this.m_eLoginType = LOGINTYPE.GUEST
-        this.m_strLoginAccount = name
-        this.m_strLoginMd5Password = password
-        this.m_strLoginMachineName = name
-        this.m_strLoginBuffHD = onlyoneKey
-        this.m_strLoginUUID = onlyoneKey
-        this.m_bReg = is_reg
-
-        this.loginToServer()
-    }
+    
 
     // 手机账号密码登录
     loginPhone(phoneText, loginPwd, is_reg) {
@@ -136,67 +144,109 @@ export class LoginCenter extends LoginMainInetMsg {
         this.loginToServer()
     }
 
-    // 微信登录
-    loginWeChat(is_reg) {
-        fw.print("loginCenter:loginAccount")
-        this.m_eLoginType = LOGINTYPE.WEIXIN
-        this.m_strLoginAccount = szInfo
-        this.m_strLoginMd5Password = app.md5.hashStr(loginPwd)
-        this.m_strLoginMachineName = app.native.device.getMachineName()
-        this.m_strLoginBuffHD = app.native.device.getHDID()
-        this.m_strLoginUUID = app.native.device.getUUID()
-        this.m_bReg = is_reg
-        wx.login({
-            success (res) {
-                if (res.code) {
-                //发起网络请求
-                this.loginToServer()
-                } else {
-                console.log('登录失败！' + res.errMsg)
-                }
-            }
-            })
-        
-    }
-    //oyhp php游客登录
-    visitorLogin(account: string) {
-        //请求登录
-        let url = httpConfig.path_pay + "Login/guest"
-        let extra = {} as any
-        extra.isVpn = app.native.device.isVpnUsed()
-        let params = this.getLoginPhpParams("", extra, account)
-        let checkCallback = async (bSuccess, response) => {
-            if (bSuccess) {
-                let data = response
-                if (data.status == 1) {
-                    if ( await center.login.isAllowLogin(data.wflag) && app.http.checkPhpSign(response) ) {
-                        app.file.writeStringToFile({
-                            fileData: JSON.stringify({account:account}),
-                            filePath: PATHS.LoginGuestPWD,
-                            bEncrypt:true,
-                        });
-                        center.roomList.downloadRoomInfo(data.version)
-                        center.roomList.doPhpQuickRecharge(data.qversion)
-                        center.login.loginGuestLua(data.account, data.account, data.password, data.is_reg == 1)
-                    }
-                } else if (data.info) {
-                    app.popup.showToast({ text: data.info })
-                } else {
-                    app.popup.showTip({ text: "data error, please login again" })
-                }
-            } else {
-                app.popup.showTip({ text: "Something went wrong with login, please login again" })
-            }
+    // 游客带账号登录，pc 测试用
+    loginGuestLua(name) {
+        this.m_eLoginType = LOGINTYPE.GUEST
+        this.m_strLoginAccount = name
+        this.m_strLoginMd5Password = ""
+        this.m_strLoginMachineName = name
+        this.m_strLoginBuffHD = ""
+        this.m_strLoginUUID = ""
+
+        var callback = function(bSuccess: boolean, response: any){
+            this.m_strToken = response.data.token
+            this.m_strSessionKey = ""
+            this.m_strOpenId = ""
+            this.m_bReg = response.data.isRegister
+            this.loginToServer()
+        }.bind(this)
+        var params = {
+            // channel_id: fw.DEBUG.sChannelID,
+            account: name,
         }
         app.http.post({
-            //请求链接
-            url: url,
-            //完成时回调函数
-            callback: checkCallback,
-            //请求参数
+            url: httpConfig.path_pay + "api/user/guestLogin",
             params: params,
+            callback: (bSuccess, response) => {
+                if (bSuccess) {
+                    if (1 == response.code) {
+                        callback ?.(bSuccess,response)
+                    } else {
+                        app.popup.showToast("登录失败:"+response.msg);
+                    }
+                } else {
+                    app.popup.showToast("登录失败，请联系客服");
+                }
+            }
         });
     }
+
+    // 向PHP注册登录
+    loginByPhp(params: {
+        channel_id: string,
+        login_type: number,
+        code: string,
+    }, callback?: (bSuccess: boolean, response: any) => void) {
+        console.log("LH0",httpConfig.path_pay + "api/user/login")
+        app.http.post({
+            url: httpConfig.path_pay + "api/user/login",
+            params: params,
+            callback: (bSuccess, response) => {
+                if (bSuccess) {
+                    if (1 == response.code) {
+                        console.log("LH1",response.data.thirdData)
+                        callback ?.(bSuccess,response)
+                    } else {
+                        app.popup.showToast("登录失败:"+response.msg);
+                    }
+                } else {
+                    app.popup.showToast("登录失败，请联系客服");
+                }
+            }
+        });
+    }
+
+    // 微信登录
+    loginWeChat() {
+        let self = this
+        fw.print("loginCenter:loginAccount")
+        this.m_eLoginType = LOGINTYPE.WEIXIN
+        this.loginToServer()
+ 
+        // this.m_strLoginMachineName = app.native.device.getMachineName()
+        // this.m_strLoginBuffHD = app.native.device.getHDID()
+        // this.m_strLoginUUID = app.native.device.getUUID()
+        
+        // var callback = function(bSuccess: boolean, response: any){
+        //     this.m_strToken = response.data.token
+        //     this.m_strSessionKey = response.data.thirdData.sessionKey
+        //     this.m_strOpenId = response.data.thirdData.openid
+        //     this.m_bReg = response.data.isRegister
+        //     this.loginToServer()
+        // }.bind(this)
+        // var params = {
+        //     channel_id: fw.DEBUG.sChannelID,
+        //     login_type: this.m_eLoginType,
+        //     code: "",
+        // }
+        // console.log("LH3")
+        // wx.login({
+        //     success (res) {
+        //         if (res.code) {
+        //             //发起网络请求
+        //             params.code = res.code
+        //             console.log("LH4",params)
+        //             self.loginByPhp(params,callback)
+        //         } else {
+        //             console.log('登录失败！' + res.errMsg)
+        //         }
+        //     },
+        //     fail (res) {
+        //         console.log('无法微信登录：' + res.errMsg )
+        //     }
+        // })
+    }
+
 
     getLoginPhpParams(session_id, extraLoginParams, buffhdEx?) {
         let buffhd = buffhdEx || app.native.device.getHDID()
@@ -266,15 +316,15 @@ export class LoginCenter extends LoginMainInetMsg {
         }
     }
     // 登录结果
-    OnRecv_LoginEnd(dict: proto.login_server.Ilogin_end_s) {
+    OnRecv_LoginEnd(dict: proto.client_proto.LoginResp) {
         /**关闭登录计时器 */
         this.stopLoginingTimer()
         // 登录信息存储
-        this.m_nLoginEndUserDBID = dict.user_dbid
-        this.m_strLoginEndKey = dict.key
+        this.m_nLoginEndUserDBID = dict.userId
+        this.m_strLoginEndKey = dict.result+""
 
         // 连接大厅
-        center.plaza.connectServer(this.m_eLoginType, this.m_nLoginEndUserDBID, this.m_strLoginEndKey)
+        // center.plaza.connectServer(this.m_eLoginType, this.m_nLoginEndUserDBID, this.m_strLoginEndKey)
 
         // 事件派发
         app.event.dispatchEvent({
@@ -301,11 +351,17 @@ export class LoginCenter extends LoginMainInetMsg {
             this.m_bReg = false
         }
         // 上报登录事件
-        app.event.reportEvent("login", {
-            userID: this.m_nLoginEndUserDBID + "",
-            loginType: this.m_eLoginType + "",
-            loginType_str: LOGINTYPE_STR[this.m_eLoginType],
-        })
+        // app.event.reportEvent("login", {
+        //     userID: this.m_nLoginEndUserDBID + "",
+        //     loginType: this.m_eLoginType + "",
+        //     loginType_str: LOGINTYPE_STR[this.m_eLoginType],
+        // })
+    }
+
+    OnRecv_LoginAttrNtf(dict: proto.client_proto.LoginAttrNtf) {
+        console.log("lh9",dict)
+        center.user.setLoginActor(dict)
+        this.loginPlaza()
     }
 
     checkRegLogin() {
@@ -411,6 +467,7 @@ export class LoginCenter extends LoginMainInetMsg {
     }
     /**停止登录定时器 */
     stopLoginingTimer() {
+        console.log("lH10")
         clearTimeout(this.nShedulerLogining);
         this.nShedulerLogining = null;
     }
@@ -509,8 +566,7 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     selectServer(serverData: server_config) {
-        
-        if (fw.DEBUG.bSelectServer) {
+        if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
             app.popup.showDialog({
                 viewConfig: fw.BundleConfig.resources.res["testlogin/login_main"],
             });
@@ -522,9 +578,9 @@ export class LoginCenter extends LoginMainInetMsg {
         //设置service配置
         app.socket.initServerConfig(serverData);
         //请求Sdk开关
-        app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
-        //刷新大厅列表排序
-        center.roomList.loadRoomSortInfo();
+        // app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
+        // //刷新大厅列表排序
+        // center.roomList.loadRoomSortInfo();
 
         
     }

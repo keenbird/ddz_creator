@@ -6,7 +6,7 @@ import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 
 export class exchangeCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_exchange.GS_PLAZA_EXCHANGE_MSG
+    // cmd = proto.plaza_exchange.GS_PLAZA_EXCHANGE_MSG
     //兑换列表
     m_ExchangeViewArray = []
     //兑换历史列表
@@ -40,31 +40,31 @@ export class exchangeCenter extends PlazeMainInetMsg {
     }
     cleanUserData() {
     }
-    initRegister() {
-        //兑换系统提示信息
-        this.bindMessage({
-            struct: proto.plaza_exchange.exchange_tips_s,
-            cmd: this.cmd.PLAZA_EXCHANGE_TIPS,
-            callback: this.OnRecv_ExchangeTips.bind(this),
-        });
-        //提现配置
-        this.bindMessage({
-            struct: proto.plaza_exchange.cash_out_config_s,
-            cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT_CONFIG,
-            callback: this.OnRecv_ExchangeCashOutCfg.bind(this),
-        });
-        //提现
-        this.bindMessage({
-            struct: proto.plaza_exchange.cash_out_c,
-            cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT,
-        });
-        //提现DB处理完后返回给客户端
-        this.bindMessage({
-            struct: proto.plaza_exchange.cash_out_s,
-            cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT_DB_RET,
-            callback: this.OnRecv_ExchangeCashReturnNew.bind(this),
-        });
-    }
+    // initRegister() {
+    //     //兑换系统提示信息
+    //     this.bindMessage({
+    //         struct: proto.plaza_exchange.exchange_tips_s,
+    //         cmd: this.cmd.PLAZA_EXCHANGE_TIPS,
+    //         callback: this.OnRecv_ExchangeTips.bind(this),
+    //     });
+    //     //提现配置
+    //     this.bindMessage({
+    //         struct: proto.plaza_exchange.cash_out_config_s,
+    //         cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT_CONFIG,
+    //         callback: this.OnRecv_ExchangeCashOutCfg.bind(this),
+    //     });
+    //     //提现
+    //     this.bindMessage({
+    //         struct: proto.plaza_exchange.cash_out_c,
+    //         cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT,
+    //     });
+    //     //提现DB处理完后返回给客户端
+    //     this.bindMessage({
+    //         struct: proto.plaza_exchange.cash_out_s,
+    //         cmd: this.cmd.PLAZA_EXCHANGE_CASHOUT_DB_RET,
+    //         callback: this.OnRecv_ExchangeCashReturnNew.bind(this),
+    //     });
+    // }
 
     getExchangeViewArray() {
         return this.m_ExchangeViewArray || [];

@@ -30,7 +30,7 @@ export class btn_common extends (fw.FWComponent) {
 	/**一般用于“了解”，“知道了” ...等中立类按钮，也可自定义使用 */
 	private initStyle_3(data: BtnStyleParam) {
 		data.text = data.text ?? `了解`;
-		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/an_lv/spriteFrame`];
+		data.bundleResConfig = data.bundleResConfig ?? fw.BundleConfig.resources.res[`ui/btn/an_dlv/spriteFrame`];
 		this.initStyle(data, true);
 	}
 	/**初始化界面 */

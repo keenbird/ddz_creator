@@ -192,7 +192,7 @@ export abstract class SDKBase extends (fw.FWComponent) {
                 if (bSuccess) {
                     // app.popup.showToast("Success")
                 } else {
-                    app.popup.showToast(fw.language.get("Fail"))
+                    app.popup.showToast("Fail")
                 }
             },
             //请求参数
@@ -241,10 +241,10 @@ export abstract class SDKBase extends (fw.FWComponent) {
                         });
 
                     } else {
-                        app.popup.showToast(response.msg ?? fw.language.get("fail"))
+                        app.popup.showToast(response.msg ?? "fail")
                     }
                 } else {
-                    app.popup.showToast(fw.language.get("Fail"))
+                    app.popup.showToast("Fail")
                 }
             },
             //请求参数
@@ -315,7 +315,7 @@ export abstract class SDKBase extends (fw.FWComponent) {
                 this.requestSdkOpenInfo(callback)
             }
             app.popup.showTip({
-                text: msg || fw.language.get("Failed to pull sdk configuration!"),
+                text: msg || "Failed to pull sdk configuration!",
                 btnList: [
                     {
                         styleId: 1,
@@ -382,7 +382,7 @@ export abstract class SDKBase extends (fw.FWComponent) {
         if (app.native.device.hasPermissions(...p)) {
             app.native.device.requestLocationUpdates(func);
         } else {
-            app.native.device.requestPermissions(fw.language.get("request location permission"), 1, ...p)
+            app.native.device.requestPermissions("request location permission", 1, ...p)
         }
     }
 

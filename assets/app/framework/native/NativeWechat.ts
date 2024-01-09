@@ -7,7 +7,7 @@ const { ccclass } = _decorator;
 @ccclass('NativeWechat')
 export class NativeWechat extends NativeBase {
 
-    get device(): NativeWechat {
-        return this.obtainComponent(NativeWechat);
+    get device(): DeviceWechat {
+        return this.obtainComponent(DeviceWechat);
     }
 }

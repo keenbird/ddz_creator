@@ -72,7 +72,7 @@ export const servers: Array<server_config> = [
     //服务器列表
     {
         Name: "测试内网",
-        url_login: "192.168.125.102",
+        url_login: "192.168.1.46",
         port_min: 5001,
         port_max: 5004,
         url_facedown: "http://192.168.125.109/Static/",
@@ -108,14 +108,26 @@ export const servers: Array<server_config> = [
     },
     {
         Name: "黄鹏",
-        url_login: "192.168.30.44",
-        port_min: 5001,
-        port_max: 5001,
+        url_login: "192.168.1.49",
+        port_min: 11001,
+        port_max: 11001,
         url_facedown: "http://192.168.125.109/Static/",
         url_faceup: "http://192.168.125.109/",
         url_active: "http://192.168.125.109:83/",
         url_payroot: "http://192.168.125.109:81/",
         url_downRes: "http://192.168.125.109/Static/",
         url_feedback: "http://192.168.125.109/"
+    },
+    {
+        Name: "戴伟祥",
+        url_login: "192.168.1.49",
+        port_min: 11001,
+        port_max: 11001,
+        url_facedown: "http://192.168.10.54/Static/",
+        url_faceup: "http://192.168.10.54/",
+        url_active: "http://192.168.10.54:83/",
+        url_payroot: "http://192.168.10.54:91/",
+        url_downRes: "http://192.168.10.54/Static/",
+        url_feedback: "http://192.168.10.54/"
     },
 ]

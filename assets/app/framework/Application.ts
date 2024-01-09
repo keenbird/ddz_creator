@@ -217,8 +217,7 @@ export class Application extends FWSceneBase {
     }
     /**去往更新场景 */
     gotoUpdateScene() { 
-        
-        if (fw.DEBUG.bSelectServer) {
+        if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
             app.popup.showDialog({
                 viewConfig: fw.BundleConfig.resources.res["selectServer/selectServer"]
             });
@@ -239,22 +238,27 @@ export class Application extends FWSceneBase {
             fw.BundleConfig.resources.res[`shader`],
             fw.BundleConfig.resources.res[`ui`],
         ];
-        /**添加预加载参数，由于使用的是bundle.loadDir，所以资源加载后可通过bundle.get同步获取 */
-        list.forEach(preloadParam => {
-            //先加在子包
-            this.loadBundle(preloadParam,(bundle) => {
-                bundle.loadDir(
-                    preloadParam.path,
-                    (err, res) => {
-                        if (err) {
-                            fw.printError(err);
-                        } else {
-                            ++nNowCount >= list.length && this.gotoUpdateScene();
+        if(list.length == 0){
+            this.gotoUpdateScene()
+        }else{
+            /**添加预加载参数，由于使用的是bundle.loadDir，所以资源加载后可通过bundle.get同步获取 */
+            list.forEach(preloadParam => {
+                //先加在子包
+                this.loadBundle(preloadParam,(bundle) => {
+                    bundle.loadDir(
+                        preloadParam.path,
+                        (err, res) => {
+                            if (err) {
+                                fw.printError(err);
+                            } else {
+                                ++nNowCount >= list.length && this.gotoUpdateScene();
+                            }
                         }
-                    }
-                );
+                    );
+                });
             });
-        });
+        }
+        
     }
     /**重启游戏 */
     restart() {

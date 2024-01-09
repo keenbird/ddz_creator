@@ -215,7 +215,7 @@ export class DeviceAndroid extends DeviceBase {
         });
     }
     /**跳转权限设置界面提示弹窗 */
-    gotoSettings(title: string = fw.language.get(`Tips`), rationale: string = fw.language.get(`This app requires these permissions to work properly`)) {
+    gotoSettings(title: string = `Tips`, rationale: string = `This app requires these permissions to work properly`) {
         this.callStaticMethod({
             strAndroidPackagePath: "com/panda/util",
             strClassName: "Utils",

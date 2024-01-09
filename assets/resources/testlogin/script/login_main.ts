@@ -16,16 +16,7 @@ export class login_main extends (fw.FWComponent) {
 	nEnterTimeOut: number
 	/**进入超时定时器 */
 	nEnter: number
-	protected doLifeFunc(): void {
-		//测试
-		this.Items.Button_test_001.onClickAndScale(() => {
-			// fw.scene.changeScene(fw.SceneConfigs.plaza);
-			// this.onClickYouKe()
-			center.login.loginGuestLua("test0", "test0", "130388F324329CE5CDC1A823A9BD800C", true)
-		});
-		//正常逻辑
-		// super.doLifeFunc();
-	}
+
 	initData() {
 		//清理大厅节点缓存
 		if (fw.isValid(app.runtime.plaza)) {
@@ -38,14 +29,14 @@ export class login_main extends (fw.FWComponent) {
             eventName: EVENT_ID.EVENT_CLEAN_USER_DATA,
         })
 		//请求登录公告
-		center.login.showLoginNotice();
+		// center.login.showLoginNotice();
 	}
 	protected initEvents(): boolean | void {
 		//登录中心登录事件
 		this.bindEvent({
 			eventName: EVENT_ID.EVENT_LOGIN_LOGINEND,
 			callback: () => {
-				this.loginProcess(fw.language.get("logging in..."), 0);
+				this.loginProcess("logging in...", 0);
 				app.popup.closeAllDialog();
 			}
 		});
@@ -56,15 +47,15 @@ export class login_main extends (fw.FWComponent) {
 				app.popup.closeLoading();
 				if (params.flag == 1) {
 					app.popup.showTip({
-						text: fw.language.get("No such account, please register")
+						text: "No such account, please register"
 					});
 				} else if (params.flag == 2) {
 					app.popup.showTip({
-						text: fw.language.get("wrong password")
+						text: "wrong password"
 					});
 				} else {
 					app.popup.showTip({
-						text: fw.language.get("Something went wrong with login, please login again")
+						text: "Something went wrong with login, please login again"
 					});
 				}
 				this.loginFail();
@@ -92,7 +83,7 @@ export class login_main extends (fw.FWComponent) {
 		this.bindEvent({
 			eventName: EVENT_ID.EVENT_PLAZA_ACTOR_PRIVATE,
 			callback: () => {
-				this.loginProcess(fw.language.get("Getting user data..."), 70);
+				this.loginProcess("Getting user data...", 70);
 				this.nLoginConfigIndex = 0;
 				//请求活动列表
 				center.activity.requestActivityList();
@@ -119,108 +110,47 @@ export class login_main extends (fw.FWComponent) {
 		});
 	}
 	protected initView(): boolean | void {
+		this.Items.youke_edit_node.active = false
 		
-		//添加测试登录界面
-		if (fw.DEBUG.bSelectServer || app.func.isWin32()) {
-			this.addView({
-				viewConfig: fw.BundleConfig.login.res["test_login/test_login"],
-				callback: () => {
-					//调整客服层级
-					if (fw.isValid(this.Items.Sprite_kefu)) {
-						//调整父节点
-						this.Items.Sprite_kefu.parent = this.node;
-						//调整层级
-						this.Items.Sprite_kefu.setSiblingIndex(app.func.getIntMax());
-					}
-				}
-			});
-			this.addView({
-				viewConfig: fw.BundleConfig.login.res["test/native"],
-			});
-		}
-		//调整显示
-		this.Items.Node_login.active = true;
-		this.Items.Node_loading.active = false;
-		this.Items.login_notice.active = false;
-		this.Items.Sprite_getOTP.active = true;
-		this.Items.Sprite_getOTP_CD.active = false;
-		//调整facebook登录显隐
-		if (app.sdk.isSdkOpen(`fblogin`)) {
-			this.Items.Node_facebook.active = true;
-		} else {
-			this.Items.Node_facebook.active = false;
-		}
-		//调整游客登录显隐
-		if (!app.func.isIOS() && app.sdk.isSdkOpen(`GuestLogin`)) {
-			this.Items.Node_youke.active = true;
-		} else {
-			this.Items.Node_youke.active = false;
-		}
-		//调整ios登录
-		if (app.func.isIOS()) {
-			this.Items.Sprite_ios.active = true;
-		} else {
-			this.Items.Sprite_ios.active = false;
-		}
-		//奖励数额
-		this.Items.Text_get.string = `${DF_SYMBOL}10`;
-		//版本号
-		this.Items.version.getComponent(Label).string = `version:${app.native.device.getAppVersion()} ${app.file.getPlazaVersion()}`;
-		//旋转
-		tween(this.Items.Sprite_loading)
-			.by(1.0, { eulerAngles: fw.v3(0, 0, -360).clone() })
-			.union()
-			.repeatForever()
-			.start();
 	}
 	protected initBtns(): boolean | void {
 		//登录
-		this.Items.Sprite_login.onClickAndScale(this.onClickLogin.bind(this));
-		this.Items.Sprite_getOTP.onClickAndScale(this.onGetOTP.bind(this));
-		//Facebook
-		this.Items.Node_facebook.onClickAndScale(() => {
-			app.native.facebook.login()
+		this.Items.btn_weixin.onClickAndScale(this.onLoginWeixin.bind(this));
+		this.Items.btn_youke.onClickAndScale(this.onClickYouKe.bind(this));
+		this.Items.btn_youke_sure.onClickAndScale(this.onSureYoukeLogin.bind(this));
+		this.Items.youke_edit_close.onClickAndScale(()=>{
+			this.Items.youke_edit_node.active = false
 		});
-		//客服
-		this.Items.Node_youke.onClickAndScale(this.onClickYouKe.bind(this));
-		//清除
-		this.Items.Node_clear.onClickAndScale(() => {
-			this.Items.Sprite_num.Items.EditBox.getComponent(EditBox).string = ``;
-		});
-		//菜单
-		let func = (data: LanguageMenuBtnParam) => {
-			fw.language.init(data.nLanguageType);
+		
+	
+	
+	}
+
+	/**微信登录 */
+	onLoginWeixin(data: any) {
+        if(app.func.isWeChat){
+			center.login.loginWeChat()
+		}else{
+			this.onClickYouKe()
 		}
-		let btns: LanguageMenuBtnParam[] = [
-			{
-				nLanguageType: fw.LanguageType.en,
-				node: this.Items.Node_english,
-				callback: func
-			},
-			{
-				nLanguageType: fw.LanguageType.brasil,
-				node: this.Items.Node_brasil,
-				callback: func
-			},
-		]
-		let defaultIndex = 0;
-		app.func.positiveTraversal(btns, (element, index) => {
-			if (element.nLanguageType == fw.language.languageType) {
-				defaultIndex = index;
-				return true;
-			}
-		});
-		app.func.createMenu<LanguageMenuBtnParam>({
-			btns,
-			defaultIndex,
-		});
+	}
+
+	/**游客登录输入账号登录 */
+	onSureYoukeLogin(data: any) {
+		var accountStr:string = this.Items.youke_edit.getComponent(EditBox).string
+		if(accountStr == ""){
+			app.popup.showToast("请输入账号")
+			return
+		}
+		app.file.setStringForKey("YoukeLogin_Account",accountStr,{all:true})
+		center.login.loginGuestLua(accountStr)
 	}
 
 	public onViewEnter(): void {
-		// let bAutoLogin = (fw.scene.getIntentData() as any).bAutoLogin
-		// if(!app.func.isBrowser() && bAutoLogin) {
-		// 	this.autoLogin()
-		// }
+		let bAutoLogin = true
+		if(!app.func.isBrowser() && bAutoLogin) {
+			this.autoLogin()
+		}
 	}
 
 	/**登录公告 */
@@ -250,20 +180,22 @@ export class login_main extends (fw.FWComponent) {
 
 	/**游客登录 */
 	onClickYouKe() {
-		center.login.visitorLogin(app.native.device.getHDID());
+		this.Items.youke_edit_node.active = true
+		var lastAccount = app.file.getStringForKey("YoukeLogin_Account","",{all:true})
+		this.Items.youke_edit.getComponent(EditBox).string = lastAccount
 	}
 
 	/**登录 */
 	onClickLogin() {
 		let phone = this.Items.Sprite_num.Items.TEXT_LABEL.string;
 		if (!app.func.isCorrectPhoneNumber(phone)) {
-			app.popup.showToast(fw.language.get(`Please input valid number`));
+			app.popup.showToast(`Please input valid number`);
 			return;
 		}
 
 		let token = this.Items.Node_input_OTP.Items.TEXT_LABEL.string;
 		if (token.length != 6) {
-			app.popup.showToast(fw.language.get(`Please enter verification code`));
+			app.popup.showToast(`Please enter verification code`);
 			return;
 		}
 
@@ -277,7 +209,7 @@ export class login_main extends (fw.FWComponent) {
 		//请求验证码
 		let phone = this.Items.Sprite_num.Items.TEXT_LABEL.string;
 		if (!app.func.isCorrectPhoneNumber(phone)) {
-			app.popup.showToast(fw.language.get(`Please input valid number`));
+			app.popup.showToast(`Please input valid number`);
 			return;
 		}
 		//获取验证码
@@ -298,7 +230,7 @@ export class login_main extends (fw.FWComponent) {
 		center.login.setTodayLoginTimes();
 		//刷新桌子人数
 		center.roomList.refreshRoomPlayNum();
-		this.loginProcess(fw.language.get("Enter lobby..."), 100);
+		this.loginProcess("Enter lobby...", 100);
 		this.nEnter = this.setTimeout(() => {
 			app.popup.closeLoading();
 			fw.scene.changeScene(fw.SceneConfigs.plaza);
@@ -337,46 +269,20 @@ export class login_main extends (fw.FWComponent) {
 	autoLogin() {
 		let loginType = app.file.getIntegerForKey("LoginType",-1,{all:true})
 		switch(loginType) {
-			case LOGINTYPE.PHONE: {
-				let data = JSON.safeParse(app.file.getStringFromFile({
-					filePath: PATHS.LoginPhonePWD,
-					bEncrypt:true,
-				}));
-				if(data) {
-					let extra = {
-						pwd : data.pwd
-					}
-					center.login.doPhpPhoneLogin(data.phoneNum,extra)
-				}
+			case LOGINTYPE.WEIXIN: {
+				center.login.loginWeChat()
 				break
 			}
 			case LOGINTYPE.GUEST: {
-				if(app.sdk.isSdkOpen("GuestLogin")) {
-					let data = JSON.safeParse(app.file.getStringFromFile({
-						filePath: PATHS.LoginGuestPWD,
-						bEncrypt:true,
-					}));
-					data && center.login.visitorLogin(data.account);
-				}
+				var lastAccount = app.file.getStringForKey("YoukeLogin_Account","",{all:true})
+				center.login.loginGuestLua(lastAccount)
 				break
 			}
-			case LOGINTYPE.FB: {
-				if(app.sdk.isSdkOpen("fblogin")) {
-					let data = JSON.safeParse(app.file.getStringFromFile({
-						filePath: PATHS.LoginFBPWD,
-						bEncrypt:true,
-					}));
-					if(data) {
-						let { name, id, token } = data;
-						app.native.facebook.loginFB(name, id, token);
-					}
-				}
-				break
-			}
+			
 			default: {
 				//未有自动登录的用户，默认自动使用游客登录游戏
 				if(this.Items.Node_youke.active == true) {
-					this.onClickYouKe()
+					// this.onClickYouKe()
 				}
 				break
 			}

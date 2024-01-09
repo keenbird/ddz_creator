@@ -44,7 +44,7 @@ export interface MultiopenSevenRewardData {
 
 @ccclass('taskActiveCenter')
 export class taskActiveCenter extends PlazeMainInetMsg {
-	cmd = proto.plaza_taskactive.GS_PLAZA_TASKACTIVE_MSG
+	// cmd = proto.plaza_taskactive.GS_PLAZA_TASKACTIVE_MSG
 
 	private mSevenActiveOpen: boolean;
 
@@ -95,86 +95,86 @@ export class taskActiveCenter extends PlazeMainInetMsg {
 		}
 	}
 
-	initRegister() {
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_MSG_TIPS, proto.plaza_taskactive.gs_task_active_tips_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_MSG_TIPS, this.OnRecv_Tips.bind(this))
+	// initRegister() {
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_MSG_TIPS, proto.plaza_taskactive.gs_task_active_tips_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_MSG_TIPS, this.OnRecv_Tips.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_STOP_SERVER_TIPS, proto.plaza_taskactive.gs_stop_server_tips_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_STOP_SERVER_TIPS, this.OnRecv_stopServerTips.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_STOP_SERVER_TIPS, proto.plaza_taskactive.gs_stop_server_tips_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_STOP_SERVER_TIPS, this.OnRecv_stopServerTips.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_REQ, proto.plaza_taskactive.gs_seven_active_req_c)
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_REQ, proto.plaza_taskactive.gs_seven_active_req_c)
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_RET, proto.plaza_taskactive.gs_seven_active_ret_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_RET, this.OnRecv_SevenactiveRet.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_RET, proto.plaza_taskactive.gs_seven_active_ret_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_RET, this.OnRecv_SevenactiveRet.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_DATA, proto.plaza_taskactive.gs_seven_active_data_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_DATA, this.OnRecv_SevenactiveData.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_DATA, proto.plaza_taskactive.gs_seven_active_data_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_DATA, this.OnRecv_SevenactiveData.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_CONFIG, proto.plaza_taskactive.gs_seven_active_cfg_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_CONFIG, this.OnRecv_SevenactiveConfig.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_SEVENACTIVE_CONFIG, proto.plaza_taskactive.gs_seven_active_cfg_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_SEVENACTIVE_CONFIG, this.OnRecv_SevenactiveConfig.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_REQ, proto.plaza_taskactive.gs_reques_seven_reward_req_c)
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_REQ, proto.plaza_taskactive.gs_reques_seven_reward_req_c)
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_RET, proto.plaza_taskactive.gs_multi_open_seven_reward_ret_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_RET, this.OnRecv_MultiopenSevenRewradRet.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_RET, proto.plaza_taskactive.gs_multi_open_seven_reward_ret_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_RET, this.OnRecv_MultiopenSevenRewradRet.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_DATA, proto.plaza_taskactive.gs_multi_open_seven_reward_data_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_DATA, this.OnRecv_MultiopenSevenRewradData.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_DATA, proto.plaza_taskactive.gs_multi_open_seven_reward_data_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_DATA, this.OnRecv_MultiopenSevenRewradData.bind(this))
 
-		this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_CONFIG, proto.plaza_taskactive.gs_multi_open_seven_reward_cfg_s)
-		this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_CONFIG, this.OnRecv_MultiopenSevenRewradConfig.bind(this))
+	// 	this.bindMsgStructPB(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_CONFIG, proto.plaza_taskactive.gs_multi_open_seven_reward_cfg_s)
+	// 	this.bindRecvFunc(PLAZA_TASKACTIVE_MULTIOPEN_SEVEN_REWRAD_CONFIG, this.OnRecv_MultiopenSevenRewradConfig.bind(this))
 
-		/**水果机财务天降--began------------------------------------- */
-		//财务天降配置
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG,
-			struct: proto.plaza_taskactive.slot_bag_task,
-			callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG.bind(this),
-		});
-		//财务天降购买
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_BUY,
-			struct: proto.plaza_taskactive.slot_bag_task_buy,
-		});
-		//财务天降进度信息
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CHANGE,
-			struct: proto.plaza_taskactive.slot_bag_task_change,
-			callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CHANGE.bind(this),
-		});
-		//请求财务天降任务领奖
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_GETPRIZE,
-			struct: proto.plaza_taskactive.slot_bag_task_get_prize,
-		});
-		//财务天降任务领奖返回
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_PRIZERET,
-			struct: proto.plaza_taskactive.slot_bag_task_prize_ret,
-			callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_PRIZERET.bind(this),
-		});
-		//订单信息返回
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_ORDER_INFO_RET,
-			struct: proto.plaza_taskactive.order_info_ret,
-			callback: this.PLAZA_TASKACTIVE_ORDER_INFO_RET.bind(this),
-		});
-		/**水果机财务天降--end------------------------------------- */
+	// 	/**水果机财务天降--began------------------------------------- */
+	// 	//财务天降配置
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG,
+	// 		struct: proto.plaza_taskactive.slot_bag_task,
+	// 		callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG.bind(this),
+	// 	});
+	// 	//财务天降购买
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_BUY,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_buy,
+	// 	});
+	// 	//财务天降进度信息
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CHANGE,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_change,
+	// 		callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CHANGE.bind(this),
+	// 	});
+	// 	//请求财务天降任务领奖
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_GETPRIZE,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_get_prize,
+	// 	});
+	// 	//财务天降任务领奖返回
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_PRIZERET,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_prize_ret,
+	// 		callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_PRIZERET.bind(this),
+	// 	});
+	// 	//订单信息返回
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_ORDER_INFO_RET,
+	// 		struct: proto.plaza_taskactive.order_info_ret,
+	// 		callback: this.PLAZA_TASKACTIVE_ORDER_INFO_RET.bind(this),
+	// 	});
+	// 	/**水果机财务天降--end------------------------------------- */
 
-		/**水果机财务天降之普通礼包，在水果机财务天降前触发--began------------------------------------- */
-		//财务天降配置
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG_EX,
-			struct: proto.plaza_taskactive.slot_bag_task_ex,
-			callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG_EX.bind(this),
-		});
-		//财务天降购买
-		this.bindMessage({
-			cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_BUY_EX,
-			struct: proto.plaza_taskactive.slot_bag_task_buy_ex,
-		});
-		/**水果机财务天降之普通礼包，在水果机财务天降前触发--end------------------------------------- */
-	}
+	// 	/**水果机财务天降之普通礼包，在水果机财务天降前触发--began------------------------------------- */
+	// 	//财务天降配置
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG_EX,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_ex,
+	// 		callback: this.PLAZA_TASKACTIVE_SLOTBAG_TASK_CFG_EX.bind(this),
+	// 	});
+	// 	//财务天降购买
+	// 	this.bindMessage({
+	// 		cmd: this.cmd.PLAZA_TASKACTIVE_SLOTBAG_TASK_BUY_EX,
+	// 		struct: proto.plaza_taskactive.slot_bag_task_buy_ex,
+	// 	});
+	// 	/**水果机财务天降之普通礼包，在水果机财务天降前触发--end------------------------------------- */
+	// }
 	private OnRecv_Tips(dict: proto.plaza_taskactive.gs_task_active_tips_s): void {
 		if ("string" == typeof (dict.msg) && "" != dict.msg) {
 			app.popup.showToast({ text: dict.msg });
@@ -217,7 +217,7 @@ export class taskActiveCenter extends PlazeMainInetMsg {
 				});
 			}
 		} else {
-			app.popup.showToast({ text: fw.language.get("fail") });
+			app.popup.showToast({ text: "fail" });
 		}
 		app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_PLAZA_SEVEN_ACTIVE_REWARD_RET, });
 	}
@@ -578,11 +578,11 @@ export class taskActiveCenter extends PlazeMainInetMsg {
 			app.sdk.setPayMode(PAY_MODE.PAY_MODE_NOR);
 			let cash = quickRecharge.nQuickGoodsNum;
 			let bonus = quickRecharge.nQuickGiveGoodsNum[0];   //说是只会送一个,  多个也只读取第一个
-			let giftText = fw.language.get("BONUS");
+			let giftText = "BONUS";
 			if (quickRecharge.nQuickGiveGoodsID[0] == center.goods.gold_id.withdraw_gold) {
-				giftText = fw.language.get("WITHDRAW");
+				giftText = "WITHDRAW";
 			} else if (quickRecharge.nQuickGiveGoodsID[0] == center.goods.gold_id.cash) {
-				giftText = fw.language.get("CASH");
+				giftText = "CASH";
 			}
 			let dataEx: PayChannelData = {
 				cashBonusInfo: {

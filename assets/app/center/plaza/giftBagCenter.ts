@@ -9,7 +9,7 @@ import { httpConfig } from "../../config/HttpConfig";
 
 export class giftBagCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_giftbag.GS_PLAZA_GIFTBAG_MSG
+    // cmd = proto.plaza_giftbag.GS_PLAZA_GIFTBAG_MSG
     /**破产礼包配置 */
     mGiftBagCfg:proto.common.IBustBagCfgBase;
     /**是否开启 */
@@ -30,37 +30,37 @@ export class giftBagCenter extends PlazeMainInetMsg {
         
     }
 
-    initRegister() {
-        //提示信息
-        this.bindMessage({
-            cmd: this.cmd.PLAZA_GIFTBAG_TIPS,
-            struct: proto.plaza_giftbag.act_tips_s,
-            callback: this.plazaGiftBagTips.bind(this),
-        });
-        //破产礼包配置
-        this.bindMessage({
-            cmd: this.cmd.PLAZA_GIFTBAG_BUSTBAG_CFG,
-            struct: proto.plaza_giftbag.bust_bag_cfg,
-            callback: this.plazaGiftBagCfg.bind(this),
-        });
-        //破产礼包购买结果
-        this.bindMessage({
-            cmd: this.cmd.PLAZA_GIFTBAG_BUY_RET,
-            struct: proto.plaza_giftbag.gift_bag_buy_ret,
-            callback: this.plazaGiftBagBuyRet.bind(this),
-        });
-        //礼包订单号信息
-        this.bindMessage({
-            cmd: this.cmd.PLAZA_GIFTBAG_ORDER_RET,
-            struct: proto.plaza_giftbag.order_ret,
-            callback: this.plazaGiftBagOrderRet.bind(this),
-        });
+    // initRegister() {
+    //     //提示信息
+    //     this.bindMessage({
+    //         cmd: this.cmd.PLAZA_GIFTBAG_TIPS,
+    //         struct: proto.plaza_giftbag.act_tips_s,
+    //         callback: this.plazaGiftBagTips.bind(this),
+    //     });
+    //     //破产礼包配置
+    //     this.bindMessage({
+    //         cmd: this.cmd.PLAZA_GIFTBAG_BUSTBAG_CFG,
+    //         struct: proto.plaza_giftbag.bust_bag_cfg,
+    //         callback: this.plazaGiftBagCfg.bind(this),
+    //     });
+    //     //破产礼包购买结果
+    //     this.bindMessage({
+    //         cmd: this.cmd.PLAZA_GIFTBAG_BUY_RET,
+    //         struct: proto.plaza_giftbag.gift_bag_buy_ret,
+    //         callback: this.plazaGiftBagBuyRet.bind(this),
+    //     });
+    //     //礼包订单号信息
+    //     this.bindMessage({
+    //         cmd: this.cmd.PLAZA_GIFTBAG_ORDER_RET,
+    //         struct: proto.plaza_giftbag.order_ret,
+    //         callback: this.plazaGiftBagOrderRet.bind(this),
+    //     });
         
-        this.bindMessage({
-            struct: proto.plaza_giftbag.gift_bag_buy,
-            cmd: this.cmd.PLAZA_GIFTBAG_BUY,
-        });
-    }
+    //     this.bindMessage({
+    //         struct: proto.plaza_giftbag.gift_bag_buy,
+    //         cmd: this.cmd.PLAZA_GIFTBAG_BUY,
+    //     });
+    // }
 
     send_PLAZA_GIFTBAG_BUSTBAG_BUY(rechargeRid: number, type: number) {
         let data = proto.plaza_giftbag.gift_bag_buy.create()
@@ -80,7 +80,7 @@ export class giftBagCenter extends PlazeMainInetMsg {
             "This activity has been closed.",
             "Configuration error. Please try again later."
         ]
-        app.popup.showToast({ text: fw.language.get(tips[data.tips_id]) || "tips"+ data.tips_id })
+        app.popup.showToast({ text: tips[data.tips_id] || "tips"+ data.tips_id })
     }
     /**告示 */
     plazaGiftBagCfg(data: proto.plaza_giftbag.bust_bag_cfg) {

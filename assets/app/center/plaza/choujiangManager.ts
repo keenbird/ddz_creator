@@ -19,7 +19,7 @@ let strTips = [
 ]
 
 export class choujiangManager extends PlazeMainInetMsg {
-    cmd = proto.plaza_luckydraw.GS_PLAZA_LUCKYDRAW_MSG
+    // cmd = proto.plaza_luckydraw.GS_PLAZA_LUCKYDRAW_MSG
     m_cfg: proto.plaza_luckydraw.ILuckyDrawItem[];
     m_userData: any;
     m_bOpen: boolean;
@@ -39,37 +39,37 @@ export class choujiangManager extends PlazeMainInetMsg {
         this.m_nMinGold = 0
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_luckydraw.lucky_draw_info,
-            cmd: this.cmd.PLAZA_LUCKYDRAW_INFO,
-            callback: this.OnRecv_Info.bind(this)
-        });
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckydraw.lucky_draw_info,
+    //         cmd: this.cmd.PLAZA_LUCKYDRAW_INFO,
+    //         callback: this.OnRecv_Info.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckydraw.lucky_draw_data,
-            cmd: this.cmd.PLAZA_LUCKYDRAW_DATA,
-            callback: this.OnRecv_Data.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckydraw.lucky_draw_data,
+    //         cmd: this.cmd.PLAZA_LUCKYDRAW_DATA,
+    //         callback: this.OnRecv_Data.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckydraw.lucky_draw_join,
-            cmd: this.cmd.PLAZA_LUCKYDRAW_JOIN,
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckydraw.lucky_draw_join,
+    //         cmd: this.cmd.PLAZA_LUCKYDRAW_JOIN,
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckydraw.lucky_draw_join_res,
-            cmd: this.cmd.PLAZA_LUCKYDRAW_JOIN_RES,
-            callback: this.OnRecv_JoinResult.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckydraw.lucky_draw_join_res,
+    //         cmd: this.cmd.PLAZA_LUCKYDRAW_JOIN_RES,
+    //         callback: this.OnRecv_JoinResult.bind(this)
+    //     });
 
-        this.bindMessage({
-            struct: proto.plaza_luckydraw.lucky_draw_tips,
-            cmd: this.cmd.PLAZA_LUCKYDRAW_TIPS,
-            callback: this.OnRecv_Tips.bind(this)
-        });
+    //     this.bindMessage({
+    //         struct: proto.plaza_luckydraw.lucky_draw_tips,
+    //         cmd: this.cmd.PLAZA_LUCKYDRAW_TIPS,
+    //         callback: this.OnRecv_Tips.bind(this)
+    //     });
 
-    }
+    // }
     OnRecv_Info(dictTB: proto.plaza_luckydraw.lucky_draw_info) {
         fw.print(dictTB, " =======OnRecv_Info======== ")
 
@@ -116,7 +116,7 @@ export class choujiangManager extends PlazeMainInetMsg {
 
     OnRecv_Tips(dictTB: proto.plaza_luckydraw.lucky_draw_tips) {
         fw.print(dictTB, " =======OnRecv_Tips======== ")
-        app.popup.showToast(fw.language.get(strTips[dictTB.tips_id] ?? ""))
+        app.popup.showToast(strTips[dictTB.tips_id] ?? "")
     }
 
     sendJoin() {

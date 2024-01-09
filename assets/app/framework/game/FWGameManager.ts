@@ -130,7 +130,7 @@ export class FWGameManager extends (fw.FWComponent) {
                     if (bSuccess) {
                         resolve(response.games);
                     } else {
-                        reject(fw.language.get("version download fail"));
+                        reject("version download fail");
                     }
                 }
             });

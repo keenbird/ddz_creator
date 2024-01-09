@@ -33,7 +33,7 @@ export class BindInetMsg extends (fw.FWComponent) {
     bCanTriggerMessage: boolean = true;
     /**初始化cmd */
     initCmd(nRootID: number, nMainID: number) {
-        this.nRootID = nRootID;
+        this.nRootID = 0;
         this.nMainID = nMainID;
         this.mapStruct = new Map();
         this.mapCallback = new Map();
@@ -143,7 +143,7 @@ export class BindInetMsg extends (fw.FWComponent) {
         if (!isValid(this, true)) {
             return;
         }
-        let nSubID = pByteStream.readUInt8();
+        let nSubID = pByteStream.readUInt16();
         let strBindStructName = this.mapStruct.get(nSubID);
         if (strBindStructName == null) {
             // fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning RootID:${this.rootInetMsg.nRootID} MainID:${this.nMainID} SubID:${nSubID} didn't bind struct!!!`)
@@ -247,7 +247,7 @@ export class BindInetMsg extends (fw.FWComponent) {
     /**打包消息数据 */
     package(pSendStream: ByteStream, nSubID: number, structName: string, dict: any) {
         pSendStream.writeSInt16(nSubID);
-        pSendStream.writeSInt32(dict.nBuffLen); //包体原始长度
+        // pSendStream.writeSInt32(dict.nBuffLen); //包体原始长度
         if (this.structParse.writeTableToByteStream(structName, dict, pSendStream) != true) {
             throw new Error(`${this.constructor.name} : sendData structName:${structName}`);
         }

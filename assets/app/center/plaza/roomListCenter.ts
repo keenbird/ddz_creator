@@ -56,8 +56,8 @@ export const ROOMGROUP_BIGAWARD_MATCH = 5 //大奖赛
 
 export class RoomListCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_room.GS_PLAZA_ROOM_MSG
-    ROOM_DROP_STATE = proto.plaza_room.ROOM_DROP_STATE
+    // cmd = proto.plaza_room.GS_PLAZA_ROOM_MSG
+    // ROOM_DROP_STATE = proto.plaza_room.ROOM_DROP_STATE
     /**游戏版本 */
     gameVersion: { [kindId: number]: number } = {}
     /**游戏名称 */
@@ -126,102 +126,102 @@ export class RoomListCenter extends PlazeMainInetMsg {
 
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_room.gs_get_room_list_c,
-            cmd: this.cmd.PLAZA_ROOM_GETLIST,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_get_serverid_c,
-            cmd: this.cmd.PLAZA_ROOM_GETSERVERID,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_server_id_ret_s,
-            cmd: this.cmd.PLAZA_ROOM_SERVERIDRET,
-            callback: this.PLAZA_ROOM_SERVERIDRET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_quick_recharge_c,
-            cmd: this.cmd.PLAZA_ROOM_QUICKRECHARGE,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_rmb_order_s,
-            cmd: this.cmd.PLAZA_ROOM_RMBORDER,
-            callback: this.PLAZA_ROOM_RMBORDER.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_fast_play_c,
-            cmd: this.cmd.PLAZA_ROOM_FASTPLAY,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_get_online_count_c,
-            cmd: this.cmd.PLAZA_ROOM_GETONLINECOUNT,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_get_online_count_ret_s,
-            cmd: this.cmd.PLAZA_ROOM_GETONLINECOUNTRET,
-            callback: this.PLAZA_ROOM_GETONLINECOUNTRET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_gold_room_list_ret_ex_s,
-            cmd: this.cmd.PLAZA_ROOM_GOLDLISTRETEX,
-            callback: this.PLAZA_ROOM_GOLDLISTRETEX.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_match_room_list_ret_ex_s,
-            cmd: this.cmd.PLAZA_ROOM_MATCHLISTRETEX,
-            callback: this.PLAZA_ROOM_MATCHLISTRETEX.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_server_id_list_s,
-            cmd: this.cmd.PLAZA_ROOM_SERVERID_LIST,
-            callback: this.PLAZA_ROOM_SERVERID_LIST.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_customroom_control_s,
-            cmd: this.cmd.PLAZA_ROOM_ROOM_CONTROL,
-            callback: this.PLAZA_ROOM_ROOM_CONTROL.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_gold_roomlist_modify_s,
-            cmd: this.cmd.PLAZA_ROOM_GOLD_LIST_MODIFY,
-            callback: this.PLAZA_ROOM_GOLD_LIST_MODIFY.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_cfg_change_notify,
-            cmd: this.cmd.PLAZA_ROOM_CFG_CHANGE_NOTIFY,
-            callback: this.PLAZA_ROOM_QUICK_RECHARGE.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_combine_ret_s,
-            cmd: this.cmd.PLAZA_ROOM_ROOM_COMBINE_RET,
-            callback: this.PLAZA_ROOM_ROOM_COMBINE_RET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_longhu_wingolds_actor_s,
-            cmd: this.cmd.PLAZA_ROOM_LONGHUBATTLE_WINGOLD,
-            callback: this.PLAZA_ROOM_LONGHUBATTLE_WINGOLD.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_ref_cfg_s,
-            cmd: this.cmd.PLAZA_ROOM_REFCONFIG,
-            callback: this.PLAZA_ROOM_REFCONFIG.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_get_bairen_winmax_actor_info_req_c,
-            cmd: this.cmd.PLAZA_ROOM_BAIREN_WINGOLD_REQ,
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_get_bairen_winmax_actor_info_ret_s,
-            cmd: this.cmd.PLAZA_ROOM_BAIREN_WINGOLD_RET,
-            callback: this.PLAZA_ROOM_BAIREN_WINGOLD_RET.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_room.gs_room_game_update_notify_s,
-            cmd: this.cmd.PLAZA_ROOM_GAME_UPDATE_NOTIFY,
-            callback: this.OnRecv_PlazaRoomGameUpdateNotify.bind(this),
-        });
-    }
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_get_room_list_c,
+    //         cmd: this.cmd.PLAZA_ROOM_GETLIST,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_get_serverid_c,
+    //         cmd: this.cmd.PLAZA_ROOM_GETSERVERID,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_server_id_ret_s,
+    //         cmd: this.cmd.PLAZA_ROOM_SERVERIDRET,
+    //         callback: this.PLAZA_ROOM_SERVERIDRET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_quick_recharge_c,
+    //         cmd: this.cmd.PLAZA_ROOM_QUICKRECHARGE,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_rmb_order_s,
+    //         cmd: this.cmd.PLAZA_ROOM_RMBORDER,
+    //         callback: this.PLAZA_ROOM_RMBORDER.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_fast_play_c,
+    //         cmd: this.cmd.PLAZA_ROOM_FASTPLAY,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_get_online_count_c,
+    //         cmd: this.cmd.PLAZA_ROOM_GETONLINECOUNT,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_get_online_count_ret_s,
+    //         cmd: this.cmd.PLAZA_ROOM_GETONLINECOUNTRET,
+    //         callback: this.PLAZA_ROOM_GETONLINECOUNTRET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_gold_room_list_ret_ex_s,
+    //         cmd: this.cmd.PLAZA_ROOM_GOLDLISTRETEX,
+    //         callback: this.PLAZA_ROOM_GOLDLISTRETEX.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_match_room_list_ret_ex_s,
+    //         cmd: this.cmd.PLAZA_ROOM_MATCHLISTRETEX,
+    //         callback: this.PLAZA_ROOM_MATCHLISTRETEX.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_server_id_list_s,
+    //         cmd: this.cmd.PLAZA_ROOM_SERVERID_LIST,
+    //         callback: this.PLAZA_ROOM_SERVERID_LIST.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_customroom_control_s,
+    //         cmd: this.cmd.PLAZA_ROOM_ROOM_CONTROL,
+    //         callback: this.PLAZA_ROOM_ROOM_CONTROL.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_gold_roomlist_modify_s,
+    //         cmd: this.cmd.PLAZA_ROOM_GOLD_LIST_MODIFY,
+    //         callback: this.PLAZA_ROOM_GOLD_LIST_MODIFY.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_cfg_change_notify,
+    //         cmd: this.cmd.PLAZA_ROOM_CFG_CHANGE_NOTIFY,
+    //         callback: this.PLAZA_ROOM_QUICK_RECHARGE.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_combine_ret_s,
+    //         cmd: this.cmd.PLAZA_ROOM_ROOM_COMBINE_RET,
+    //         callback: this.PLAZA_ROOM_ROOM_COMBINE_RET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_longhu_wingolds_actor_s,
+    //         cmd: this.cmd.PLAZA_ROOM_LONGHUBATTLE_WINGOLD,
+    //         callback: this.PLAZA_ROOM_LONGHUBATTLE_WINGOLD.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_ref_cfg_s,
+    //         cmd: this.cmd.PLAZA_ROOM_REFCONFIG,
+    //         callback: this.PLAZA_ROOM_REFCONFIG.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_get_bairen_winmax_actor_info_req_c,
+    //         cmd: this.cmd.PLAZA_ROOM_BAIREN_WINGOLD_REQ,
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_get_bairen_winmax_actor_info_ret_s,
+    //         cmd: this.cmd.PLAZA_ROOM_BAIREN_WINGOLD_RET,
+    //         callback: this.PLAZA_ROOM_BAIREN_WINGOLD_RET.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_room.gs_room_game_update_notify_s,
+    //         cmd: this.cmd.PLAZA_ROOM_GAME_UPDATE_NOTIFY,
+    //         callback: this.OnRecv_PlazaRoomGameUpdateNotify.bind(this),
+    //     });
+    // }
     /**设置游戏版本 */
     setGameVersion(kindId: number, version: number | string) {
         this.gameVersion[kindId] = Number(version);
@@ -423,12 +423,12 @@ export class RoomListCenter extends PlazeMainInetMsg {
             let { limilID } = this.getEnterRoomLimit(kindID)
             if (limilID == ROOM_RULE_ENTER.goldLimitMin) {
                 if (isShowTips) {
-                    app.popup.showToast({ text: fw.language.get("There is not enough money") });
+                    app.popup.showToast({ text: "There is not enough money" });
                 }
                 return false
             } else if (limilID == ROOM_RULE_ENTER.goldLimitMax) {
                 if (isShowTips) {
-                    app.popup.showToast({ text: fw.language.get("You have too much money, you can go to a high-level table.") });
+                    app.popup.showToast({ text: "You have too much money, you can go to a high-level table." });
                 }
                 return false
             } else if (limilID == ROOM_RULE_ENTER.roomConfigLimit) {
@@ -500,7 +500,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
             if (data.noRoomInfoCallback) {
                 data.noRoomInfoCallback(data)
             } else {
-                app.popup.showToast({ text: fw.language.get("no config") });
+                app.popup.showToast({ text: "no config" });
             }
         }
         //执行回调
@@ -924,11 +924,11 @@ export class RoomListCenter extends PlazeMainInetMsg {
 
         let enterGame = () => {
             if (dict.game_name == "" || dict.version == "") {
-                app.popup.showTip({ text: fw.language.get("Please contact us, the current game version is wrong") })
+                app.popup.showTip({ text: "Please contact us, the current game version is wrong" })
                 return
             }
             if (dict.server_id <= 0) {
-                app.popup.showTip({ text: fw.language.get("no server ID") })
+                app.popup.showTip({ text: "no server ID" })
                 return
             }
             fw.print(dict.game_name);
@@ -978,7 +978,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
             }
             app.popup.showTip({
-                text: fw.language.get("has new plaza version need update"),
+                text: "has new plaza version need update",
                 closeCallback: closeFunc,
                 btnList: [
                     {
@@ -998,7 +998,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
             }
             app.popup.showTip({
-                text: fw.language.get("fish config invalid"),
+                text: "fish config invalid",
                 closeCallback: closeFunc,
                 btnList: [
                     {
@@ -1018,7 +1018,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
             }
             app.popup.showTip({
-                text: fw.language.get("config invalid"),
+                text: "config invalid",
                 closeCallback: closeFunc,
                 btnList: [
                     {
@@ -1038,7 +1038,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
             }
             app.popup.showTip({
-                text: fw.language.get("Game service discontinued"),
+                text: "Game service discontinued",
                 closeCallback: closeFunc,
                 btnList: [
                     {
@@ -1052,7 +1052,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
         if (dict.drop_state == this.ROOM_DROP_STATE.RULE_LIMIT) {
             let { limilID } = this.getEnterRoomLimit(dict.kind_id)
             if (limilID == ROOM_RULE_ENTER.goldLimitMin) {
-                app.popup.showToast({ text: fw.language.get("You don't have enough money to bet.Deposit to unlock levels faster.") })
+                app.popup.showToast({ text: "You don't have enough money to bet.Deposit to unlock levels faster." })
             } else if (limilID == ROOM_RULE_ENTER.goldLimitMax) {
                 let sureFunc = function () {
                     fw.print("nKindIDnKindID", dict.kind_id)
@@ -1063,10 +1063,10 @@ export class RoomListCenter extends PlazeMainInetMsg {
                             this.sendGetRoomServerId(kindID)
                             return
                         } else {
-                            app.popup.showToast({ text: fw.language.get("Can't find table.") })
+                            app.popup.showToast({ text: "Can't find table." })
                         }
                     } else {
-                        app.popup.showToast({ text: fw.language.get("Can't find table.") })
+                        app.popup.showToast({ text: "Can't find table." })
                     }
                     fw.scene.changeScene(fw.SceneConfigs.plaza);
                 }
@@ -1075,7 +1075,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
                     fw.scene.changeScene(fw.SceneConfigs.plaza);
                 }
                 app.popup.showTip({
-                    text: fw.language.get("You have too much money, you can go to a high-level table."),
+                    text: "You have too much money, you can go to a high-level table.",
                     btnList: [
                         {
                             styleId: 1,
@@ -1086,10 +1086,10 @@ export class RoomListCenter extends PlazeMainInetMsg {
                 return false
             } else if (limilID == ROOM_RULE_ENTER.roomConfigLimit) {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
-                app.popup.showToast({ text: fw.language.get("Can't find table.") })
+                app.popup.showToast({ text: "Can't find table." })
             } else if (limilID == ROOM_RULE_ENTER.noLimit) {
                 fw.scene.changeScene(fw.SceneConfigs.plaza);
-                app.popup.showToast({ text: fw.language.get("room config error") })
+                app.popup.showToast({ text: "room config error" })
             }
             return
         }

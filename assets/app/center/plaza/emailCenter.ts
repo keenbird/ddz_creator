@@ -12,7 +12,7 @@ export enum EmailType {
 
 export class emailCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_email.GS_PLAZA_EMAIL_MSG
+    // cmd = proto.plaza_email.GS_PLAZA_EMAIL_MSG
     /**邮件类型 */
     EmailType = EmailType
     /**邮件列表 */
@@ -36,64 +36,64 @@ export class emailCenter extends PlazeMainInetMsg {
     
     cleanUserData() {
     }
-    initRegister() {
-        //增加一封新邮件
-        this.bindMessage({
-            struct: proto.plaza_email.email_new_s,
-            cmd: this.cmd.PLAZA_EMAIL_ADDNEW,
-            callback: this.OnRecv_EmailAdd.bind(this)
-        });
+    // initRegister() {
+    //     //增加一封新邮件
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_new_s,
+    //         cmd: this.cmd.PLAZA_EMAIL_ADDNEW,
+    //         callback: this.OnRecv_EmailAdd.bind(this)
+    //     });
 
-        //邮件系统提示信息
-        this.bindMessage({
-            struct: proto.plaza_email.email_tips_s,
-            cmd: this.cmd.PLAZA_EMALI_TIPS,
-            callback: this.OnRecv_EmailTips.bind(this)
-        });
-        //提取附件
-        this.bindMessage({
-            struct: proto.plaza_email.email_pick_c,
-            cmd: this.cmd.PLAZA_EMAIL_PICK,
-        });
-        //提取附件返回
-        this.bindMessage({
-            struct: proto.plaza_email.email_pick_ret_s,
-            cmd: this.cmd.PLAZA_EMAIL_PICKRETURN,
-            callback: this.OnRecv_EmailPickReturn.bind(this)
-        });
-        //浏览邮件正文
-        this.bindMessage({
-            struct: proto.plaza_email.email_view_text_c,
-            cmd: this.cmd.PLAZA_EMAIL_VIEWTEXT,
-        });
-        //浏览正文返回
-        this.bindMessage({
-            struct: proto.plaza_email.email_view_text_ret_s,
-            cmd: this.cmd.PLAZA_EMAIL_VIEWTEXTRETURN,
-            callback: this.OnRecv_EmailViewTextReturn.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_email.email_view_c,
-            cmd: this.cmd.PLAZA_EMAIL_VIEW,
-        });
-        //浏览邮件返回
-        this.bindMessage({
-            struct: proto.plaza_email.email_view_return_s,
-            cmd: this.cmd.PLAZA_EMAIL_VIEWRETURN,
-            callback: this.OnRecv_EmailViewReturn.bind(this),
-        });
-        //一键领取
-        this.bindMessage({
-            struct: proto.plaza_email.email_akey_to_get_c,
-            cmd: this.cmd.PLAZA_EMAIL_A_KEY_TO_GET,
-        });
-        //一键领取返回
-        this.bindMessage({
-            struct: proto.plaza_email.email_akey_to_get_s,
-            cmd: this.cmd.PLAZA_EMAIL_A_KEY_TO_GET_RET,
-            callback: this.OnRecv_AKeyToGetRet.bind(this),
-        });
-    }
+    //     //邮件系统提示信息
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_tips_s,
+    //         cmd: this.cmd.PLAZA_EMALI_TIPS,
+    //         callback: this.OnRecv_EmailTips.bind(this)
+    //     });
+    //     //提取附件
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_pick_c,
+    //         cmd: this.cmd.PLAZA_EMAIL_PICK,
+    //     });
+    //     //提取附件返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_pick_ret_s,
+    //         cmd: this.cmd.PLAZA_EMAIL_PICKRETURN,
+    //         callback: this.OnRecv_EmailPickReturn.bind(this)
+    //     });
+    //     //浏览邮件正文
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_view_text_c,
+    //         cmd: this.cmd.PLAZA_EMAIL_VIEWTEXT,
+    //     });
+    //     //浏览正文返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_view_text_ret_s,
+    //         cmd: this.cmd.PLAZA_EMAIL_VIEWTEXTRETURN,
+    //         callback: this.OnRecv_EmailViewTextReturn.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_view_c,
+    //         cmd: this.cmd.PLAZA_EMAIL_VIEW,
+    //     });
+    //     //浏览邮件返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_view_return_s,
+    //         cmd: this.cmd.PLAZA_EMAIL_VIEWRETURN,
+    //         callback: this.OnRecv_EmailViewReturn.bind(this),
+    //     });
+    //     //一键领取
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_akey_to_get_c,
+    //         cmd: this.cmd.PLAZA_EMAIL_A_KEY_TO_GET,
+    //     });
+    //     //一键领取返回
+    //     this.bindMessage({
+    //         struct: proto.plaza_email.email_akey_to_get_s,
+    //         cmd: this.cmd.PLAZA_EMAIL_A_KEY_TO_GET_RET,
+    //         callback: this.OnRecv_AKeyToGetRet.bind(this),
+    //     });
+    // }
     /**增加一封新邮件 */
     OnRecv_EmailAdd(data: proto.plaza_email.email_new_s) {
         this.emailList.push(data.item);

@@ -6,7 +6,7 @@ import { BindInetMsg } from "./BindInetMsg";
 export class MainInetMsg extends BindInetMsg {
 
     initCmd(nRootID: number, nMainID: number) {
-        super.initCmd(nRootID, nMainID);
+        super.initCmd(0, nMainID);
         this.bindMsgListener();
         this.initRegister();
     }
@@ -34,7 +34,7 @@ export class LoginMainInetMsg extends MainInetMsg {
 }
 export abstract class PlazeMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {
-        this.initCmd(Root_cmd.CMDROOT_PLAZA_MSG, nMainID);
+        // this.initCmd(Root_cmd.CMDROOT_PLAZA_MSG, nMainID);
     }
 
     protected initEvents(): boolean | void {
@@ -48,11 +48,11 @@ export abstract class PlazeMainInetMsg extends MainInetMsg {
 }
 export class GameServerMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {
-        this.initCmd(Root_cmd.CMDROOT_GAMESERVER_MSG, nMainID);
+        // this.initCmd(Root_cmd.CMDROOT_GAMESERVER_MSG, nMainID);
     }
 }
 export class WebMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {
-        this.initCmd(Root_cmd.CMDROOT_WEB_MSG, nMainID);
+        // this.initCmd(Root_cmd.CMDROOT_WEB_MSG, nMainID);
     }
 }

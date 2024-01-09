@@ -26,12 +26,14 @@ $root.client_proto = (function() {
      * @property {number} LSMI_LOGIN_NULL=0 LSMI_LOGIN_NULL value
      * @property {number} LSMI_LOGIN_REQ=1 LSMI_LOGIN_REQ value
      * @property {number} LSMI_LOGIN_RESP=2 LSMI_LOGIN_RESP value
+     * @property {number} LSMI_LOGIN_ATTR_NTF=3 LSMI_LOGIN_ATTR_NTF value
      */
     client_proto.LOGIN_SUB_MSG_ID = (function() {
         var valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "LSMI_LOGIN_NULL"] = 0;
         values[valuesById[1] = "LSMI_LOGIN_REQ"] = 1;
         values[valuesById[2] = "LSMI_LOGIN_RESP"] = 2;
+        values[valuesById[3] = "LSMI_LOGIN_ATTR_NTF"] = 3;
         return values;
     })();
 
@@ -64,8 +66,10 @@ $root.client_proto = (function() {
          * @property {string|null} [loginAccount] LoginReq loginAccount
          * @property {string|null} [loginPassword] LoginReq loginPassword
          * @property {string|null} [version] LoginReq version
-         * @property {number|null} [gameVersion] LoginReq gameVersion
+         * @property {string|null} [gameVersion] LoginReq gameVersion
          * @property {string|null} [channel] LoginReq channel
+         * @property {string|null} [packageName] LoginReq packageName
+         * @property {string|null} [deviceId] LoginReq deviceId
          */
 
         /**
@@ -125,11 +129,11 @@ $root.client_proto = (function() {
 
         /**
          * LoginReq gameVersion.
-         * @member {number} gameVersion
+         * @member {string} gameVersion
          * @memberof client_proto.LoginReq
          * @instance
          */
-        LoginReq.prototype.gameVersion = 0;
+        LoginReq.prototype.gameVersion = "";
 
         /**
          * LoginReq channel.
@@ -138,6 +142,22 @@ $root.client_proto = (function() {
          * @instance
          */
         LoginReq.prototype.channel = "";
+
+        /**
+         * LoginReq packageName.
+         * @member {string} packageName
+         * @memberof client_proto.LoginReq
+         * @instance
+         */
+        LoginReq.prototype.packageName = "";
+
+        /**
+         * LoginReq deviceId.
+         * @member {string} deviceId
+         * @memberof client_proto.LoginReq
+         * @instance
+         */
+        LoginReq.prototype.deviceId = "";
 
         /**
          * Creates a new LoginReq instance using the specified properties.
@@ -174,9 +194,13 @@ $root.client_proto = (function() {
             if (message.version != null && Object.hasOwnProperty.call(message, "version"))
                 writer.uint32(/* id 5, wireType 2 =*/42).string(message.version);
             if (message.gameVersion != null && Object.hasOwnProperty.call(message, "gameVersion"))
-                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.gameVersion);
+                writer.uint32(/* id 6, wireType 2 =*/50).string(message.gameVersion);
             if (message.channel != null && Object.hasOwnProperty.call(message, "channel"))
                 writer.uint32(/* id 7, wireType 2 =*/58).string(message.channel);
+            if (message.packageName != null && Object.hasOwnProperty.call(message, "packageName"))
+                writer.uint32(/* id 8, wireType 2 =*/66).string(message.packageName);
+            if (message.deviceId != null && Object.hasOwnProperty.call(message, "deviceId"))
+                writer.uint32(/* id 9, wireType 2 =*/74).string(message.deviceId);
             return writer;
         };
 
@@ -232,11 +256,19 @@ $root.client_proto = (function() {
                         break;
                     }
                 case 6: {
-                        message.gameVersion = reader.int32();
+                        message.gameVersion = reader.string();
                         break;
                     }
                 case 7: {
                         message.channel = reader.string();
+                        break;
+                    }
+                case 8: {
+                        message.packageName = reader.string();
+                        break;
+                    }
+                case 9: {
+                        message.deviceId = reader.string();
                         break;
                     }
                 default:
@@ -290,11 +322,17 @@ $root.client_proto = (function() {
                 if (!$util.isString(message.version))
                     return "version: string expected";
             if (message.gameVersion != null && message.hasOwnProperty("gameVersion"))
-                if (!$util.isInteger(message.gameVersion))
-                    return "gameVersion: integer expected";
+                if (!$util.isString(message.gameVersion))
+                    return "gameVersion: string expected";
             if (message.channel != null && message.hasOwnProperty("channel"))
                 if (!$util.isString(message.channel))
                     return "channel: string expected";
+            if (message.packageName != null && message.hasOwnProperty("packageName"))
+                if (!$util.isString(message.packageName))
+                    return "packageName: string expected";
+            if (message.deviceId != null && message.hasOwnProperty("deviceId"))
+                if (!$util.isString(message.deviceId))
+                    return "deviceId: string expected";
             return null;
         };
 
@@ -321,9 +359,13 @@ $root.client_proto = (function() {
             if (object.version != null)
                 message.version = String(object.version);
             if (object.gameVersion != null)
-                message.gameVersion = object.gameVersion | 0;
+                message.gameVersion = String(object.gameVersion);
             if (object.channel != null)
                 message.channel = String(object.channel);
+            if (object.packageName != null)
+                message.packageName = String(object.packageName);
+            if (object.deviceId != null)
+                message.deviceId = String(object.deviceId);
             return message;
         };
 
@@ -346,8 +388,10 @@ $root.client_proto = (function() {
                 object.loginAccount = "";
                 object.loginPassword = "";
                 object.version = "";
-                object.gameVersion = 0;
+                object.gameVersion = "";
                 object.channel = "";
+                object.packageName = "";
+                object.deviceId = "";
             }
             if (message.loginType != null && message.hasOwnProperty("loginType"))
                 object.loginType = message.loginType;
@@ -363,6 +407,10 @@ $root.client_proto = (function() {
                 object.gameVersion = message.gameVersion;
             if (message.channel != null && message.hasOwnProperty("channel"))
                 object.channel = message.channel;
+            if (message.packageName != null && message.hasOwnProperty("packageName"))
+                object.packageName = message.packageName;
+            if (message.deviceId != null && message.hasOwnProperty("deviceId"))
+                object.deviceId = message.deviceId;
             return object;
         };
 
@@ -634,6 +682,459 @@ $root.client_proto = (function() {
         };
 
         return LoginResp;
+    })();
+
+    client_proto.LoginAttrNtf = (function() {
+
+        /**
+         * Properties of a LoginAttrNtf.
+         * @memberof client_proto
+         * @interface ILoginAttrNtf
+         * @property {number|Long|null} [userId] LoginAttrNtf userId
+         * @property {string|null} [nickname] LoginAttrNtf nickname
+         * @property {string|null} [sex] LoginAttrNtf sex
+         * @property {number|null} [imgType] LoginAttrNtf imgType
+         * @property {number|null} [imgId] LoginAttrNtf imgId
+         * @property {string|null} [imgUrl] LoginAttrNtf imgUrl
+         * @property {string|null} [channel] LoginAttrNtf channel
+         * @property {string|null} [phone] LoginAttrNtf phone
+         * @property {number|Long|null} [diamond] LoginAttrNtf diamond
+         * @property {number|Long|null} [goldbean] LoginAttrNtf goldbean
+         */
+
+        /**
+         * Constructs a new LoginAttrNtf.
+         * @memberof client_proto
+         * @classdesc Represents a LoginAttrNtf.
+         * @implements ILoginAttrNtf
+         * @constructor
+         * @param {client_proto.ILoginAttrNtf=} [properties] Properties to set
+         */
+        function LoginAttrNtf(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * LoginAttrNtf userId.
+         * @member {number|Long} userId
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.userId = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * LoginAttrNtf nickname.
+         * @member {string} nickname
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.nickname = "";
+
+        /**
+         * LoginAttrNtf sex.
+         * @member {string} sex
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.sex = "";
+
+        /**
+         * LoginAttrNtf imgType.
+         * @member {number} imgType
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.imgType = 0;
+
+        /**
+         * LoginAttrNtf imgId.
+         * @member {number} imgId
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.imgId = 0;
+
+        /**
+         * LoginAttrNtf imgUrl.
+         * @member {string} imgUrl
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.imgUrl = "";
+
+        /**
+         * LoginAttrNtf channel.
+         * @member {string} channel
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.channel = "";
+
+        /**
+         * LoginAttrNtf phone.
+         * @member {string} phone
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.phone = "";
+
+        /**
+         * LoginAttrNtf diamond.
+         * @member {number|Long} diamond
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.diamond = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * LoginAttrNtf goldbean.
+         * @member {number|Long} goldbean
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         */
+        LoginAttrNtf.prototype.goldbean = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new LoginAttrNtf instance using the specified properties.
+         * @function create
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {client_proto.ILoginAttrNtf=} [properties] Properties to set
+         * @returns {client_proto.LoginAttrNtf} LoginAttrNtf instance
+         */
+        LoginAttrNtf.create = function create(properties) {
+            return new LoginAttrNtf(properties);
+        };
+
+        /**
+         * Encodes the specified LoginAttrNtf message. Does not implicitly {@link client_proto.LoginAttrNtf.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {client_proto.ILoginAttrNtf} message LoginAttrNtf message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        LoginAttrNtf.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.userId);
+            if (message.nickname != null && Object.hasOwnProperty.call(message, "nickname"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.nickname);
+            if (message.sex != null && Object.hasOwnProperty.call(message, "sex"))
+                writer.uint32(/* id 3, wireType 2 =*/26).string(message.sex);
+            if (message.imgType != null && Object.hasOwnProperty.call(message, "imgType"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.imgType);
+            if (message.imgId != null && Object.hasOwnProperty.call(message, "imgId"))
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.imgId);
+            if (message.imgUrl != null && Object.hasOwnProperty.call(message, "imgUrl"))
+                writer.uint32(/* id 6, wireType 2 =*/50).string(message.imgUrl);
+            if (message.channel != null && Object.hasOwnProperty.call(message, "channel"))
+                writer.uint32(/* id 8, wireType 2 =*/66).string(message.channel);
+            if (message.phone != null && Object.hasOwnProperty.call(message, "phone"))
+                writer.uint32(/* id 9, wireType 2 =*/74).string(message.phone);
+            if (message.diamond != null && Object.hasOwnProperty.call(message, "diamond"))
+                writer.uint32(/* id 10, wireType 0 =*/80).int64(message.diamond);
+            if (message.goldbean != null && Object.hasOwnProperty.call(message, "goldbean"))
+                writer.uint32(/* id 11, wireType 0 =*/88).int64(message.goldbean);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified LoginAttrNtf message, length delimited. Does not implicitly {@link client_proto.LoginAttrNtf.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {client_proto.ILoginAttrNtf} message LoginAttrNtf message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        LoginAttrNtf.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a LoginAttrNtf message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.LoginAttrNtf} LoginAttrNtf
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        LoginAttrNtf.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.LoginAttrNtf();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.userId = reader.int64();
+                        break;
+                    }
+                case 2: {
+                        message.nickname = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.sex = reader.string();
+                        break;
+                    }
+                case 4: {
+                        message.imgType = reader.int32();
+                        break;
+                    }
+                case 5: {
+                        message.imgId = reader.int32();
+                        break;
+                    }
+                case 6: {
+                        message.imgUrl = reader.string();
+                        break;
+                    }
+                case 8: {
+                        message.channel = reader.string();
+                        break;
+                    }
+                case 9: {
+                        message.phone = reader.string();
+                        break;
+                    }
+                case 10: {
+                        message.diamond = reader.int64();
+                        break;
+                    }
+                case 11: {
+                        message.goldbean = reader.int64();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a LoginAttrNtf message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.LoginAttrNtf} LoginAttrNtf
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        LoginAttrNtf.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a LoginAttrNtf message.
+         * @function verify
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        LoginAttrNtf.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.userId != null && message.hasOwnProperty("userId"))
+                if (!$util.isInteger(message.userId) && !(message.userId && $util.isInteger(message.userId.low) && $util.isInteger(message.userId.high)))
+                    return "userId: integer|Long expected";
+            if (message.nickname != null && message.hasOwnProperty("nickname"))
+                if (!$util.isString(message.nickname))
+                    return "nickname: string expected";
+            if (message.sex != null && message.hasOwnProperty("sex"))
+                if (!$util.isString(message.sex))
+                    return "sex: string expected";
+            if (message.imgType != null && message.hasOwnProperty("imgType"))
+                if (!$util.isInteger(message.imgType))
+                    return "imgType: integer expected";
+            if (message.imgId != null && message.hasOwnProperty("imgId"))
+                if (!$util.isInteger(message.imgId))
+                    return "imgId: integer expected";
+            if (message.imgUrl != null && message.hasOwnProperty("imgUrl"))
+                if (!$util.isString(message.imgUrl))
+                    return "imgUrl: string expected";
+            if (message.channel != null && message.hasOwnProperty("channel"))
+                if (!$util.isString(message.channel))
+                    return "channel: string expected";
+            if (message.phone != null && message.hasOwnProperty("phone"))
+                if (!$util.isString(message.phone))
+                    return "phone: string expected";
+            if (message.diamond != null && message.hasOwnProperty("diamond"))
+                if (!$util.isInteger(message.diamond) && !(message.diamond && $util.isInteger(message.diamond.low) && $util.isInteger(message.diamond.high)))
+                    return "diamond: integer|Long expected";
+            if (message.goldbean != null && message.hasOwnProperty("goldbean"))
+                if (!$util.isInteger(message.goldbean) && !(message.goldbean && $util.isInteger(message.goldbean.low) && $util.isInteger(message.goldbean.high)))
+                    return "goldbean: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a LoginAttrNtf message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.LoginAttrNtf} LoginAttrNtf
+         */
+        LoginAttrNtf.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.LoginAttrNtf)
+                return object;
+            var message = new $root.client_proto.LoginAttrNtf();
+            if (object.userId != null)
+                if ($util.Long)
+                    (message.userId = $util.Long.fromValue(object.userId)).unsigned = false;
+                else if (typeof object.userId === "string")
+                    message.userId = parseInt(object.userId, 10);
+                else if (typeof object.userId === "number")
+                    message.userId = object.userId;
+                else if (typeof object.userId === "object")
+                    message.userId = new $util.LongBits(object.userId.low >>> 0, object.userId.high >>> 0).toNumber();
+            if (object.nickname != null)
+                message.nickname = String(object.nickname);
+            if (object.sex != null)
+                message.sex = String(object.sex);
+            if (object.imgType != null)
+                message.imgType = object.imgType | 0;
+            if (object.imgId != null)
+                message.imgId = object.imgId | 0;
+            if (object.imgUrl != null)
+                message.imgUrl = String(object.imgUrl);
+            if (object.channel != null)
+                message.channel = String(object.channel);
+            if (object.phone != null)
+                message.phone = String(object.phone);
+            if (object.diamond != null)
+                if ($util.Long)
+                    (message.diamond = $util.Long.fromValue(object.diamond)).unsigned = false;
+                else if (typeof object.diamond === "string")
+                    message.diamond = parseInt(object.diamond, 10);
+                else if (typeof object.diamond === "number")
+                    message.diamond = object.diamond;
+                else if (typeof object.diamond === "object")
+                    message.diamond = new $util.LongBits(object.diamond.low >>> 0, object.diamond.high >>> 0).toNumber();
+            if (object.goldbean != null)
+                if ($util.Long)
+                    (message.goldbean = $util.Long.fromValue(object.goldbean)).unsigned = false;
+                else if (typeof object.goldbean === "string")
+                    message.goldbean = parseInt(object.goldbean, 10);
+                else if (typeof object.goldbean === "number")
+                    message.goldbean = object.goldbean;
+                else if (typeof object.goldbean === "object")
+                    message.goldbean = new $util.LongBits(object.goldbean.low >>> 0, object.goldbean.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a LoginAttrNtf message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {client_proto.LoginAttrNtf} message LoginAttrNtf
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        LoginAttrNtf.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.userId = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.userId = options.longs === String ? "0" : 0;
+                object.nickname = "";
+                object.sex = "";
+                object.imgType = 0;
+                object.imgId = 0;
+                object.imgUrl = "";
+                object.channel = "";
+                object.phone = "";
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.diamond = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.diamond = options.longs === String ? "0" : 0;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.goldbean = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.goldbean = options.longs === String ? "0" : 0;
+            }
+            if (message.userId != null && message.hasOwnProperty("userId"))
+                if (typeof message.userId === "number")
+                    object.userId = options.longs === String ? String(message.userId) : message.userId;
+                else
+                    object.userId = options.longs === String ? $util.Long.prototype.toString.call(message.userId) : options.longs === Number ? new $util.LongBits(message.userId.low >>> 0, message.userId.high >>> 0).toNumber() : message.userId;
+            if (message.nickname != null && message.hasOwnProperty("nickname"))
+                object.nickname = message.nickname;
+            if (message.sex != null && message.hasOwnProperty("sex"))
+                object.sex = message.sex;
+            if (message.imgType != null && message.hasOwnProperty("imgType"))
+                object.imgType = message.imgType;
+            if (message.imgId != null && message.hasOwnProperty("imgId"))
+                object.imgId = message.imgId;
+            if (message.imgUrl != null && message.hasOwnProperty("imgUrl"))
+                object.imgUrl = message.imgUrl;
+            if (message.channel != null && message.hasOwnProperty("channel"))
+                object.channel = message.channel;
+            if (message.phone != null && message.hasOwnProperty("phone"))
+                object.phone = message.phone;
+            if (message.diamond != null && message.hasOwnProperty("diamond"))
+                if (typeof message.diamond === "number")
+                    object.diamond = options.longs === String ? String(message.diamond) : message.diamond;
+                else
+                    object.diamond = options.longs === String ? $util.Long.prototype.toString.call(message.diamond) : options.longs === Number ? new $util.LongBits(message.diamond.low >>> 0, message.diamond.high >>> 0).toNumber() : message.diamond;
+            if (message.goldbean != null && message.hasOwnProperty("goldbean"))
+                if (typeof message.goldbean === "number")
+                    object.goldbean = options.longs === String ? String(message.goldbean) : message.goldbean;
+                else
+                    object.goldbean = options.longs === String ? $util.Long.prototype.toString.call(message.goldbean) : options.longs === Number ? new $util.LongBits(message.goldbean.low >>> 0, message.goldbean.high >>> 0).toNumber() : message.goldbean;
+            return object;
+        };
+
+        /**
+         * Converts this LoginAttrNtf to JSON.
+         * @function toJSON
+         * @memberof client_proto.LoginAttrNtf
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        LoginAttrNtf.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for LoginAttrNtf
+         * @function getTypeUrl
+         * @memberof client_proto.LoginAttrNtf
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        LoginAttrNtf.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.LoginAttrNtf";
+        };
+
+        return LoginAttrNtf;
     })();
 
     /**
@@ -1139,7 +1640,8 @@ export namespace client_proto {
     enum LOGIN_SUB_MSG_ID {
         LSMI_LOGIN_NULL = 0,
         LSMI_LOGIN_REQ = 1,
-        LSMI_LOGIN_RESP = 2
+        LSMI_LOGIN_RESP = 2,
+        LSMI_LOGIN_ATTR_NTF = 3
     }
 
     /** LOGIN_TYPE_DEF enum. */
@@ -1169,10 +1671,16 @@ export namespace client_proto {
         version?: (string|null);
 
         /** LoginReq gameVersion */
-        gameVersion?: (number|null);
+        gameVersion?: (string|null);
 
         /** LoginReq channel */
         channel?: (string|null);
+
+        /** LoginReq packageName */
+        packageName?: (string|null);
+
+        /** LoginReq deviceId */
+        deviceId?: (string|null);
     }
 
     /** Represents a LoginReq. */
@@ -1200,10 +1708,16 @@ export namespace client_proto {
         public version: string;
 
         /** LoginReq gameVersion. */
-        public gameVersion: number;
+        public gameVersion: string;
 
         /** LoginReq channel. */
         public channel: string;
+
+        /** LoginReq packageName. */
+        public packageName: string;
+
+        /** LoginReq deviceId. */
+        public deviceId: string;
 
         /**
          * Creates a new LoginReq instance using the specified properties.
@@ -1380,6 +1894,157 @@ export namespace client_proto {
 
         /**
          * Gets the default type url for LoginResp
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a LoginAttrNtf. */
+    interface ILoginAttrNtf {
+
+        /** LoginAttrNtf userId */
+        userId?: (number|Long|null);
+
+        /** LoginAttrNtf nickname */
+        nickname?: (string|null);
+
+        /** LoginAttrNtf sex */
+        sex?: (string|null);
+
+        /** LoginAttrNtf imgType */
+        imgType?: (number|null);
+
+        /** LoginAttrNtf imgId */
+        imgId?: (number|null);
+
+        /** LoginAttrNtf imgUrl */
+        imgUrl?: (string|null);
+
+        /** LoginAttrNtf channel */
+        channel?: (string|null);
+
+        /** LoginAttrNtf phone */
+        phone?: (string|null);
+
+        /** LoginAttrNtf diamond */
+        diamond?: (number|Long|null);
+
+        /** LoginAttrNtf goldbean */
+        goldbean?: (number|Long|null);
+    }
+
+    /** Represents a LoginAttrNtf. */
+    class LoginAttrNtf implements ILoginAttrNtf {
+
+        /**
+         * Constructs a new LoginAttrNtf.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.ILoginAttrNtf);
+
+        /** LoginAttrNtf userId. */
+        public userId: (number|Long);
+
+        /** LoginAttrNtf nickname. */
+        public nickname: string;
+
+        /** LoginAttrNtf sex. */
+        public sex: string;
+
+        /** LoginAttrNtf imgType. */
+        public imgType: number;
+
+        /** LoginAttrNtf imgId. */
+        public imgId: number;
+
+        /** LoginAttrNtf imgUrl. */
+        public imgUrl: string;
+
+        /** LoginAttrNtf channel. */
+        public channel: string;
+
+        /** LoginAttrNtf phone. */
+        public phone: string;
+
+        /** LoginAttrNtf diamond. */
+        public diamond: (number|Long);
+
+        /** LoginAttrNtf goldbean. */
+        public goldbean: (number|Long);
+
+        /**
+         * Creates a new LoginAttrNtf instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns LoginAttrNtf instance
+         */
+        public static create(properties?: client_proto.ILoginAttrNtf): client_proto.LoginAttrNtf;
+
+        /**
+         * Encodes the specified LoginAttrNtf message. Does not implicitly {@link client_proto.LoginAttrNtf.verify|verify} messages.
+         * @param message LoginAttrNtf message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.ILoginAttrNtf, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified LoginAttrNtf message, length delimited. Does not implicitly {@link client_proto.LoginAttrNtf.verify|verify} messages.
+         * @param message LoginAttrNtf message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.ILoginAttrNtf, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a LoginAttrNtf message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns LoginAttrNtf
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.LoginAttrNtf;
+
+        /**
+         * Decodes a LoginAttrNtf message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns LoginAttrNtf
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.LoginAttrNtf;
+
+        /**
+         * Verifies a LoginAttrNtf message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a LoginAttrNtf message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns LoginAttrNtf
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.LoginAttrNtf;
+
+        /**
+         * Creates a plain object from a LoginAttrNtf message. Also converts values to other types if specified.
+         * @param message LoginAttrNtf
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.LoginAttrNtf, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this LoginAttrNtf to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for LoginAttrNtf
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */

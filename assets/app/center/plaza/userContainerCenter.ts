@@ -10,7 +10,7 @@ export enum RankType {
 
 export class userContainerCenter extends PlazeMainInetMsg {
     /**命令ID */
-    cmd = proto.plaza_container.GS_PLAZA_CONTAINER_MSG
+    // cmd = proto.plaza_container.GS_PLAZA_CONTAINER_MSG
     m_ActorPacketMap = {}
     mUserDBID = 0
 
@@ -24,18 +24,18 @@ export class userContainerCenter extends PlazeMainInetMsg {
         this.mUserDBID = 0
     }
 
-    initRegister() {
-        this.bindMessage({
-            struct: proto.plaza_container.container_info,
-            cmd: this.cmd.PLAZA_CONTAINER_INFO,
-            callback: this.OnRecv_ContainerInfo.bind(this),
-        });
-        this.bindMessage({
-            struct: proto.plaza_container.container_change,
-            cmd: this.cmd.PLAZA_CONTAINER_CHANGE,
-            callback: this.OnRecv_ContainerChange.bind(this),
-        });
-    }
+    // initRegister() {
+    //     this.bindMessage({
+    //         struct: proto.plaza_container.container_info,
+    //         cmd: this.cmd.PLAZA_CONTAINER_INFO,
+    //         callback: this.OnRecv_ContainerInfo.bind(this),
+    //     });
+    //     this.bindMessage({
+    //         struct: proto.plaza_container.container_change,
+    //         cmd: this.cmd.PLAZA_CONTAINER_CHANGE,
+    //         callback: this.OnRecv_ContainerChange.bind(this),
+    //     });
+    // }
     getContainer(ucContainerID) {
         if (this.m_ActorPacketMap[ucContainerID]) {
             return this.m_ActorPacketMap[ucContainerID]

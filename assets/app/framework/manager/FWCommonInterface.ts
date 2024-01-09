@@ -97,7 +97,7 @@ export class FWCommonInterface extends fw.FWComponent {
             //显示加载
             app.popup.showLoading();
             //请求权限
-            app.native.device.requestPermissions(fw.language.get(`Tips`), 1, `android.permission.REQUEST_INSTALL_PACKAGES`);
+            app.native.device.requestPermissions(`Tips`, 1, `android.permission.REQUEST_INSTALL_PACKAGES`);
             //监听事件
             this.bindEvent({
                 bOne: true,
@@ -111,27 +111,27 @@ export class FWCommonInterface extends fw.FWComponent {
                     } else {
                         if (data.params.requestCode == 1) {
                             app.popup.showTip({
-                                text: fw.language.get("Failed to request permission. Go to Settings."),
+                                text: "Failed to request permission. Go to Settings.",
                                 btnList: [
                                     {
                                         styleId: 1,
-                                        text: fw.language.get("Go"),
+                                        text: "Go",
                                         bNotClose: true,
                                         callback: () => {
                                             //先弹提示
                                             app.popup.showTip({
-                                                text: fw.language.get("Have you agreed to these permissions?"),
+                                                text: "Have you agreed to these permissions?",
                                                 btnList: [
                                                     {
                                                         styleId: 2,
-                                                        text: fw.language.get("No"),
+                                                        text: "No",
                                                         callback: () => {
                                                             game.end();
                                                         }
                                                     },
                                                     {
                                                         styleId: 1,
-                                                        text: fw.language.get("Yes"),
+                                                        text: "Yes",
                                                         callback: () => {
                                                             this.installApk(filePath);
                                                         }
@@ -142,7 +142,7 @@ export class FWCommonInterface extends fw.FWComponent {
                                                 }
                                             });
                                             //前往设置
-                                            app.native.device.gotoSettings(fw.language.get("Tips"), fw.language.get("This app requires these permissions to function properly."));
+                                            app.native.device.gotoSettings("Tips", "This app requires these permissions to function properly.");
                                         }
                                     },
                                 ],
@@ -152,11 +152,11 @@ export class FWCommonInterface extends fw.FWComponent {
                             });
                         } else {
                             app.popup.showTip({
-                                text: fw.language.get("update failed"),
+                                text: "update failed",
                                 btnList: [
                                     {
                                         styleId: 1,
-                                        text: fw.language.get("exit"),
+                                        text: "exit",
                                         callback: () => {
                                             game.end();
                                         }
