@@ -308,10 +308,35 @@ export class internet_Landlord extends internet_GameBase {
         
     }
     DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+        this.nGameState = data.gamestate;
+        this.cleanLocalData()
+
+        if(this.nGameState == yx.config.GameState.FREE){
+            return
+        }
+        if(this.nGameState == yx.config.GameState.SENDCARD){
+            return
+        }
+
+        if(data.busememory){
+            this.cardRecordData = data.recordindex
+        }
         
+        if(this.nGameState == yx.config.GameState.DOUBLE){
+            this.toppoint = data.toppoint
+        }
+        if(this.nGameState == yx.config.GameState.PLAY){
+            if(data.turncards.length > 0){
+                this.m_MaxCardInfo.cardData = data.turncards[data.turnwinner].data
+                this.m_MaxCardInfo.cardCount = data.turncards[data.turnwinner].data.length
+                this.m_MaxCardInfo.cbChairID = data.turnwinner
+                this.m_MaxCardInfo.nType = yx.main.logic.GetCardType(data.turncards[data.turnwinner].data,data.turncards[data.turnwinner].data.length)
+            }
+        }
     }
     DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
         this.nGameState = yx.config.GameState.SETTLEMENT;
+        
     }
   
 

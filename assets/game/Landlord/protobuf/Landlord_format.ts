@@ -3983,6 +3983,7 @@ $root.client_proto_ddz = (function() {
          * @property {Array.<number>|null} [doubletimes] DDZ_S_Reconnect doubletimes
          * @property {number|null} [turnwinner] DDZ_S_Reconnect turnwinner
          * @property {Array.<client_proto_ddz.IRepeatedInt32>|null} [turncards] DDZ_S_Reconnect turncards
+         * @property {Array.<boolean>|null} [passornull] DDZ_S_Reconnect passornull
          * @property {client_proto_ddz.IDDZSettle|null} [settleinfo] DDZ_S_Reconnect settleinfo
          */
 
@@ -4004,6 +4005,7 @@ $root.client_proto_ddz = (function() {
             this.bdouble = [];
             this.doubletimes = [];
             this.turncards = [];
+            this.passornull = [];
             if (properties)
                 for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                     if (properties[keys[i]] != null)
@@ -4163,6 +4165,14 @@ $root.client_proto_ddz = (function() {
         DDZ_S_Reconnect.prototype.turncards = $util.emptyArray;
 
         /**
+         * DDZ_S_Reconnect passornull.
+         * @member {Array.<boolean>} passornull
+         * @memberof client_proto_ddz.DDZ_S_Reconnect
+         * @instance
+         */
+        DDZ_S_Reconnect.prototype.passornull = $util.emptyArray;
+
+        /**
          * DDZ_S_Reconnect settleinfo.
          * @member {client_proto_ddz.IDDZSettle|null|undefined} settleinfo
          * @memberof client_proto_ddz.DDZ_S_Reconnect
@@ -4259,8 +4269,14 @@ $root.client_proto_ddz = (function() {
             if (message.turncards != null && message.turncards.length)
                 for (var i = 0; i < message.turncards.length; ++i)
                     $root.client_proto_ddz.RepeatedInt32.encode(message.turncards[i], writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
+            if (message.passornull != null && message.passornull.length) {
+                writer.uint32(/* id 20, wireType 2 =*/162).fork();
+                for (var i = 0; i < message.passornull.length; ++i)
+                    writer.bool(message.passornull[i]);
+                writer.ldelim();
+            }
             if (message.settleinfo != null && Object.hasOwnProperty.call(message, "settleinfo"))
-                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
+                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 21, wireType 2 =*/170).fork()).ldelim();
             return writer;
         };
 
@@ -4437,6 +4453,17 @@ $root.client_proto_ddz = (function() {
                         break;
                     }
                 case 20: {
+                        if (!(message.passornull && message.passornull.length))
+                            message.passornull = [];
+                        if ((tag & 7) === 2) {
+                            var end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.passornull.push(reader.bool());
+                        } else
+                            message.passornull.push(reader.bool());
+                        break;
+                    }
+                case 21: {
                         message.settleinfo = $root.client_proto_ddz.DDZSettle.decode(reader, reader.uint32());
                         break;
                     }
@@ -4578,6 +4605,13 @@ $root.client_proto_ddz = (function() {
                         return "turncards." + error;
                 }
             }
+            if (message.passornull != null && message.hasOwnProperty("passornull")) {
+                if (!Array.isArray(message.passornull))
+                    return "passornull: array expected";
+                for (var i = 0; i < message.passornull.length; ++i)
+                    if (typeof message.passornull[i] !== "boolean")
+                        return "passornull: boolean[] expected";
+            }
             if (message.settleinfo != null && message.hasOwnProperty("settleinfo")) {
                 var error = $root.client_proto_ddz.DDZSettle.verify(message.settleinfo);
                 if (error)
@@ -4690,6 +4724,13 @@ $root.client_proto_ddz = (function() {
                     message.turncards[i] = $root.client_proto_ddz.RepeatedInt32.fromObject(object.turncards[i]);
                 }
             }
+            if (object.passornull) {
+                if (!Array.isArray(object.passornull))
+                    throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.passornull: array expected");
+                message.passornull = [];
+                for (var i = 0; i < object.passornull.length; ++i)
+                    message.passornull[i] = Boolean(object.passornull[i]);
+            }
             if (object.settleinfo != null) {
                 if (typeof object.settleinfo !== "object")
                     throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.settleinfo: object expected");
@@ -4720,6 +4761,7 @@ $root.client_proto_ddz = (function() {
                 object.bdouble = [];
                 object.doubletimes = [];
                 object.turncards = [];
+                object.passornull = [];
             }
             if (options.objects || options.defaults)
                 object.historycall = {};
@@ -4801,6 +4843,11 @@ $root.client_proto_ddz = (function() {
                 object.turncards = [];
                 for (var j = 0; j < message.turncards.length; ++j)
                     object.turncards[j] = $root.client_proto_ddz.RepeatedInt32.toObject(message.turncards[j], options);
+            }
+            if (message.passornull && message.passornull.length) {
+                object.passornull = [];
+                for (var j = 0; j < message.passornull.length; ++j)
+                    object.passornull[j] = message.passornull[j];
             }
             if (message.settleinfo != null && message.hasOwnProperty("settleinfo"))
                 object.settleinfo = $root.client_proto_ddz.DDZSettle.toObject(message.settleinfo, options);
@@ -8376,6 +8423,9 @@ export namespace client_proto_ddz {
         /** DDZ_S_Reconnect turncards */
         turncards?: (client_proto_ddz.IRepeatedInt32[]|null);
 
+        /** DDZ_S_Reconnect passornull */
+        passornull?: (boolean[]|null);
+
         /** DDZ_S_Reconnect settleinfo */
         settleinfo?: (client_proto_ddz.IDDZSettle|null);
     }
@@ -8445,6 +8495,9 @@ export namespace client_proto_ddz {
 
         /** DDZ_S_Reconnect turncards. */
         public turncards: client_proto_ddz.IRepeatedInt32[];
+
+        /** DDZ_S_Reconnect passornull. */
+        public passornull: boolean[];
 
         /** DDZ_S_Reconnect settleinfo. */
         public settleinfo?: (client_proto_ddz.IDDZSettle|null);

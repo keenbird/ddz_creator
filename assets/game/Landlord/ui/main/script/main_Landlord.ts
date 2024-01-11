@@ -125,6 +125,7 @@ export class main_Landlord extends main_GameBase {
         //清理桌面牌
         // this.updateTableCard(null, false);
         // this.setOperateVisible(false, true);
+        this.cleanHandCard()
         this.resetActionBarOnFree();
         this.resetNodeLookCard();
         this.resetActionBar();
@@ -166,6 +167,14 @@ export class main_Landlord extends main_GameBase {
             this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i].active = true
         }
         
+    }
+    //清理手牌
+    cleanHandCard(){
+        this.m_HandCardData = []
+        for(var i=this.m_HandCardNode.length-1;i>=0;i--){
+            this.m_HandCardNode[i].removeFromParent(true)
+        }
+        this.m_HandCardNode = []
     }
     //清理所有等待时间的按钮
     resetActionBarOnFree(){
@@ -867,7 +876,7 @@ export class main_Landlord extends main_GameBase {
     //牌型特效
     playCardTypeEffect(nChairID:number,cardType:number,posVecs:Vec3[],callback?:Function){
         const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
-        var aniName:string
+        var aniName:string = ""
         var parentNode:ccNode = this.viewZOrderNode[this.viewZOrder.Anim]
         var pos:Vec3= new Vec3(0,0,0)
         if(cardType == yx.config.OutCardType.Sequence){
@@ -889,32 +898,34 @@ export class main_Landlord extends main_GameBase {
         }else if(cardType == yx.config.OutCardType.serial_bomb || cardType == yx.config.OutCardType.Quadplex_Two_special ){
             aniName = "ani_node_lianzha"
         }
-
-        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
-            let aniNode = instantiate(res);
-            if(!fw.isNull(aniNode)){
-                parentNode.addChild(aniNode)
-                if(aniName == "ani_node_shunzi" || aniName == "ani_node_liandui" ){
-                    if(ClientChairID == 1){
-                        aniNode.Items.Node_zuo.active = false
-                    }else{
-                        aniNode.Items.Node_you.active = false
+        if(aniName != ""){
+            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
+                let aniNode = instantiate(res);
+                if(!fw.isNull(aniNode)){
+                    parentNode.addChild(aniNode)
+                    if(aniName == "ani_node_shunzi" || aniName == "ani_node_liandui" ){
+                        if(ClientChairID == 1){
+                            aniNode.Items.Node_zuo.active = false
+                        }else{
+                            aniNode.Items.Node_you.active = false
+                        }
                     }
+                    aniNode.setPosition(pos)
+                    var tScale = yx.config.changeOldResScale
+                    aniNode.scale = v3(tScale, tScale, tScale)
+                    const a = aniNode.getComponent(Animation);
+                    
+                    a.on(Animation.EventType.FINISHED, () => {
+                        aniNode.removeFromParent(true)
+                    });
+                    a.play(aniName);
                 }
-                aniNode.setPosition(pos)
-                var tScale = yx.config.changeOldResScale
-                aniNode.scale = v3(tScale, tScale, tScale)
-                const a = aniNode.getComponent(Animation);
-                
-                a.on(Animation.EventType.FINISHED, () => {
-                    aniNode.removeFromParent(true)
-                });
-                a.play(aniName);
-            }
-        });
+            });
+        }
+        
     }
     //发牌命令
-    didReceiveSendCard(cardData:number[]){
+    didReceiveSendCard(cardData:number[],isAni?:boolean){
         this.m_HandCardData = cardData
         for(var i=0;i<cardData.length;i++){
             var node = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_Hands)
@@ -925,9 +936,21 @@ export class main_Landlord extends main_GameBase {
             // this.Items.node_handCard.addChild(node)
         }
         yx.func.sortCard(this.m_HandCardNode)
-        
         this.resetCardsPosition(cardData.length)
-        this.sendCardAni(true,3,null,2)
+        if(isAni){
+            this.sendCardAni(true,3,null,2)
+        }else{
+            this.Items.node_handCard.setPosition(this.getGameManagerPostion(this.m_HandCardNode.length-1))
+            for(let i=0;i<this.m_HandCardNode.length ;i++){
+                var card = this.m_HandCardNode[i]
+                if(!fw.isNull(card)){
+                    this.Items.node_handCard.addChild(card)
+                    var targetPos = this.m_vecCardsPosition[i]
+                    card.setPosition(targetPos)
+                    card.getSiblingIndex(card.getComponent("card_Landlord").getCardLocalZOrder())
+                }
+            }
+        }
     }
 
     markRegionCardData(data){
@@ -1335,7 +1358,8 @@ export class main_Landlord extends main_GameBase {
         }
     }
     //展示三张牌揭开后的动画
-    showLastThreeCardAndMove(lastThreeCache:number[],nChairID:number){
+    showLastThreeCardAndMove(lastThreeCache:number[],nChairID?:number,isAni?:boolean){
+        let needAni = isAni == false ? false : true
         let self = this
         this.Items.node_showThreeNormal.active = true
         let startPosArr = []
@@ -1370,26 +1394,38 @@ export class main_Landlord extends main_GameBase {
                 .hide()
                 .start()
         }
-        for(let i=0;i<lastThreeCache.length;i++){
-            let bg = this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i]
-            bg.active = true
-            let bgPos = bg.getPosition()
-            startPosArr.push(bgPos)
-
-            let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
-            let endPos = new Vec2()
-            endPos.x = bgPos.x + (baseBg.worldPosition.x -  bg.worldPosition.x)
-            endPos.y = bgPos.y + (baseBg.worldPosition.y -  bg.worldPosition.y)
-            endPosArr.push(endPos)
-
-            let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
-            card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
-            this.Items.node_showThreeAniNode.addChild(card)
-            card.setScale(new Vec3(0,1.6,1.6))
-            card.setPosition(bgPos.x,bgPos.y )
-            
-            showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
+        if(needAni){
+            for(let i=0;i<lastThreeCache.length;i++){
+                let bg = this.Items.node_showThreeNormal.Items["Sprite_BaseCardBG_"+i]
+                bg.active = true
+                let bgPos = bg.getPosition()
+                startPosArr.push(bgPos)
+    
+                let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
+                let endPos = new Vec2()
+                endPos.x = bgPos.x + (baseBg.worldPosition.x -  bg.worldPosition.x)
+                endPos.y = bgPos.y + (baseBg.worldPosition.y -  bg.worldPosition.y)
+                endPosArr.push(endPos)
+    
+                let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+                card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
+                this.Items.node_showThreeAniNode.addChild(card)
+                card.setScale(new Vec3(0,1.6,1.6))
+                card.setPosition(bgPos.x,bgPos.y )
+                
+                showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
+            }
+        }else{
+            for(let i=0;i<lastThreeCache.length;i++){
+                let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
+                let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+                card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
+                card.setScale(new Vec3(1.6,1.6,1.6))
+                baseBg.addChild(card)
+                card.setPosition(-2,0)
+            }
         }
+        
         
     }
     //展示更多按钮
@@ -1421,7 +1457,7 @@ export class main_Landlord extends main_GameBase {
     DDZ_S_MSG_USER_ENTER(data: proto.client_proto_ddz.IDDZ_S_UserEnter) {
         
     }
-    DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips) {
+    DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips,bdouble?:boolean[]) {
         switch (data.type) {
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_START: {
                    this.clearOneGame()
@@ -1442,7 +1478,7 @@ export class main_Landlord extends main_GameBase {
                     }else{
                         this.player.setPlayerTimerVisible(data.curchair,true,data.countdown)
                     }
-                    
+                    this.player.setPlayerCallStateVisible(data.curchair,false)
                     break;
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_RESTART: {
@@ -1451,11 +1487,15 @@ export class main_Landlord extends main_GameBase {
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_DOUBLE_START: {
                     for(let i=0;i<yx.internet.nMaxPlayerCount;i++){
-                        let logicChair = yx.func.getClientChairIDByServerChairID(i)
-                        if(logicChair == 0){
-                            this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_Double,data.countdown,null,[yx.internet.ddzBaseInfo.doubletimes,yx.internet.ddzBaseInfo.superdoubletimes])
-                        }else{
-                            this.player.setPlayerTimerVisible(i,true,data.countdown)
+                        let needCountDown = bdouble && bdouble[i] == false ? false : true
+                        if(needCountDown){
+                            this.player.setPlayerCallStateVisible(i,false)
+                            let logicChair = yx.func.getClientChairIDByServerChairID(i)
+                            if(logicChair == 0){
+                                this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_Double,data.countdown,null,[yx.internet.ddzBaseInfo.doubletimes,yx.internet.ddzBaseInfo.superdoubletimes])
+                            }else{
+                                this.player.setPlayerTimerVisible(i,true,data.countdown)
+                            }
                         }
                     }
                     break;
@@ -1483,6 +1523,7 @@ export class main_Landlord extends main_GameBase {
                     }else{
                         this.player.setPlayerTimerVisible(data.curchair,true,data.countdown)
                     }
+                    this.player.setPlayerCallStateVisible(data.curchair,false)
                     break;
                 }
             
@@ -1494,12 +1535,16 @@ export class main_Landlord extends main_GameBase {
     }
     DDZ_S_MSG_SEND_CARD(data: proto.client_proto_ddz.IDDZ_S_SendCard) {
         this.showBasePool(true);
-        this.didReceiveSendCard(data.sendcards)
+        this.didReceiveSendCard(data.sendcards,true)
     }
     DDZ_S_MSG_SHOW_CARD(data: proto.client_proto_ddz.IDDZ_S_ShowCard) {
         let logicChair = yx.func.getClientChairIDByServerChairID(data.showchair)
         if(logicChair == 0){
             this.resetActionBar()
+            var cardLen = this.m_HandCardNode.length
+            for(var i=0;i<cardLen;i++){
+                this.m_HandCardNode[i].getComponent("card_Landlord").showMarkAsPublicCard(i==(cardLen-1))
+            }
         }
         this.showXbeiAni(yx.internet.ddzBaseInfo.showtimes,data.toptimes)
         //播放明牌音效
@@ -1507,7 +1552,8 @@ export class main_Landlord extends main_GameBase {
         //把玩家明牌处理
         
     }
-    DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint) {
+    DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint,isAni?:boolean) {
+        let needAni = isAni == false ? false : true
         //播放叫/抢地主音效
         let content = ""
         switch (data.callcode) {
@@ -1537,7 +1583,9 @@ export class main_Landlord extends main_GameBase {
         }
         if(content != ""){
             this.player.setPlayerCallStateVisible(data.callchair,true,content)
-            this.showXbeiAni(yx.internet.ddzBaseInfo.calltimes,data.toptimes)
+            if(needAni){
+                this.showXbeiAni(yx.internet.ddzBaseInfo.calltimes,data.toptimes)
+            }
             let logicChair = yx.func.getClientChairIDByServerChairID(data.callchair)
             if(logicChair == 0){
                 this.resetActionBar()
@@ -1550,7 +1598,8 @@ export class main_Landlord extends main_GameBase {
         this.showLastThreeCardAndMove(data.backcards,data.bankerchair)
         this.showDipaiBieshu(true,true,data.backtimes)
     }
-    DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double) {
+    DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double,isAni?:boolean) {
+        let needAni = isAni == false ? false : true
         //播放加倍/超级加倍音效
         let content = ""
         switch (data.opetimes) {
@@ -1571,7 +1620,7 @@ export class main_Landlord extends main_GameBase {
         }
         if(content != ""){
             this.player.setPlayerCallStateVisible(data.opechair,true,content)
-            if(data.opetimes > 1){
+            if(data.opetimes > 1 && needAni){
                 this.showXbeiAni(data.opetimes,data.toptimes)
             }
             let logicChair = yx.func.getClientChairIDByServerChairID(data.opechair)
@@ -1611,8 +1660,105 @@ export class main_Landlord extends main_GameBase {
             this.player.setPlayerTrusteeship(data.chair,data.trusteeship)
         }
     }
-    DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
-        
+    DDZ_S_RECONNECT(reconnData: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+        this.clearOneGame()
+        if(yx.internet.nGameState == yx.config.GameState.FREE){
+            return
+        }
+        let operateCode = -1
+        let bdouble:boolean[] = null
+        //发牌阶段
+        if(yx.internet.nGameState >= yx.config.GameState.SENDCARD){
+            this.showBasePool(true);
+            this.showCardRecorder(reconnData.busememory)
+            if(reconnData.busememory){
+               this.setCardRecorderData(reconnData.recordindex) 
+            }
+            for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+                if(i==yx.internet.nSelfChairID){
+                    this.didReceiveSendCard(reconnData.handcards[yx.internet.nSelfChairID].data,false)
+                    this.showTrustLayout(reconnData.btrusteeship[i])
+                }else{
+                    this.player.setPlayerCardNumVisible(i,true,reconnData.handcards[i].data.length)
+                    this.player.setPlayerTrusteeship(i,reconnData.btrusteeship[i])
+                }
+            }
+        }
+        //明牌阶段
+        if(yx.internet.nGameState >= yx.config.GameState.SHOW){
+            this.setBaseScorePool(reconnData.toptimes)
+            for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+                if(reconnData.bshow[i]){
+                    if(i==yx.internet.nSelfChairID){
+                        var cardLen = this.m_HandCardNode.length
+                        for(var i=0;i<cardLen;i++){
+                            this.m_HandCardNode[i].getComponent("card_Landlord").showMarkAsPublicCard(i==(cardLen-1))
+                        }
+                    }else{
+                        //处理对家明牌
+                    }
+                }else{
+                    if(yx.internet.nGameState == yx.config.GameState.SHOW && i==yx.internet.nSelfChairID){
+                        operateCode = proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_SHOW_START
+                    }
+                }
+            }
+        }
+        //叫分阶段
+        if(yx.internet.nGameState == yx.config.GameState.CALLPOINT){
+            for(var i=0;i<reconnData.historycall.length;i++){
+                let callData:proto.client_proto_ddz.IDDZ_S_CallPoint = {
+                    callcode:reconnData.historycall[i][1],
+                    callchair:reconnData.historycall[i][0]
+                }
+                this.DDZ_S_MSG_CALL_POINT(callData,false)
+                this.callPointTimes++
+                if(i == reconnData.historycall.length-1){
+                    operateCode = proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_CALL_START
+                }
+            }
+        }
+        //加倍阶段
+        if(yx.internet.nGameState >= yx.config.GameState.DOUBLE){
+            if(yx.internet.nGameState == yx.config.GameState.DOUBLE){
+                for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+                    if(reconnData.bdouble[i]){
+                        let doubleData:proto.client_proto_ddz.IDDZ_S_Double = {
+                            opetimes:reconnData.doubletimes[i],
+                            opechair:i
+                        }
+                        this.DDZ_S_MSG_DOUBLE(doubleData,false)
+                    }
+                }
+                operateCode = proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_DOUBLE_START
+                bdouble = reconnData.bdouble
+            }
+            this.player.setPlayerDizhuVisible(reconnData.bankerchair,false)
+            this.showDipaiBieshu(true,false,reconnData.backtimes)
+            this.showLastThreeCardAndMove(reconnData.backcards,null,false)
+        }
+        //出牌阶段
+        if(yx.internet.nGameState == yx.config.GameState.PLAY){
+            for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+                if( reconnData.turncards[i] && reconnData.turncards[i].data.length > 0){
+                    this.ShowOutCard(i,reconnData.turncards[i].data,-1)
+                }else{
+                    if(reconnData.passornull[i]){
+                        this.player.setPlayerCallStateVisible(i,true,"不要")
+                    }
+                }
+            }
+            operateCode = proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_OUT_START
+        }
+        //恢复操作按钮
+        if(yx.internet.nGameState<yx.config.GameState.SETTLEMENT){
+            let operateData:proto.client_proto_ddz.IDDZ_S_Tips = {
+                type:operateCode,
+                countdown:reconnData.countdown,
+                curchair:reconnData.curchair
+            }
+            this.DDZ_S_MSG_TIPS(operateData,bdouble)
+        }
     }
     DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
     }
