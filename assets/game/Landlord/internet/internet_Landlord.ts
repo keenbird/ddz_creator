@@ -35,6 +35,8 @@ export class internet_Landlord extends internet_GameBase {
     cardRecordData: proto.client_proto_ddz.IDDZ_S_UseMemory.recordindex = []
     /**叫分最高值 */
     toppoint: number = 0
+    /**是否明牌 */
+    bMingpai: boolean[] = [false,false,false]
     /**上个人出的牌 */
     m_MaxCardInfo={
         cardData : [],
@@ -280,6 +282,7 @@ export class internet_Landlord extends internet_GameBase {
     }
     DDZ_S_MSG_SHOW_CARD(data: proto.client_proto_ddz.IDDZ_S_ShowCard) {
         this.nGameState = yx.config.GameState.SHOW;
+        this.bMingpai[data.showchair] = true
     }
     DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint) {
         this.nGameState = yx.config.GameState.CALLPOINT;
@@ -318,6 +321,10 @@ export class internet_Landlord extends internet_GameBase {
             return
         }
 
+        if(this.nGameState >= yx.config.GameState.SHOW){
+            this.bMingpai = data.bshow
+        }
+
         if(data.busememory){
             this.cardRecordData = data.recordindex
         }
@@ -337,6 +344,17 @@ export class internet_Landlord extends internet_GameBase {
     DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
         this.nGameState = yx.config.GameState.SETTLEMENT;
         
+    }
+
+    //初始化游戏数据
+    cleanLocalData() {
+        this.m_MaxCardInfo.cardData = []
+        this.m_MaxCardInfo.cardCount = -1
+        this.m_MaxCardInfo.cbChairID = -1
+        this.m_MaxCardInfo.nType = -1
+        this.cardRecordData = []
+        this.toppoint = 0
+        this.bMingpai= [false,false,false]
     }
   
 
@@ -408,15 +426,7 @@ export class internet_Landlord extends internet_GameBase {
     GameReconnectRoom(data: proto.game_Landlord.IGameReconnectRoom) {
         return this.doReconnect(data);
     }
-    //初始化游戏数据
-    cleanLocalData() {
-        this.m_MaxCardInfo.cardData = []
-        this.m_MaxCardInfo.cardCount = -1
-        this.m_MaxCardInfo.cbChairID = -1
-        this.m_MaxCardInfo.nType = -1
-        this.cardRecordData = []
-        this.toppoint = 0
-    }
+    
     doReconnect(data: proto.game_Landlord.IMSG_RECONNECT_S) {
         //清理消息列表
         this.clearMessageList();

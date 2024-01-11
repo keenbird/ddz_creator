@@ -178,7 +178,21 @@ export class player_Landlord extends player_GameBase {
         }
         return node
     }
-
+    //获取明牌节点
+    getMingpaiParent(nChairID: number,isCleanChild?:boolean):ccNode{
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var node : ccNode
+        if(ClientChairID != 0){
+            const player = this.getPlayerNode({ nChairID: nChairID });
+            if (player) {
+                node =  player.Items.node_mingpai_pos
+            }
+        }
+        if(isCleanChild && node){
+            node.removeAllChildren()
+        }
+        return node
+    }
 
     //设置玩家实时流水提示
     setSettlementScoreVisible(nChairID: number, bVisible: boolean, num?: number, isAni?: boolean) {

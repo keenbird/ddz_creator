@@ -142,15 +142,29 @@ export class main_Landlord extends main_GameBase {
         this.player.clearOneGame();
         
         //--------------test-------------//
-        // this.schedule(function(){
+        // this.scheduleOnce(function(){
             // this.didReceiveSendCard()
             // this.showBasePool(true);
-        
+            // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     cardtype : yx.config.OutCardType.Sequence,
+            //     outchair : 1
+            // }
+            // this.didReceiveOutCard(data)
+            // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     cardtype : yx.config.OutCardType.Sequence,
+            //     outchair : 2
+            // }
+            // this.didReceiveOutCard(data2)
+            // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.scheduleOnce(function(){
             //     // this.showLastThreeCardAndMove([78,79,50],0)
             //     // this.showDipaiBieshu(true,true,3)
-            //     // this.didReceiveOutCard()
-            //     this.showXbeiAni(3,15)
+                
+            //     // this.showXbeiAni(3,15)
+            //     // this.didReceiveMingpai()
             // }, 4);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
@@ -797,7 +811,17 @@ export class main_Landlord extends main_GameBase {
             yx.func.removeCardByData(cardData,this.m_HandCardNode,this.m_HandCardData)
             this.resetHandCardPos()
         }else{
-            this.player.setPlayerCardNumVisibleBySudCardNum(nChairID,true,data.outcards.length,true) 
+            this.player.setPlayerCardNumVisibleBySudCardNum(nChairID,true,cardData.length,true) 
+            if(yx.internet.bMingpai[nChairID]){
+                var mingpaiParent:ccNode = this.player.getMingpaiParent(nChairID)
+                var tempCache = yx.func.cardDatasFromVector(mingpaiParent.children)
+                for(var i=0;i<cardData.length;i++){
+                    if (tempCache.indexOf(cardData[i]) != -1) {
+                        tempCache.splice(tempCache.indexOf(cardData[i]),1)
+                    }
+                }
+                this.didReceiveMingpai(nChairID,tempCache)
+            }
         }
         
         this.ShowOutCard(nChairID,cardData,cardType)
@@ -829,7 +853,7 @@ export class main_Landlord extends main_GameBase {
             outCardParent.addChild(card)
             cardArr.push(card)
             if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
-                card.setPosition(ClientChairID == 1 ? posVecs[cardData.length - 1] : posVecs[0])
+                card.setPosition(ClientChairID == 1 ? (cardData.length >=10 ? posVecs[10 - 1].x :posVecs[cardData.length - 1].x) : posVecs[0].x, posVecs[i].y)
                 tween(card)
                     .to(0.2,{ position:posVecs[i] })
                     .start()
@@ -872,6 +896,20 @@ export class main_Landlord extends main_GameBase {
         //牌型特效
         this.playCardTypeEffect(nChairID,cardType,posVecs)
         
+    }
+    //展示明牌
+    didReceiveMingpai(nChairID:number,cardData:number[]){
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var posVecs = yx.func.getCardPositionForMingpai(ClientChairID,cardData.length)
+        var mingpaiParent:ccNode = this.player.getMingpaiParent(nChairID,true)
+
+        const tScale = 0.4
+        for(var i=0;i<cardData.length;i++){
+            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_OutCard)
+            card.setScale(new Vec3(tScale,tScale,tScale))
+            mingpaiParent.addChild(card)
+            card.setPosition(posVecs[i])
+        }
     }
     //牌型特效
     playCardTypeEffect(nChairID:number,cardType:number,posVecs:Vec3[],callback?:Function){
@@ -1545,12 +1583,12 @@ export class main_Landlord extends main_GameBase {
             for(var i=0;i<cardLen;i++){
                 this.m_HandCardNode[i].getComponent("card_Landlord").showMarkAsPublicCard(i==(cardLen-1))
             }
+        }else{
+            this.didReceiveMingpai(data.showchair,data.showcards)
         }
         this.showXbeiAni(yx.internet.ddzBaseInfo.showtimes,data.toptimes)
         //播放明牌音效
 
-        //把玩家明牌处理
-        
     }
     DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint,isAni?:boolean) {
         let needAni = isAni == false ? false : true
@@ -1696,6 +1734,7 @@ export class main_Landlord extends main_GameBase {
                         }
                     }else{
                         //处理对家明牌
+                        this.didReceiveMingpai(i,reconnData.handcards[i].data)
                     }
                 }else{
                     if(yx.internet.nGameState == yx.config.GameState.SHOW && i==yx.internet.nSelfChairID){
