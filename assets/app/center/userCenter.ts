@@ -488,7 +488,8 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取玩家头像 */
     getActorMD5Face(): string {
-        return this._actorProp[`szMD5FaceFile`] || this.getUserID();
+
+        return this._actorProp["szFaceType"] == 0 ? this._actorProp[`szMD5FaceFile`] : this._actorProp[`szFaceSysId`]
     }
     /**设置玩家头像 */
     setActorMD5Face(md5Face: string): void {
@@ -509,6 +510,10 @@ export class UserCenter extends PlazeMainInetMsg {
     /**获取玩家金币 */
     getActorGold(): number {
         return this._actorProp[ACTOR.ACTOR_PROP_GOLD];
+    }
+    /**获取玩家钻石 */
+    getActorDiamond(): number {
+        return this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS];
     }
     /**获取邮箱地址（web数据） */
     getEmail() {
@@ -894,13 +899,14 @@ export class UserCenter extends PlazeMainInetMsg {
     setLoginActor(dict: proto.client_proto.LoginAttrNtf){
         this._actorProp["szName"] = dict.nickname;
         this._actorProp["szPhone"] = dict.phone;
+        this._actorProp[ACTOR.ACTOR_PROP_DBID] = dict.userId;
         this._actorProp[ACTOR.ACTOR_PROP_UID] = dict.userId;
-        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex;
+        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex; // 性别('f'=男 'm'=女)
         this._actorProp["szMD5FaceFile"] = dict.imgUrl;
-        this._actorProp["szFaceType"] = dict.imgType;
+        this._actorProp["szFaceType"] = dict.imgType; //0:系统头像  1：自定义头像
         this._actorProp["szFaceSysId"] = dict.imgId;
         this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS] = dict.diamond;
-        this._actorProp[ACTOR.ACTOR_PROP_GOLD] = dict.gold;
+        this._actorProp[ACTOR.ACTOR_PROP_GOLD] = dict.goldbean;
         this.mActorProrUseChannelid = app.func.toNumber(dict.channel);//玩家渠道ID
     }
 

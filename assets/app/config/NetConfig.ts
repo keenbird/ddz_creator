@@ -3,7 +3,8 @@ import { ByteStream } from "../framework/network/lib/NetInterface";
 // 请求对象
 export class GS_Head {
     wMsgLen: number;  //代理使用的头码信息
-    wBodyLen: number;  //代理使用的头码信息
+    bMsgType: number;  //占位用
+    wBodyLen: number;  //主体长度
     wVersion: number;  //消息头版本号
     MainID: number;  //主消息码
     SubID: number;  //子消息码
@@ -14,6 +15,7 @@ export class GS_HeadNull extends GS_Head {
     private _byteStream = new ByteStream();
     initByteStream(buffers: ByteStream) {
         this.wMsgLen = buffers.readSInt16();
+        this.bMsgType = buffers.readSInt8();
         this.wVersion = buffers.readSInt16();
         this.uRoomSvrId = buffers.readSInt32();
         this.MainID = buffers.readSInt16();
@@ -28,7 +30,7 @@ export class GS_HeadNull extends GS_Head {
 
 export const S_GS_HeadNull = new GS_HeadNull()
 
-export const GS_HeadNull_Size = 16;
+export const GS_HeadNull_Size = 17;
 export const MAX_NET_PACKAGE_SIZE = 65535 - 8; //65535 uShort最大长度  -8作为缓冲区
 
 export enum Root_cmd {

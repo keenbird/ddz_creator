@@ -31,8 +31,11 @@ export class main_Landlord extends main_GameBase {
     mDragCardNode: ccNode;
     m_vecPopCache: any[]= [];
     m_RegionData :any;
-    m_enumGameStatus: number;
+    callPointTimes: number = 0; //已经叫地主的次数 大于3等于已经第二轮
     schedule_updateTime:any;
+    m_SearchResult:any;   //搜索可出的牌型
+    m_cbHitCount:number = 0; //搜索可出的牌型数量
+    m_cbTipIndex:number = 0; //搜索的引数
     protected initData(): boolean | void {
         this.m_HandCardData = []
         this.m_HandCardNode = []
@@ -70,6 +73,22 @@ export class main_Landlord extends main_GameBase {
         });
     }
     protected initBtns(): boolean | void {
+        this.Items.btn_cardRecord.onClickAndScale(() => {
+            if(this.Items.node_card_recorder.active){
+                this.showCardRecorder(false)
+                yx.internet.DDZ_C_USE_MEMORY({
+                    buse:false
+                })
+            }else{
+                yx.internet.DDZ_C_USE_MEMORY({
+                    buse:true
+                })
+            }
+        });
+        this.Items.Sprite_rule.onClickAndScale(() => {
+            yx.internet.DDZ_C_DISMISS({ })
+        });
+        
         /**Andar */
         this.Items.Sprite_BtnMore.onClickAndScale(() => {
             this.onMoveBgClick()
@@ -79,18 +98,17 @@ export class main_Landlord extends main_GameBase {
             // fw.scene.changeScene(fw.SceneConfigs.plaza);
             app.gameManager.exitGame();
         });
-        this.Items.btn_cardRecord.onClickAndScale(() => {
-            // yx.internet.MSG_BACK_C({1});
-        });
- 
-
+       
         this.Items.Sprite_BtnTrusteeship.onClickAndScale(() => {
-            this.showTrustLayout(true)
+            yx.internet.DDZ_C_TRUSTEESHIP({
+                btrusteeship:true
+            })
         });
         /**trusteeship */
         this.Items.Node_trusteeship.onClickAndScale(() => {
-            // yx.internet.MSG_BACK_C({});
-            this.showTrustLayout(false)
+            yx.internet.DDZ_C_TRUSTEESHIP({
+                btrusteeship:false
+            })
         });
         this.initCardTouchLayerEvent()
         this.initEmptySpaceEvent()
@@ -98,6 +116,7 @@ export class main_Landlord extends main_GameBase {
     }
     /**清理一局游戏 */
     clearOneGame() {
+        this.callPointTimes = 0
         //清理定时器
         this.unscheduleAllCallbacks();
         //清理所有动画节点
@@ -123,16 +142,15 @@ export class main_Landlord extends main_GameBase {
         
         //--------------test-------------//
         // this.schedule(function(){
-            this.m_enumGameStatus = yx.config.GameStatus.GameStatus_Playing
-            this.didReceiveSendCard()
-            this.showBasePool(true);
+            // this.didReceiveSendCard()
+            // this.showBasePool(true);
         
-            this.scheduleOnce(function(){
-                this.showLastThreeCardAndMove([78,79,50],0)
-                this.showDipaiBieshu(true,true,3)
-                this.didReceiveOutCard()
-                this.showXbeiAni(3,15)
-            }, 4);
+            // this.scheduleOnce(function(){
+            //     // this.showLastThreeCardAndMove([78,79,50],0)
+            //     // this.showDipaiBieshu(true,true,3)
+            //     // this.didReceiveOutCard()
+            //     this.showXbeiAni(3,15)
+            // }, 4);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
@@ -172,8 +190,16 @@ export class main_Landlord extends main_GameBase {
         this.Items.Sprite_trusteeship.active = isShow
     }
     //是否展示记牌器
-    showCardRecorder(isShow:boolean,recorderDada ?: any){
+    showCardRecorder(isShow:boolean){
         this.Items.node_card_recorder.active = isShow
+    }
+    //是否展示记牌器
+    setCardRecorderData(recorderDada : any){
+        var faceNames = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "E", "F"]
+        for(var i=0;i<faceNames.length;i++){
+            this.Items["BMFont_CountKey_"+faceNames].string = recorderDada[i] ?? 0+""
+        }
+        
     }
     //是否展示游戏提示
     showGameTip(type: any){
@@ -313,55 +339,87 @@ export class main_Landlord extends main_GameBase {
     initActionBar(){
         //叫地主
         this.Items.Node_BarStatusCallLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_CALL_POINT({
+                point:yx.internet.toppoint+1
+            })
         });
         //不叫地主
         this.Items.Node_BarStatusCallLandlord.Items.Sprite_BtnNegative.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_CALL_POINT({
+                point:0
+            })
         });
         //抢地主
         this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_CALL_POINT({
+                point:yx.internet.toppoint+1
+            })
         });
         //不抢地主
         this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnNegative.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_CALL_POINT({
+                point:0
+            })
         });
         //抢地主
         this.Items.Node_BarStatusGrabLandlord.Items.Sprite_BtnPositive.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_CALL_POINT({
+                point:yx.internet.toppoint+1
+            })
         });
         //出牌
         this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnDiscard.onClickAndScale(() => {
-            
+            this.checkPopCard()
         });
         //不出
         this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnPass.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_PASS_CARD({})
         });
         //提示
         this.Items.Node_BarStatusCanAfford.Items.Sprite_BtnTip.onClickAndScale(() => {
-            
+            this.putDownAllHandCard()
+            if(this.m_cbTipIndex >= this.m_cbHitCount){
+                this.m_cbTipIndex = 0
+            }
+            yx.func.popCardsByData(this.m_SearchResult[this.m_cbTipIndex].cbResultCard, this.m_SearchResult[this.m_cbTipIndex].cbCardCount,this.m_HandCardNode,null, this.logic.getLaiZiCardData())
+            this.m_cbTipIndex++;
         });
         //要不起
         this.Items.Node_BarStatusCannotAfford.Items.Sprite_BtnDiscard.onClickAndScale(() => {
+            yx.internet.DDZ_C_PASS_CARD({})
+        });
+        //超级加倍
+        this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.onClickAndScale(() => {
+            if(center.user.getActorDiamond() > yx.internet.ddzBaseInfo.superdoubleDiamond){
+                yx.internet.DDZ_C_DOUBLE({
+                    times:yx.internet.ddzBaseInfo.superdoubletimes
+                })
+            }else{
+                app.popup.showToast("钻石不足,请到商城购买")
+            }
             
         });
         //加倍
         this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_DOUBLE({
+                times:yx.internet.ddzBaseInfo.doubletimes
+            })
         });
         //不加倍
         this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_DOUBLE({
+                times:1
+            })
         });
         //明牌
         this.Items.Node_BarStatusPublicCard.Items.Sprite_BtnPublic.onClickAndScale(() => {
-            
+            yx.internet.DDZ_C_SHOW_CARDS({
+                times:yx.internet.ddzBaseInfo.showtimes
+            })
         });
         //出牌
         this.Items.Node_BarStatusPublicOutCard.Items.Sprite_BtnOutCard.onClickAndScale(() => {
-            
+            this.checkPopCard()
         });
 
         //--------------------onfree----------------------//
@@ -377,6 +435,42 @@ export class main_Landlord extends main_GameBase {
         this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.onClickAndScale(() => {
             
         });
+    }
+    //出牌判断，正确则发送出牌命令
+    checkPopCard(){
+        var cardData:number[] = []
+        var cardType:number = -1
+        var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
+        if(tempCache.length == 0){
+            app.popup.showToast("请至少选1张牌")
+            return
+        }
+        
+		var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length)
+
+        if(cbTempCardData.length != 0){
+            var maxCardInfo = yx.internet.m_MaxCardInfo
+            var isLarger = false
+            cardType = this.logic.GetCardType(cbTempCardData, cbTempCardData.length)
+            isLarger = this.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
+            if  (cardType == -1 || ! isLarger){
+                if(cardType == -1 ){
+                    this.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
+                }else{
+                    this.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_NoAvaliableCard)
+                }
+                this.scheduleOnce(function(){
+                    this.displayHandsAnalyseTips(false)
+                },0.4)
+                return;
+            }
+            this.clearPopCardCache()
+            yx.internet.DDZ_C_OUT_CARD({
+                cards:cardData,
+                cardtype: cardType
+            })
+            this.putDownAllHandCard()
+        }
     }
     //创建卡牌触摸屏
     initCardTouchLayerEvent(){
@@ -567,7 +661,7 @@ export class main_Landlord extends main_GameBase {
                 var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length)
                 tempCache = []
                 if(cbTempCardData.length != 0){
-                    var maxCardInfo = yx.config.m_MaxCardInfo
+                    var maxCardInfo = yx.internet.m_MaxCardInfo
                     var isLarger = false
 	                var cardDataType = -1
                     cardDataType = self.logic.GetCardType(cbTempCardData, cbTempCardData.length)
@@ -580,7 +674,10 @@ export class main_Landlord extends main_GameBase {
                         },0.4)
                     }
                     self.clearPopCardCache()
-                    //this.dispatchClientMSG_OutCard(cbTempCardData, #cbTempCardData)
+                    yx.internet.DDZ_C_OUT_CARD({
+                        cards:cbTempCardData,
+                        cardtype: cardDataType
+                    })
                     self.putDownAllHandCard()
                 }else{
                     tmpFun()
@@ -627,10 +724,13 @@ export class main_Landlord extends main_GameBase {
             }
             /* 加倍(不加倍 or 加倍) */
             case yx.config.ActionBarStatus.ActionBarStatus_Double: {
-                barNode = this.Items.Node_BarStatusCannotAfford
+                barNode = this.Items.Node_BarStatusDouble
                 if(data){
-                    var bmt = this.Items.Node_BarStatusCannotAfford.Items.Node_BarStatusDouble.Items.BMFont_Title
-                    bmt.string = "加倍x" + data
+                    var bmt = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.Items.BMFont_Title
+                    bmt.string = "加倍x" + data[0]
+
+                    var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.BMFont_Title
+                    bmt1.string = "加倍x" + data[0]
                 }
             }
             /* 明牌(明牌xn) */
@@ -678,18 +778,17 @@ export class main_Landlord extends main_GameBase {
         }
     }
     //玩家出牌命令
-    didReceiveOutCard(){
-        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21 ]
-        var cardType = yx.config.OutCardType.Sequence
-        var leaveCardCount = 5
-        var nChairID = 1
+    didReceiveOutCard(data:proto.client_proto_ddz.IDDZ_S_OutCard){
+        var cardData = data.outcards
+        var cardType = data.cardtype
+        var nChairID = data.outchair
         
         const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
         if(ClientChairID == 0){
             yx.func.removeCardByData(cardData,this.m_HandCardNode,this.m_HandCardData)
             this.resetHandCardPos()
         }else{
-            this.player.setPlayerCardNumVisible(nChairID,true,leaveCardCount,true) 
+            this.player.setPlayerCardNumVisibleBySudCardNum(nChairID,true,data.outcards.length,true) 
         }
         
         this.ShowOutCard(nChairID,cardData,cardType)
@@ -815,8 +914,7 @@ export class main_Landlord extends main_GameBase {
         });
     }
     //发牌命令
-    didReceiveSendCard(){
-        var cardData = [12, 17,33,49,1,2,3,4,5,6,7,8,9,10,11,20,21]
+    didReceiveSendCard(cardData:number[]){
         this.m_HandCardData = cardData
         for(var i=0;i<cardData.length;i++){
             var node = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_Hands)
@@ -878,7 +976,7 @@ export class main_Landlord extends main_GameBase {
     }
 
     getMaxCardDataInfo(){
-        return  yx.config.m_MaxCardInfo
+        return  yx.internet.m_MaxCardInfo
     }
 
     slidingSearch(){
@@ -937,7 +1035,7 @@ export class main_Landlord extends main_GameBase {
             }
         }
        
-        var outType = this.logic.GetCardType(yx.config.m_MaxCardInfo.cardData,yx.config.m_MaxCardInfo.cardCount,false)
+        var outType = this.logic.GetCardType(yx.internet.m_MaxCardInfo.cardData,yx.internet.m_MaxCardInfo.cardCount,false)
 	    //只有顺子、连对进行划牌搜索
         
         if(outType == yx.config.OutCardType.Sequence 
@@ -947,7 +1045,7 @@ export class main_Landlord extends main_GameBase {
             var selectCardType = this.logic.GetCardType(pSelectedCard,nSelectedLen)
 		    //只有在划的牌不能组成牌型时再去搜索
             if(selectCardType == yx.config.OutCardType.Invalid){
-                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.config.m_MaxCardInfo.cardData, yx.config.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,false, yx.config.OutCardType.Invalid)
+                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,false, yx.config.OutCardType.Invalid)
                 if (cbHitCount > 0 ){
                     this.putDownAllHandCard()
                     //有具体的压牌牌型，按最小能压的来出
@@ -960,7 +1058,7 @@ export class main_Landlord extends main_GameBase {
     
     
     getGameStatus() : number{
-        return this.m_enumGameStatus
+        return yx.internet.nGameState
     }
 
     updateDisplayOfOutCardBtn(){
@@ -1318,6 +1416,205 @@ export class main_Landlord extends main_GameBase {
             this.schedule_updateTime = null;
         }
         this.schedule_updateTime = this.setInterval(setTimeLabel, 1)
+    }
+
+    DDZ_S_MSG_USER_ENTER(data: proto.client_proto_ddz.IDDZ_S_UserEnter) {
+        
+    }
+    DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips) {
+        switch (data.type) {
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_START: {
+                   this.clearOneGame()
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_SHOW_START: {
+                    this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_PublicCard,data.countdown,null,yx.internet.ddzBaseInfo.showtimes)
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_CALL_START: {
+                    let logicChair = yx.func.getClientChairIDByServerChairID(data.curchair)
+                    if(logicChair == 0){
+                        if(this.callPointTimes > 3){
+                            this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_GrabLandlord,data.countdown,null)
+                        }else{
+                            this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_CallLandlord,data.countdown,null)
+                        }
+                    }else{
+                        this.player.setPlayerTimerVisible(data.curchair,true,data.countdown)
+                    }
+                    
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_RESTART: {
+                    this.clearOneGame()
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_DOUBLE_START: {
+                    for(let i=0;i<yx.internet.nMaxPlayerCount;i++){
+                        let logicChair = yx.func.getClientChairIDByServerChairID(i)
+                        if(logicChair == 0){
+                            this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_Double,data.countdown,null,[yx.internet.ddzBaseInfo.doubletimes,yx.internet.ddzBaseInfo.superdoubletimes])
+                        }else{
+                            this.player.setPlayerTimerVisible(i,true,data.countdown)
+                        }
+                    }
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_OUT_START: {
+                    let logicChair = yx.func.getClientChairIDByServerChairID(data.curchair)
+                    if(logicChair == 0){
+                        if(data.bFirst){
+                            this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_PublicOutCard,data.countdown,null)
+                        }else{
+                            var pSelectedCard = yx.func.cardDatasFromVector(this.m_HandCardNode)
+                            var nSelectedLen = pSelectedCard.length
+                                                   
+                            var bFind : boolean
+                            [bFind,this.m_SearchResult,this.m_cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_FullRegion,false, yx.config.OutCardType.Invalid)
+                            this.m_cbTipIndex = 0
+                            if(this.m_cbHitCount > 0){
+                                this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_CanAfford,data.countdown,null)
+                            }else{
+                                this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_CannotAfford,3,()=>{
+                                    yx.internet.DDZ_C_PASS_CARD({})
+                                })
+                            }
+                        }
+                    }else{
+                        this.player.setPlayerTimerVisible(data.curchair,true,data.countdown)
+                    }
+                    break;
+                }
+            
+            default:
+               
+                break;
+        }
+        
+    }
+    DDZ_S_MSG_SEND_CARD(data: proto.client_proto_ddz.IDDZ_S_SendCard) {
+        this.showBasePool(true);
+        this.didReceiveSendCard(data.sendcards)
+    }
+    DDZ_S_MSG_SHOW_CARD(data: proto.client_proto_ddz.IDDZ_S_ShowCard) {
+        let logicChair = yx.func.getClientChairIDByServerChairID(data.showchair)
+        if(logicChair == 0){
+            this.resetActionBar()
+        }
+        this.showXbeiAni(yx.internet.ddzBaseInfo.showtimes,data.toptimes)
+        //播放明牌音效
+
+        //把玩家明牌处理
+        
+    }
+    DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint) {
+        //播放叫/抢地主音效
+        let content = ""
+        switch (data.callcode) {
+            case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_CALL: {
+                content = "不叫"
+                break;
+            }
+            case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_CALL: {
+                content = "叫地主"
+                break;
+            }
+            case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_ROB: {
+                content = "不抢"
+                break;
+            }
+            case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_1: {
+                content = "抢地主"
+                break;
+            }
+            case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_3: {
+                content = "抢地主"
+                break;
+            }
+            default:
+               
+                break;
+        }
+        if(content != ""){
+            this.player.setPlayerCallStateVisible(data.callchair,true,content)
+            this.showXbeiAni(yx.internet.ddzBaseInfo.calltimes,data.toptimes)
+            let logicChair = yx.func.getClientChairIDByServerChairID(data.callchair)
+            if(logicChair == 0){
+                this.resetActionBar()
+            }
+        }
+        
+    }
+    DDZ_S_MSG_CALL_END(data: proto.client_proto_ddz.IDDZ_S_CallEnd) {
+        this.resetActionBar()
+        this.showLastThreeCardAndMove(data.backcards,data.bankerchair)
+        this.showDipaiBieshu(true,true,data.backtimes)
+    }
+    DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double) {
+        //播放加倍/超级加倍音效
+        let content = ""
+        switch (data.opetimes) {
+            case 1: { //不加倍
+                content = "不加倍"
+                break;
+            }
+            case yx.internet.ddzBaseInfo.doubletimes: { //加倍
+                content = "加倍"
+                break;
+            }
+            case yx.internet.ddzBaseInfo.superdoubletimes: {  //超级加倍
+                content = "超级加倍"
+                break;
+            }
+            default:
+                break;
+        }
+        if(content != ""){
+            this.player.setPlayerCallStateVisible(data.opechair,true,content)
+            if(data.opetimes > 1){
+                this.showXbeiAni(data.opetimes,data.toptimes)
+            }
+            let logicChair = yx.func.getClientChairIDByServerChairID(data.opechair)
+            if(logicChair == 0){
+                this.resetActionBar()
+            }
+        }
+    }
+    DDZ_S_MSG_OUT_CARD(data: proto.client_proto_ddz.IDDZ_S_OutCard) {
+        let logicChair = yx.func.getClientChairIDByServerChairID(data.outchair)
+        if(logicChair == 0){
+            this.resetActionBar()
+        }
+        this.didReceiveOutCard(data)
+    }
+    DDZ_S_MSG_PASS_CARD(data: proto.client_proto_ddz.IDDZ_S_PassCard) {
+        let logicChair = yx.func.getClientChairIDByServerChairID(data.passchair)
+        if(logicChair == 0){
+            this.resetActionBar()
+        }
+        //播放不要音效 //随机的话要和文字配合上
+
+        this.player.setPlayerCallStateVisible(data.passchair,true,"不要")
+            
+    }
+    DDZ_S_MSG_USE_MEMORY(data: proto.client_proto_ddz.IDDZ_S_UseMemory) {
+        if(!this.Items.node_card_recorder.active){
+            this.showCardRecorder(true)
+        }
+        this.setCardRecorderData(data.recordindex)
+    }
+    DDZ_S_MSG_TRUSTEESHIP(data: proto.client_proto_ddz.IDDZ_S_Trusteeship) {
+        let logicChair = yx.func.getClientChairIDByServerChairID(data.chair)
+        if(logicChair == 0){
+            this.showTrustLayout(data.trusteeship)
+        }else{
+            this.player.setPlayerTrusteeship(data.chair,data.trusteeship)
+        }
+    }
+    DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+        
+    }
+    DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
     }
 
     //-----------------------------老代码 ------------------------------------//

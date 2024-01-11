@@ -23,7 +23,7 @@ export class plaza extends fw.FWComponent {
 	}
 	onViewEnter() {
 		//播放背景音效
-		app.audio.setDefMusic(fw.BundleConfig.resources.res[`audio/BGM${randomInt(1, 3)}`]);
+		app.audio.setDefMusic(fw.BundleConfig.plaza.res[`audio/BGM`]);
 		app.audio.playMusic();
 	}
 	onViewExit() {

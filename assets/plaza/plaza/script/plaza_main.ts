@@ -49,10 +49,9 @@ export class plaza_main extends (fw.FWComponent) {
 				});
 			}
 			fw.scene.changeScene(fw.SceneConfigs.Landlord,intentData);
-			center.login.loginWeChat(false)
 		});
 		//正常逻辑
-		// super.doLifeFunc();
+		super.doLifeFunc();
 	}
 	initData() {
 		
@@ -61,36 +60,39 @@ export class plaza_main extends (fw.FWComponent) {
 		//缓存大厅，不清理
 		app.runtime.permanentView.set(this.node, true);
 		app.runtime.plaza = this.node;
-		//多语言
-		this.initLanguage();
+	
 		//更新玩家信息
 		this.updatePlayerInfo();
 		//运营活动
-		this.updateActivitys();
+		// this.updateActivitys();
 		//刷新游戏
-		this.updateGames();
+		// this.updateGames();
 		//刷新特殊游戏
-		this.updateSpecialGame();
+		// this.updateSpecialGame();
 	}
 	protected initBtns(): boolean | void {
 		//AddCash
-		this.initBtnAddCash();
+		this.initBtnShop();
 		//分享
 		this.initBtnShare();
-		//vipGift
-		this.initBtnVipGift();
-		//freeCash
-		this.initBtnFreeCash();
-		//充值保护
-		this.initBtnRechargeProtect();
+		//任务
+		this.initBtnTask();
+		//福利
+		this.initBtnFree();
+		//背包
+		this.initBtnBackpack();
 		//客服
 		this.initBtnService();
 		//邮件
 		this.initBtnEmail();
 		//活动
 		this.initBtnActivity();
-		//更多（箭头）
-		this.initArrowBtn();
+		//更多
+		this.initBtnMore();
+		//转盘
+		this.initBtnPrizeWheel();
+		//月卡
+		this.initBtnMoonCard();
 	}
 	protected initEvents(): boolean | void {
 		//返回键事件
@@ -112,7 +114,7 @@ export class plaza_main extends (fw.FWComponent) {
 								//断开连接
 								center.login.closeConnect();
 								//切换到登录
-								fw.scene.changeScene(fw.SceneConfigs.login);
+								cc.game.end();
 							}
 						},
 						{
@@ -132,11 +134,11 @@ export class plaza_main extends (fw.FWComponent) {
 					return true;
 				}
 				if (data.eventData.keyCode == app.event.CommonKey.Space) {
-					let lastEnterRoomData: proto.plaza_room.Igs_room_get_serverid_c;
-					lastEnterRoomData = JSON.safeParse(app.file.getStringForKey("LastEnterRoomData", ``, { all: true }));
-					if (lastEnterRoomData) {
-						center.roomList.sendGetRoomServerId(lastEnterRoomData.kind_id);
-					}
+					// let lastEnterRoomData: proto.plaza_room.Igs_room_get_serverid_c;
+					// lastEnterRoomData = JSON.safeParse(app.file.getStringForKey("LastEnterRoomData", ``, { all: true }));
+					// if (lastEnterRoomData) {
+					// 	center.roomList.sendGetRoomServerId(lastEnterRoomData.kind_id);
+					// }
 				} else {
 					return true;
 				}
@@ -173,7 +175,7 @@ export class plaza_main extends (fw.FWComponent) {
 	}
 	onViewEnter() {
 		this.mIsFromLogin = false
-		if (app.runtime.lastSceneType == fw.SceneConfigs.login.sceneName) {
+		if (app.runtime.lastSceneType == fw.SceneConfigs.app.sceneName) {
 			this.mIsFromLogin = true;
 		}
 
@@ -185,21 +187,15 @@ export class plaza_main extends (fw.FWComponent) {
 		//刷新特殊游戏 新手引导没了不需要了
 		// this.updateSpecialGame();
 		//请求历史单笔最大充值金额
-		center.giftBag.getMaxPaymentHis();
+		// center.giftBag.getMaxPaymentHis();
 	}
-	initLanguage() {
-		
-	}
-	/**更多（箭头） */
-	initArrowBtn() {
-		let content = this.Items.content;
-		let scrollView = this.Items.ScrollView;
-		let scrollCom = scrollView.obtainComponent(ScrollView);
-		scrollView.on(ScrollView.EventType.SCROLLING, () => {
-			this.Items.Node_arrow.active = content.position.x > 50 - (content.size.width - scrollView.size.width);
-		});
-		this.Items.Node_arrow_touch.onClick(() => {
-			scrollCom.scrollToOffset(fw.v2(Math.abs(content.position.x) + 200, Math.abs(content.position.y)), 0.5);
+
+	/**更多 */
+	initBtnMore() {
+		this.Items.Node_more.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`service/service_main`]
+			// });
 		});
 	}
 	/**处理进大厅弹框逻辑 */
@@ -709,16 +705,23 @@ export class plaza_main extends (fw.FWComponent) {
 		let Node_gold = this.Items.Node_gold;
 		let pos = Node_gold.getComponent(UITransform).convertToWorldSpaceAR(v3(0, 0, 0));
 		center.plaza.setPlazaGoldPos(pos);
+		//钻石
+		this.updateDiamond();
+		center.user.event.bindEvent({
+			valideTarget: this.node,
+			eventName: ACTOR.ACTOR_PROP_DIAMONDS,
+			callback: this.updateDiamond.bind(this)
+		});
 		let updateVipLevel = () => {
-			this.Items.Sprite_vip.active = false;
-			let vipLevel = center.user.getActorVipLevel();
-			let bgPath = fw.BundleConfig.plaza.res[js.formatStr("userInfo/img_new/vipNum/%s/spriteFrame", vipLevel)];
-			if (bgPath) {
-				this.Items.Sprite_vip.loadBundleRes(bgPath, (res: SpriteFrame) => {
-					this.Items.Sprite_vip.active = true;
-					this.Items.Sprite_vip.obtainComponent(Sprite).spriteFrame = res;
-				});
-			}
+			// this.Items.Sprite_vip.active = false;
+			// let vipLevel = center.user.getActorVipLevel();
+			// let bgPath = fw.BundleConfig.plaza.res[js.formatStr("userInfo/img_new/vipNum/%s/spriteFrame", vipLevel)];
+			// if (bgPath) {
+			// 	this.Items.Sprite_vip.loadBundleRes(bgPath, (res: SpriteFrame) => {
+			// 		this.Items.Sprite_vip.active = true;
+			// 		this.Items.Sprite_vip.obtainComponent(Sprite).spriteFrame = res;
+			// 	});
+			// }
 		}
 		this.Items.Sprite_vip.bindEvent({
 			eventName: [
@@ -733,225 +736,126 @@ export class plaza_main extends (fw.FWComponent) {
 	}
 	/**刷新玩家金币 */
 	updateGold() {
-		this.Items.Label_gold.getComponent(Label).string = `${center.user.getActorGold() / DF_RATE}`;
+		this.Items.coin_label.getComponent(Label).string = `${center.user.getActorGold() }`;
+	}
+	/**刷新玩家钻石 */
+	updateDiamond() {
+		this.Items.diamond_label.getComponent(Label).string = `${center.user.getActorDiamond() }`;
 	}
 	initBtnEmail() {
 		this.Items.Node_email.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`email/email`]
-			});
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`email/email`]
+			// });
 		});
-		let node = this.Items.Node_email.Items.Node_bubble;
-		node.active = false;
-		let updateEmail = () => {
-			let num = center.email.getEmailNoCloseNum();
-			let newActive = num > 0;
-			let oldActive = node.active;
-			if (oldActive != newActive) {
-				node.active = newActive;
-				let tempBubble = node.getComponent(bubble);
-				tempBubble.stopAnim();
-				newActive && tempBubble.playAnim();
-			}
-		}
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_EMAIL_EMAIL_ADD,
-				EVENT_ID.EVENT_EMAIL_VIEW_STATE,
-				EVENT_ID.EVENT_EMAIL_VIEW_RETURN,
-				EVENT_ID.EVENT_EMAIL_TEXT_RETURN,
-				EVENT_ID.EVENT_EMAIL_PICK_RETURN,
-			],
-			callback: updateEmail
-		});
-		updateEmail();
+		// let node = this.Items.Node_email.Items.Node_bubble;
+		// node.active = false;
+		// let updateEmail = () => {
+		// 	let num = center.email.getEmailNoCloseNum();
+		// 	let newActive = num > 0;
+		// 	let oldActive = node.active;
+		// 	if (oldActive != newActive) {
+		// 		node.active = newActive;
+		// 		let tempBubble = node.getComponent(bubble);
+		// 		tempBubble.stopAnim();
+		// 		newActive && tempBubble.playAnim();
+		// 	}
+		// }
+		// this.bindEvent({
+		// 	eventName: [
+		// 		EVENT_ID.EVENT_EMAIL_EMAIL_ADD,
+		// 		EVENT_ID.EVENT_EMAIL_VIEW_STATE,
+		// 		EVENT_ID.EVENT_EMAIL_VIEW_RETURN,
+		// 		EVENT_ID.EVENT_EMAIL_TEXT_RETURN,
+		// 		EVENT_ID.EVENT_EMAIL_PICK_RETURN,
+		// 	],
+		// 	callback: updateEmail
+		// });
+		// updateEmail();
 	}
 	initBtnShare() {
-		let bShareShow = center.user.isSwitchOpen(`btShareSwitch`);
-		let shareNode = this.Items.Sprite_share;
+		let bShareShow = true// center.user.isSwitchOpen(`btShareSwitch`);
+		let shareNode = this.Items.Node_yaoqing;
 		shareNode.active = bShareShow;
 		let shareData = (<any>shareNode).shareData ??= {};
+		this.Items.Node_yaoqing.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`vipGift/vipGift_dlg`]
+			// });
+		});
+	}
+
 	
-	}
-	initBtnVipGift() {
-		this.Items.vipGift_anim.obtainComponent(sp.Skeleton).setAnimation(0, "animation", true);
-		this.Items.Node_vipGift.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`vipGift/vipGift_dlg`]
-			});
-		});
-		let updateClaimTips = () => {
-			let claim_tips = this.Items.Node_vipGift.Items.claim_tips
-			if (!fw.isNull(claim_tips)) {
-				let tempBubble = claim_tips.getComponent(bubble);
-				let rewardStatus = center.user.getRewardStatus()
-				claim_tips.active = rewardStatus
-				if (rewardStatus) {
-					tempBubble.stopAnim();
-					tempBubble.playAnim();
-				} else {
-					tempBubble.stopAnim();
-				}
-			}
-		}
-		updateClaimTips()
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_PLAZA_VIPGIFT_INFO,
-			],
-			callback: updateClaimTips
+	initBtnFree() {
+		this.Items.Node_fuli.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`freeCash/freeCash`]
+			// });
 		});
 	}
-	initBtnFreeCash() {
-		this.Items.Node_freeCash.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`freeCash/freeCash`]
-			});
+
+	initBtnTask() {
+		this.Items.Node_task.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`freeCash/freeCash`]
+			// });
 		});
 	}
-	initBtnRechargeProtect() {
-		this.Items.Node_rechargeProtect.active = false
-		this.rechargeProtect_anim_uuid = ""
-
-		let initRechargeProtectNode = () => {
-			let bOpen = center.mall.isRechargeProtectOpen()
-			let child = this.Items.Node_rechargeProtect.getChildByUuid(this.rechargeProtect_anim_uuid)
-			if (bOpen && !child) {
-				this.Items.Node_rechargeProtect.loadBundleRes(fw.BundleConfig.plaza.res[`shop/rechargeProtectBtn`], (res: Prefab) => {
-					let btn = instantiate(res);
-					this.Items.Node_rechargeProtect.addChild(btn);
-					btn.active = true;
-					btn.setPosition(0, 6)
-					this.rechargeProtect_anim_uuid = btn.uuid
-				});
-				this.Items.Node_rechargeProtect.active = true
-			}
-		}
-		let updateFreeCashBtnVisible = () => {
-			if (!fw.isNull(this.Items.Node_freeCash)) {
-				let child = this.Items.Node_rechargeProtect.getChildByUuid(this.rechargeProtect_anim_uuid)
-				if (!child) {
-					if (center.share.isFreeCashOpen()) {
-						this.Items.Node_freeCash.active = true
-					} else {
-						this.Items.Node_freeCash.active = false
-					}
-				}
-			}
-		}
-		let updateRechargeProtect = () => {
-			let bOpen = center.mall.isRechargeProtectOpen()
-			if (!bOpen) {
-				this.Items.Node_rechargeProtect.removeAllChildren(true)
-				this.Items.Node_rechargeProtect.active = false
-			} else {
-				initRechargeProtectNode()
-			}
-			updateFreeCashBtnVisible()
-		}
-		let rechargeProtectVisible = (arg1) => {
-			let data: proto.plaza_actorprop.IActVariable[] = arg1.dict
-			if (data[0].prop_id == ACTOR.ACTOR_PROP_RECHARGE_PROTECT_END_TIME || data[0].prop_id == ACTOR.ACTOR_PROP_RECHARGE_PROTECT_PRIZE) {
-				updateRechargeProtect()
-			}
-		}
-		let rechargeProtectReward = (arg1) => {
-			if (arg1.data.result == 0) {
-				this.Items.Node_rechargeProtect.removeAllChildren(true)
-				this.Items.Node_rechargeProtect.active = false
-				updateFreeCashBtnVisible()
-			}
-		}
-
-		initRechargeProtectNode()
-		updateFreeCashBtnVisible()
-
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_RECHARGE_PROTECT_CFG,
-			],
-			callback: (arg1, arg2) => { updateRechargeProtect() }
-		});
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
-			],
-			callback: (arg1, arg2) => { rechargeProtectVisible(arg1) }
-		});
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_RECHARGE_PROTECT_REWARD,
-			],
-			callback: (arg1, arg2) => { rechargeProtectReward(arg1) }
-		});
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_PLAZA_SHARE_OPEN,
-				EVENT_ID.EVENT_PLAZA_SHARE_FREECASH_CHANGE,
-			],
-			callback: (arg1, arg2) => { updateFreeCashBtnVisible() }
+	initBtnBackpack() {
+		this.Items.Node_beibao.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`service/service_main`]
+			// });
 		});
 	}
 	initBtnService() {
-		this.Items.Node_service.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`service/service_main`]
-			});
+		this.Items.Node_kefu.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`service/service_main`]
+			// });
 		});
 	}
-	initBtnAddCash() {
+	initBtnShop() {
 		let goMall = () => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`shop/shop_main`]
-			});
-			center.user.popGift(false, false, true)
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`shop/shop_main`]
+			// });
+			// center.user.popGift(false, false, true)
 		}
-		this.Items.Sprite_addCash.onClickAndScale(() => {
+		this.Items.coin_add.onClickAndScale(() => {
+			goMall()
+		});
+		this.Items.diamond_add.onClickAndScale(() => {
+			goMall()
+		});
+		this.Items.Node_shop.onClickAndScale(() => {
 			goMall()
 		});
 
-		let upDateRate = () => {
-			let mallLimitConfig = center.mall.mallLimitConfig;
-			let nCashList = mallLimitConfig.num.list;
-			let mMShopRate = 0
-			for (let k = 0; k < nCashList.length; k++) {
-				let v = nCashList[k];
-				let nRate = center.luckyCard.getFirstRechrgeRatio(v)
-				let notShowBonusReward = center.luckyCard.getShowBonusRewardStatus()
-				if (nRate.index > -1 && center.user.isFirstCashVaild(nRate.index) && nRate.ratio > mMShopRate && !notShowBonusReward) {
-					mMShopRate = app.func.numberAccuracy(nRate.ratio)
-				}
-			}
-
-			let mMMegaGiftRate = 0
-			if (center.user.canShowMegaGift()) {
-				mMMegaGiftRate = app.func.numberAccuracy(center.luckyCard.getMegaGiftRate() * 100)
-			}
-
-			let rate = mMMegaGiftRate > mMShopRate ? mMMegaGiftRate : mMShopRate
-			this.Items.Label_add_rate.string = `+\n${rate}%`
-			this.Items.Sprite_add_rate.active = rate > 0
-		}
-		upDateRate()
-
-		this.Items.Sprite_addCash.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
-				EVENT_ID.EVENT_MEGAGIFT_BUY_RESULT,
-				EVENT_ID.EVENT_PLAZA_FIRSTRECHRGE_LASTTIME,
-			],
-			callback: () => {
-				upDateRate();
-			}
-		});
+		
 	}
 	initBtnActivity() {
 		this.Items.Node_activity.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`activity/activity`]
-			});
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`activity/activity`]
+			// });
 		});
 	}
+	initBtnMoonCard() {
+		this.Items.Node_mooncard.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`activity/activity`]
+			// });
+		});
+	}
+	initBtnPrizeWheel() {
+		this.Items.Node_wheel.onClickAndScale(() => {
+			// app.popup.showDialog({
+			// 	viewConfig: fw.BundleConfig.plaza.res[`activity/activity`]
+			// });
+		});
+	}
+	
 	onClickGame(data: OnePlazaGameConfigParam) {
 		if (data.kindIdName) {
 			if(data.kindIdName == "Crash") {

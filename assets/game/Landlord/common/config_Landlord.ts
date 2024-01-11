@@ -21,12 +21,18 @@ export class config_Landlord extends config_GameBase {
     GameState = {
         /**空闲 */
         FREE: 0,
-        /**第一阶段（发第一张牌） */
-        BET1: 1,
-        /**第二阶段（发第二张牌） */
-        BET2: 2,
-        /**游戏结束 */
-        END: 3,
+        /**发牌 */
+        SENDCARD: 1,
+        /**明牌 */
+        SHOW: 2,
+        /**叫分 */
+        CALLPOINT: 3,
+        /**加倍 */
+        DOUBLE: 4,
+        /**操作牌阶段 */
+        PLAY: 5,
+        /**结算 */
+        SETTLEMENT: 6,
     }
     /**游戏状态 */
     PlayerStates = {
@@ -155,12 +161,7 @@ export class config_Landlord extends config_GameBase {
         GameStatus_Discard: 18,
     }
 
-    m_MaxCardInfo={
-        cardData : [],
-        cardCount : -1,
-        cbChairID : -1,
-        nType : -1
-    }
+    
 
     //排序方式
     CardSortOrder ={

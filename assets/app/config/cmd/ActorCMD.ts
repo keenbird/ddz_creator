@@ -11,7 +11,7 @@ export enum ACTOR {
     ACTOR_PROP_VIPEXP = 10, //VIP经验值
     ACTOR_PROP_VIPLEVEL = 11, //VIP等级
     ACTOR_PROP_NEXTVIPLEVELEXP = 12, //VIP达到下一等级需要的经验值
-    ACTOR_PROP_SEX = 13, //用户性别		
+    ACTOR_PROP_SEX = 13, //用户性别		 // 性别('f'=男 'm'=女)
     ACTOR_PROP_GM = 14, //是否是GM		
     ACTOR_PROP_OPENFLAG = 15, //功能开启标示(参考OPENFLAG定义)
     ACTOR_PROP_GAME_STATE = 16, //用户状态

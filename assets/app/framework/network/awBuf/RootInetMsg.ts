@@ -25,6 +25,7 @@ export class RootInetMsg {
         this._readByteStream.setBuffers(data);
         let pByteStream = this._readByteStream;
         let wMsgLen = pByteStream.readUInt16();
+        let wMsgType = pByteStream.readUInt8();
         let wVersion = pByteStream.readUInt16();
         let uRoomSvrId = pByteStream.readUInt32();
         let nMainID = pByteStream.readUInt16();
@@ -45,6 +46,7 @@ export class RootInetMsg {
         this._writeByteStream.setBuffers(this._writeArrayBuffer);
         let pSendStream = this._writeByteStream;
         pSendStream.writeSInt16(0);
+        pSendStream.writeSInt8(1);
         pSendStream.writeSInt16(0); //版本
         pSendStream.writeSInt32(0); //房间时ser id
         pSendStream.writeSInt16(nMainID);

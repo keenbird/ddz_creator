@@ -1,4 +1,4 @@
-import { _decorator,ccNode } from 'cc';
+import { _decorator,Node as ccNode } from 'cc';
 const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
@@ -9,11 +9,12 @@ import { EVENT_ID } from '../../../app/config/EventConfig';
 @ccclass('internet_Landlord')
 export class internet_Landlord extends internet_GameBase {
     /**协议相关字段--began------------------------------------ */
-    proto = proto.game_Landlord
+    proto = proto.client_proto_ddz
     /**命令ID */
-    cmd = this.proto.CMD
+    cmd = this.proto.DDZ_SUB_S_MSG_ID
+    ctscmd = this.proto.DDZ_SUB_C_MSG_ID
     /**房间规则 */
-    gameConfig: proto.game_Landlord.IGameConfig
+    // gameConfig: proto.game_Landlord.IGameConfig
     /**协议相关字段--end------------------------------------ */
     INVALID_CHAIRID: number = -1
     /**自己在服务器上的位置 */
@@ -28,123 +29,293 @@ export class internet_Landlord extends internet_GameBase {
     playerState: { [nChairID: number]: number } = {}
     /**玩家当局下注金额 */
     nJettonScore: number = 0
+    /**房间基础信息 */
+    ddzBaseInfo: proto.client_proto_ddz.IDDZInfo
+    /**记牌器数据 */
+    cardRecordData: proto.client_proto_ddz.IDDZ_S_UseMemory.recordindex = []
+    /**叫分最高值 */
+    toppoint: number = 0
+    /**上个人出的牌 */
+    m_MaxCardInfo={
+        cardData : [],
+        cardCount : -1,
+        cbChairID : -1,
+        nType : -1
+    }
     
     protected initEvents(): boolean | void {
         //自己进入桌子
-        this.bindEvent({
-            eventName: [
-                EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
-            ],
-            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
-                //刷新自己的座位号
-                this.nSelfChairID = gameCenter.user.getSelfChairID();
-            },
-        });
+        // this.bindEvent({
+        //     eventName: [
+        //         EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
+        //     ],
+        //     callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
+        //         //刷新自己的座位号
+        //         this.nSelfChairID = gameCenter.user.getSelfChairID();
+        //     },
+        // });
     }
     protected initRegister(): void {
         this.bindMessage({
-            name: `GameConfig`,
-            struct: this.proto.GameConfig,
+            name: `RepeatedInt32`,
+            struct: this.proto.RepeatedInt32,
         });
         this.bindMessage({
-            name: `GameRule`,
-            struct: this.proto.GameRule,
+            name: `DDZSettle`,
+            struct: this.proto.DDZSettle,
         });
         this.bindMessage({
-            name: `GameReconnectRoom`,
-            struct: this.proto.GameReconnectRoom,
+            name: `DDZInfo`,
+            struct: this.proto.DDZInfo,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_BET_C,
-            struct: this.proto.MSG_BET_C,
+            cmd: this.ctscmd.DDZ_C_SHOW_CARDS,
+            struct: this.proto.DDZ_C_ShowCards,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_BACK_C,
-            struct: this.proto.MSG_BACK_C,
+            cmd: this.ctscmd.DDZ_C_CALL_POINT,
+            struct: this.proto.DDZ_C_CallPoint,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_SYNCDATA_C,
-            struct: this.proto.MSG_SYNCDATA_C,
+            cmd: this.ctscmd.DDZ_C_DOUBLE,
+            struct: this.proto.DDZ_C_Double,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_GAMESCENE_S,
-            struct: this.proto.MSG_GAMESCENE_S,
-            callback: this.MSG_GAMESCENE_S.bind(this),
-            bQueue: true,
+            cmd: this.ctscmd.DDZ_C_OUT_CARD,
+            struct: this.proto.DDZ_C_OutCard,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_FREE_S,
-            struct: this.proto.MSG_FREE_S,
-            callback: this.MSG_FREE_S.bind(this),
-            bQueue: true,
+            cmd: this.ctscmd.DDZ_C_PASS_CARD,
+            struct: this.proto.DDZ_C_PassCard,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_START_S,
-            struct: this.proto.MSG_START_S,
-            callback: this.MSG_START_S.bind(this),
-            bQueue: true,
+            cmd: this.ctscmd.DDZ_C_TRUSTEESHIP,
+            struct: this.proto.DDZ_C_Trusteeship,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_BET_PART2_S,
-            struct: this.proto.MSG_BET_PART2_S,
-            callback: this.MSG_BET_PART2_S.bind(this),
-            bQueue: true,
+            cmd: this.ctscmd.DDZ_C_USE_MEMORY,
+            struct: this.proto.DDZ_C_UseMomory,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_BET_S,
-            struct: this.proto.MSG_BET_S,
-            callback: this.MSG_BET_S.bind(this),
-            bQueue: true,
+            cmd: this.ctscmd.DDZ_C_DISMISS,
+            struct: this.proto.DDZ_C_Dismiss,
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_END_S,
-            struct: this.proto.MSG_END_S,
-            callback: this.MSG_END_S.bind(this),
-            bQueue: true,
+            cmd: this.cmd.DDZ_S_MSG_USER_ENTER,
+            struct: this.proto.DDZ_S_UserEnter,
+            callback: this.DDZ_S_MSG_USER_ENTER.bind(this),
+            
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_TIPS_S,
-            struct: this.proto.MSG_TIPS_S,
-            callback: this.MSG_TIPS_S.bind(this),
+            cmd: this.cmd.DDZ_S_MSG_TIPS,
+            struct: this.proto.DDZ_S_Tips,
+            callback: this.DDZ_S_MSG_TIPS.bind(this),
+            
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_RECONNECT_S,
-            struct: this.proto.MSG_RECONNECT_S,
-            callback: this.MSG_RECONNECT_S.bind(this),
+            cmd: this.cmd.DDZ_S_MSG_SEND_CARD,
+            struct: this.proto.DDZ_S_SendCard,
+            callback: this.DDZ_S_MSG_SEND_CARD.bind(this),
+            
         });
         this.bindMessage({
-            cmd: this.cmd.MSG_PLAYER_STATUS_S,
-            struct: this.proto.MSG_PLAYER_STATUS_S,
-            callback: this.MSG_PLAYER_STATUS_S.bind(this),
+            cmd: this.cmd.DDZ_S_MSG_SHOW_CARD,
+            struct: this.proto.DDZ_S_ShowCard,
+            callback: this.DDZ_S_MSG_SHOW_CARD.bind(this),
+            
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_CALL_POINT,
+            struct: this.proto.DDZ_S_CallPoint,
+            callback: this.DDZ_S_MSG_CALL_POINT.bind(this),
+            
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_CALL_END,
+            struct: this.proto.DDZ_S_CallEnd,
+            callback: this.DDZ_S_MSG_CALL_END.bind(this),
+            
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_DOUBLE,
+            struct: this.proto.DDZ_S_Double,
+            callback: this.DDZ_S_MSG_DOUBLE.bind(this),
+            
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_OUT_CARD,
+            struct: this.proto.DDZ_S_OutCard,
+            callback: this.DDZ_S_MSG_OUT_CARD.bind(this),
+            
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_PASS_CARD,
+            struct: this.proto.DDZ_S_PassCard,
+            callback: this.DDZ_S_MSG_PASS_CARD.bind(this),
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_USE_MEMORY,
+            struct: this.proto.DDZ_S_UseMemory,
+            callback: this.DDZ_S_MSG_USE_MEMORY.bind(this),
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_MSG_TRUSTEESHIP,
+            struct: this.proto.DDZ_S_Trusteeship,
+            callback: this.DDZ_S_MSG_TRUSTEESHIP.bind(this),
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_RECONNECT,
+            struct: this.proto.DDZ_S_Reconnect,
+            callback: this.DDZ_S_RECONNECT.bind(this),
+        });
+        this.bindMessage({
+            cmd: this.cmd.DDZ_S_GAMEEND,
+            struct: this.proto.DDZ_S_GameEnd,
+            callback: this.DDZ_S_GAMEEND.bind(this),
         });
         //大厅游戏消息
-        this.setGameRuleData(this.proto.GameRule, this.GameRule.bind(this));
-        this.setDropEndData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
-        this.setHalfWayJoinData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
-        this.setReplace(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
+        // this.setGameRuleData(this.proto.GameRule, this.GameRule.bind(this));
+        // this.setDropEndData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
+        // this.setHalfWayJoinData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
+        // this.setReplace(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
     }
     /**玩家是否已经进入 */
     isUserCenter() {
         return !fw.isNull(this.nSelfChairID) && this.nSelfChairID != this.INVALID_CHAIRID;
     }
-    MSG_BET_C(data: proto.game_Landlord.IMSG_BET_C) {
+    DDZ_C_SHOW_CARDS(data: proto.client_proto_ddz.IDDZ_C_ShowCards) {
         this.sendMessage({
-            cmd: this.cmd.MSG_BET_C,
+            cmd: this.ctscmd.DDZ_C_SHOW_CARDS,
             data: data,
         });
     }
-    MSG_BACK_C(data: proto.game_Landlord.IMSG_BACK_C) {
+    DDZ_C_CALL_POINT(data: proto.client_proto_ddz.IDDZ_C_CallPoint) {
         this.sendMessage({
-            cmd: this.cmd.MSG_BACK_C,
+            cmd: this.ctscmd.DDZ_C_CALL_POINT,
             data: data,
         });
     }
-    MSG_SYNCDATA_C(data: proto.game_Landlord.IMSG_SYNCDATA_C) {
+    DDZ_C_DOUBLE(data: proto.client_proto_ddz.IDDZ_C_Double) {
         this.sendMessage({
-            cmd: this.cmd.MSG_SYNCDATA_C,
+            cmd: this.ctscmd.DDZ_C_DOUBLE,
             data: data,
         });
     }
+    DDZ_C_OUT_CARD(data: proto.client_proto_ddz.IDDZ_C_OutCard) {
+        this.sendMessage({
+            cmd: this.ctscmd.DDZ_C_OUT_CARD,
+            data: data,
+        });
+    }
+    DDZ_C_PASS_CARD(data: proto.client_proto_ddz.IDDZ_C_PassCard) {
+        this.sendMessage({
+            cmd: this.ctscmd.DDZ_C_PASS_CARD,
+            data: data,
+        });
+    }
+    DDZ_C_TRUSTEESHIP(data: proto.client_proto_ddz.IDDZ_C_Trusteeship) {
+        this.sendMessage({
+            cmd: this.ctscmd.DDZ_C_TRUSTEESHIP,
+            data: data,
+        });
+    }
+    DDZ_C_USE_MEMORY(data: proto.client_proto_ddz.IDDZ_C_UseMomory) {
+        this.sendMessage({
+            cmd: this.ctscmd.DDZ_C_USE_MEMORY,
+            data: data,
+        });
+    }
+    DDZ_C_DISMISS(data: proto.client_proto_ddz.IDDZ_C_Dismiss) {
+        this.sendMessage({
+            cmd: this.ctscmd.DDZ_C_DISMISS,
+            data: data,
+        });
+    }
+
+    DDZ_S_MSG_USER_ENTER(data: proto.client_proto_ddz.IDDZ_S_UserEnter) {
+        this.ddzBaseInfo = data.gameInfo
+    }
+    DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips) {
+        switch (data.type) {
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_START: {
+                   
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_SHOW_START: {
+                    this.nGameState = yx.config.GameState.SHOW;
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_CALL_START: {
+                    this.nGameState = yx.config.GameState.CALLPOINT;
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_RESTART: {
+                    this.nGameState = yx.config.GameState.SENDCARD;
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_DOUBLE_START: {
+                    this.nGameState = yx.config.GameState.DOUBLE;
+                    break;
+                }
+            case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_OUT_START: {
+                    this.nGameState = yx.config.GameState.PLAY;
+                    if(data.bFirst){
+                        this.m_MaxCardInfo.cardData = []
+                        this.m_MaxCardInfo.cardCount = -1
+                        this.m_MaxCardInfo.cbChairID = -1
+                        this.m_MaxCardInfo.nType = -1
+                    }
+                    break;
+                }
+            
+            default:
+               
+                break;
+        }
+        
+    }
+    DDZ_S_MSG_SEND_CARD(data: proto.client_proto_ddz.IDDZ_S_SendCard) {
+        //调整游戏状态
+        this.nGameState = yx.config.GameState.SENDCARD;
+    }
+    DDZ_S_MSG_SHOW_CARD(data: proto.client_proto_ddz.IDDZ_S_ShowCard) {
+        this.nGameState = yx.config.GameState.SHOW;
+    }
+    DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint) {
+        this.nGameState = yx.config.GameState.CALLPOINT;
+        this.toppoint = data.toppoint
+    }
+    DDZ_S_MSG_CALL_END(data: proto.client_proto_ddz.IDDZ_S_CallEnd) {
+        this.nGameState = yx.config.GameState.CALLPOINT;
+    }
+    DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double) {
+        this.nGameState = yx.config.GameState.DOUBLE;
+    }
+    DDZ_S_MSG_OUT_CARD(data: proto.client_proto_ddz.IDDZ_S_OutCard) {
+        this.nGameState = yx.config.GameState.PLAY;
+        this.m_MaxCardInfo.cardData = data.outcards
+        this.m_MaxCardInfo.cardCount = data.outcards.length
+        this.m_MaxCardInfo.cbChairID = data.outchair
+        this.m_MaxCardInfo.nType = data.cardtype
+    }
+    DDZ_S_MSG_PASS_CARD(data: proto.client_proto_ddz.IDDZ_S_PassCard) {
+        this.nGameState = yx.config.GameState.PLAY;
+    }
+    DDZ_S_MSG_USE_MEMORY(data: proto.client_proto_ddz.IDDZ_S_UseMemory) {
+        this.cardRecordData = data.recordindex
+    }
+    DDZ_S_MSG_TRUSTEESHIP(data: proto.client_proto_ddz.IDDZ_S_Trusteeship) {
+        
+    }
+    DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+        
+    }
+    DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
+        this.nGameState = yx.config.GameState.SETTLEMENT;
+    }
+  
+
+    //---------------OLD CODE ----------------//
     MSG_GAMESCENE_S(data: proto.game_Landlord.IMSG_GAMESCENE_S) {
         //剩余时间
         this.nLeftTime = data.nLeaveTime;
@@ -211,6 +382,15 @@ export class internet_Landlord extends internet_GameBase {
     }
     GameReconnectRoom(data: proto.game_Landlord.IGameReconnectRoom) {
         return this.doReconnect(data);
+    }
+    //初始化游戏数据
+    cleanLocalData() {
+        this.m_MaxCardInfo.cardData = []
+        this.m_MaxCardInfo.cardCount = -1
+        this.m_MaxCardInfo.cbChairID = -1
+        this.m_MaxCardInfo.nType = -1
+        this.cardRecordData = []
+        this.toppoint = 0
     }
     doReconnect(data: proto.game_Landlord.IMSG_RECONNECT_S) {
         //清理消息列表

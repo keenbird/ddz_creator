@@ -73,7 +73,6 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     loginToServer() {
-        console.log("LH5")
         if (!app.socket.isWorking()) {
             this.connectServer()
             return
@@ -81,34 +80,32 @@ export class LoginCenter extends LoginMainInetMsg {
 
         let loginData = proto.client_proto.LoginReq.create()
 
-        // loginData.channel = fw.DEBUG.sChannelID;
-        // loginData.gameVersion = app.native.device.getAppVersion();
-        // loginData.loginToken = this.m_strToken;
-        // loginData.loginAccount = this.m_strLoginAccount;
-        // loginData.loginPassword = this.m_strLoginMd5Password;
-        // loginData.loginType = CPLUSLOGINTYPE.LTD_TOKEN;
-        // loginData.packageName = fw.DEBUG.sPackageName;
-        // loginData.deviceId = app.native.device.getBiosID();
-        // loginData.version = app.native.device.getVersion();
-
         loginData.channel = fw.DEBUG.sChannelID;
-        loginData.gameVersion = "1.0.0"
-        loginData.loginToken = "Y3BfY29kZT13eCZjcF91aWQ9b0xLX2I0azJwcVpVdmlUNEV2YlF4eGJvaVRQOCZleHBpPTE3MDQ4NzM3NzEmc2lnbj1kNDY4YmU4ZmU4MDk5NWZiNWI3MWUwNDNhNDFmOThhZA==";
+        loginData.gameVersion = app.native.device.getAppVersion();
+        loginData.loginToken = this.m_strToken;
         loginData.loginAccount = this.m_strLoginAccount;
         loginData.loginPassword = this.m_strLoginMd5Password;
         loginData.loginType = CPLUSLOGINTYPE.LTD_TOKEN;
-        loginData.packageName ="1"
-        loginData.deviceId = "iPhone X"
-        loginData.version = "8.0.5"
+        loginData.packageName = fw.DEBUG.sPackageName;
+        loginData.deviceId = app.native.device.getBiosID();
+        loginData.version = app.native.device.getVersion();
+
+        // loginData.channel = fw.DEBUG.sChannelID;
+        // loginData.gameVersion = "1.0.0"
+        // loginData.loginToken = "Y3BfY29kZT13eCZjcF91aWQ9b0xLX2I0azJwcVpVdmlUNEV2YlF4eGJvaVRQOCZleHBpPTE3MDQ5NDM5NzYmc2lnbj00ZTJmNjM1M2M1YTU0OTYzOTE0ODRhMTE5YzBhMTM2Mw==";
+        // loginData.loginAccount = this.m_strLoginAccount;
+        // loginData.loginPassword = this.m_strLoginMd5Password;
+        // loginData.loginType = CPLUSLOGINTYPE.LTD_TOKEN;
+        // loginData.packageName ="1"
+        // loginData.deviceId = "iPhone X"
+        // loginData.version = "8.0.5"
 
 
         app.file.setIntegerForKey("LoginType", this.m_eLoginType, { all: true })
         app.file.setStringForKey("LoginAccount", this.m_strLoginAccount, { all: true })
         app.file.setStringForKey("LoginMd5Pwd", this.m_strLoginMd5Password, { all: true })
 
-        console.log("LH6")
         if (this.sendData(this.cmd.LSMI_LOGIN_REQ, loginData)) {
-            console.log("LH7")
             this.startLoginingTimer()
         }
     }
@@ -187,14 +184,12 @@ export class LoginCenter extends LoginMainInetMsg {
         login_type: number,
         code: string,
     }, callback?: (bSuccess: boolean, response: any) => void) {
-        console.log("LH0",httpConfig.path_pay + "api/user/login")
         app.http.post({
             url: httpConfig.path_pay + "api/user/login",
             params: params,
             callback: (bSuccess, response) => {
                 if (bSuccess) {
                     if (1 == response.code) {
-                        console.log("LH1",response.data.thirdData)
                         callback ?.(bSuccess,response)
                     } else {
                         app.popup.showToast("登录失败:"+response.msg);
@@ -211,40 +206,37 @@ export class LoginCenter extends LoginMainInetMsg {
         let self = this
         fw.print("loginCenter:loginAccount")
         this.m_eLoginType = LOGINTYPE.WEIXIN
-        this.loginToServer()
  
-        // this.m_strLoginMachineName = app.native.device.getMachineName()
-        // this.m_strLoginBuffHD = app.native.device.getHDID()
-        // this.m_strLoginUUID = app.native.device.getUUID()
+        this.m_strLoginMachineName = app.native.device.getMachineName()
+        this.m_strLoginBuffHD = app.native.device.getHDID()
+        this.m_strLoginUUID = app.native.device.getUUID()
         
-        // var callback = function(bSuccess: boolean, response: any){
-        //     this.m_strToken = response.data.token
-        //     this.m_strSessionKey = response.data.thirdData.sessionKey
-        //     this.m_strOpenId = response.data.thirdData.openid
-        //     this.m_bReg = response.data.isRegister
-        //     this.loginToServer()
-        // }.bind(this)
-        // var params = {
-        //     channel_id: fw.DEBUG.sChannelID,
-        //     login_type: this.m_eLoginType,
-        //     code: "",
-        // }
-        // console.log("LH3")
-        // wx.login({
-        //     success (res) {
-        //         if (res.code) {
-        //             //发起网络请求
-        //             params.code = res.code
-        //             console.log("LH4",params)
-        //             self.loginByPhp(params,callback)
-        //         } else {
-        //             console.log('登录失败！' + res.errMsg)
-        //         }
-        //     },
-        //     fail (res) {
-        //         console.log('无法微信登录：' + res.errMsg )
-        //     }
-        // })
+        var callback = function(bSuccess: boolean, response: any){
+            this.m_strToken = response.data.token
+            this.m_strSessionKey = response.data.thirdData.sessionKey
+            this.m_strOpenId = response.data.thirdData.openid
+            this.m_bReg = response.data.isRegister
+            this.loginToServer()
+        }.bind(this)
+        var params = {
+            channel_id: fw.DEBUG.sChannelID,
+            login_type: this.m_eLoginType,
+            code: "",
+        }
+        wx.login({
+            success (res) {
+                if (res.code) {
+                    //发起网络请求
+                    params.code = res.code
+                    self.loginByPhp(params,callback)
+                } else {
+                    console.log('登录失败！' + res.errMsg)
+                }
+            },
+            fail (res) {
+                console.log('无法微信登录：' + res.errMsg )
+            }
+        })
     }
 
 
@@ -359,7 +351,6 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     OnRecv_LoginAttrNtf(dict: proto.client_proto.LoginAttrNtf) {
-        console.log("lh9",dict)
         center.user.setLoginActor(dict)
         this.loginPlaza()
     }
@@ -467,7 +458,6 @@ export class LoginCenter extends LoginMainInetMsg {
     }
     /**停止登录定时器 */
     stopLoginingTimer() {
-        console.log("lH10")
         clearTimeout(this.nShedulerLogining);
         this.nShedulerLogining = null;
     }

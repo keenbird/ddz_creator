@@ -645,7 +645,7 @@ export class FWFileManager extends (fw.FWComponent) {
         //serverPicID可能是userID
         if (typeof (data.serverPicID) == `number`) {
             if (type == DOWN_IMAGE_TYPE.Head) {
-                data.bundleResConfig = fw.BundleConfig.resources.res[`ui/head/img/atlas/LM_touxiang_${data.serverPicID % 30 + 1}/spriteFrame`];
+                data.bundleResConfig = fw.BundleConfig.plaza.res[`head/TX_moren_${data.serverPicID % 5 + 1}/spriteFrame`];
             } else {
                 data.serverPicID = `${data.serverPicID}`;
             }

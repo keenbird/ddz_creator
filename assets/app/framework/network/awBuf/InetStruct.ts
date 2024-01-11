@@ -1031,7 +1031,6 @@ export class InetStruct {
     }
     WriteStructToByteStream(pStruct: SStruct, pMember: SMember, pStream: SInetByteStream, tab) {
         var s = pStruct.mapStructName.get(pMember.strName)
-        console.log("LH3333",s)
         let pSubStruct = this.m_mapStruct.get(s);
         if (pSubStruct == null) {
             fw.printError(`write: error struct:'${pStruct.mapStructName.get(pMember.strName)}' didn't find`);

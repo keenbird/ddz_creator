@@ -70,7 +70,7 @@ export class player_Landlord extends player_GameBase {
             }
             const player = this.Items[`node_player_${i}`];
             if (player) {
-                player.active = true;
+                player.active = false;
                 player.Items.btn_open_userinfo.onClickAndScale(() => {
                     //自己不处理
                     if (i == yx.func.getClientChairIDByServerChairID(yx.internet.nSelfChairID)) {
@@ -105,16 +105,18 @@ export class player_Landlord extends player_GameBase {
         this.setPlayerCartoonVisible(null, false );
         //隐藏所有玩家气泡
         this.setPlayerChatBubble(null, false );
+        //隐藏所有玩家托管状态
+        this.setPlayerTrusteeship(null, false );
         
         //------------test----------------//    
-        this.setPlayerCartoonVisible(null, true , 2);
-        this.scheduleOnce(() => {
-            this.setPlayerCartoonVisible(null, true , 1);
-        },3)
+        // this.setPlayerCartoonVisible(null, true , 2);
+        // this.scheduleOnce(() => {
+        //     this.setPlayerCartoonVisible(null, true , 1);
+        // },3)
         
-        this.scheduleOnce(function(){
-            this.setPlayerDizhuVisible(0,true)
-        }, 5);
+        // this.scheduleOnce(function(){
+        //     this.setPlayerDizhuVisible(0,true)
+        // }, 5);
         //------------test----------------//
 
         // //隐藏部分简单界面
@@ -122,7 +124,7 @@ export class player_Landlord extends player_GameBase {
             const player = this.getPlayerNode({ nChairID: nChairID });
             if (player) {
                 player.Items.Image_dizhu_icon.active = false;
-                player.Items.node_trusteeship.active = false;
+                // player.Items.node_trusteeship.active = false;
             }
         }
     }
@@ -344,6 +346,50 @@ export class player_Landlord extends player_GameBase {
             }
             
             
+        }
+        if (fw.isNull(nChairID)) {
+            for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
+                func(k);
+            }
+        } else {
+            func(nChairID);
+        }
+    }
+    //以扣减的方式处理对家牌数
+    setPlayerCardNumVisibleBySudCardNum(nChairID: number, bVisible: boolean, subcardNum?: number, noBaojin?: boolean) {
+        let self = this
+
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+
+        var node : ccNode
+        if(ClientChairID != 0){
+            const player = this.getPlayerNode({ nChairID: nChairID });
+            if (player ) {
+                node =  player.Items.Sprite_SurplusCard
+                let cardNum = app.func.toNumber(node.Items.BMFont_SurplusValue.string) - subcardNum
+                this.setPlayerCardNumVisible(nChairID,bVisible,cardNum,noBaojin)
+            }
+        }
+       
+    }
+    //隐藏所有玩家托管状态
+    setPlayerTrusteeship(nChairID: number, bVisible: boolean) {
+        let self = this 
+        let func = (nChairIDEx: number) => {
+            let showFun = (TrusteeshipNode :ccNode) => {
+                TrusteeshipNode.active = bVisible
+                
+            }
+            const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
+
+            var node : ccNode
+            if(ClientChairID != 0){
+                const player = this.getPlayerNode({ nChairID: nChairIDEx });
+                if (player ) {
+                    node =  player.Items.node_trusteeship
+                    showFun(node)
+                }
+            }
         }
         if (fw.isNull(nChairID)) {
             for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
