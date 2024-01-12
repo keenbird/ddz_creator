@@ -1,0 +1,13 @@
+{
+  "ver": "1.1.43",
+  "importer": "prefab",
+  "imported": true,
+  "uuid": "d1bc5fe1-1ebe-44f3-9089-2d2c64d50440",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "syncNodeName": "tx_ddz_settlement_fail_bg"
+  }
+}

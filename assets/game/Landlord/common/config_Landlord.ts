@@ -232,7 +232,7 @@ export class config_Landlord extends config_GameBase {
     OUT_CARD_SIZE = new Size(107, 141)
 
     /* 动作条状态 */
-    ActionBarStatus : {
+    ActionBarStatus = {
         /* 叫地主状态(不叫 or 叫地主) */
         ActionBarStatus_CallLandlord : 0x20,
         /* 抢地主状态(不抢 or 抢地主) */
@@ -254,8 +254,9 @@ export class config_Landlord extends config_GameBase {
         /* 掩码 */
         ActionBarStatus_Mask : 0xF0
     }
+
     /* 空闲动作条状态 */
-    FreeActionBarStatus : {
+    FreeActionBarStatus = {
         /* 只有开始游戏 */
         FreeActionBarStatus_Start : 0x10,
         /* 可换桌可准备 */

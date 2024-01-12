@@ -70,7 +70,7 @@ export class player_Landlord extends player_GameBase {
             }
             const player = this.Items[`node_player_${i}`];
             if (player) {
-                player.active = false;
+                player.active = true;
                 player.Items.btn_open_userinfo.onClickAndScale(() => {
                     //自己不处理
                     if (i == yx.func.getClientChairIDByServerChairID(yx.internet.nSelfChairID)) {

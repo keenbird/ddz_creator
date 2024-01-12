@@ -144,28 +144,52 @@ export class main_Landlord extends main_GameBase {
         //--------------test-------------//
         // this.scheduleOnce(function(){
             // this.didReceiveSendCard()
-            // this.showBasePool(true);
-            // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            //     cardtype : yx.config.OutCardType.Sequence,
-            //     outchair : 1
-            // }
-            // this.didReceiveOutCard(data)
-            // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            //     cardtype : yx.config.OutCardType.Sequence,
-            //     outchair : 2
-            // }
-            // this.didReceiveOutCard(data2)
-            // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
-            // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
-            // this.scheduleOnce(function(){
-            //     // this.showLastThreeCardAndMove([78,79,50],0)
-            //     // this.showDipaiBieshu(true,true,3)
+            this.showBasePool(true);
+            let data:proto.client_proto_ddz.IDDZ_S_OutCard={
+                outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+                cardtype : yx.config.OutCardType.Sequence,
+                outchair : 1
+            }
+            this.didReceiveOutCard(data)
+            let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+                outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+                cardtype : yx.config.OutCardType.Bomb,
+                outchair : 2
+            }
+            this.didReceiveOutCard(data2)
+            this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            this.scheduleOnce(function(){
+                // this.showLastThreeCardAndMove([78,79,50],0)
+                // this.showDipaiBieshu(true,true,3)
                 
-            //     // this.showXbeiAni(3,15)
-            //     // this.didReceiveMingpai()
-            // }, 4);
+                // this.showXbeiAni(3,15)
+                // this.didReceiveMingpai()
+                let dataSeettle:proto.client_proto_ddz.IDDZ_S_GameEnd = {
+                    handcards:[
+                        {
+                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+                        },
+                        {
+                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+                        },
+                        {
+                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+                        },
+                    ],
+                    settleinfo:{
+                        toptimes:[999999,8888,77777],
+                        golds:[999999,-555555,-444444],
+                        broke:[false,false,false],
+                        toplimit:[true,false,false],
+                        baopei:[false,false,true],
+                        doubletimes:[1,2,4],
+                        flag: 1
+                    }
+                }
+                yx.internet.nSelfChairID = 0
+                this.DDZ_S_GAMEEND(dataSeettle)
+            }, 2);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
@@ -904,6 +928,20 @@ export class main_Landlord extends main_GameBase {
         var mingpaiParent:ccNode = this.player.getMingpaiParent(nChairID,true)
 
         const tScale = 0.4
+        for(var i=0;i<cardData.length;i++){
+            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_OutCard)
+            card.setScale(new Vec3(tScale,tScale,tScale))
+            mingpaiParent.addChild(card)
+            card.setPosition(posVecs[i])
+        }
+    }
+    //展示摊牌
+    didReceiveTanpai(nChairID:number,cardData:number[]){
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+        var posVecs = yx.func.getCardPositionForOutCard(ClientChairID,cardData.length)
+        var mingpaiParent:ccNode = this.player.getOutCardParent(nChairID,true)
+
+        const tScale = yx.config.CARD_SCALE_OUT_CARDS
         for(var i=0;i<cardData.length;i++){
             var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_OutCard)
             card.setScale(new Vec3(tScale,tScale,tScale))
@@ -1799,7 +1837,157 @@ export class main_Landlord extends main_GameBase {
             this.DDZ_S_MSG_TIPS(operateData,bdouble)
         }
     }
+
     DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
+
+        //展示春天/反春天
+        let showSpringAni = (type:number,callback?:Function)=>{
+            let aniName = type == 1 ? "effect_spring" : "effect_spring_pposite"
+            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
+                let aniNode = instantiate(res);
+                if(!fw.isNull(aniNode)){
+                    this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
+                    var tScale = yx.config.changeOldResScale
+                    aniNode.scale = v3(tScale, tScale, tScale)
+                    const a = aniNode.getComponent(Animation);
+
+                    a.play(aniName);
+                    a.on(Animation.EventType.FINISHED, () => {
+                        aniNode.removeFromParent(true)
+                        callback?.()
+                    });
+                }
+            });
+        } 
+        //展示斗地主/农民结算小动画
+        let showLoseWin = (callback?:Function)=>{
+            let aniName = `node_${yx.internet.isSelfLandlord() ? `landlord` : `famer` }_${data.settleinfo.golds[yx.internet.nSelfChairID] > 0 ? `win` : `lose`}`
+            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
+                let aniNode = instantiate(res);
+                if(!fw.isNull(aniNode)){
+                    this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
+                    var tScale = yx.config.changeOldResScale
+                    aniNode.scale = v3(tScale, tScale, tScale)
+                    const a = aniNode.getComponent(Animation);
+
+                    a.play(aniName);
+                    a.on(Animation.EventType.FINISHED, () => {
+                        aniNode.removeFromParent(true)
+                        callback?.()
+                    });
+                }
+            });
+        } 
+        //摊牌以及展示结算流水
+        let showTanpaiAndCoin =  (callback?:Function)=>{
+            for(let i=0;i<yx.internet.nMaxPlayerCount;i++){
+                this.player.setSettlementScoreVisible(i,true,data.settleinfo.golds[i],true)
+                let logicChair = yx.func.getClientChairIDByServerChairID(i)
+                if(logicChair != 0){
+                    this.didReceiveTanpai(i,data.handcards[i].data)
+                    this.player.getMingpaiParent(logicChair,true)
+                }
+            }
+            this.scheduleOnce(()=>{
+                callback?.()
+            },2)
+        } 
+        if(data.settleinfo.flag > 0){
+            showTanpaiAndCoin()
+            showSpringAni(data.settleinfo.flag,()=>{
+                showLoseWin(()=>{
+                    this.showSettleLayout(data.settleinfo)
+                })
+            })
+        }else{
+            showTanpaiAndCoin(()=>{
+                showLoseWin(()=>{
+                    this.showSettleLayout(data.settleinfo)
+                })
+            })
+        }
+    }
+
+    showSettleLayout(data: proto.client_proto_ddz.IDDZSettle) {
+        let self = this
+        let isWin = data.golds[yx.internet.nSelfChairID] > 0
+        let aniName = `node_settlement_${isWin ? `win` : `fail`}`
+        let aniBgName = `tx_ddz_settlement_${isWin ? `win` : `fail`}_bg`
+        let txtColor = app.func.color(255, 255, 255, 255)
+
+        let signNumber = function(number):string{
+            let tempStr = ''
+            if(number >= 0){
+                tempStr = "+" + app.func.FormatNumber(number)
+            }else{
+                tempStr = "-" + app.func.FormatNumber(Math.abs(number))
+            }
+            return tempStr
+        }
+        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/`+aniName], (res: Prefab) => {
+            let aniNode = instantiate(res);
+            if(!fw.isNull(aniNode)){
+                this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
+                var tScale = 1
+                aniNode.scale = v3(tScale, tScale, tScale)
+                const a = aniNode.getComponent(Animation);
+                aniNode.name = "settleLayout"
+                a.play(aniName);
+                
+                let FileNode_TitleBarBG = aniNode.Items.FileNode_TitleBarBG
+                const b = FileNode_TitleBarBG.getComponent(Animation);
+                b.play(aniBgName);
+                b.on(Animation.EventType.FINISHED, () => {
+                    b.play(aniBgName);
+                });
+
+                let btn_settle_start = aniNode.Items.btn_settle_start
+                const c = btn_settle_start.getComponent(Animation);
+                c.play(`tx_ddz_jiesuan_anniu`);
+                c.on(Animation.EventType.FINISHED, () => {
+                    c.play(`tx_ddz_jiesuan_anniu`);
+                });
+
+                aniNode.Items.Sprite_PlayBtn_new.onClickAndScale(() => {
+                    //再来一局
+                });
+
+                aniNode.Items.Sprite_CloseBtn.onClickAndScale(() => {
+                    //关闭
+                    aniNode.removeFromParent(true)
+                    self.showStartGameBtn(yx.config.FreeActionBarStatus.FreeActionBarStatus_ChangeAndReady)
+                });
+
+                for(let i=0;i<yx.internet.nMaxPlayerCount;i++){
+                    let logicChair = yx.func.getClientChairIDByServerChairID(i)
+                    let node_cell = aniNode.Items[`node_cell_`+logicChair]
+                    if(isWin){
+                        txtColor = i==0 ? app.func.color(233, 102, 56, 255) : app.func.color(171, 115, 98, 255)
+                    }else{
+                        txtColor = i==0 ? app.func.color(47, 169, 255, 255) : app.func.color(101, 103, 135, 255)
+                    }
+                    node_cell.Items.Text_Nick.obtainComponent(Label).color = txtColor
+                    node_cell.Items.Text_FinalMutiple.obtainComponent(Label).color = txtColor
+                    node_cell.Items.Text_CurrencyFluctuation.obtainComponent(Label).color = txtColor
+
+                    //地主身份
+                    node_cell.Items.DDZ_dizhubiaoshi_1.active = yx.internet.landlordSeat == i
+                    //是否加倍
+                    node_cell.Items.Image_double.active = data.doubletimes[i] > 1
+                    //是否破产
+                    node_cell.Items.Sprite_Bankrupt.active = data.broke[i] 
+                    //是否包赔
+                    node_cell.Items.Node_FullCompensation.active = data.baopei[i] 
+                    //是否封顶
+                    node_cell.Items.Node_Limit.active = data.toplimit[i] 
+                    //倍数
+                    node_cell.Items.Text_FinalMutiple.string = data.toptimes[i] +""
+                    //货币增减
+                    node_cell.Items.Text_CurrencyFluctuation.string = signNumber(data.golds[i] ) 
+                }
+            }
+        });
+        
     }
 
     //-----------------------------老代码 ------------------------------------//

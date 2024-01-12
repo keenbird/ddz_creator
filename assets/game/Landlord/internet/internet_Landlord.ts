@@ -37,6 +37,8 @@ export class internet_Landlord extends internet_GameBase {
     toppoint: number = 0
     /**是否明牌 */
     bMingpai: boolean[] = [false,false,false]
+    /**当局地主座位号 */
+    landlordSeat: number = -1
     /**上个人出的牌 */
     m_MaxCardInfo={
         cardData : [],
@@ -290,6 +292,7 @@ export class internet_Landlord extends internet_GameBase {
     }
     DDZ_S_MSG_CALL_END(data: proto.client_proto_ddz.IDDZ_S_CallEnd) {
         this.nGameState = yx.config.GameState.CALLPOINT;
+        this.landlordSeat = data.bankerchair
     }
     DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double) {
         this.nGameState = yx.config.GameState.DOUBLE;
@@ -325,6 +328,10 @@ export class internet_Landlord extends internet_GameBase {
             this.bMingpai = data.bshow
         }
 
+        if(this.nGameState >= yx.config.GameState.DOUBLE){
+            this.landlordSeat = data.bankerchair
+        }
+
         if(data.busememory){
             this.cardRecordData = data.recordindex
         }
@@ -346,6 +353,14 @@ export class internet_Landlord extends internet_GameBase {
         
     }
 
+    isSelfLandlord():boolean {
+        let isLandlord = false
+        if(this.landlordSeat != -1){
+            isLandlord = this.landlordSeat == this.nSelfChairID
+        }
+        return isLandlord
+    }
+
     //初始化游戏数据
     cleanLocalData() {
         this.m_MaxCardInfo.cardData = []
@@ -355,6 +370,7 @@ export class internet_Landlord extends internet_GameBase {
         this.cardRecordData = []
         this.toppoint = 0
         this.bMingpai= [false,false,false]
+        this.landlordSeat = -1
     }
   
 

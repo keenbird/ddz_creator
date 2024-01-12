@@ -1,4 +1,4 @@
-import { isValid, Label, Overflow, sys, Node as ccNode } from "cc";
+import { isValid, Label, Overflow, sys, Node as ccNode,js } from "cc";
 
 import dayjs from "dayjs";
 import { DesignResolutionSize } from "../../config/ConstantConfig";
@@ -863,6 +863,29 @@ export class FWFunctionCommon extends (fw.FWComponent) {
         }
         return l.string
     }
+
+    FormatNumber(num: number, noFloat?: number): string {
+        let JinBiNum = num;
+        let str = "";
+        let jinbi = 0;
+        let n = noFloat ?? 1;
+        let fmt = `%.${n}f`;
+      
+        if (Math.abs(JinBiNum) >= 10000 && Math.abs(JinBiNum) <= 99999999) {
+          jinbi = Math.floor(JinBiNum / 10000);
+          str = jinbi.toFixed(0) + "万";
+        } else if (Math.abs(JinBiNum) > 99999999 && Math.abs(JinBiNum) <= 999999999999) {
+          jinbi = Math.floor(JinBiNum / 100000000);
+          str = jinbi.toFixed(0) + "亿";
+        } else if (Math.abs(JinBiNum) > 999999999999) {
+          jinbi = Math.floor(JinBiNum / 1000000000000);
+          str = jinbi.toFixed(0) + "万亿";
+        } else {
+          str = num.toString();
+        }
+      
+        return str;
+      }
 }
 
 export function randomInt(s: number, e?: number) {
