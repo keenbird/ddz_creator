@@ -66,6 +66,7 @@ export class func_Landlord extends func_GameBase {
         a.stop()
         if(isPlay){
             a.play(`clock`);
+            yx.main.sound.playClockEffect()
         }
     }
     
@@ -270,6 +271,8 @@ export class func_Landlord extends func_GameBase {
         }
         return card
     }
+
+    
 
 }
 

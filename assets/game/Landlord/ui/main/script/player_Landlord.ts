@@ -384,7 +384,20 @@ export class player_Landlord extends player_GameBase {
                 this.setPlayerCardNumVisible(nChairID,bVisible,cardNum,noBaojin)
             }
         }
-       
+    }
+    //获取对家牌数
+    getCardNum(nChairID:number):number {
+        let self = this
+        let num = 20
+        const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
+
+        if(ClientChairID != 0){
+            const player = this.getPlayerNode({ nChairID: nChairID });
+            if (player ) {
+                num = app.func.toNumber(player.Items.BMFont_SurplusValue.string) 
+            }
+        }
+        return num
     }
     //隐藏所有玩家托管状态
     setPlayerTrusteeship(nChairID: number, bVisible: boolean) {

@@ -2503,7 +2503,115 @@ export class logic_Landlord extends (fw.FWComponent) {
 	GetCardColorShape(cbCardData:number) {
 		return cbCardData &  yx.config.CARD_COLOR_MASK
 	}
+
+	isSpecialBomb(nCardType:number,bTopSequence:boolean, lastMaxCard:any) {
+		var result = false
+		var nType  = lastMaxCard.nType
+		if(nCardType == yx.config.OutCardType.Bomb){
+			if(bTopSequence){
+				result = true
+			}else if(nType == yx.config.OutCardType.Sequence_Of_Pairs && (lastMaxCard.cardCount / 2) > 5){
+				result = true
+			}else if(nType == yx.config.OutCardType.Sequence_Of_Pairs && (lastMaxCard.cardCount / 2) > 5){
+				result = true
+			}else if((nType == yx.config.OutCardType.Triplet || nType == yx.config.OutCardType.Triplet_Attached_Card || nType == yx.config.OutCardType.Triplet_Attached_Pair) && 
+			this.GetCardLogicValue(lastMaxCard.cardData[0]) >= 0x0D){
+				result = true
+			}else if(nType == yx.config.OutCardType.Double && this.GetCardLogicValue(lastMaxCard.cardData[0]) >= 0x0E){
+				result = true
+			}else if(nType == yx.config.OutCardType.Quadplex_Attached_Two_Cards  || nType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs){
+				result = true
+			}else if(nType == yx.config.OutCardType.Sequence_Of_Triplets  || nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards || nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+				result = true
+			}
+		}else if(nCardType == yx.config.OutCardType.Bomb){
+			result = true
+		}
+
+		return true
+	}
+
+	isShutCardType(cardData:number[],count:number, cardType:number) {
+		var result = false
+		var isContainA = false
+		for(var i =0;i<cardData.length;i++){
+			if(this.GetCardFaceValue(cardData[i]) == 0x01){
+				isContainA = true
+			}
+		}
+		if( (cardType == yx.config.OutCardType.Single && cardData[0] == 0x4F) ||
+		(cardType == yx.config.OutCardType.Single && cardData[0] == 0x4E)||
+		(cardType == yx.config.OutCardType.Sequence && this.GetCardFaceValue(cardData[0]) == 0x01) || 
+		(cardType == yx.config.OutCardType.Double && this.GetCardFaceValue(cardData[0]) == 0x02) ||
+		((cardType == yx.config.OutCardType.Triplet || cardType == yx.config.OutCardType.Triplet_Attached_Card ||cardType == yx.config.OutCardType.Triplet_Attached_Pair ) && this.GetCardFaceValue(cardData[1]) == 0x02)||
+		((cardType == yx.config.OutCardType.Sequence_Of_Triplets ||cardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards || cardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs ||cardType == yx.config.OutCardType.Sequence_Of_Pairs ) && isContainA)||
+		(cardType == yx.config.OutCardType.Sequence_Of_Pairs && (count / 2) >= 5)){
+			result = true
+		}
+		if(cardType == yx.config.OutCardType.Rocket){
+			result = true
+		}
+		return result
+	}
 	
+	isSmallCard():boolean {
+		var result = false
+		var lastMaxCard = yx.internet.m_MaxCardInfo
+		if((lastMaxCard.nType == yx.config.OutCardType.Single || lastMaxCard.nType == yx.config.OutCardType.Double) && this.GetCardLogicValue(lastMaxCard.cardData[0]) < 10){
+			result = true
+		}
+		return result
+	}
+
+	isPlayAffordSound(bNewTurn:boolean):[boolean,number] {
+		var result = false
+		var nType = 0
+		var maxCardInfo = yx.internet.m_MaxCardInfo
+		var isContainA = false
+		for(var i =0;i<maxCardInfo.cardData.length;i++){
+			if(this.GetCardFaceValue(maxCardInfo.cardData[i]) == 0x01){
+				isContainA = true
+			}
+		}
+
+		if (((maxCardInfo.nType == yx.config.OutCardType.Single && maxCardInfo.cardData[1] == 0x4F)  //大王
+			|| (maxCardInfo.nType == yx.config.OutCardType.Sequence && this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x01) //通天顺
+			|| (maxCardInfo.nType == yx.config.OutCardType.Double && this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02) //对2
+			|| ((maxCardInfo.nType == yx.config.OutCardType.Triplet 
+			|| maxCardInfo.nType == yx.config.OutCardType.Triplet_Attached_Card
+			|| maxCardInfo.nType == yx.config.OutCardType.Triplet_Attached_Pair) 
+			&& this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02)  //三个2
+			|| ((maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Cards 
+			|| maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs)
+			&& this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02) //四个2
+			|| ((maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets 
+			|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards 
+			|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs
+			|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Pairs)
+			&& isContainA) //带A的飞机、带A的连对
+			|| (maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Pairs && (maxCardInfo.cardCount / 2) >= 5)) //双顺
+		&& ! bNewTurn ){
+			result = true
+			nType = 1
+
+			if( Math.random() <= 0.5 ){
+				result = false
+			}
+
+		}else if( (maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Pairs
+				|| maxCardInfo.nType == yx.config.OutCardType.Sequence
+				|| maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Cards
+				|| maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs 
+				|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets 
+				|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards 
+				|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs)
+			&& ! bNewTurn ){
+			result = true
+			nType = 2
+		}
+		return [result,nType]
+	}
+
 	AnalysebCardData(cbCardData:number[],cbCardCount:number) {
 		var AnalyseResult = this.createTagAnalyseResultEx()
 		var i = 0

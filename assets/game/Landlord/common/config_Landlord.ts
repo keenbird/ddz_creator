@@ -266,6 +266,43 @@ export class config_Landlord extends config_GameBase {
         /* 掩码 */
         FreeActionBarStatus_Mask : 0xF0
     }
+
+    ActionEvent = {
+        //无操作
+        Default : 0x00,
+        //准备
+        Ready : 0x10,
+        //叫地主
+        CallPositive : 0x21,
+        //不叫
+        CallNegative : 0x22,
+        //叫1分
+        CallOnePoint : 0x23,
+        //叫2分
+        CallTwoPoint : 0x24,
+        //叫3分
+        CallThreePoint : 0x25,
+        //抢地主
+        GrabPositive : 0x31,    
+        //不抢
+        GrabNegative : 0x32,
+        //加倍
+        DoublePositive : 0x41,
+        //不加倍
+        DoubleNegative : 0x42,    
+        //超级加倍
+        DoubleSuper : 0x43,
+        //Pass
+        Pass : 0x52,
+        //要不起
+        CanNotAfford : 0x60,
+    }
+
+    SpringType = {
+        spring          : 1,    //春天             
+        antiSpring      : 2,    //反春
+        beSpring        : 3     //被春天
+    }
 }
 
 /**牌花色 */

@@ -10,6 +10,7 @@ import { DF_RATE, DF_SYMBOL } from '../../../../../app/config/ConstantConfig';
 import { main_GameBase } from '../../../../GameBase/ui/main/script/main_GameBase';
 import { boolean } from '../../../../../../engine/cocos/core/data/class-decorator';
 import { logic_Landlord } from './logic_Landlord';
+import { landlordSoundInitData, sound_Landlord } from '../../../../Landlord/common/sound_Landlord';
 
 @ccclass('main_Landlord')
 export class main_Landlord extends main_GameBase {
@@ -21,6 +22,8 @@ export class main_Landlord extends main_GameBase {
     player: player_Landlord = null
     /**logic */
     logic: logic_Landlord = new logic_Landlord
+    /**sound */
+    sound: sound_Landlord = new sound_Landlord
     /**玩家手牌数据 */
     m_HandCardData: any[];
     /**玩家手牌Node */
@@ -36,6 +39,7 @@ export class main_Landlord extends main_GameBase {
     m_SearchResult:any;   //搜索可出的牌型
     m_cbHitCount:number = 0; //搜索可出的牌型数量
     m_cbTipIndex:number = 0; //搜索的引数
+    m_bFirstRound:boolean = false //是否首出
     protected initData(): boolean | void {
         this.m_HandCardData = []
         this.m_HandCardNode = []
@@ -147,16 +151,16 @@ export class main_Landlord extends main_GameBase {
             this.showBasePool(true);
             let data:proto.client_proto_ddz.IDDZ_S_OutCard={
                 outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-                cardtype : yx.config.OutCardType.Sequence,
+                cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
                 outchair : 1
             }
             this.didReceiveOutCard(data)
-            let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
-                outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-                cardtype : yx.config.OutCardType.Bomb,
-                outchair : 2
-            }
-            this.didReceiveOutCard(data2)
+            // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     cardtype : yx.config.OutCardType.Bomb,
+            //     outchair : 2
+            // }
+            // this.didReceiveOutCard(data2)
             this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             this.scheduleOnce(function(){
@@ -847,8 +851,63 @@ export class main_Landlord extends main_GameBase {
                 this.didReceiveMingpai(nChairID,tempCache)
             }
         }
+
+        var bTopSequence = (cardType == yx.config.OutCardType.Sequence && this.logic.GetCardFaceValue(cardData[0]) == 0x01)
+        var bNewTurn = (yx.internet.m_MaxCardInfo.cbChairID == nChairID || yx.internet.m_MaxCardInfo.cbChairID == -1)
+        var bSecondBomb = (cardType == yx.config.OutCardType.Bomb ||  cardType == yx.config.OutCardType.serial_bomb) 
+        var isTeam = yx.internet.m_MaxCardInfo.cbChairID != yx.internet.landlordSeat && nChairID != yx.internet.landlordSeat &&  ! bNewTurn //上个打牌的是否是队友
+        var bSpecialBomb = ! bNewTurn && this.logic.isSpecialBomb(cardType, bTopSequence, yx.internet.m_MaxCardInfo)  //如果是新一轮 出牌这个就不属于炸其他牌型
+        var isShutCardType = this.logic.isShutCardType(cardData, cardData.length, cardType)
+        let leaveHandCardNum = 20
+        if(ClientChairID != 0){
+            leaveHandCardNum = this.player.getCardNum(nChairID)
+            if(leaveHandCardNum <= 6 && cardData.length > 6){
+                isShutCardType = true
+            }
+        }else{
+            leaveHandCardNum = this.m_HandCardNode.length
+        }
+        //处理音效
         
-        this.ShowOutCard(nChairID,cardData,cardType)
+        if(isShutCardType){
+            this.sound.playShutCardSound()
+        }else{
+            this.sound.playDiscard()
+        }
+        let  [bPlayAfford, nType] = this.logic.isPlayAffordSound(bNewTurn)
+        if(bPlayAfford){
+            let soundData:landlordSoundInitData = {
+                // pActor : player:getActor(),
+                tag : nType,
+            }
+            this.sound.playOutCardSound(soundData)
+        }else{
+            let soundData:landlordSoundInitData = {
+                bFirstRound : this.m_bFirstRound ,
+                nCardType : cardType,
+                cbCardData : cardData,
+                nCount : cardData.length,
+                // pActor : player:getActor(),
+                bTopSequence : bTopSequence,
+                bSecondBomb : bSecondBomb,
+                bSpecialBomb : bSpecialBomb,
+                isTeam : isTeam
+            }
+            this.sound.playCardTypeSound(soundData)
+        }
+
+        if(leaveHandCardNum <= 2 && leaveHandCardNum > 0){
+            this.scheduleOnce(()=>{
+                let soundData:landlordSoundInitData = {
+                    // pActor : player:getActor(),
+                    nCount : leaveHandCardNum,
+                }
+                this.sound.playAlertorSound(soundData)
+            },1)
+        }
+        
+        
+        this.ShowOutCard(nChairID,cardData,cardType,true)
     }
     //重设手牌位置
     resetHandCardPos(){
@@ -865,7 +924,7 @@ export class main_Landlord extends main_GameBase {
         }
     }
     //展示出牌动画
-    ShowOutCard(nChairID:number,cardData:number[],cardType:number){
+    ShowOutCard(nChairID:number,cardData:number[],cardType:number,needAni:boolean){
         const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
         var posVecs = yx.func.getCardPositionForOutCard(ClientChairID,cardData.length)
         var outCardParent:ccNode = this.player.getOutCardParent(nChairID,true)
@@ -876,7 +935,7 @@ export class main_Landlord extends main_GameBase {
             card.setScale(new Vec3(tScale,tScale,tScale))
             outCardParent.addChild(card)
             cardArr.push(card)
-            if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+            if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs && needAni){
                 card.setPosition(ClientChairID == 1 ? (cardData.length >=10 ? posVecs[10 - 1].x :posVecs[cardData.length - 1].x) : posVecs[0].x, posVecs[i].y)
                 tween(card)
                     .to(0.2,{ position:posVecs[i] })
@@ -885,41 +944,42 @@ export class main_Landlord extends main_GameBase {
                 card.setPosition(posVecs[i])
             }
         }
-        //牌堆整体表现
-        if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
-            outCardParent.obtainComponent(UIOpacity).opacity =1 
-            tween(outCardParent.obtainComponent(UIOpacity))
-                .to(0.05,{ opacity:255 })
-                .start()
-        }else if(cardType == yx.config.OutCardType.Bomb || cardType == yx.config.OutCardType.LaiZiBomb || cardType == yx.config.OutCardType.Rocket || cardType == yx.config.OutCardType.serial_bomb){
-            outCardParent.obtainComponent(UIOpacity).opacity =1 
-            tween(outCardParent.obtainComponent(UIOpacity))
-                .to(0.05,{ opacity:255 })
-                .start()
-            tween(outCardParent)
-                .call(() => {
-                    outCardParent.setScale(new Vec3(1.5,1.5,1.5))
-                })
-                .delay(0.05)
-                .to(0.2,{ scale:new Vec3(0.95,0.95,0.95) }, { easing: 'sineOut' })
-                .to(0.1,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
-                .start()
-        } else{
-            outCardParent.obtainComponent(UIOpacity).opacity =1 
-            tween(outCardParent.obtainComponent(UIOpacity))
-                .to(0.05,{ opacity:255 })
-                .start()
-            tween(outCardParent)
-                .call(() => {
-                    outCardParent.setScale(new Vec3(0.8,0.8,0.8))
-                })
-                .delay(0.05)
-                .to(0.2,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
-                .start()
+        if(needAni){
+            //牌堆整体表现
+            if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+                outCardParent.obtainComponent(UIOpacity).opacity =1 
+                tween(outCardParent.obtainComponent(UIOpacity))
+                    .to(0.05,{ opacity:255 })
+                    .start()
+            }else if(cardType == yx.config.OutCardType.Bomb || cardType == yx.config.OutCardType.LaiZiBomb || cardType == yx.config.OutCardType.Rocket || cardType == yx.config.OutCardType.serial_bomb){
+                outCardParent.obtainComponent(UIOpacity).opacity =1 
+                tween(outCardParent.obtainComponent(UIOpacity))
+                    .to(0.05,{ opacity:255 })
+                    .start()
+                tween(outCardParent)
+                    .call(() => {
+                        outCardParent.setScale(new Vec3(1.5,1.5,1.5))
+                    })
+                    .delay(0.05)
+                    .to(0.2,{ scale:new Vec3(0.95,0.95,0.95) }, { easing: 'sineOut' })
+                    .to(0.1,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
+                    .start()
+            } else{
+                outCardParent.obtainComponent(UIOpacity).opacity =1 
+                tween(outCardParent.obtainComponent(UIOpacity))
+                    .to(0.05,{ opacity:255 })
+                    .start()
+                tween(outCardParent)
+                    .call(() => {
+                        outCardParent.setScale(new Vec3(0.8,0.8,0.8))
+                    })
+                    .delay(0.05)
+                    .to(0.2,{ scale:new Vec3(1,1,1) }, { easing: 'sineOut' })
+                    .start()
+            }
+            //牌型特效
+            this.playCardTypeEffect(nChairID,cardType,posVecs)
         }
-        //牌型特效
-        this.playCardTypeEffect(nChairID,cardType,posVecs)
-        
     }
     //展示明牌
     didReceiveMingpai(nChairID:number,cardData:number[]){
@@ -995,6 +1055,10 @@ export class main_Landlord extends main_GameBase {
                         aniNode.removeFromParent(true)
                     });
                     a.play(aniName);
+                    let soundData:landlordSoundInitData = {
+                        nCardType : cardType
+                    }
+                    this.sound.playCardTypeEffect(soundData)
                 }
             });
         }
@@ -1295,6 +1359,7 @@ export class main_Landlord extends main_GameBase {
                                     this.player.setPlayerCardNumVisible(p,true,i+1,true)
                                 }
                             }
+                            this.sound.playSendCard()
                         })
                         .to(unitDelayTime, { position:targetPos })
                         .start();
@@ -1578,6 +1643,7 @@ export class main_Landlord extends main_GameBase {
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_OUT_START: {
                     let logicChair = yx.func.getClientChairIDByServerChairID(data.curchair)
+                    this.m_bFirstRound = data.bFirst
                     if(logicChair == 0){
                         if(data.bFirst){
                             this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_PublicOutCard,data.countdown,null)
@@ -1632,25 +1698,33 @@ export class main_Landlord extends main_GameBase {
         let needAni = isAni == false ? false : true
         //播放叫/抢地主音效
         let content = ""
+        let soundTag = 0
+        let bGrapAgain = false
         switch (data.callcode) {
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_CALL: {
                 content = "不叫"
+                soundTag = yx.config.ActionEvent.CallNegative
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_CALL: {
                 content = "叫地主"
+                soundTag = yx.config.ActionEvent.CallPositive
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_ROB: {
                 content = "不抢"
+                soundTag = yx.config.ActionEvent.GrabNegative
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_1: {
                 content = "抢地主"
+                soundTag = yx.config.ActionEvent.GrabPositive
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_3: {
                 content = "抢地主"
+                soundTag = yx.config.ActionEvent.GrabPositive
+                bGrapAgain = true
                 break;
             }
             default:
@@ -1661,6 +1735,12 @@ export class main_Landlord extends main_GameBase {
             this.player.setPlayerCallStateVisible(data.callchair,true,content)
             if(needAni){
                 this.showXbeiAni(yx.internet.ddzBaseInfo.calltimes,data.toptimes)
+                var soundData:landlordSoundInitData = {
+                    // pActor : player:getActor(),
+                    tag : soundTag,
+                    bGrapAgain: bGrapAgain
+                }
+                this.sound.playOptSound(soundData)
             }
             let logicChair = yx.func.getClientChairIDByServerChairID(data.callchair)
             if(logicChair == 0){
@@ -1678,17 +1758,21 @@ export class main_Landlord extends main_GameBase {
         let needAni = isAni == false ? false : true
         //播放加倍/超级加倍音效
         let content = ""
+        let soundTag = 0
         switch (data.opetimes) {
             case 1: { //不加倍
                 content = "不加倍"
+                soundTag = yx.config.ActionEvent.DoubleNegative
                 break;
             }
             case yx.internet.ddzBaseInfo.doubletimes: { //加倍
                 content = "加倍"
+                soundTag = yx.config.ActionEvent.DoublePositive
                 break;
             }
             case yx.internet.ddzBaseInfo.superdoubletimes: {  //超级加倍
                 content = "超级加倍"
+                soundTag = yx.config.ActionEvent.DoubleSuper
                 break;
             }
             default:
@@ -1696,8 +1780,15 @@ export class main_Landlord extends main_GameBase {
         }
         if(content != ""){
             this.player.setPlayerCallStateVisible(data.opechair,true,content)
-            if(data.opetimes > 1 && needAni){
-                this.showXbeiAni(data.opetimes,data.toptimes)
+            if(needAni){
+                var soundData:landlordSoundInitData = {
+                    // pActor : player:getActor(),
+                    tag : soundTag,
+                }
+                this.sound.playOptSound(soundData)
+                if(data.opetimes > 1){
+                    this.showXbeiAni(data.opetimes,data.toptimes)
+                }
             }
             let logicChair = yx.func.getClientChairIDByServerChairID(data.opechair)
             if(logicChair == 0){
@@ -1718,7 +1809,11 @@ export class main_Landlord extends main_GameBase {
             this.resetActionBar()
         }
         //播放不要音效 //随机的话要和文字配合上
-
+        var soundData:landlordSoundInitData = {
+            // pActor : player:getActor(),
+            bSmall : this.logic.isSmallCard(),
+        }
+        this.sound.playPassSound(soundData)
         this.player.setPlayerCallStateVisible(data.passchair,true,"不要")
             
     }
@@ -1818,7 +1913,7 @@ export class main_Landlord extends main_GameBase {
         if(yx.internet.nGameState == yx.config.GameState.PLAY){
             for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
                 if( reconnData.turncards[i] && reconnData.turncards[i].data.length > 0){
-                    this.ShowOutCard(i,reconnData.turncards[i].data,-1)
+                    this.ShowOutCard(i,reconnData.turncards[i].data,-1,false)
                 }else{
                     if(reconnData.passornull[i]){
                         this.player.setPlayerCallStateVisible(i,true,"不要")
@@ -1856,8 +1951,19 @@ export class main_Landlord extends main_GameBase {
                         aniNode.removeFromParent(true)
                         callback?.()
                     });
+                   
+                    this.sound.playSpringEffect()   
                 }
             });
+            let nType = yx.config.SpringType.beSpring
+            if(data.settleinfo.golds[yx.internet.nSelfChairID] > 0){
+                nType = yx.internet.isSelfLandlord() ?  yx.config.SpringType.spring : yx.config.SpringType.antiSpring
+            }
+            var soundData:landlordSoundInitData = {
+                // pActor : player:getActor(),
+                tag : nType,
+            }
+            this.sound.playSpringSound(soundData)            
         } 
         //展示斗地主/农民结算小动画
         let showLoseWin = (callback?:Function)=>{
@@ -1875,6 +1981,11 @@ export class main_Landlord extends main_GameBase {
                         aniNode.removeFromParent(true)
                         callback?.()
                     });
+                    if(data.settleinfo.golds[yx.internet.nSelfChairID] > 0){
+                        this.sound.playSettleEffect(true)
+                    }else{
+                        this.sound.playSettleEffect(false)
+                    }
                 }
             });
         } 
