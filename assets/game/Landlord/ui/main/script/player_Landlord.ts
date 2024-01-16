@@ -130,7 +130,8 @@ export class player_Landlord extends player_GameBase {
     }
     /**刷新所有玩家 */
     updateAllPlayers() {
-        gameCenter.user.getActors().forEach(element => {
+        let Actors = gameCenter.user.getActors()
+        Actors.forEach(element => {
             this.updateOnePlayer(element.chairID);
         });
     }
@@ -140,16 +141,17 @@ export class player_Landlord extends player_GameBase {
             return;
         }
         const nClientChairID = yx.func.getClientChairIDByServerChairID(nServerChairID);
-        const player = this.Items[`Node_player_${nClientChairID}`];
+        const player = this.Items[`node_player_${nClientChairID}`];
         if (player) {
             const playerInfo = gameCenter.user.getPlayerInfoByChairID(nServerChairID);
             this.actorByClientChairID[nClientChairID] = playerInfo;
             if (playerInfo) {
                 player.active = true;
                 //名称
-                player.Items.player_name.string = `${playerInfo.szName}`;
+                player.Items.player_name.string = `${playerInfo[PROTO_ACTOR.UAT_NICKNAME]}`;
                 //金币
                 player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
+                this.setPlayerCartoonVisible(nServerChairID,true,1)
                 // player.Items.Node_chip.active = nServerChairID == yx.internet.nSelfChairID;
                 //头像
                 // app.file.updateHead({

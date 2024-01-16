@@ -11,6 +11,7 @@ import { main_GameBase } from '../../../../GameBase/ui/main/script/main_GameBase
 import { boolean } from '../../../../../../engine/cocos/core/data/class-decorator';
 import { logic_Landlord } from './logic_Landlord';
 import { landlordSoundInitData, sound_Landlord } from '../../../../Landlord/common/sound_Landlord';
+import { EVENT_ID } from '../../../../../app/config/EventConfig';
 
 @ccclass('main_Landlord')
 export class main_Landlord extends main_GameBase {
@@ -77,6 +78,14 @@ export class main_Landlord extends main_GameBase {
                 this.doReconnect(arg1.data);
             }
         });
+
+        this.bindEvent({
+            eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
+            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
+                this.initTableInfo(arg1.data);
+            }
+        });
+
     }
     protected initBtns(): boolean | void {
         this.Items.btn_cardRecord.onClickAndScale(() => {
@@ -253,6 +262,10 @@ export class main_Landlord extends main_GameBase {
             this.Items["BMFont_CountKey_"+faceNames].string = recorderDada[i+1] ?? 0+""
         }
         
+    }
+    //初始化房间名字和底分
+    initTableInfo(data){
+        this.Items.tableinfo.string = data.roomName + " 底分" + data.roomBase
     }
     //是否展示游戏提示
     showGameTip(type: any){

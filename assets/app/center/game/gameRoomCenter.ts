@@ -181,12 +181,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
     //返回配桌
     OnRecv_ENTER_MATCH_RESP(dict: proto.client_proto.IEnterMatchTableResp) {
-        let pActor = center.user.getActor()
-        pActor.tableID = 1
-        pActor.chairID = 1
-        this.OnMeCreate(pActor)
-
-
+        
         app.popup.showToast({
             nUpdateIntervalTime:dict.waitSec,
             text:"正在匹配牌友...",
@@ -195,11 +190,22 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             }
         })
        
-        
-        // app.event.dispatchEvent({
-        //     eventName: EVENT_ID.EVENT_PLAY_CHAT_MAGICFACE,
-        //     data: data
-        // });
+        let pActor = center.user.getActor()
+        pActor.tableID = 1
+        pActor.chairID = 1
+        app.event.dispatchEvent({
+            eventName: EVENT_ID.EVENT_PLAY_ACTOR_MATCH,
+            data: pActor
+        });
+
+        let data= {
+            roomName : dict.roomName,
+            roomBase : dict.roomBase,
+        }
+        app.event.dispatchEvent({
+            eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
+            data: data
+        });
     }
 
     /**退出配桌 */
@@ -312,11 +318,13 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
     //请求配桌
     sendEnterMatchREQ(room_id: number) {
+        // this.OnRecv_ENTER_MATCH_RESP({
+        //     waitSec : 15,
+        //     roomId : 1
+        // })
         let sData = proto.client_proto.EnterMatchTableReq.create();
         sData.roomId = room_id;
         return this.sendData(this.cmd.RLSMI_ENTER_MATCH_REQ, sData);
-
-       
     }
 
     /**退出桌 */
@@ -469,7 +477,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.m_ActorTableID.set(nActorDBID, nTableID)
                 // 非旁观者和GM才能上桌
                 // if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
-                    this.table[nTableID].sitdown(nChairID, nActorDBID);
+                    // this.table[nTableID].sitdown(nChairID, nActorDBID);
                     app.event.dispatchEvent({
                         eventName: EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
                         dict: {
