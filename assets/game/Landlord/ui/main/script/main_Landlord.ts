@@ -94,10 +94,12 @@ export class main_Landlord extends main_GameBase {
                 yx.internet.DDZ_C_USE_MEMORY({
                     buse:false
                 })
+                app.file.setBooleanForKey(`Use_cardRecorder`, false, { all: false });
             }else{
                 yx.internet.DDZ_C_USE_MEMORY({
                     buse:true
                 })
+                app.file.setBooleanForKey(`Use_cardRecorder`, true, { all: false });
             }
         });
         this.Items.Sprite_rule.onClickAndScale(() => {
@@ -1856,8 +1858,8 @@ export class main_Landlord extends main_GameBase {
         //发牌阶段
         if(yx.internet.nGameState >= yx.config.GameState.SENDCARD){
             this.showBasePool(true);
-            this.showCardRecorder(reconnData.busememory)
-            if(reconnData.busememory){
+            this.showCardRecorder(reconnData.usememory == 1)
+            if(reconnData.usememory == 1){
                this.setCardRecorderData(reconnData.recordindex) 
             }
             for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
@@ -1895,8 +1897,8 @@ export class main_Landlord extends main_GameBase {
         if(yx.internet.nGameState == yx.config.GameState.CALLPOINT){
             for(var i=0;i<reconnData.historycall.length;i++){
                 let callData:proto.client_proto_ddz.IDDZ_S_CallPoint = {
-                    callcode:reconnData.historycall[i][1],
-                    callchair:reconnData.historycall[i][0]
+                    callcode:reconnData.historycall[i],
+                    callchair:reconnData.historychair[i]
                 }
                 this.DDZ_S_MSG_CALL_POINT(callData,false)
                 this.callPointTimes++

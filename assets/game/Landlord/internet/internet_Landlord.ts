@@ -281,6 +281,13 @@ export class internet_Landlord extends internet_GameBase {
     DDZ_S_MSG_SEND_CARD(data: proto.client_proto_ddz.IDDZ_S_SendCard) {
         //调整游戏状态
         this.nGameState = yx.config.GameState.SENDCARD;
+
+        //自动打开记牌器
+        if(app.file.getBooleanForKey(`Use_cardRecorder`, false, { all: false })){
+            this.DDZ_C_USE_MEMORY({
+                buse:true
+            })
+        } 
     }
     DDZ_S_MSG_SHOW_CARD(data: proto.client_proto_ddz.IDDZ_S_ShowCard) {
         this.nGameState = yx.config.GameState.SHOW;
@@ -335,7 +342,7 @@ export class internet_Landlord extends internet_GameBase {
             this.landlordSeat = data.bankerchair
         }
 
-        if(data.busememory){
+        if(data.usememory == 1){
             this.cardRecordData = data.recordindex
         }
         

@@ -306,12 +306,12 @@ $root.client_proto_ddz = (function() {
      * @property {number} DDZ_S_MSG_CALL_POINT=5 DDZ_S_MSG_CALL_POINT value
      * @property {number} DDZ_S_MSG_CALL_END=6 DDZ_S_MSG_CALL_END value
      * @property {number} DDZ_S_MSG_DOUBLE=7 DDZ_S_MSG_DOUBLE value
-     * @property {number} DDZ_S_MSG_OUT_CARD=9 DDZ_S_MSG_OUT_CARD value
-     * @property {number} DDZ_S_MSG_PASS_CARD=10 DDZ_S_MSG_PASS_CARD value
-     * @property {number} DDZ_S_MSG_USE_MEMORY=11 DDZ_S_MSG_USE_MEMORY value
-     * @property {number} DDZ_S_MSG_TRUSTEESHIP=12 DDZ_S_MSG_TRUSTEESHIP value
-     * @property {number} DDZ_S_RECONNECT=13 DDZ_S_RECONNECT value
-     * @property {number} DDZ_S_GAMEEND=14 DDZ_S_GAMEEND value
+     * @property {number} DDZ_S_MSG_OUT_CARD=8 DDZ_S_MSG_OUT_CARD value
+     * @property {number} DDZ_S_MSG_PASS_CARD=9 DDZ_S_MSG_PASS_CARD value
+     * @property {number} DDZ_S_MSG_USE_MEMORY=10 DDZ_S_MSG_USE_MEMORY value
+     * @property {number} DDZ_S_MSG_TRUSTEESHIP=11 DDZ_S_MSG_TRUSTEESHIP value
+     * @property {number} DDZ_S_MSG_RECONNECT=12 DDZ_S_MSG_RECONNECT value
+     * @property {number} DDZ_S_MSG_GAMEEND=13 DDZ_S_MSG_GAMEEND value
      */
     client_proto_ddz.DDZ_SUB_S_MSG_ID = (function() {
         var valuesById = {}, values = Object.create(valuesById);
@@ -323,12 +323,12 @@ $root.client_proto_ddz = (function() {
         values[valuesById[5] = "DDZ_S_MSG_CALL_POINT"] = 5;
         values[valuesById[6] = "DDZ_S_MSG_CALL_END"] = 6;
         values[valuesById[7] = "DDZ_S_MSG_DOUBLE"] = 7;
-        values[valuesById[9] = "DDZ_S_MSG_OUT_CARD"] = 9;
-        values[valuesById[10] = "DDZ_S_MSG_PASS_CARD"] = 10;
-        values[valuesById[11] = "DDZ_S_MSG_USE_MEMORY"] = 11;
-        values[valuesById[12] = "DDZ_S_MSG_TRUSTEESHIP"] = 12;
-        values[valuesById[13] = "DDZ_S_RECONNECT"] = 13;
-        values[valuesById[14] = "DDZ_S_GAMEEND"] = 14;
+        values[valuesById[8] = "DDZ_S_MSG_OUT_CARD"] = 8;
+        values[valuesById[9] = "DDZ_S_MSG_PASS_CARD"] = 9;
+        values[valuesById[10] = "DDZ_S_MSG_USE_MEMORY"] = 10;
+        values[valuesById[11] = "DDZ_S_MSG_TRUSTEESHIP"] = 11;
+        values[valuesById[12] = "DDZ_S_MSG_RECONNECT"] = 12;
+        values[valuesById[13] = "DDZ_S_MSG_GAMEEND"] = 13;
         return values;
     })();
 
@@ -3973,11 +3973,12 @@ $root.client_proto_ddz = (function() {
          * @property {Array.<number>|null} [backcards] DDZ_S_Reconnect backcards
          * @property {number|null} [backtimes] DDZ_S_Reconnect backtimes
          * @property {Array.<boolean>|null} [btrusteeship] DDZ_S_Reconnect btrusteeship
-         * @property {boolean|null} [busememory] DDZ_S_Reconnect busememory
+         * @property {number|null} [usememory] DDZ_S_Reconnect usememory
          * @property {Array.<number>|null} [recordindex] DDZ_S_Reconnect recordindex
          * @property {number|null} [countdown] DDZ_S_Reconnect countdown
          * @property {Array.<boolean>|null} [bshow] DDZ_S_Reconnect bshow
-         * @property {Object.<string,number>|null} [historycall] DDZ_S_Reconnect historycall
+         * @property {Array.<number>|null} [historycall] DDZ_S_Reconnect historycall
+         * @property {Array.<number>|null} [historychair] DDZ_S_Reconnect historychair
          * @property {number|null} [toppoint] DDZ_S_Reconnect toppoint
          * @property {Array.<boolean>|null} [bdouble] DDZ_S_Reconnect bdouble
          * @property {Array.<number>|null} [doubletimes] DDZ_S_Reconnect doubletimes
@@ -4001,7 +4002,8 @@ $root.client_proto_ddz = (function() {
             this.btrusteeship = [];
             this.recordindex = [];
             this.bshow = [];
-            this.historycall = {};
+            this.historycall = [];
+            this.historychair = [];
             this.bdouble = [];
             this.doubletimes = [];
             this.turncards = [];
@@ -4085,12 +4087,12 @@ $root.client_proto_ddz = (function() {
         DDZ_S_Reconnect.prototype.btrusteeship = $util.emptyArray;
 
         /**
-         * DDZ_S_Reconnect busememory.
-         * @member {boolean} busememory
+         * DDZ_S_Reconnect usememory.
+         * @member {number} usememory
          * @memberof client_proto_ddz.DDZ_S_Reconnect
          * @instance
          */
-        DDZ_S_Reconnect.prototype.busememory = false;
+        DDZ_S_Reconnect.prototype.usememory = 0;
 
         /**
          * DDZ_S_Reconnect recordindex.
@@ -4118,11 +4120,19 @@ $root.client_proto_ddz = (function() {
 
         /**
          * DDZ_S_Reconnect historycall.
-         * @member {Object.<string,number>} historycall
+         * @member {Array.<number>} historycall
          * @memberof client_proto_ddz.DDZ_S_Reconnect
          * @instance
          */
-        DDZ_S_Reconnect.prototype.historycall = $util.emptyObject;
+        DDZ_S_Reconnect.prototype.historycall = $util.emptyArray;
+
+        /**
+         * DDZ_S_Reconnect historychair.
+         * @member {Array.<number>} historychair
+         * @memberof client_proto_ddz.DDZ_S_Reconnect
+         * @instance
+         */
+        DDZ_S_Reconnect.prototype.historychair = $util.emptyArray;
 
         /**
          * DDZ_S_Reconnect toppoint.
@@ -4231,8 +4241,8 @@ $root.client_proto_ddz = (function() {
                     writer.bool(message.btrusteeship[i]);
                 writer.ldelim();
             }
-            if (message.busememory != null && Object.hasOwnProperty.call(message, "busememory"))
-                writer.uint32(/* id 10, wireType 0 =*/80).bool(message.busememory);
+            if (message.usememory != null && Object.hasOwnProperty.call(message, "usememory"))
+                writer.uint32(/* id 10, wireType 0 =*/80).int32(message.usememory);
             if (message.recordindex != null && message.recordindex.length) {
                 writer.uint32(/* id 11, wireType 2 =*/90).fork();
                 for (var i = 0; i < message.recordindex.length; ++i)
@@ -4247,36 +4257,45 @@ $root.client_proto_ddz = (function() {
                     writer.bool(message.bshow[i]);
                 writer.ldelim();
             }
-            if (message.historycall != null && Object.hasOwnProperty.call(message, "historycall"))
-                for (var keys = Object.keys(message.historycall), i = 0; i < keys.length; ++i)
-                    writer.uint32(/* id 14, wireType 2 =*/114).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]).uint32(/* id 2, wireType 0 =*/16).int32(message.historycall[keys[i]]).ldelim();
+            if (message.historycall != null && message.historycall.length) {
+                writer.uint32(/* id 14, wireType 2 =*/114).fork();
+                for (var i = 0; i < message.historycall.length; ++i)
+                    writer.int32(message.historycall[i]);
+                writer.ldelim();
+            }
+            if (message.historychair != null && message.historychair.length) {
+                writer.uint32(/* id 15, wireType 2 =*/122).fork();
+                for (var i = 0; i < message.historychair.length; ++i)
+                    writer.int32(message.historychair[i]);
+                writer.ldelim();
+            }
             if (message.toppoint != null && Object.hasOwnProperty.call(message, "toppoint"))
-                writer.uint32(/* id 15, wireType 0 =*/120).int32(message.toppoint);
+                writer.uint32(/* id 16, wireType 0 =*/128).int32(message.toppoint);
             if (message.bdouble != null && message.bdouble.length) {
-                writer.uint32(/* id 16, wireType 2 =*/130).fork();
+                writer.uint32(/* id 17, wireType 2 =*/138).fork();
                 for (var i = 0; i < message.bdouble.length; ++i)
                     writer.bool(message.bdouble[i]);
                 writer.ldelim();
             }
             if (message.doubletimes != null && message.doubletimes.length) {
-                writer.uint32(/* id 17, wireType 2 =*/138).fork();
+                writer.uint32(/* id 18, wireType 2 =*/146).fork();
                 for (var i = 0; i < message.doubletimes.length; ++i)
                     writer.int32(message.doubletimes[i]);
                 writer.ldelim();
             }
             if (message.turnwinner != null && Object.hasOwnProperty.call(message, "turnwinner"))
-                writer.uint32(/* id 18, wireType 0 =*/144).int32(message.turnwinner);
+                writer.uint32(/* id 19, wireType 0 =*/152).int32(message.turnwinner);
             if (message.turncards != null && message.turncards.length)
                 for (var i = 0; i < message.turncards.length; ++i)
-                    $root.client_proto_ddz.RepeatedInt32.encode(message.turncards[i], writer.uint32(/* id 19, wireType 2 =*/154).fork()).ldelim();
+                    $root.client_proto_ddz.RepeatedInt32.encode(message.turncards[i], writer.uint32(/* id 20, wireType 2 =*/162).fork()).ldelim();
             if (message.passornull != null && message.passornull.length) {
-                writer.uint32(/* id 20, wireType 2 =*/162).fork();
+                writer.uint32(/* id 21, wireType 2 =*/170).fork();
                 for (var i = 0; i < message.passornull.length; ++i)
                     writer.bool(message.passornull[i]);
                 writer.ldelim();
             }
             if (message.settleinfo != null && Object.hasOwnProperty.call(message, "settleinfo"))
-                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 21, wireType 2 =*/170).fork()).ldelim();
+                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 22, wireType 2 =*/178).fork()).ldelim();
             return writer;
         };
 
@@ -4307,7 +4326,7 @@ $root.client_proto_ddz = (function() {
         DDZ_S_Reconnect.decode = function decode(reader, length) {
             if (!(reader instanceof $Reader))
                 reader = $Reader.create(reader);
-            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto_ddz.DDZ_S_Reconnect(), key, value;
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto_ddz.DDZ_S_Reconnect();
             while (reader.pos < end) {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
@@ -4364,7 +4383,7 @@ $root.client_proto_ddz = (function() {
                         break;
                     }
                 case 10: {
-                        message.busememory = reader.bool();
+                        message.usememory = reader.int32();
                         break;
                     }
                 case 11: {
@@ -4394,33 +4413,32 @@ $root.client_proto_ddz = (function() {
                         break;
                     }
                 case 14: {
-                        if (message.historycall === $util.emptyObject)
-                            message.historycall = {};
-                        var end2 = reader.uint32() + reader.pos;
-                        key = 0;
-                        value = 0;
-                        while (reader.pos < end2) {
-                            var tag2 = reader.uint32();
-                            switch (tag2 >>> 3) {
-                            case 1:
-                                key = reader.int32();
-                                break;
-                            case 2:
-                                value = reader.int32();
-                                break;
-                            default:
-                                reader.skipType(tag2 & 7);
-                                break;
-                            }
-                        }
-                        message.historycall[key] = value;
+                        if (!(message.historycall && message.historycall.length))
+                            message.historycall = [];
+                        if ((tag & 7) === 2) {
+                            var end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.historycall.push(reader.int32());
+                        } else
+                            message.historycall.push(reader.int32());
                         break;
                     }
                 case 15: {
-                        message.toppoint = reader.int32();
+                        if (!(message.historychair && message.historychair.length))
+                            message.historychair = [];
+                        if ((tag & 7) === 2) {
+                            var end2 = reader.uint32() + reader.pos;
+                            while (reader.pos < end2)
+                                message.historychair.push(reader.int32());
+                        } else
+                            message.historychair.push(reader.int32());
                         break;
                     }
                 case 16: {
+                        message.toppoint = reader.int32();
+                        break;
+                    }
+                case 17: {
                         if (!(message.bdouble && message.bdouble.length))
                             message.bdouble = [];
                         if ((tag & 7) === 2) {
@@ -4431,7 +4449,7 @@ $root.client_proto_ddz = (function() {
                             message.bdouble.push(reader.bool());
                         break;
                     }
-                case 17: {
+                case 18: {
                         if (!(message.doubletimes && message.doubletimes.length))
                             message.doubletimes = [];
                         if ((tag & 7) === 2) {
@@ -4442,17 +4460,17 @@ $root.client_proto_ddz = (function() {
                             message.doubletimes.push(reader.int32());
                         break;
                     }
-                case 18: {
+                case 19: {
                         message.turnwinner = reader.int32();
                         break;
                     }
-                case 19: {
+                case 20: {
                         if (!(message.turncards && message.turncards.length))
                             message.turncards = [];
                         message.turncards.push($root.client_proto_ddz.RepeatedInt32.decode(reader, reader.uint32()));
                         break;
                     }
-                case 20: {
+                case 21: {
                         if (!(message.passornull && message.passornull.length))
                             message.passornull = [];
                         if ((tag & 7) === 2) {
@@ -4463,7 +4481,7 @@ $root.client_proto_ddz = (function() {
                             message.passornull.push(reader.bool());
                         break;
                     }
-                case 21: {
+                case 22: {
                         message.settleinfo = $root.client_proto_ddz.DDZSettle.decode(reader, reader.uint32());
                         break;
                     }
@@ -4545,9 +4563,9 @@ $root.client_proto_ddz = (function() {
                     if (typeof message.btrusteeship[i] !== "boolean")
                         return "btrusteeship: boolean[] expected";
             }
-            if (message.busememory != null && message.hasOwnProperty("busememory"))
-                if (typeof message.busememory !== "boolean")
-                    return "busememory: boolean expected";
+            if (message.usememory != null && message.hasOwnProperty("usememory"))
+                if (!$util.isInteger(message.usememory))
+                    return "usememory: integer expected";
             if (message.recordindex != null && message.hasOwnProperty("recordindex")) {
                 if (!Array.isArray(message.recordindex))
                     return "recordindex: array expected";
@@ -4566,15 +4584,18 @@ $root.client_proto_ddz = (function() {
                         return "bshow: boolean[] expected";
             }
             if (message.historycall != null && message.hasOwnProperty("historycall")) {
-                if (!$util.isObject(message.historycall))
-                    return "historycall: object expected";
-                var key = Object.keys(message.historycall);
-                for (var i = 0; i < key.length; ++i) {
-                    if (!$util.key32Re.test(key[i]))
-                        return "historycall: integer key{k:int32} expected";
-                    if (!$util.isInteger(message.historycall[key[i]]))
-                        return "historycall: integer{k:int32} expected";
-                }
+                if (!Array.isArray(message.historycall))
+                    return "historycall: array expected";
+                for (var i = 0; i < message.historycall.length; ++i)
+                    if (!$util.isInteger(message.historycall[i]))
+                        return "historycall: integer[] expected";
+            }
+            if (message.historychair != null && message.hasOwnProperty("historychair")) {
+                if (!Array.isArray(message.historychair))
+                    return "historychair: array expected";
+                for (var i = 0; i < message.historychair.length; ++i)
+                    if (!$util.isInteger(message.historychair[i]))
+                        return "historychair: integer[] expected";
             }
             if (message.toppoint != null && message.hasOwnProperty("toppoint"))
                 if (!$util.isInteger(message.toppoint))
@@ -4671,8 +4692,8 @@ $root.client_proto_ddz = (function() {
                 for (var i = 0; i < object.btrusteeship.length; ++i)
                     message.btrusteeship[i] = Boolean(object.btrusteeship[i]);
             }
-            if (object.busememory != null)
-                message.busememory = Boolean(object.busememory);
+            if (object.usememory != null)
+                message.usememory = object.usememory | 0;
             if (object.recordindex) {
                 if (!Array.isArray(object.recordindex))
                     throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.recordindex: array expected");
@@ -4690,11 +4711,18 @@ $root.client_proto_ddz = (function() {
                     message.bshow[i] = Boolean(object.bshow[i]);
             }
             if (object.historycall) {
-                if (typeof object.historycall !== "object")
-                    throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.historycall: object expected");
-                message.historycall = {};
-                for (var keys = Object.keys(object.historycall), i = 0; i < keys.length; ++i)
-                    message.historycall[keys[i]] = object.historycall[keys[i]] | 0;
+                if (!Array.isArray(object.historycall))
+                    throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.historycall: array expected");
+                message.historycall = [];
+                for (var i = 0; i < object.historycall.length; ++i)
+                    message.historycall[i] = object.historycall[i] | 0;
+            }
+            if (object.historychair) {
+                if (!Array.isArray(object.historychair))
+                    throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.historychair: array expected");
+                message.historychair = [];
+                for (var i = 0; i < object.historychair.length; ++i)
+                    message.historychair[i] = object.historychair[i] | 0;
             }
             if (object.toppoint != null)
                 message.toppoint = object.toppoint | 0;
@@ -4758,13 +4786,13 @@ $root.client_proto_ddz = (function() {
                 object.btrusteeship = [];
                 object.recordindex = [];
                 object.bshow = [];
+                object.historycall = [];
+                object.historychair = [];
                 object.bdouble = [];
                 object.doubletimes = [];
                 object.turncards = [];
                 object.passornull = [];
             }
-            if (options.objects || options.defaults)
-                object.historycall = {};
             if (options.defaults) {
                 object.gameInfo = null;
                 object.gamestate = 0;
@@ -4772,7 +4800,7 @@ $root.client_proto_ddz = (function() {
                 object.bankerchair = 0;
                 object.curchair = 0;
                 object.backtimes = 0;
-                object.busememory = false;
+                object.usememory = 0;
                 object.countdown = 0;
                 object.toppoint = 0;
                 object.turnwinner = 0;
@@ -4805,8 +4833,8 @@ $root.client_proto_ddz = (function() {
                 for (var j = 0; j < message.btrusteeship.length; ++j)
                     object.btrusteeship[j] = message.btrusteeship[j];
             }
-            if (message.busememory != null && message.hasOwnProperty("busememory"))
-                object.busememory = message.busememory;
+            if (message.usememory != null && message.hasOwnProperty("usememory"))
+                object.usememory = message.usememory;
             if (message.recordindex && message.recordindex.length) {
                 object.recordindex = [];
                 for (var j = 0; j < message.recordindex.length; ++j)
@@ -4819,11 +4847,15 @@ $root.client_proto_ddz = (function() {
                 for (var j = 0; j < message.bshow.length; ++j)
                     object.bshow[j] = message.bshow[j];
             }
-            var keys2;
-            if (message.historycall && (keys2 = Object.keys(message.historycall)).length) {
-                object.historycall = {};
-                for (var j = 0; j < keys2.length; ++j)
-                    object.historycall[keys2[j]] = message.historycall[keys2[j]];
+            if (message.historycall && message.historycall.length) {
+                object.historycall = [];
+                for (var j = 0; j < message.historycall.length; ++j)
+                    object.historycall[j] = message.historycall[j];
+            }
+            if (message.historychair && message.historychair.length) {
+                object.historychair = [];
+                for (var j = 0; j < message.historychair.length; ++j)
+                    object.historychair[j] = message.historychair[j];
             }
             if (message.toppoint != null && message.hasOwnProperty("toppoint"))
                 object.toppoint = message.toppoint;
@@ -6920,12 +6952,12 @@ export namespace client_proto_ddz {
         DDZ_S_MSG_CALL_POINT = 5,
         DDZ_S_MSG_CALL_END = 6,
         DDZ_S_MSG_DOUBLE = 7,
-        DDZ_S_MSG_OUT_CARD = 9,
-        DDZ_S_MSG_PASS_CARD = 10,
-        DDZ_S_MSG_USE_MEMORY = 11,
-        DDZ_S_MSG_TRUSTEESHIP = 12,
-        DDZ_S_RECONNECT = 13,
-        DDZ_S_GAMEEND = 14
+        DDZ_S_MSG_OUT_CARD = 8,
+        DDZ_S_MSG_PASS_CARD = 9,
+        DDZ_S_MSG_USE_MEMORY = 10,
+        DDZ_S_MSG_TRUSTEESHIP = 11,
+        DDZ_S_MSG_RECONNECT = 12,
+        DDZ_S_MSG_GAMEEND = 13
     }
 
     /** Properties of a DDZInfo. */
@@ -8393,8 +8425,8 @@ export namespace client_proto_ddz {
         /** DDZ_S_Reconnect btrusteeship */
         btrusteeship?: (boolean[]|null);
 
-        /** DDZ_S_Reconnect busememory */
-        busememory?: (boolean|null);
+        /** DDZ_S_Reconnect usememory */
+        usememory?: (number|null);
 
         /** DDZ_S_Reconnect recordindex */
         recordindex?: (number[]|null);
@@ -8406,7 +8438,10 @@ export namespace client_proto_ddz {
         bshow?: (boolean[]|null);
 
         /** DDZ_S_Reconnect historycall */
-        historycall?: ({ [k: string]: number }|null);
+        historycall?: (number[]|null);
+
+        /** DDZ_S_Reconnect historychair */
+        historychair?: (number[]|null);
 
         /** DDZ_S_Reconnect toppoint */
         toppoint?: (number|null);
@@ -8466,8 +8501,8 @@ export namespace client_proto_ddz {
         /** DDZ_S_Reconnect btrusteeship. */
         public btrusteeship: boolean[];
 
-        /** DDZ_S_Reconnect busememory. */
-        public busememory: boolean;
+        /** DDZ_S_Reconnect usememory. */
+        public usememory: number;
 
         /** DDZ_S_Reconnect recordindex. */
         public recordindex: number[];
@@ -8479,7 +8514,10 @@ export namespace client_proto_ddz {
         public bshow: boolean[];
 
         /** DDZ_S_Reconnect historycall. */
-        public historycall: { [k: string]: number };
+        public historycall: number[];
+
+        /** DDZ_S_Reconnect historychair. */
+        public historychair: number[];
 
         /** DDZ_S_Reconnect toppoint. */
         public toppoint: number;
