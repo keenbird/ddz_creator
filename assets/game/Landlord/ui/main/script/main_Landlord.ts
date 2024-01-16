@@ -45,6 +45,8 @@ export class main_Landlord extends main_GameBase {
         this.m_HandCardNode = []
     }
     protected initView(): boolean | void {
+        app.audio.setDefMusic(fw.BundleConfig.Landlord.res[`audio/gamebg`]);
+		app.audio.playMusic();
         //刷新下注
         // this.updateChipScore();
         // //添加player
@@ -148,52 +150,52 @@ export class main_Landlord extends main_GameBase {
         //--------------test-------------//
         // this.scheduleOnce(function(){
             // this.didReceiveSendCard()
-            this.showBasePool(true);
-            let data:proto.client_proto_ddz.IDDZ_S_OutCard={
-                outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-                cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
-                outchair : 1
-            }
-            this.didReceiveOutCard(data)
-            // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+            // this.showBasePool(true);
+            // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
             //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            //     cardtype : yx.config.OutCardType.Bomb,
-            //     outchair : 2
+            //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
+            //     outchair : 1
             // }
-            // this.didReceiveOutCard(data2)
-            this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
-            this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
-            this.scheduleOnce(function(){
-                // this.showLastThreeCardAndMove([78,79,50],0)
-                // this.showDipaiBieshu(true,true,3)
+            // this.didReceiveOutCard(data)
+            // // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+            // //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            // //     cardtype : yx.config.OutCardType.Bomb,
+            // //     outchair : 2
+            // // }
+            // // this.didReceiveOutCard(data2)
+            // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // this.scheduleOnce(function(){
+            //     // this.showLastThreeCardAndMove([78,79,50],0)
+            //     // this.showDipaiBieshu(true,true,3)
                 
-                // this.showXbeiAni(3,15)
-                // this.didReceiveMingpai()
-                let dataSeettle:proto.client_proto_ddz.IDDZ_S_GameEnd = {
-                    handcards:[
-                        {
-                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
-                        },
-                        {
-                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
-                        },
-                        {
-                            data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
-                        },
-                    ],
-                    settleinfo:{
-                        toptimes:[999999,8888,77777],
-                        golds:[999999,-555555,-444444],
-                        broke:[false,false,false],
-                        toplimit:[true,false,false],
-                        baopei:[false,false,true],
-                        doubletimes:[1,2,4],
-                        flag: 1
-                    }
-                }
-                yx.internet.nSelfChairID = 0
-                this.DDZ_S_GAMEEND(dataSeettle)
-            }, 2);
+            //     // this.showXbeiAni(3,15)
+            //     // this.didReceiveMingpai()
+            //     let dataSeettle:proto.client_proto_ddz.IDDZ_S_GameEnd = {
+            //         handcards:[
+            //             {
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //             },
+            //             {
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //             },
+            //             {
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //             },
+            //         ],
+            //         settleinfo:{
+            //             toptimes:[999999,8888,77777],
+            //             golds:[999999,-555555,-444444],
+            //             broke:[false,false,false],
+            //             toplimit:[true,false,false],
+            //             baopei:[false,false,true],
+            //             doubletimes:[1,2,4],
+            //             flag: 1
+            //         }
+            //     }
+            //     yx.internet.nSelfChairID = 0
+            //     this.DDZ_S_GAMEEND(dataSeettle)
+            // }, 2);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
@@ -248,7 +250,7 @@ export class main_Landlord extends main_GameBase {
     setCardRecorderData(recorderDada : any){
         var faceNames = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "E", "F"]
         for(var i=0;i<faceNames.length;i++){
-            this.Items["BMFont_CountKey_"+faceNames].string = recorderDada[i] ?? 0+""
+            this.Items["BMFont_CountKey_"+faceNames].string = recorderDada[i+1] ?? 0+""
         }
         
     }

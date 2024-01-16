@@ -1,4 +1,4 @@
-import { ACTOR, INVAL_CHAIRID, INVAL_TABLEID, INVAL_USERID, TABLESTATE_FREE, TABLESTATE_PLAY } from "../../config/cmd/ActorCMD";
+import { ACTOR, INVAL_CHAIRID, INVAL_TABLEID, INVAL_USERID, TABLESTATE_FREE, TABLESTATE_PLAY ,PROTO_ACTOR} from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { httpConfig } from "../../config/HttpConfig";
 import { BYTE, GS_GAME_MSGID, sint, sint64, slong, stchar, uchar, uint, uint64, ulong, ushort } from "../../config/NetConfig";
@@ -14,7 +14,7 @@ let ROOMGROUP_BIGAWARD_MATCH = "5"    //大奖赛
 
 let D_GameVersion = 11
 export class GameRoomCenter extends GameServerMainInetMsg {
-    // cmd = proto.game_room.GS_GAME_ROOM_MSG;
+    cmd = proto.client_proto.ROOM_LIST_SUB_MSG_ID;
     declare m_RoomInfo: GameRoomInfo;
     declare m_RoomQuickRecharge: RoomQuickRecharge;
     // declare m_MagicFaceVec: proto.game_room.IMagicInfo[];
@@ -27,6 +27,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     declare tableRobot: GameRoomRobotTable;
     m_jackpotDataConfig: Map<number, { time: number, data: JackpotData[] }>;
     bOnline: boolean;
+    exitFun:Function; //退出回调
 
     initData() {
         this.m_RoomInfo = new GameRoomInfo();
@@ -66,12 +67,12 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.OnMeCreate(data.dict)
             }
         });
-        app.event.bindEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ACTOR_DESTORY,
-            callback: (data) => {
-                this.OnUserDestory(data.dict)
-            }
-        });
+        // app.event.bindEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_ACTOR_DESTORY,
+        //     callback: (data) => {
+        //         this.OnUserDestory(data.dict)
+        //     }
+        // });
         app.event.bindEvent({
             eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
             callback: (data) => {
@@ -79,74 +80,55 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.OnUserPropVariable(varTB.actor, varTB.btPropID, varTB.nOldValue, varTB.nNewValue)
             }
         });
-        app.event.bindEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_PUBLIC,
-            callback: (data) => {
-                this.OnUserRobotCreate(data.dict);
-            }
-        });
-        app.event.bindEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_DESTORY,
-            callback: (data) => {
-                this.OnUserRobotDestory(data.dict);
-            }
-        });
+        // app.event.bindEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_PUBLIC,
+        //     callback: (data) => {
+        //         this.OnUserRobotCreate(data.dict);
+        //     }
+        // });
+        // app.event.bindEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_DESTORY,
+        //     callback: (data) => {
+        //         this.OnUserRobotDestory(data.dict);
+        //     }
+        // });
     }
 
-    // initRegister() {
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_INFO, proto.game_room.room_info_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_INFO, this.OnRecv_RoomInfo.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLESTATE, proto.game_room.table_state_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLESTATE, this.OnRecv_RoomTableState.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPS, proto.game_room.tips_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPS, this.OnRecv_Tips.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, proto.game_room.add_friend_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_ADDFRIENDREQUEST, this.OnRecv_AddFindRequest.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_MAGICINFO, proto.game_room.magic_info_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_MAGICINFO, this.OnRecv_MagicInfo.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_CS_USEMAGICFACE, proto.game_room.use_magic_cs);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_CS_USEMAGICFACE, this.OnRecv_UseMagic.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSUPROOM, proto.game_room.tips_up_room_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSUPROOM, this.OnRecv_TipsUpRoom.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYDATA, proto.game_room.lottery_data_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYDATA, {
-    //         callback: this.OnRecv_LotteryData.bind(this),
-    //         printLog: false,
-    //     });
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_LOTTERYPLAY, proto.game_room.lottery_player_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_LOTTERYPLAY, this.OnRecv_LotteryPlay.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, proto.game_room.tips_down_room_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TIPSDOWNROOM, this.OnRecv_TipsDownRoom.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, proto.game_room.quit_match_ret_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_QUITDDZMATCH_RET, this.OnRecv_MatchSettle.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_DISBAND, proto.game_room.table_disband_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_DISBAND, this.OnRecv_TableDisband.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_TABLE_FULL, proto.game_room.table_full_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_TABLE_FULL, this.OnRecv_TableDFull.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, proto.game_room.bairen_rank_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_C_BAIREN_RANK_RET, this.OnRecv_GAME_ROOM_C_BAIREN_RANK_RET.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, proto.game_room.join_queue_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ROOM_S_JOIN_QUEUE_RET, this.OnRecv_JoinQueueRet.bind(this));
+    initRegister() {
+        // this.bindMsgStructPB(this.cmd.RLSMI_FIRST_LAYOUT_RESP, proto.client_proto.room_info_s);
+        // this.bindRecvFunc(this.cmd.RLSMI_FIRST_LAYOUT_RESP, this.OnRecv_RoomInfo.bind(this));
+        // this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_RESP, proto.client_proto.table_state_s);
+        // this.bindRecvFunc(this.cmd.RLSMI_SECOND_LIST_RESP, this.OnRecv_RoomTableState.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_BEFORE_MATCH_RESP, proto.client_proto.BeforeMatchTableResp);
+        this.bindRecvFunc(this.cmd.RLSMI_BEFORE_MATCH_RESP, this.OnRecv_BEFORE_MATCH_RESP.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_ENTER_MATCH_RESP, proto.client_proto.EnterMatchTableResp);
+        this.bindRecvFunc(this.cmd.RLSMI_ENTER_MATCH_RESP, this.OnRecv_ENTER_MATCH_RESP.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_EXIT_MATCH_RESP, proto.client_proto.ExitMatchTableResp);
+        this.bindRecvFunc(this.cmd.RLSMI_EXIT_MATCH_RESP, this.OnRecv_EXIT_MATCH_RESP.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_ENTER_ROOM_RESP, proto.client_proto.EnterRoomResp);
+        this.bindRecvFunc(this.cmd.RLSMI_ENTER_ROOM_RESP, this.OnRecv_ENTER_ROOM_RESP.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_MATCH_INFO_PUSH, proto.client_proto.MatchedTableInfoPush);
+        this.bindRecvFunc(this.cmd.RLSMI_MATCH_INFO_PUSH, this.OnRecv_MATCH_INFO_PUSH.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_COMEBACK_INFO_PUSH, proto.client_proto.ComebackRoomInfoPush);
+        this.bindRecvFunc(this.cmd.RLSMI_COMEBACK_INFO_PUSH, this.OnRecv_COMEBACK_INFO_PUSH.bind(this));
+       
 
-    //     // ////////-send struct//////////
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_HANDS, proto.game_room.hands_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ONTABLE, proto.game_room.on_table_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_CHANGETABLE, proto.game_room.change_table_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTTABLE, proto.game_room.out_table_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_S_QUITDDZMATCH, proto.game_room.quit_match_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_OUTROOM, proto.game_room.out_room_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_BAIREN_RANK_REQ, proto.game_room.bairen_rank_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_ACTOR_IM_BACK, proto.game_room.actor_im_back_c);
-    //     this.bindMsgStructPB(this.cmd.GAME_ROOM_C_JOIN_QUEUE, proto.game_room.join_queue_c);
-    //     // ////////-send struct//////////    
-    // }
+        // ////////-send struct//////////
+        this.bindMsgStructPB(this.cmd.RLSMI_FIRST_LAYOUT_REQ, proto.client_proto.LoginReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_REQ, proto.client_proto.LoginReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_BEFORE_MATCH_REQ, proto.client_proto.BeforeMatchTableReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_ENTER_MATCH_REQ, proto.client_proto.EnterMatchTableReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_EXIT_MATCH_REQ, proto.client_proto.ExitMatchTableReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_ENTER_ROOM_REQ, proto.client_proto.EnterRoomReq);
+        // ////////-send struct//////////    
+    }
 
     //获得自己的桌子ID
     getMyTableID() {
         // 待处理，等 roomUserCenter
         let actor = gameCenter.user.getActor()
         if (actor) {
-            return actor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX]
+            return actor.tableID
         }
         return INVAL_TABLEID
     }
@@ -191,29 +173,65 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         })
     }
 
-    // 提示
-    OnRecv_Tips(dict: proto.game_room.Itips_s) {
-        fw.print("roomManager:OnRecv_Tips")
-        let szTips = dict.tips;
-        app.popup.showToast({ text: szTips })
+    // 返回配桌之前的判断
+    OnRecv_BEFORE_MATCH_RESP(dict: proto.client_proto.IBeforeMatchTableResp) {
+        fw.print("roomManager:OnRecv_BEFORE_MATCH_RESP")
+        app.gameManager.gotoGame(`Landlord`, dict.roomId);
     }
 
-    //好友请求
-    OnRecv_AddFindRequest(dict: proto.game_room.Iadd_friend_s) {
+    //返回配桌
+    OnRecv_ENTER_MATCH_RESP(dict: proto.client_proto.IEnterMatchTableResp) {
+        let pActor = center.user.getActor()
+        pActor.tableID = 1
+        pActor.chairID = 1
+        this.OnMeCreate(pActor)
 
+
+        app.popup.showToast({
+            nUpdateIntervalTime:dict.waitSec,
+            text:"正在匹配牌友...",
+            updateCallback:()=>{
+                this.sendEnterMatchREQ(dict.roomId)
+            }
+        })
+       
+        
+        // app.event.dispatchEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_CHAT_MAGICFACE,
+        //     data: data
+        // });
     }
 
-    /**魔法表情配置 */
-    OnRecv_MagicInfo(dict: proto.game_room.Imagic_info_s) {
-        this.m_MagicFaceVec = dict.info;
+    /**退出配桌 */
+    OnRecv_EXIT_MATCH_RESP(dict: proto.client_proto.IExitMatchTableResp) {
+        if(dict.result > 0){
+            app.gameManager.setServerId(0)
+            app.gameManager.setRoomId(0)
+            this.exitFun ?.()
+        }else{
+            app.popup.showTip({
+                text: "正在游戏中,请不要退出",
+                btnList: [
+                    {
+                        styleId: 3,
+                        callback: null,
+                    },
+                ],
+                closeCallback: null,
+            });
+        }
     }
 
-    /**使用魔法表情 */
-    OnRecv_UseMagic(data: proto.game_room.Iuse_magic_cs) {
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_PLAY_CHAT_MAGICFACE,
-            data: data
-        });
+    /**返回进入房间(仅失败或异常时返回) */ 
+    OnRecv_ENTER_ROOM_RESP(data: proto.client_proto.IEnterRoomResp) {
+        // app.event.dispatchEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_CHAT_MAGICFACE,
+        //     data: data
+        // });
+        app.gameManager.setServerId(0)
+        this.sendEnterMatchREQ(data.roomId)
+        
+        
     }
 
     //奖池变动
@@ -224,17 +242,21 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             data: data,
         });
     }
-    //中奖变动
-    OnRecv_LotteryPlay(data: proto.game_room.Ilottery_player_s) {
-        app.event.dispatchEvent({
-            eventName: `GAME_ROOM_S_LOTTERYPLAY`,
-            data: data,
-        });
+    //推送重回房间信息
+    OnRecv_COMEBACK_INFO_PUSH(data: proto.client_proto.IComebackRoomInfoPush) {
+        // app.event.dispatchEvent({
+        //     eventName: `GAME_ROOM_S_LOTTERYPLAY`,
+        //     data: data,
+        // });
+        app.gameManager.setServerId(data.svrId)
+        app.gameManager.gotoGame(`Landlord`, data.roomId,true);
     }
 
-    /**提示升场 */
-    OnRecv_TipsUpRoom(data: proto.game_room.Itips_up_room_s) {
-
+    /**推送配桌消息 */
+    OnRecv_MATCH_INFO_PUSH(data: proto.client_proto.IMatchedTableInfoPush) {
+        app.gameManager.setServerId(data.svrId)
+        app.popup.closeAllToast()
+        this.sendEnterRoomREQ(data.roomId)
     }
 
     //提示降场
@@ -281,40 +303,35 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         });
     }
 
-    //请求搓桌
-    sendJoinQueue(isJoin: boolean) {
-        let sData = proto.game_room.join_queue_c.create();
-        sData.is_join = isJoin;
-        return this.sendData(this.cmd.GAME_ROOM_C_JOIN_QUEUE, sData);
+    //请求判断配桌，成功则加载资源
+    sendBEFORE_MATCH_REQ(room_id: number) {
+        let sData = proto.client_proto.BeforeMatchTableReq.create();
+        sData.roomId = room_id;
+        return this.sendData(this.cmd.RLSMI_BEFORE_MATCH_REQ, sData);
     }
 
-    //举手准备
-    sendHandUp() {
-        if (this.getMyTableID() != INVAL_TABLEID) {
-            let actor = gameCenter.user.getActor()
-            if (actor[ACTOR.ACTOR_PROP_GAME_STATE] == ACTOR.ACTOR_STATE_FREE) {
-                let sData = proto.game_room.hands_c.create();
-                let bsuccess = this.sendData(this.cmd.GAME_ROOM_C_HANDS, sData);
-                fw.print("HandUp = ", bsuccess)
-                return bsuccess
-            }
-        }
-        return false
+    //请求配桌
+    sendEnterMatchREQ(room_id: number) {
+        let sData = proto.client_proto.EnterMatchTableReq.create();
+        sData.roomId = room_id;
+        return this.sendData(this.cmd.RLSMI_ENTER_MATCH_REQ, sData);
+
+       
     }
 
-    /**换桌 */
-    sendChangeTable() {
-        let sData = proto.game_room.change_table_c.create();
-        return this.sendData(this.cmd.GAME_ROOM_C_CHANGETABLE, sData);
+    /**退出桌 */
+    sendOutRoom(room_id: number,exitFun:Function) {
+        this.exitFun = exitFun
+        let sData = proto.client_proto.ExitMatchTableReq.create();
+        sData.roomId = room_id;
+        return this.sendData(this.cmd.RLSMI_EXIT_MATCH_REQ, sData);
     }
 
-    /**离开游戏桌 */
-    sendOutTable() {
-        if (this.getMyTableID() != INVAL_TABLEID) {
-            let sData = proto.game_room.out_table_c.create();
-            return this.sendData(this.cmd.GAME_ROOM_C_OUTTABLE, sData);
-        }
-        return false;
+    /**请求进桌 */
+    sendEnterRoomREQ(room_id: number) {
+        let sData = proto.client_proto.EnterRoomReq.create();
+        sData.roomId = room_id;
+        return this.sendData(this.cmd.RLSMI_EXIT_MATCH_REQ, sData);
     }
 
     /**上桌 */
@@ -334,17 +351,17 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     /**玩家处于游戏状态 */
     bPlaying(nUserID?: number) {
         let actor = nUserID ? gameCenter.user.getActorByDBIDEx(nUserID) : gameCenter.user.getActor();
-        return actor && actor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX] != -1;
+        return actor && actor.tableID != -1;
     }
 
-    /**退出房间（非游戏状态下发两次退出房间，可能导致Socket被断开） */
-    sendOutRoom() {
-        if (this.bOnline) {
-            let sData = proto.game_room.out_room_c.create();
-            return this.sendData(this.cmd.GAME_ROOM_C_OUTROOM, sData);
-        }
-        return true;
-    }
+    // /**退出房间（非游戏状态下发两次退出房间，可能导致Socket被断开） */
+    // sendOutRoom() {
+    //     if (this.bOnline) {
+    //         let sData = proto.game_room.out_room_c.create();
+    //         return this.sendData(this.cmd.GAME_ROOM_C_OUTROOM, sData);
+    //     }
+    //     return true;
+    // }
 
     /**使用魔法表情 */
     sendUseMagic(nActorDBID: number, nMagicID: number, nCount?: number) {
@@ -385,18 +402,18 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         return value;
     }
 
-    //玩家被创建(不包括自己)
+    //进房，记录房间数据
     OnUserCreate(pActor) {
-        let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR]
-        let nTableID = pActor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX]
+        let nChairID = pActor.chairID
+        let nTableID = pActor.tableID
         if (nTableID != INVAL_TABLEID && nChairID != INVAL_CHAIRID) {
             let numnTableID = nTableID
             let numnChairID = nChairID
-            if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
-                let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+            // if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
+                let nActorDBID = pActor[PROTO_ACTOR.UAT_UID] 
                 this.m_ActorTableID.set(nActorDBID, nTableID)
                 // 非旁观者和GM才能上桌
-                if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
+                // if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
                     this.table[nTableID].sitdown(nChairID, nActorDBID);
                     // 和玩家同个桌子 才推送消息
                     if (nTableID == this.getMyTableID()) {
@@ -407,24 +424,24 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                                 nChairID: nChairID,
                             }
                         })
-                        if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] == ACTOR.ACTOR_STATE_HAND) {
-                            app.event.dispatchEvent({
-                                eventName: EVENT_ID.EVENT_PLAY_ACTOR_RAISEHANDS,
-                                dict: {
-                                    pActor: pActor,
-                                    nChairID: nChairID,
-                                }
-                            })
-                        }
+                        // if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] == ACTOR.ACTOR_STATE_HAND) {
+                        //     app.event.dispatchEvent({
+                        //         eventName: EVENT_ID.EVENT_PLAY_ACTOR_RAISEHANDS,
+                        //         dict: {
+                        //             pActor: pActor,
+                        //             nChairID: nChairID,
+                        //         }
+                        //     })
+                        // }
                     }
-                }
-                app.event.dispatchEvent({
-                    eventName: EVENT_ID.EVENT_PLAY_TALBEREF,
-                    dict: {
-                        nTableID: nTableID,
-                    }
-                })
-            }
+                // }
+                // app.event.dispatchEvent({
+                //     eventName: EVENT_ID.EVENT_PLAY_TALBEREF,
+                //     dict: {
+                //         nTableID: nTableID,
+                //     }
+                // })
+            // }
         }
     }
     /**
@@ -432,9 +449,9 @@ export class GameRoomCenter extends GameServerMainInetMsg {
      * @param pActor 
      */
     OnUserRobotCreate(pActor) {
-        let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR]
+        let nChairID = pActor.chairID
         if (nChairID != INVAL_CHAIRID) {
-            let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+            let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
             this.tableRobot.sitdown(nChairID, nActorDBID);
         }
     }
@@ -442,16 +459,16 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
     //自己被创建
     OnMeCreate(pActor) {
-        let nTableID = pActor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX]
-        let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR]
+        let nTableID = pActor.tableID
+        let nChairID = pActor.chairID
         if (nTableID != INVAL_TABLEID && nChairID != INVAL_CHAIRID) {
             let numnTableID = (nTableID)
             let numnChairID = (nChairID)
-            if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
-                let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+            // if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
+                let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
                 this.m_ActorTableID.set(nActorDBID, nTableID)
                 // 非旁观者和GM才能上桌
-                if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
+                // if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
                     this.table[nTableID].sitdown(nChairID, nActorDBID);
                     app.event.dispatchEvent({
                         eventName: EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
@@ -470,27 +487,27 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                         })
                     }
                     gameCenter.user.isMe(pActor)
-                }
+                // }
                 app.event.dispatchEvent({
                     eventName: EVENT_ID.EVENT_PLAY_TALBEREF,
                     dict: {
                         nTableID: nTableID,
                     }
                 })
-            }
+            // }
         }
     }
 
     // 玩家被销毁
     OnUserDestory(pActor) {
-        let nTableID = pActor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX]
-        let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR]
+        let nTableID = pActor.tableID
+        let nChairID = pActor.chairID
         if (nTableID != INVAL_TABLEID) {
             let numnTableID = (nTableID)
             let numnChairID = (nChairID)
 
             if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
-                let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+                let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
                 this.m_ActorTableID.delete(nActorDBID)
                 if (this.table[nTableID].getActorDbid(nChairID) == nActorDBID) {
                     this.table[nTableID].standup(nChairID);
@@ -515,8 +532,8 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     }
 
     OnUserRobotDestory(pActor) {
-        let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR]
-        let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+        let nChairID = pActor.chairID
+        let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
         if (this.tableRobot.getActorDbid(nChairID) == nActorDBID) {
             this.tableRobot.standup(nChairID);
         }
@@ -534,8 +551,8 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.OnUserCreate(pActor);
             }
         } else if (propid == ACTOR.ACTOR_PROP_GAME_STATE) {
-            let nTableID = pActor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX];
-            let nChairID = pActor[ACTOR.ACTOR_PROP_GAME_CHAIR];
+            let nTableID = pActor.tableID;
+            let nChairID = pActor.chairID;
             if (nValue == ACTOR.ACTOR_STATE_HAND) {
                 if (nTableID == this.getMyTableID() && nChairID != INVAL_CHAIRID) {
                     app.event.dispatchEvent({
@@ -573,7 +590,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     //从老的位置弹起
     OutOldTable(pActor) {
         let tableid = -1
-        let nActorDBID = pActor[ACTOR.ACTOR_PROP_DBID]
+        let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
 
         if (gameCenter.user.isMe(pActor)) {
             if (this.m_ActorTableID.has(nActorDBID)) {

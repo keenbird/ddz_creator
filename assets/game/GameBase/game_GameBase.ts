@@ -124,8 +124,13 @@ export class game_GameBase extends FWSceneBase {
                 callback: this.onShowGameView.bind(this),
             });
             //请求进入房间
-            center.gateway.connectRoom(app.gameManager.gameData.nServerID);
-            gameCenter.login.sendLoginGameServer();
+            // center.gateway.connectRoom(app.gameManager.gameData.nServerID);
+            // gameCenter.login.sendLoginGameServer();
+            if(app.gameManager.isComeback){
+                gameCenter.room.sendEnterRoomREQ(app.gameManager.room_id)
+            }else{
+                gameCenter.room.sendEnterMatchREQ(app.gameManager.room_id)
+            }
         }
     }
     /**初始化主脚本 */

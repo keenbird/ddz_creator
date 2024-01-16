@@ -1,4 +1,4 @@
-import { ACTOR, INVAL_USERID } from "../../config/cmd/ActorCMD";
+import { ACTOR, INVAL_USERID, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { GS_GAME_MSGID, sint64, slong, stchar, uchar, ulong } from "../../config/NetConfig";
 import { EventHelp } from "../../framework/manager/FWEventManager";
@@ -8,7 +8,7 @@ import proto from "../common";
 
 export class GameUserCenter extends GameServerMainInetMsg {
     event = new EventHelp()
-    // cmd = proto.game_actor.GS_GAME_ACTORINFO_MSG;
+    cmd = proto.client_proto.GAME_COMMON_SUB_ID;
     m_ActorMap:Map<number,any> = new Map();
     initData() {
         this.m_ActorMap.clear();
@@ -28,16 +28,16 @@ export class GameUserCenter extends GameServerMainInetMsg {
         }
     }
 
-    // initRegister() {
-    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PRIVATE, proto.game_actor.private_info_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PRIVATE, this.OnRecv_ActorPrivateInfo.bind(this));
+    initRegister() {
+        this.bindMsgStructPB(this.cmd.GCSI_GAME_SCENE_PUSH, proto.client_proto.CommonGameScenePush);
+        this.bindRecvFunc(this.cmd.GCSI_GAME_SCENE_PUSH, this.OnRecv_ActorPublicInfo.bind(this));
     //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PUBLIC, proto.game_actor.public_info_s);
     //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PUBLIC, { callback: this.OnRecv_ActorPublicInfo.bind(this), printLog: false });
-    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_VARIABLE, proto.game_actor.variable_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_VARIABLE, { callback: this.OnRecv_ActorVariableInfo.bind(this), printLog: false });
+        this.bindMsgStructPB(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, proto.client_proto.GameUserAttriChangePush);
+        this.bindRecvFunc(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, { callback: this.OnRecv_ActorVariableInfo.bind(this), printLog: false });
     //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
     //     this.bindRecvFunc(this.cmd.GAME_ACTOR_DESTORY, { callback: this.OnRecv_ActorDestory.bind(this), printLog: false });
-    // }
+    }
 
     /**获得某桌人数 */
     getActorCount() {
@@ -75,6 +75,16 @@ export class GameUserCenter extends GameServerMainInetMsg {
         }
         return null;
     }
+    /**通过ChairId获得用户 */
+    getActorByChairId(ChairId: number | string) {
+        this.m_ActorMap.forEach(v => {
+            if (v.chairID == ChairId) {
+                return v
+            }
+            
+        });
+        return null;
+    }
     /**获取玩家金币 */
     getGold(): number {
         let actor = this.getActor();
@@ -92,12 +102,12 @@ export class GameUserCenter extends GameServerMainInetMsg {
     /**得到自己的桌子号 */
     getSelfTableID(): number | null {
         let actor = this.getActor();
-        return actor ? actor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX] : null;
+        return actor ? actor.tableID : null;
     }
     /**得到自己的椅子号 */
     getSelfChairID(): number | null {
         let actor = this.getActor();
-        return actor ? actor[ACTOR.ACTOR_PROP_GAME_CHAIR] : null;
+        return actor ? actor.chairID : null;
     }
 
     isPlayActor(pActor) {
@@ -110,28 +120,21 @@ export class GameUserCenter extends GameServerMainInetMsg {
         return pActor[ACTOR.ACTOR_PROP_DBID] == center.login.getUserDBID()
     }
     // 玩家共有属性
-    initPlayPublicInfo(dict: proto.game_actor.Ipublic_info_s) {
+    initPlayPublicInfo(dict: proto.client_proto.ICommonGamePlayerInfo,tableID:number) {
         // dump(dict, " =======initPlayPublicInfo======== ")
-        let nActorDBID = dict.user_id;
+        let nActorDBID = dict.userId;
         let actor = this.m_ActorMap.get(nActorDBID);
-        actor.szName = dict.name;
-        actor.szMD5FaceFile = dict.face;
-        actor[ACTOR.ACTOR_PROP_DBID] = dict.user_id; // 玩家的数据库DBID
-        actor[ACTOR.ACTOR_PROP_UID] = dict.id; // 用户的全局UID
-        actor[ACTOR.ACTOR_PROP_SEX] = dict.sex; // 用户性别
-        actor[ACTOR.ACTOR_PROP_GOLD] = dict.gold; // 携带金币
-        actor[ACTOR.ACTOR_PROP_DIAMONDS] = dict.diamonds; // 携带钻石
-        actor[ACTOR.ACTOR_PROP_WINCOUNT] = dict.win_count; // 赢次数
-        actor[ACTOR.ACTOR_PROP_LOSTCOUNT] = dict.lost_count; // 输次数
-        actor[ACTOR.ACTOR_PROP_DRAWCOUNT] = dict.draw_count; // 平次数
-        actor[ACTOR.ACTOR_PROP_DROPCOUNT] = dict.drop_count; // 逃跑次数
-        actor[ACTOR.ACTOR_PROP_SCORE] = dict.score; // 用户的积分值
-        actor[ACTOR.ACTOR_PROP_VIPLEVEL] = dict.vip_level; // vip等级
-        actor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX] = dict.table_id; // 桌号
-        actor[ACTOR.ACTOR_PROP_GAME_CHAIR] = dict.chair_id; // 椅子
-        actor[ACTOR.ACTOR_PROP_GAME_STATE] = dict.state; // 状态
-        actor[ACTOR.ACTOR_PROP_ISGUEST] = dict.guest; //是否游客登录
-        actor[ACTOR.ACTOR_PROP_PRACTISE_SCORE] = dict.practise_score; // 练习场积分
+        actor.szName = dict.nickname;
+        actor[PROTO_ACTOR.UAT_NICKNAME] = dict.nickname;
+        actor[PROTO_ACTOR.UAT_FACE_URL] = dict.faceUrl;
+        actor[PROTO_ACTOR.UAT_FACE_TYPE] = dict.faceType;
+        actor[PROTO_ACTOR.UAT_FACE_ID] = dict.faceId;
+        actor[PROTO_ACTOR.UAT_UID] = dict.userId; // 玩家的数据库DBID
+        actor[PROTO_ACTOR.UAT_SEX] = dict.sex; // 用户性别
+        actor[PROTO_ACTOR.UAT_GOLD] = dict.goldNum; // 携带金币
+        actor[PROTO_ACTOR.UAT_DIAMOND] = dict.diamondNum; // 携带钻石
+        actor.tableID = tableID; // 桌号
+        actor.chairID = dict.chairId; // 椅子
 
         return actor
     }
@@ -158,8 +161,8 @@ export class GameUserCenter extends GameServerMainInetMsg {
         actor[ACTOR.ACTOR_PROP_VIPEXP] = dict.vip_exp; // vip经验值
         actor[ACTOR.ACTOR_PROP_VIPLEVEL] = dict.vip_level; // vip等级
         actor[ACTOR.ACTOR_PROP_NEXTVIPLEVELEXP] = dict.next_vip_level_exp; // vip达到下一级需要的经验值
-        actor[ACTOR.ACTOR_PROP_GAME_TABLEINDEX] = dict.table_id; // 桌号
-        actor[ACTOR.ACTOR_PROP_GAME_CHAIR] = dict.chair_id; // 椅子
+        actor.tableID = dict.table_id; // 桌号
+        actor.chairID = dict.chair_id; // 椅子
         actor[ACTOR.ACTOR_PROP_GAME_STATE] = dict.state; // 状态
         actor[ACTOR.ACTOR_PROP_GM] = dict.gm_flag; // 管理员权值
         actor[ACTOR.ACTOR_PROP_OPENFLAG] = dict.open_flag; // 功能开启标示(参考OPENFLAG定义)
@@ -174,15 +177,27 @@ export class GameUserCenter extends GameServerMainInetMsg {
         actor && (actor[Prop] = value);
     }
 
-    OnRecv_ActorPublicInfo(dict: proto.game_actor.Ipublic_info_s) {
+    OnRecv_ActorPublicInfo(dict: proto.client_proto.ICommonGameScenePush) {
         // fw.print(dict, " =======OnRecv_ActorPublicInfo======== ")
-        let nActorDBID = dict.user_id;
-        let actor = this.createActor(nActorDBID);
-        this.initPlayPublicInfo(dict)
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ACTOR_PUBLIC,
-            dict: actor
-        })
+        for(var i=0;i<dict.useList.length;i++){
+            let nActorDBID = dict.useList[i].userId;
+            let actor = this.createActor(nActorDBID);
+            this.initPlayPublicInfo(dict.useList[i],dict.tableId)
+
+            if(this.isMe(actor)){
+                app.event.dispatchEvent({
+                    eventName: EVENT_ID.EVENT_PLAY_ACTOR_PRIVATE,
+                    dict: dict.useList[i]
+                })
+            }else{
+                app.event.dispatchEvent({
+                    eventName: EVENT_ID.EVENT_PLAY_ACTOR_PUBLIC,
+                    dict: dict
+                })
+            }
+        }
+        
+        
     }
     /**
      * 单机游戏机器人创建
@@ -210,25 +225,26 @@ export class GameUserCenter extends GameServerMainInetMsg {
         })
     }
 
-    OnRecv_ActorVariableInfo(dict: proto.game_actor.Ivariable_s) {
+    OnRecv_ActorVariableInfo(dict: proto.client_proto.IGameUserAttriChangePush) {
         // fw.print(dict, " ========OnRecv_ActorVariableInfo====== ")
-        let nActorDBID = dict.user_id;
-        let actor = this.getActorByDBIDEx(nActorDBID)
+        let chairId = dict.chairId;
+        let actor = this.getActorByChairId(chairId)
         if (actor) {
-            let Variable = dict.info;
+            let Variable = dict.attriList;
+            let nActorDBID = actor[PROTO_ACTOR.UAT_UID]
             for (const k in Variable) {
                 const v = Variable[k];
-                let btPropID = v.prop_id;
+                let btPropID = v.key;
                 let nOldValue = actor[btPropID];
                 let eventTB = {
                     actor: actor,
                     nOldValue: nOldValue,
                     btPropID: btPropID,
-                    nNewValue: v.value,
+                    nNewValue: v.valueType == 1 ?  app.func.toNumber(v.value) : v.value,
                 }
                 this.setActorProp(nActorDBID, btPropID, v.value);
                 this.event.dispatchEvent({
-                    eventName: v.prop_id,
+                    eventName: v.key,
                     dict: eventTB,
                 })
                 app.event.dispatchEvent({

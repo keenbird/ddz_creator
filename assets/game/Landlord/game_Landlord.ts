@@ -9,8 +9,7 @@ export class game_Landlord extends game_GameBase {
     preloadList = [`ui`]
     /**恢复背景音乐 */
     protected initView(): boolean | void {
-        app.audio.setDefMusic(fw.BundleConfig.Landlord.res[`audio/gamebg`]);
-		app.audio.playMusic();
+        
         app.audio.resumMusic();
     }
 }

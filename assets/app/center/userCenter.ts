@@ -1,6 +1,6 @@
 import { Node } from "cc";
 
-import { ACTOR } from "../config/cmd/ActorCMD";
+import { ACTOR,PROTO_ACTOR } from "../config/cmd/ActorCMD";
 import { EVENT_ID } from "../config/EventConfig";
 import { httpConfig } from "../config/HttpConfig";
 import { DF_RATE } from "../config/ConstantConfig";
@@ -191,7 +191,7 @@ const OPENFLAG_FIRSTBINDPHONE = 0x8 //首次绑定手机
 export class UserCenter extends PlazeMainInetMsg {
     event = new EventHelp()
     /**命令ID */
-    cmd = cmds
+    cmd = proto.client_proto.USER_INFO_SUB_MSG_ID
     /**功能开关 */
     switchInfo: { [key: string]: number }
     /**引导是否完成 */
@@ -263,30 +263,30 @@ export class UserCenter extends PlazeMainInetMsg {
         super.initEvents()
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_ACTOR);
     }
-    // initRegister() {
+    initRegister() {
     //     //玩家私有数据
     //     this.bindMessage({
     //         struct: proto.plaza_actorprop.ator_private_info_s,
     //         cmd: this.cmd.PLAZA_ACTOR_PRIVATE,
     //         callback: this.OnRecv_ActorPrivateInfo.bind(this)
     //     });
-    //     //玩家易变属性
-    //     this.bindMessage({
-    //         struct: proto.plaza_actorprop.actor_variable_s,
-    //         cmd: this.cmd.PLAZA_ACTOR_VARIABLE,
-    //         callback: this.OnRecv_ActorVariable.bind(this)
-    //     });
-    //     //玩家修改资料
-    //     this.bindMessage({
-    //         struct: proto.plaza_actorprop.actor_modify_data_c,
-    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYDATA,
-    //     });
-    //     //玩家修改资料返回
-    //     this.bindMessage({
-    //         struct: proto.plaza_actorprop.actor_modify_data_ret_s,
-    //         cmd: this.cmd.PLAZA_ACTOR_MODIFYDATERET,
-    //         callback: this.OnRecv_ActorModifyDateRet.bind(this)
-    //     });
+        //玩家易变属性
+        this.bindMessage({
+            struct: proto.client_proto.UserAttriChangePush,
+            cmd: this.cmd.UISMI_USER_ATTRI_CHANGE_PUSH,
+            callback: this.OnRecv_ActorVariable.bind(this)
+        });
+        //请求背包数据
+        this.bindMessage({
+            struct: proto.client_proto.UserBagDataReq,
+            cmd: this.cmd.UISMI_USER_BAG_REQ,
+        });
+        //请求背包数据返回
+        this.bindMessage({
+            struct: proto.client_proto.UserBagDataResp,
+            cmd: this.cmd.UISMI_USER_BAG_RESP,
+            callback: this.OnRecv_UserBagResp.bind(this)
+        });
     //     //提示客户端
     //     this.bindMessage({
     //         struct: proto.plaza_actorprop.ator_tips_s,
@@ -457,8 +457,8 @@ export class UserCenter extends PlazeMainInetMsg {
     //         cmd: this.cmd.PLAZA_ACTOR_VIP_GETREWARD_RES,
     //         callback: this.OnRecv_VipRewardInfo.bind(this)
     //     });
-    // }
-    /**获取属性事件名 =>（ACTOR[ACTOR.ACTOR_PROP_GOLD] 或者 `ACTOR_EVENT_${`szMD5FaceFile`}`） */
+    }
+    /**获取属性事件名 =>（ACTOR[PROTO_ACTOR.UAT_GOLD] 或者 `ACTOR_EVENT_${`szMD5FaceFile`}`） */
     getActorEventName(actorName: string) {
         return ACTOR[actorName] ?? `ACTOR_EVENT_${actorName}`;
     }
@@ -489,7 +489,7 @@ export class UserCenter extends PlazeMainInetMsg {
     /**获取玩家头像 */
     getActorMD5Face(): string {
 
-        return this._actorProp["szFaceType"] == 0 ? this._actorProp[`szMD5FaceFile`] : this._actorProp[`szFaceSysId`]
+        return this._actorProp[PROTO_ACTOR.UAT_FACE_TYPE] == 0 ? this._actorProp[`szMD5FaceFile`] : this._actorProp[`szFaceSysId`]
     }
     /**设置玩家头像 */
     setActorMD5Face(md5Face: string): void {
@@ -497,7 +497,7 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取玩家ID */
     getUserID(): number {
-        return this._actorProp[ACTOR.ACTOR_PROP_DBID];
+        return this._actorProp[PROTO_ACTOR.UAT_UID];
     }
     /**充值总额 */
     getTotalRecharged(): number {
@@ -509,11 +509,11 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取玩家金币 */
     getActorGold(): number {
-        return this._actorProp[ACTOR.ACTOR_PROP_GOLD];
+        return this._actorProp[PROTO_ACTOR.UAT_GOLD];
     }
     /**获取玩家钻石 */
     getActorDiamond(): number {
-        return this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS];
+        return this._actorProp[PROTO_ACTOR.UAT_DIAMOND];
     }
     /**获取邮箱地址（web数据） */
     getEmail() {
@@ -633,7 +633,7 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     //修改用户资料，姓名
     sendSubmitModifyName(szName: string) {
-        let nSex = center.user.getActorProp(ACTOR.ACTOR_PROP_SEX)
+        let nSex = center.user.getActorProp(PROTO_ACTOR.UAT_SEX)
         this.sendSubmitModifyActorInfo(szName, nSex)
     }
 
@@ -694,7 +694,7 @@ export class UserCenter extends PlazeMainInetMsg {
         app.http.post({
             url: httpConfig.path_pay + "Hall/GuestBindPhone",
             params: {
-                user_id: this.getActorProp(ACTOR.ACTOR_PROP_DBID),
+                user_id: this.getActorProp(PROTO_ACTOR.UAT_UID),
                 phone: phone,
                 token: szVerify,
                 timestamp: app.func.time()
@@ -724,7 +724,7 @@ export class UserCenter extends PlazeMainInetMsg {
         app.http.post({
             url: httpConfig.path_pay + "hall/bindParam",
             params: {
-                user_id: this.getActorProp(ACTOR.ACTOR_PROP_DBID),
+                user_id: this.getActorProp(PROTO_ACTOR.UAT_UID),
                 email: email,
                 realname: name,
                 timestamp: app.func.time()
@@ -755,7 +755,7 @@ export class UserCenter extends PlazeMainInetMsg {
         app.http.post({
             url: httpConfig.path_pay + "Hall/setPaymentInfo",
             params: {
-                uid: this.getActorProp(ACTOR.ACTOR_PROP_DBID),
+                uid: this.getActorProp(PROTO_ACTOR.UAT_UID),
                 phone: phone,
                 email: email,
                 name: name,
@@ -790,7 +790,7 @@ export class UserCenter extends PlazeMainInetMsg {
         app.http.post({
             url: httpConfig.path_pay + "hall/userInfo",
             params: {
-                user_id: this.getActorProp(ACTOR.ACTOR_PROP_DBID),
+                user_id: this.getActorProp(PROTO_ACTOR.UAT_UID),
                 timestamp: app.func.time()
             },
             callback: (bSuccess, response) => {
@@ -857,7 +857,7 @@ export class UserCenter extends PlazeMainInetMsg {
         app.http.post({
             url: httpConfig.path_pay + "user/facev2",
             params: {
-                uid: this.getActorProp(ACTOR.ACTOR_PROP_DBID),
+                uid: this.getActorProp(PROTO_ACTOR.UAT_UID),
                 md5: headMd5,
                 timestamp: app.func.time()
             },
@@ -897,16 +897,15 @@ export class UserCenter extends PlazeMainInetMsg {
      * @param dict 
      */
     setLoginActor(dict: proto.client_proto.LoginAttrNtf){
-        this._actorProp["szName"] = dict.nickname;
+        this._actorProp[PROTO_ACTOR.UAT_NICKNAME] = dict.nickname;
         this._actorProp["szPhone"] = dict.phone;
-        this._actorProp[ACTOR.ACTOR_PROP_DBID] = dict.userId;
-        this._actorProp[ACTOR.ACTOR_PROP_UID] = dict.userId;
-        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex; // 性别('f'=男 'm'=女)
-        this._actorProp["szMD5FaceFile"] = dict.imgUrl;
-        this._actorProp["szFaceType"] = dict.imgType; //0:系统头像  1：自定义头像
-        this._actorProp["szFaceSysId"] = dict.imgId;
-        this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS] = dict.diamond;
-        this._actorProp[ACTOR.ACTOR_PROP_GOLD] = dict.goldbean;
+        this._actorProp[PROTO_ACTOR.UAT_UID] = dict.userId;PROTO_ACTOR.UAT_NICKNAME
+        this._actorProp[PROTO_ACTOR.UAT_SEX] = dict.sex; // 性别('f'=男 'm'=女)
+        this._actorProp[PROTO_ACTOR.UAT_FACE_URL] = dict.imgUrl;
+        this._actorProp[PROTO_ACTOR.UAT_FACE_TYPE] = dict.imgType; //0:系统头像  1：自定义头像
+        this._actorProp[PROTO_ACTOR.UAT_FACE_ID] = dict.imgId;
+        this._actorProp[PROTO_ACTOR.UAT_DIAMOND] = dict.diamond;
+        this._actorProp[PROTO_ACTOR.UAT_GOLD] = dict.goldbean;
         this.mActorProrUseChannelid = app.func.toNumber(dict.channel);//玩家渠道ID
     }
 
@@ -915,15 +914,15 @@ export class UserCenter extends PlazeMainInetMsg {
      * @param dict 
      */
     OnRecv_ActorPrivateInfo(dict: proto.plaza_actorprop.ator_private_info_s) {
-        this._actorProp["szName"] = dict.name;
+        this._actorProp[PROTO_ACTOR.UAT_NICKNAME] = dict.name;
         this._actorProp["szPhone"] = dict.phone;
-        this._actorProp["szMD5FaceFile"] = dict.md5_face_file;
+        this._actorProp[PROTO_ACTOR.UAT_FACE_URL] = dict.md5_face_file;
 
 
-        this._actorProp[ACTOR.ACTOR_PROP_DBID] = dict.actor_dbid;
-        this._actorProp[ACTOR.ACTOR_PROP_UID] = dict.uid;
-        this._actorProp[ACTOR.ACTOR_PROP_GOLD] = dict.gold;
-        this._actorProp[ACTOR.ACTOR_PROP_DIAMONDS] = dict.diamonds;
+        this._actorProp[PROTO_ACTOR.UAT_UID] = dict.actor_dbid;
+        this._actorProp[PROTO_ACTOR.UAT_UID] = dict.uid;
+        this._actorProp[PROTO_ACTOR.UAT_GOLD] = dict.gold;
+        this._actorProp[PROTO_ACTOR.UAT_DIAMOND] = dict.diamonds;
         this._actorProp[ACTOR.ACTOR_PROP_LOSTCOUNT] = dict.lost_count;
         this._actorProp[ACTOR.ACTOR_PROP_WINCOUNT] = dict.win_count;
         this._actorProp[ACTOR.ACTOR_PROP_DRAWCOUNT] = dict.draw_count;
@@ -932,7 +931,7 @@ export class UserCenter extends PlazeMainInetMsg {
         this._actorProp[ACTOR.ACTOR_PROP_VIPEXP] = dict.vip_exp;
         this._actorProp[ACTOR.ACTOR_PROP_VIPLEVEL] = dict.vip_level;
         this._actorProp[ACTOR.ACTOR_PROP_NEXTVIPLEVELEXP] = dict.next_vip_Exp;
-        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex;
+        this._actorProp[PROTO_ACTOR.UAT_SEX] = dict.sex;
         this._actorProp[ACTOR.ACTOR_PROP_GM] = dict.gm_flag;
         this._actorProp[ACTOR.ACTOR_PROP_OPENFLAG] = dict.open_flag;
         this._actorProp[ACTOR.ACTOR_PROP_BEHAVIORCTRL] = dict.behavior_ctrl_flag;
@@ -1046,7 +1045,7 @@ export class UserCenter extends PlazeMainInetMsg {
         let roomInfoLen = fw.isNull(roomInfo) ? 0 : Object.keys(roomInfo).length;
         if (roomInfoLen > 0) {
             let actor = center.user.getActor();
-            let nthisMoney = actor[ACTOR.ACTOR_PROP_GOLD];
+            let nthisMoney = actor[PROTO_ACTOR.UAT_GOLD];
             let room = center.roomList.getRoomInfo(roomInfo.kindId);
             if (room) {
                 let nMinGold = room.LimitRule[0].nMinValue;
@@ -1091,33 +1090,33 @@ export class UserCenter extends PlazeMainInetMsg {
      * 玩家易变属性
      * @param dict 
      */
-    OnRecv_ActorVariable(dict: proto.plaza_actorprop.actor_variable_s) {
-        dict.variable.forEach(v => {
-            if (v.prop_id == ACTOR.ACTOR_PROP_SERVER_TIME) {
-                let nCurTime = app.func.time()
-                this.mDelServerTime = v.new_value - nCurTime;
-            }
-            this._actorProp[v.prop_id] = v.new_value
+    OnRecv_ActorVariable(dict: proto.client_proto.IUserAttriChangePush) {
+        dict.attriList.forEach(v => {
+            // if (v.prop_id == ACTOR.ACTOR_PROP_SERVER_TIME) {
+            //     let nCurTime = app.func.time()
+            //     this.mDelServerTime = v.new_value - nCurTime;
+            // }
+            this._actorProp[v.key] = v.valueType == 1 ?  app.func.toNumber(v.value) : v.value
             this.event.dispatchEvent({
-                eventName: v.prop_id,
+                eventName: v.key,
                 dict: v,
             });
         });
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
-            dict: dict.variable,
+            dict: dict.attriList,
         });
     }
     /**
      * 玩家修改资料返回
      * @param dict 
      */
-    OnRecv_ActorModifyDateRet(dict: proto.plaza_actorprop.actor_modify_data_ret_s) {
-        this._actorProp[ACTOR.ACTOR_PROP_SEX] = dict.sex;
-        this._actorProp["szName"] = dict.name;
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_ACTOR_MODIFY_RETURN,
-        });
+    OnRecv_UserBagResp(dict: proto.plaza_actorprop.actor_modify_data_ret_s) {
+        // this._actorProp[PROTO_ACTOR.UAT_SEX] = dict.sex;
+        // this._actorProp[PROTO_ACTOR.UAT_NICKNAME] = dict.name;
+        // app.event.dispatchEvent({
+        //     eventName: EVENT_ID.EVENT_ACTOR_MODIFY_RETURN,
+        // });
     }
 
     //提示客户端
@@ -1340,7 +1339,7 @@ export class UserCenter extends PlazeMainInetMsg {
      * @param dict 
      */
     OnRecv_FaceChange(dict: proto.plaza_actorprop.face_change_s) {
-        this._actorProp["szMD5FaceFile"] = dict.md5_face_file
+        this._actorProp[PROTO_ACTOR.UAT_FACE_URL] = dict.md5_face_file
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_ICON_UPLOAD_SUCCEED,
             dict: dict
@@ -1771,7 +1770,7 @@ export class UserCenter extends PlazeMainInetMsg {
                         viewConfig: fw.BundleConfig.plaza.res[`superCashBack/superCashBack`]
                     })
                 } else {
-                    let myGold = center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD)
+                    let myGold = center.user.getActorProp(PROTO_ACTOR.UAT_GOLD)
                     if (myGold / DF_RATE < 1000 && this.mBackToPlazaHasShow < 6) {
                         this.mBackToPlazaHasShow = this.mBackToPlazaHasShow + 1
                         app.popup.showDialog({

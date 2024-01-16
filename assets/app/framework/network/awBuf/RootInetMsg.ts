@@ -48,7 +48,7 @@ export class RootInetMsg {
         pSendStream.writeSInt16(0);
         pSendStream.writeSInt8(1);
         pSendStream.writeSInt16(0); //版本
-        pSendStream.writeSInt32(0); //房间时ser id
+        pSendStream.writeSInt32(app.gameManager.gameData.nServerID); //房间时ser id
         pSendStream.writeSInt16(nMainID);
         func(pSendStream)
         return pSendStream.buffers.slice(0, pSendStream.curIndex);

@@ -1,3 +1,4 @@
+import proto from "../../../app/center/common";
 export enum ACTOR {
     ACTOR_PROP_DBID = 1, //用户的DBID
     ACTOR_PROP_UID = 2, //用户的UID
@@ -61,8 +62,9 @@ export enum ACTOR {
     ACTOR_STATE_WAITNEXT = 6, //占座等待下一场游戏状态(用户不参与本局游戏)		
     ACTOR_STATE_WAITSETPLAY = 7, //等待游戏模块设置游戏状态
     ACTOR_STATE_GMLOOK = 8, //GM旁观状态(不参与游戏)
-}
 
+}
+export const PROTO_ACTOR = proto.client_proto.USER_ATTRI_TYPE 
 export const INVAL_TABLEID = -1
 export const INVAL_CHAIRID = -1
 export const INVAL_USERID = -1

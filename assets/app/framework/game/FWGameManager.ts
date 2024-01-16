@@ -13,13 +13,19 @@ export class FWGameManager extends (fw.FWComponent) {
     //获取游戏实例
     public gameConfig: OneGameConfig
     //进游戏附加参数
-    public gameData: GameData
+    public gameData: GameData = {
+        nServerID : 0
+    }
+    //要进的房间ID
+    public room_id: number
     //获取游戏实例
     public game: type_game_GameBase
+    //是否重连
+    public isComeback: boolean
     //getRes缓存
     private searchResCache: Map<string, BundleResConfig> = new Map();
     /**是否处于测试状态 */
-    _isTest: boolean = true
+    _isTest: boolean = false
     /**是否是测试状态 */
     get isTest() {
         return app.func.isWin32() && this._isTest;
@@ -137,9 +143,10 @@ export class FWGameManager extends (fw.FWComponent) {
         });
     }
     /**前往游戏 */
-    gotoGame(gameConfig: number | string | OneGameConfig, data: GameData) {
+    gotoGame(gameConfig: number | string | OneGameConfig, room_id: number,isComeback:boolean) {
         //转换为游戏配置
         gameConfig = this.getGameConfig(gameConfig);
+        this.isComeback = isComeback
         //判断是否需要切换场景
         let isSameGame = this.gameConfig && this.gameConfig.gameName == gameConfig.gameName;
         //卸载子包资源
@@ -154,8 +161,6 @@ export class FWGameManager extends (fw.FWComponent) {
             oldCheckGameQueue.filter(v => {
                 return needFlag[v.gameName] != true
             }).forEach(v => {
-                //移除多语言
-                fw.language.delLanguageConfig({ unique: v.gameName });
                 //卸载子包
                 app.assetManager.unloadBundle(v.gameName);
             })
@@ -164,7 +169,8 @@ export class FWGameManager extends (fw.FWComponent) {
         }
         //保存配置
         this.gameConfig = gameConfig;
-        this.gameData = data;
+        // this.gameData = { nServerID : 0};
+        this.room_id = room_id
         //配置不存在
         if (fw.isNull(this.gameConfig)) {
             fw.printError(`gameConfig is Null`);
@@ -186,13 +192,19 @@ export class FWGameManager extends (fw.FWComponent) {
                         //非热更新情况下
                         //进入游戏的配置是一致的则不需要重新showMain和加载资源
                         //直接进入房间并登录
-                        if (!isUpdate && isInRoomScene && isSameGame) {
-                            //连接房间id
-                            center.gateway.connectRoom(app.gameManager.gameData.nServerID);
-                            //登录游戏服
-                            gameCenter.login.sendLoginGameServer();
+                        if ( isInRoomScene && isSameGame) {
+                            // //连接房间id
+                            // center.gateway.connectRoom(app.gameManager.gameData.nServerID);
+                            // //登录游戏服
+                            // gameCenter.login.sendLoginGameServer();
                         } else {
-                            this.changeScene(this.gameConfig);
+                            this.changeScene(this.gameConfig,()=>{
+                                if(isComeback){
+                                    gameCenter.room.sendEnterRoomREQ(room_id)
+                                }else{
+                                    gameCenter.room.sendEnterMatchREQ(room_id)
+                                }
+                            });
                         }
                     }
                 });
@@ -205,6 +217,16 @@ export class FWGameManager extends (fw.FWComponent) {
     //         });
     //     });
     }
+    /**设置服务器ID */
+    public setServerId(data:GameData) {
+        this.gameData = data;
+    }
+
+    /**设置RoomId */
+    public setRoomId(room_id:number) {
+        this.room_id = room_id;
+    }
+    
     /**清理资源缓存 */
     clearSearchResCache() {
         //清理搜索路径缓存
@@ -283,25 +305,32 @@ export class FWGameManager extends (fw.FWComponent) {
         return <OneGameConfig>gameConfig;
     }
     /**切换到游戏场景 */
-    changeScene(gameConfig: OneGameConfig): void {
+    changeScene(gameConfig: OneGameConfig,callback?:Function): void {
         //切换场景
-        fw.scene.changeScene(gameConfig.sceneConfig, { bCleanAllView: true });
+        fw.scene.changeScene(gameConfig.sceneConfig, { bCleanAllView: true ,callback:(err: any, scene: Scene)=>{
+            callback?.();
+        }});
     }
     /**退出游戏 */
     exitGame(isServerKick: boolean = false, intentData?: IntentParam): void {
+        
+        var exitFun = ()=>{
+            if (fw.scene.isGameScene()) {
+                //关闭背景音乐
+                app.audio.stopMusic();
+                //移除主界面
+                app.popup.removeMain();
+                //清理游戏数据
+                this.clean()
+                //返回大厅
+                fw.scene.changeScene(fw.SceneConfigs.plaza, intentData);
+            }
+        }
         if (!isServerKick) {
             //请求离开房间
-            gameCenter.room.sendOutRoom();
-        }
-        if (fw.scene.isGameScene()) {
-            //关闭背景音乐
-            app.audio.stopMusic();
-            //移除主界面
-            app.popup.removeMain();
-            //清理游戏数据
-            this.clean()
-            //返回大厅
-            fw.scene.changeScene(fw.SceneConfigs.plaza, intentData);
+            gameCenter.room.sendOutRoom(this.room_id ,exitFun);
+        }else{
+            exitFun()
         }
     }
     /**

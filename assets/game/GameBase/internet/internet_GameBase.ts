@@ -12,7 +12,7 @@ export class internet_GameBase extends GameInetMsg {
     /**初始化 */
     start() {
         super.start();
-        this.initGameInet(gameCenter.room, gameCenter.room.cmd.GAME_ROOM_CS_GAMEDATA);
+        // this.initGameInet(gameCenter.room, gameCenter.room.cmd.GAME_ROOM_CS_GAMEDATA);
     }
     /**房间规则 */
     setGameRuleData(struct: any, func: InetMsgCallback | InetMsgCallbackData) {

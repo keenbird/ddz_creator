@@ -26,30 +26,7 @@ export class FWToastViewBase extends FWPopupViewBase {
     showHideAnim() {
         let drSize = view.getDesignResolutionSize();
         this.node.worldPosition = new Vec3(drSize.width / 2, drSize.height * 0.8, 0);
-        switch (app.runtime.nCurScreenOrientation) {
-            case ScreenOrientationType.Vertical_false:
-            case ScreenOrientationType.Horizontal_false:
-                tween(this.node)
-                    .delay(this.popupData.time ?? 1.0)
-                    .by(2.0, { position: v3(-drSize.height * 0.2, 0, 0) })
-                    .start();
-                break;
-            case ScreenOrientationType.Vertical_true:
-            case ScreenOrientationType.Horizontal_true:
-            default:
-                tween(this.node)
-                    .delay(this.popupData.time ?? 1.0)
-                    .by(2.0, { position: v3(0, drSize.height * 0.2, 0) })
-                    .start();
-                break;
-        }
-        tween(this.obtainComponent(UIOpacityComponent))
-            .delay((this.popupData.time ?? 1.0) + 1.0)
-            .to(1.0, { opacity: 0 })
-            .call(() => {
-                this.onClickClose();
-            })
-            .start();
+        
         //刷新
         if (!fw.isNull(this.popupData.nUpdateDelayTime)) {
             if (this.popupData.updateCallback) {
@@ -63,15 +40,45 @@ export class FWToastViewBase extends FWPopupViewBase {
             }
         }
         if (!fw.isNull(this.popupData.nUpdateIntervalTime)) {
-            if (this.popupData.updateCallback) {
                 this.setInterval(() => {
-                    let str = this.popupData.updateCallback(this);
+                    let str = this.popupData.text;
+                    this.popupData.nUpdateIntervalTime --;
+                    str = str + this.popupData.nUpdateIntervalTime
                     if (!fw.isValid(this)) {
                         return;
                     }
-                    this.updatePopupView(str);
-                }, this.popupData.nUpdateIntervalTime);
+                    if(this.popupData.nUpdateIntervalTime <= 0){
+                        this.onClickClose()
+                        this.popupData.updateCallback?.()
+                    }else{
+                        this.updatePopupView(str);
+                    }
+                }, 1);
+        }else{
+            switch (app.runtime.nCurScreenOrientation) {
+                case ScreenOrientationType.Vertical_false:
+                case ScreenOrientationType.Horizontal_false:
+                    tween(this.node)
+                        .delay(this.popupData.time ?? 1.0)
+                        .by(2.0, { position: v3(-drSize.height * 0.2, 0, 0) })
+                        .start();
+                    break;
+                case ScreenOrientationType.Vertical_true:
+                case ScreenOrientationType.Horizontal_true:
+                default:
+                    tween(this.node)
+                        .delay(this.popupData.time ?? 1.0)
+                        .by(2.0, { position: v3(0, drSize.height * 0.2, 0) })
+                        .start();
+                    break;
             }
+            tween(this.obtainComponent(UIOpacityComponent))
+                .delay((this.popupData.time ?? 1.0) + 1.0)
+                .to(1.0, { opacity: 0 })
+                .call(() => {
+                    this.onClickClose();
+                })
+                .start();
         }
     }
     /**横竖屏 */

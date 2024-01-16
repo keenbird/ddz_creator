@@ -3,7 +3,7 @@ const { ccclass } = _decorator;
 
 import { yx } from '../../../yx_Landlord';
 import proto from './../../../protobuf/Landlord_format';
-import { ACTOR } from '../../../../../app/config/cmd/ActorCMD';
+import { ACTOR,PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
 import { EVENT_ID } from '../../../../../app/config/EventConfig';
 import { DF_RATE } from '../../../../../app/config/ConstantConfig';
 import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
@@ -25,7 +25,7 @@ export class player_Landlord extends player_GameBase {
     protected initEvents(): boolean | void {
         //玩家金币金币变更
         this.bindEvent({
-            eventName: ACTOR[ACTOR.ACTOR_PROP_GOLD],
+            eventName: ACTOR[PROTO_ACTOR.UAT_GOLD],
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
                 //刷新自身金币
                 this.updateOnePlayer(yx.internet.nSelfChairID);
@@ -36,7 +36,7 @@ export class player_Landlord extends player_GameBase {
             eventName: [
                 `GameReconnectRoom`,
                 EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
-                yx.internet.cmd[yx.internet.cmd.MSG_RECONNECT_S],
+                yx.internet.cmd[yx.internet.cmd.DDZ_S_RECONNECT],
             ],
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
                 //清理定时器
@@ -70,7 +70,7 @@ export class player_Landlord extends player_GameBase {
             }
             const player = this.Items[`node_player_${i}`];
             if (player) {
-                player.active = true;
+                player.active = false;
                 player.Items.btn_open_userinfo.onClickAndScale(() => {
                     //自己不处理
                     if (i == yx.func.getClientChairIDByServerChairID(yx.internet.nSelfChairID)) {
@@ -131,7 +131,7 @@ export class player_Landlord extends player_GameBase {
     /**刷新所有玩家 */
     updateAllPlayers() {
         gameCenter.user.getActors().forEach(element => {
-            this.updateOnePlayer(element[ACTOR.ACTOR_PROP_GAME_CHAIR]);
+            this.updateOnePlayer(element.chairID);
         });
     }
     /**刷新一个玩家 */
@@ -149,7 +149,7 @@ export class player_Landlord extends player_GameBase {
                 //名称
                 player.Items.player_name.string = `${playerInfo.szName}`;
                 //金币
-                player.Items.player_coin.string = `${playerInfo[ACTOR.ACTOR_PROP_GOLD]}`;
+                player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
                 // player.Items.Node_chip.active = nServerChairID == yx.internet.nSelfChairID;
                 //头像
                 // app.file.updateHead({
@@ -809,7 +809,7 @@ export class player_Landlord extends player_GameBase {
         if (!fw.isNull(data.nUserID)) {
             const actor = gameCenter.user.getActorByDBIDEx(data.nUserID);
             if (actor) {
-                data.nChairID = actor[ACTOR.ACTOR_PROP_GAME_CHAIR];
+                data.nChairID = actor.chairID;
             }
         }
         //传入了nChairID

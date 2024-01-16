@@ -44,7 +44,8 @@ export enum Root_cmd {
 export enum GS_PLAZA_MSGID {
     GS_PLAZA_MSGID_TIPS = 0, //提示 s->c
     GS_PLAZA_MSGID_LOGIN = 1, //登录 c->s->c
-    GS_PLAZA_MSGID_ACTOR = 2, //玩家 s->c
+    GS_PLAZA_MSGID_ACTOR = 4, //玩家 s->c
+    
     GS_PLAZA_MSGID_CHAT = 3, //聊天 c->s->c
     GS_PLAZA_MSGID_CONTAINER = 4, //容器 s->c
     GS_PLAZA_MSGID_TASK = 5, //任务 c->s->c
@@ -99,10 +100,10 @@ export enum GS_LOGIN_MSGID {
 }
 
 export enum GS_GAME_MSGID {
-    GS_GAME_MSGID_ROOM = 0, //房间 c->s->c	
+    GS_GAME_MSGID_ROOM = 3, //房间 c->s->c	
     GS_GAME_MSGID_TIPS = 1, //提示 s->c
     GS_GAME_MSGID_LOGIN = 2, //登录 c->s->c		
-    GS_GAME_MSGID_ACTOR = 3, //玩家 s->c
+    GS_GAME_MSGID_ACTOR = 299, //玩家 s->c
     GS_GAME_MSGID_CHAT = 4, //聊天 c->s->c	
     GS_GAME_MSGID_LUA = 5, //LUA c->s	
     GS_GAME_MSGID_MATCH = 6, //比赛 c->s->c

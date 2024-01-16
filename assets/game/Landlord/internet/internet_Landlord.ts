@@ -49,15 +49,15 @@ export class internet_Landlord extends internet_GameBase {
     
     protected initEvents(): boolean | void {
         //自己进入桌子
-        // this.bindEvent({
-        //     eventName: [
-        //         EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
-        //     ],
-        //     callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
-        //         //刷新自己的座位号
-        //         this.nSelfChairID = gameCenter.user.getSelfChairID();
-        //     },
-        // });
+        this.bindEvent({
+            eventName: [
+                EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
+            ],
+            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
+                //刷新自己的座位号
+                this.nSelfChairID = gameCenter.user.getSelfChairID();
+            },
+        });
     }
     protected initRegister(): void {
         this.bindMessage({
@@ -316,7 +316,10 @@ export class internet_Landlord extends internet_GameBase {
     DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
         this.nGameState = data.gamestate;
         this.cleanLocalData()
-
+        app.event.dispatchEvent({
+            eventName: `GameReconnectRoom`,
+            data: data,
+        });
         if(this.nGameState == yx.config.GameState.FREE){
             return
         }

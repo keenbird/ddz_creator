@@ -101,7 +101,7 @@ export class player_AB extends player_GameBase {
     /**刷新所有玩家 */
     updateAllPlayers() {
         gameCenter.user.getActors().forEach(element => {
-            this.updateOnePlayer(element[ACTOR.ACTOR_PROP_GAME_CHAIR]);
+            this.updateOnePlayer(element.chairID);
         });
     }
     /**刷新一个玩家 */
@@ -519,7 +519,7 @@ export class player_AB extends player_GameBase {
         if (!fw.isNull(data.nUserID)) {
             const actor = gameCenter.user.getActorByDBIDEx(data.nUserID);
             if (actor) {
-                data.nChairID = actor[ACTOR.ACTOR_PROP_GAME_CHAIR];
+                data.nChairID = actor.chairID;
             }
         }
         //传入了nChairID
