@@ -422,7 +422,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.m_ActorTableID.set(nActorDBID, nTableID)
                 // 非旁观者和GM才能上桌
                 // if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_WATCH && pActor[ACTOR.ACTOR_PROP_GAME_STATE] != ACTOR.ACTOR_STATE_GMLOOK) {
-                    this.table[nTableID].sitdown(nChairID, nActorDBID);
+                    // this.table[nTableID].sitdown(nChairID, nActorDBID);
                     // 和玩家同个桌子 才推送消息
                     if (nTableID == this.getMyTableID()) {
                         app.event.dispatchEvent({

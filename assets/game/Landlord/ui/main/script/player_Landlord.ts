@@ -36,7 +36,7 @@ export class player_Landlord extends player_GameBase {
             eventName: [
                 `GameReconnectRoom`,
                 EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
-                yx.internet.cmd[yx.internet.cmd.DDZ_S_RECONNECT],
+                yx.internet.cmd[yx.internet.cmd.DDZ_S_MSG_RECONNECT],
             ],
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
                 //清理定时器
