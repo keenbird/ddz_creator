@@ -168,12 +168,12 @@ export class main_Landlord extends main_GameBase {
             //     outchair : 1
             // }
             // this.didReceiveOutCard(data)
-            // // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
-            // //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            // //     cardtype : yx.config.OutCardType.Bomb,
-            // //     outchair : 2
-            // // }
-            // // this.didReceiveOutCard(data2)
+            // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     cardtype : yx.config.OutCardType.Bomb,
+            //     outchair : 2
+            // }
+            // this.didReceiveOutCard(data2)
             // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.scheduleOnce(function(){
@@ -204,7 +204,7 @@ export class main_Landlord extends main_GameBase {
             //             flag: 1
             //         }
             //     }
-            //     yx.internet.nSelfChairID = 0
+            //     yx.internet.nSelfChairID = 1
             //     this.DDZ_S_GAMEEND(dataSeettle)
             // }, 2);
             // app.popup.showToast("assssssssssssssssssssssssss");
@@ -493,16 +493,20 @@ export class main_Landlord extends main_GameBase {
         //--------------------onfree----------------------//
         //开始游戏
         this.Items.Node_BarStyleForPrivate.Items.Sprite_ContinueBtn.onClickAndScale(() => {
-            
+            this.startGameAgain()
         });
         //换桌
         this.Items.Node_BarStyleForHappy.Items.Sprite_ChangeRoom.onClickAndScale(() => {
-            
+            this.startGameAgain()
         });
         //准备
         this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.onClickAndScale(() => {
-            
+            this.startGameAgain()
         });
+    }
+    //再来一局
+    startGameAgain(){
+        gameCenter.room.sendEnterMatchREQ(app.gameManager.room_id)
     }
     //出牌判断，正确则发送出牌命令
     checkPopCard(){
@@ -829,19 +833,22 @@ export class main_Landlord extends main_GameBase {
             /* 只有开始游戏 */
             case yx.config.FreeActionBarStatus.FreeActionBarStatus_Start: {
                 this.Items.Node_BarStyleForPrivate.active = true
+                break
             }
             /* 可换桌可准备 */
             case yx.config.FreeActionBarStatus.FreeActionBarStatus_ChangeAndReady: {
                 this.Items.Node_BarStyleForHappy.active = true
                 this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.active = true
+                break
             }
             /* 已准备可换桌 */
             case yx.config.FreeActionBarStatus.FreeActionBarStatus_Change: {
                 this.Items.Node_BarStyleForHappy.active = true
                 this.Items.Node_BarStyleForHappy.Items.Sprite_GetReady.active = false
+                break
             }
             default: {
-        
+                break
             }
         }
     }
@@ -2078,6 +2085,7 @@ export class main_Landlord extends main_GameBase {
 
                 aniNode.Items.Sprite_PlayBtn_new.onClickAndScale(() => {
                     //再来一局
+                    this.startGameAgain()
                 });
 
                 aniNode.Items.Sprite_CloseBtn.onClickAndScale(() => {

@@ -8,9 +8,6 @@ import { EVENT_ID } from '../../../../../app/config/EventConfig';
 import { DF_RATE } from '../../../../../app/config/ConstantConfig';
 import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
 import { player_GameBase } from '../../../../GameBase/ui/main/script/player_GameBase';
-import { TextAsset } from '../../../../../../engine/typedoc-index';
-import { scale } from '../../../../../../engine/cocos/primitive';
-import { bool } from '../../../../../app/config/NetConfig';
 
 @ccclass('player_Landlord')
 export class player_Landlord extends player_GameBase {
@@ -151,7 +148,7 @@ export class player_Landlord extends player_GameBase {
                 player.Items.player_name.string = `${playerInfo[PROTO_ACTOR.UAT_NICKNAME]}`;
                 //金币
                 player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
-                this.setPlayerCartoonVisible(nServerChairID,true,1)
+                this.setPlayerCartoonVisible(nServerChairID,true,1,false)
                 // player.Items.Node_chip.active = nServerChairID == yx.internet.nSelfChairID;
                 //头像
                 // app.file.updateHead({
@@ -494,51 +491,65 @@ export class player_Landlord extends player_GameBase {
         }
     }
     //设置玩家玩偶形象 type1:卡通形象  type2：地主农民形象
-    setPlayerCartoonVisible(nChairID: number, bVisible: boolean, type?: number, animation?: string ) {
-        let self = this
+    setPlayerCartoonVisible(nChairID: number, bVisible: boolean, type?: number, isAni?: boolean, animation?: string ) {
+        isAni = isAni == false ? false : true
         let func = (nChairIDEx: number) => {
             let showFun = (parentNode :ccNode) => {
-                parentNode.Items.node_spine.active = false
-                parentNode.Items.node_cartoon.removeAllChildren()
-
+                
                 if(bVisible){
-                    this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_node_huantouxiang`], (res: Prefab) => {
-                        let aniNode = instantiate(res);
-                        if(!fw.isNull(aniNode)){
-                            parentNode.addChild(aniNode)
-                            
-                            const a = aniNode.getComponent(Animation);
-    
-                            a.play(`ani_node_huantouxiang`);
-                            a.on(Animation.EventType.FINISHED, () => {
-                                aniNode.removeFromParent(true)
-                            });
-                        }
-                    });
-                    this.scheduleOnce(() => {
+                    if(parentNode["cartoonType"] != type){
+                        parentNode["cartoonType"] = type
+                        let delayTime = isAni ? 0.5 : 0
                         if(type == 1){
-                            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/tx_ddz_renwuhuxi`], (res: Prefab) => {
+                            parentNode.Items.node_spine.active = false
+                        }else{
+                            parentNode.Items.node_cartoon.removeAllChildren()
+                        }
+                        if(isAni){
+                            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_node_huantouxiang`], (res: Prefab) => {
                                 let aniNode = instantiate(res);
                                 if(!fw.isNull(aniNode)){
-                                    parentNode.Items.node_cartoon.addChild(aniNode)
+                                    parentNode.addChild(aniNode)
+                                    
                                     const a = aniNode.getComponent(Animation);
-                                    a.play(`tx_ddz_renwuhuxi`);
-                                    a.getState('tx_ddz_renwuhuxi').repeatCount = Infinity;
+            
+                                    a.play(`ani_node_huantouxiang`);
+                                    a.on(Animation.EventType.FINISHED, () => {
+                                        aniNode.removeFromParent(true)
+                                    });
                                 }
                             });
-                        }else{
-                            var spk = parentNode.Items.node_spine.obtainComponent(FWSpine)
-                            
-                            this.loadBundleRes(fw.BundleConfig.Landlord.res[`effect/actor/landlordBoy/dizhu`],sp.SkeletonData, (skeletonData: sp.SkeletonData) => {
-                                
-                                spk.skeletonData  = skeletonData
-                                spk.animation = animation ? animation : "daiji"
-                                parentNode.Items.node_spine.active = true
-                          
-                            });
                         }
-                    },0.5)
+                        this.scheduleOnce(() => {
+                            if(type == 1){
+                                this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/tx_ddz_renwuhuxi`], (res: Prefab) => {
+                                    let aniNode = instantiate(res);
+                                    if(!fw.isNull(aniNode)){
+                                        parentNode.Items.node_cartoon.addChild(aniNode)
+                                        const a = aniNode.getComponent(Animation);
+                                        a.play(`tx_ddz_renwuhuxi`);
+                                        a.getState('tx_ddz_renwuhuxi').repeatCount = Infinity;
+                                    }
+                                });
+                            }else{
+                                var spk = parentNode.Items.node_spine.obtainComponent(FWSpine)
+                                
+                                this.loadBundleRes(fw.BundleConfig.Landlord.res[`effect/actor/landlordBoy/dizhu`],sp.SkeletonData, (skeletonData: sp.SkeletonData) => {
+                                    
+                                    spk.skeletonData  = skeletonData
+                                    spk.animation = animation ? animation : "daiji"
+                                    parentNode.Items.node_spine.active = true
+                            
+                                });
+                            }
+                        },delayTime)
+                    }
                     
+                    
+                }else{
+                    parentNode.Items.node_spine.active = false
+                    parentNode.Items.node_cartoon.removeAllChildren()
+                    parentNode["cartoonType"] = 0
                 }
                 
                 
