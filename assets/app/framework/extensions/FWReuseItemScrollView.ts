@@ -137,7 +137,7 @@ export class FWReuseItemScrollView<T> extends ScrollView {
                     let sprite = placeholderNode.getComponent(Sprite) || placeholderNode.addComponent(Sprite);
                     sprite.color = app.func.color(`#00ff00`);
                     sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-                    placeholderNode.updateSprite(fw.BundleConfig.resources.res[`img/atlas/default_sprite_splash/spriteFrame`]);
+                    placeholderNode.updateSprite(fw.BundleConfig.resources.res[`ui/common/img/black/spriteFrame`]);
                 }
             }
             this.checkPlaceholdNode(placeholderNode, index, nDelayTime * index);

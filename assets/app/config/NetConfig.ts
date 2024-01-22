@@ -101,6 +101,7 @@ export enum GS_LOGIN_MSGID {
 
 export enum GS_GAME_MSGID {
     GS_GAME_MSGID_ROOM = 3, //房间 c->s->c	
+    
     GS_GAME_MSGID_TIPS = 1, //提示 s->c
     GS_GAME_MSGID_LOGIN = 2, //登录 c->s->c		
     GS_GAME_MSGID_ACTOR = 299, //玩家 s->c

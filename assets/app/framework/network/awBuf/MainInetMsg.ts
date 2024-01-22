@@ -48,7 +48,7 @@ export abstract class PlazeMainInetMsg extends MainInetMsg {
 }
 export class GameServerMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {
-        // this.initCmd(Root_cmd.CMDROOT_GAMESERVER_MSG, nMainID);
+        this.initCmd(Root_cmd.CMDROOT_GAMESERVER_MSG, nMainID);
     }
 }
 export class WebMainInetMsg extends MainInetMsg {

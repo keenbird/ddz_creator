@@ -12,7 +12,7 @@ export class GameChatCenter extends GameServerMainInetMsg {
     // cmd = proto.game_chat.GS_GAME_CHAT_MSG;
     m_lastTime: number = 0;
     initData() {
-        this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_CHAT);
+        // this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_CHAT);
     }
     // initRegister() {
     //     //房间聊天

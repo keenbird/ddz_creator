@@ -416,7 +416,7 @@ export class FWFunctionUI extends (fw.FWComponent) {
             //半透明黑色
             sprite.color = data.color ?? app.func.color(`#00000080`);
             //更换精灵
-            bgNode.loadBundleRes(fw.BundleConfig.resources.res[`img/atlas/default_sprite_splash/spriteFrame`], (res: SpriteFrame) => {
+            bgNode.loadBundleRes(fw.BundleConfig.resources.res[`ui/common/img/black/spriteFrame`], (res: SpriteFrame) => {
                 sprite.spriteFrame = res;
             });
         }

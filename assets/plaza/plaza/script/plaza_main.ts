@@ -3,7 +3,7 @@ const { ccclass, property } = _decorator;
 
 import proto from '../../../app/center/common';
 import { PlazaGameConfig } from './plaza_game_config';
-import { ACTOR } from '../../../app/config/cmd/ActorCMD';
+import { ACTOR, PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
 import { EVENT_ID } from '../../../app/config/EventConfig';
 import { DF_RATE } from '../../../app/config/ConstantConfig';
 import { bubble } from '../../../resources/ui/bubble/script/bubble';
@@ -39,9 +39,9 @@ export class plaza_main extends (fw.FWComponent) {
 		// });
 		var intentData: IntentParam = {}
 		this.Items.Button_test_002.onClickAndScale(() => {
-			app.gameManager.gotoGame(`Landlord`, 1);
+			// app.gameManager.gotoGame(`Landlord`, 1);
 			
-			
+			center.game.room.sendBEFORE_MATCH_REQ(10101)
 			// intentData.bCleanAllView = true
 			// intentData.callback = (err, scene) => {
 			// 	app.popup.showMain({
@@ -60,7 +60,9 @@ export class plaza_main extends (fw.FWComponent) {
 		//缓存大厅，不清理
 		app.runtime.permanentView.set(this.node, true);
 		app.runtime.plaza = this.node;
-	
+		
+		//适配
+		this.fitSceneNode();
 		//更新玩家信息
 		this.updatePlayerInfo();
 		//运营活动
@@ -69,6 +71,15 @@ export class plaza_main extends (fw.FWComponent) {
 		// this.updateGames();
 		//刷新特殊游戏
 		// this.updateSpecialGame();
+		
+	}
+	protected fitSceneNode(){
+		if(app.isIphoneX){
+			this.scheduleOnce(()=>{
+				this.Items.Node_activitys.setPosition(v3(this.Items.Node_activitys.getPosition().x+66,this.Items.Node_activitys.getPosition().y,1))
+		
+			},0)
+			}
 	}
 	protected initBtns(): boolean | void {
 		//AddCash
@@ -183,6 +194,15 @@ export class plaza_main extends (fw.FWComponent) {
 
 		if (app.runtime.lastSceneType != fw.SceneConfigs.plaza.sceneName) {
 			// this.onEnterProcess()
+		}
+		if(app.func.isWeChat() && center.user.getActorProp(PROTO_ACTOR.UAT_FACE_TYPE) == 1){
+			app.native.device.getWechatUserInfo(this.Items.Node_head,()=>{
+				this.Items.Node_head.onClickAndScale(() => {
+					app.popup.showDialog({
+						viewConfig: fw.BundleConfig.plaza.res[`userInfo/userInfo_dialog`]
+					});
+				});
+			})
 		}
 		//刷新特殊游戏 新手引导没了不需要了
 		// this.updateSpecialGame();
@@ -671,13 +691,9 @@ export class plaza_main extends (fw.FWComponent) {
 			node: this.Items.Sprite_head,
 			serverPicID: center.user.getActorMD5Face(),
 		});
-		this.Items.Node_head.onClickAndScale(() => {
-			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.plaza.res[`userInfo/userInfo_dialog`]
-			});
-		});
+		
 		this.Items.Sprite_head.bindEvent({
-			eventName: `ACTOR_EVENT_${`szMD5FaceFile`}`,
+			eventName: `ACTOR_EVENT_${PROTO_ACTOR.UAT_FACE_URL}`,
 			callback: () => {
 				app.file.updateHead({
 					node: this.Items.Sprite_head,
@@ -685,12 +701,13 @@ export class plaza_main extends (fw.FWComponent) {
 				});
 			}
 		});
+		
 		//id
 		this.Items.Label_id.string = `ID: ${center.user.getUserID()}`;
 		//名称
 		this.Items.Label_name.string = center.user.getActorName();
 		this.Items.Label_name.bindEvent({
-			eventName: `ACTOR_EVENT_${`szName`}`,
+			eventName: `ACTOR_EVENT_${PROTO_ACTOR.UAT_NICKNAME}`,
 			callback: () => {
 				this.Items.Label_name.string = center.user.getActorName();
 			}
@@ -702,8 +719,8 @@ export class plaza_main extends (fw.FWComponent) {
 			eventName: ACTOR.ACTOR_PROP_GOLD,
 			callback: this.updateGold.bind(this)
 		});
-		let Node_gold = this.Items.Node_gold;
-		let pos = Node_gold.getComponent(UITransform).convertToWorldSpaceAR(v3(0, 0, 0));
+		let node_coin = this.Items.node_coin;
+		let pos = node_coin.getComponent(UITransform).convertToWorldSpaceAR(v3(0, 0, 0));
 		center.plaza.setPlazaGoldPos(pos);
 		//钻石
 		this.updateDiamond();
@@ -848,6 +865,7 @@ export class plaza_main extends (fw.FWComponent) {
 			// });
 		});
 	}
+	
 	initBtnPrizeWheel() {
 		this.Items.Node_wheel.onClickAndScale(() => {
 			// app.popup.showDialog({

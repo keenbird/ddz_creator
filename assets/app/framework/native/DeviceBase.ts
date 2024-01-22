@@ -1,4 +1,4 @@
-import { _decorator } from 'cc';
+import { _decorator,Node as ccNode } from 'cc';
 const { ccclass } = _decorator;
 
 import { ModuleBase } from './ModuleBase';
@@ -75,6 +75,8 @@ export abstract class DeviceBase extends ModuleBase {
     abstract somePermissionPermanentlyDenied(...args: string[]): boolean;
     /**检测权限是被授权 */
     abstract hasPermissions(...args: string[]): boolean;
+    /**获取微信用户昵称头像信息 */
+    abstract getWechatUserInfo(parentNode:ccNode,parentClickCallback?:Function)
     /**
      * 请求权限
      * @param rationale 描述

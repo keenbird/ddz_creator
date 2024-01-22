@@ -13,6 +13,7 @@ const config = {
         //大厅
         main: <BundleConfigType>{},
         plaza: <BundleConfigType>{},
+        login: <BundleConfigType>{},
         resources: <BundleConfigType>{},
     },
     /**作为游戏所需的配置，gameId为后台子集分类值，客户端自定义的版本号要从10000起步，因为后台有业务逻辑 */
@@ -34,9 +35,11 @@ const config = {
     scene: {
         //普通
         AB: <OneSceneConfig>{ bGame: true },
-        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true,preloadList:[]},
+        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true,preloadList:[`ui/main/main`]},
         //大厅
         plaza: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, preloadList: sys.isBrowser ? [] : ['activity',  'shop'] },
+        //登录选择界面
+        login: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, },
         app: <OneSceneConfig>{ frameRate: 30, bSubPackage: false, },
     }
 }

@@ -7,7 +7,7 @@ let D_GameVersion = 11
 export class GameLoginCenter extends GameServerMainInetMsg {
     // cmd = proto.game_login.GS_GAME_LOGIN_MSG;
     initEvents() {
-        this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_LOGIN);
+        // this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_LOGIN);
     }
 
     // initRegister() {

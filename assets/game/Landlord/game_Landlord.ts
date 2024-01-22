@@ -6,7 +6,7 @@ import { game_GameBase } from '../GameBase/game_GameBase';
 @ccclass('game_Landlord')
 export class game_Landlord extends game_GameBase {
     /**预加载文件夹列表 子类使用“=”赋值 */
-    preloadList = [`ui`]
+    preloadList = []
     /**恢复背景音乐 */
     protected initView(): boolean | void {
         

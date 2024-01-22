@@ -11,7 +11,7 @@ export class GameTipsCenter extends GameServerMainInetMsg {
     /**命令ID */
     // cmd = proto.game_tips.GS_TIPS_MSG;
     initData() {
-        this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_TIPS);
+        // this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_TIPS);
     }
     // initRegister() {
     //     //提示

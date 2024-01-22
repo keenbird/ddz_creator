@@ -161,21 +161,34 @@ export class main_Landlord extends main_GameBase {
         //--------------test-------------//
         // this.scheduleOnce(function(){
             // this.didReceiveSendCard()
+            // yx.internet.nSelfChairID = 0
             // this.showBasePool(true);
             // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
             //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
             //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
-            //     outchair : 1
+            //     outchair : 2
             // }
             // this.didReceiveOutCard(data)
             // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     outcards : [17,18,19,20,21,22,23,24,25,26,27,28,29],
             //     cardtype : yx.config.OutCardType.Bomb,
-            //     outchair : 2
+            //     outchair : 1
             // }
             // this.didReceiveOutCard(data2)
-            // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // this.scheduleOnce(function(){
+            //     let data:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //         outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //         cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
+            //         outchair : 2
+            //     }
+            //     this.didReceiveOutCard(data)
+            // }, 2);
+            // this.scheduleOnce(function(){
+            //     this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // }, 4);
+            // // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            // // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.scheduleOnce(function(){
             //     // this.showLastThreeCardAndMove([78,79,50],0)
             //     // this.showDipaiBieshu(true,true,3)
@@ -206,7 +219,7 @@ export class main_Landlord extends main_GameBase {
             //     }
             //     yx.internet.nSelfChairID = 1
             //     this.DDZ_S_GAMEEND(dataSeettle)
-            // }, 2);
+            // }, 6);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
@@ -960,7 +973,7 @@ export class main_Landlord extends main_GameBase {
             outCardParent.addChild(card)
             cardArr.push(card)
             if(cardType >= yx.config.OutCardType.Sequence && cardType <= yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs && needAni){
-                card.setPosition(ClientChairID == 1 ? (cardData.length >=10 ? posVecs[10 - 1].x :posVecs[cardData.length - 1].x) : posVecs[0].x, posVecs[i].y)
+                card.setPosition(ClientChairID == 1 ? posVecs[cardData.length - 1] : posVecs[0])
                 tween(card)
                     .to(0.2,{ position:posVecs[i] })
                     .start()
@@ -1022,7 +1035,7 @@ export class main_Landlord extends main_GameBase {
     //展示摊牌
     didReceiveTanpai(nChairID:number,cardData:number[]){
         const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
-        var posVecs = yx.func.getCardPositionForOutCard(ClientChairID,cardData.length)
+        var posVecs = yx.func.getCardPositionForTanCard(ClientChairID,cardData.length)
         var mingpaiParent:ccNode = this.player.getOutCardParent(nChairID,true)
 
         const tScale = yx.config.CARD_SCALE_OUT_CARDS
@@ -1758,7 +1771,8 @@ export class main_Landlord extends main_GameBase {
         if(content != ""){
             this.player.setPlayerCallStateVisible(data.callchair,true,content)
             if(needAni){
-                this.showXbeiAni(yx.internet.ddzBaseInfo.calltimes,data.toptimes)
+                let callTimes = data.callcode == proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_CALL ? 3 : 2
+                this.showXbeiAni(callTimes,data.toptimes)
                 var soundData:landlordSoundInitData = {
                     // pActor : player:getActor(),
                     tag : soundTag,
@@ -2063,6 +2077,7 @@ export class main_Landlord extends main_GameBase {
             let aniNode = instantiate(res);
             if(!fw.isNull(aniNode)){
                 this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
+                aniNode.Items.Layout_close.getComponent(UITransform).setContentSize(app.winSize );
                 var tScale = 1
                 aniNode.scale = v3(tScale, tScale, tScale)
                 const a = aniNode.getComponent(Animation);

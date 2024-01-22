@@ -55,32 +55,9 @@ export class setting extends FWDialogViewBase {
 		this.setInterval(() => {
 			this.bCanWrite = true;
 		}, 0.1);
-		//菜单
-		let func = (data: LanguageMenuBtnParam) => {
-			fw.language.init(data.nLanguageType);
-		}
-		let btns: LanguageMenuBtnParam[] = [
-			{
-				nLanguageType: fw.LanguageType.en,
-				node: this.Items.Node_english,
-				callback: func
-			},
-			{
-				nLanguageType: fw.LanguageType.brasil,
-				node: this.Items.Node_brasil,
-				callback: func
-			},
-		]
-		let defaultIndex = 0;
-		app.func.positiveTraversal(btns, (element, index) => {
-			if (element.nLanguageType == fw.language.languageType) {
-				defaultIndex = index;
-				return true;
-			}
-		});
-		app.func.createMenu<LanguageMenuBtnParam>({
-			btns,
-			defaultIndex,
+
+		this.Items.Node_close.onClickAndScale(() => {
+			this.onCancelClickClose()
 		});
 	}
 	updateSlider(slider: ccNode, bSwitch: boolean, nProgress: number, bSlider: boolean) {

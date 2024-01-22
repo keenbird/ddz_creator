@@ -40,6 +40,10 @@ export class Application extends FWSceneBase {
     get winSize(): Size {
         return view.getVisibleSize();
     }
+    /**是否为刘海屏 */
+    get isIphoneX(): boolean {
+        return view.getVisibleSize().width / view.getVisibleSize().height > 2
+    }
     /**原生 */
     nativeBase: any
     /**初始化 */
@@ -217,13 +221,19 @@ export class Application extends FWSceneBase {
     }
     /**去往更新场景 */
     gotoUpdateScene() { 
-        if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
-            app.popup.showDialog({
-                viewConfig: fw.BundleConfig.resources.res["selectServer/selectServer"]
-            });
-        } else {
-            center.login.selectServer(servers_default);
-        }
+   
+        fw.scene.changeScene(fw.SceneConfigs.login, {
+            callback : (err, scene)=>{
+                //调整主界面
+                if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
+                    app.popup.showDialog({
+                        viewConfig: fw.BundleConfig.login.res["selectServer/selectServer"]
+                    });
+                } else {
+                    center.login.selectServer(servers_default);
+                }
+            }
+        });
         //关闭闪屏界面
         // this.native.device.hideSplashView();
     }

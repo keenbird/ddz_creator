@@ -30,11 +30,7 @@ export class player_Landlord extends player_GameBase {
         });
         //自己进入桌子
         this.bindEvent({
-            eventName: [
-                `GameReconnectRoom`,
-                EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
-                yx.internet.cmd[yx.internet.cmd.DDZ_S_MSG_RECONNECT],
-            ],
+            eventName: EVENT_ID.EVENT_PLAY_ACTOR_SELFONTABLE,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
                 //清理定时器
                 this.unscheduleAllCallbacks();
@@ -127,10 +123,12 @@ export class player_Landlord extends player_GameBase {
     }
     /**刷新所有玩家 */
     updateAllPlayers() {
-        let Actors = gameCenter.user.getActors()
-        Actors.forEach(element => {
-            this.updateOnePlayer(element.chairID);
-        });
+        for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+            let Actors = gameCenter.user.getActorByChairId(i)
+            if(Actors){
+                this.updateOnePlayer(i);
+            }
+        }
     }
     /**刷新一个玩家 */
     updateOnePlayer(nServerChairID: number) {
@@ -167,9 +165,13 @@ export class player_Landlord extends player_GameBase {
         if(ClientChairID == 0){
             node =  this.Items.Node_bottom.Items.node_OutCardPos
         }else{
-            const player = this.getPlayerNode({ nChairID: nChairID });
-            if (player) {
-                node =  player.Items.node_outcard_pos
+            for(let i=1;i<=yx.internet.nMaxPlayerCount-1;i++){
+                if(i==ClientChairID){
+                    node =  this.Items["node_outcard_pos_"+ClientChairID]
+                    node.setSiblingIndex(1)
+                }else{
+                    this.Items["node_outcard_pos_"+i].setSiblingIndex(0)
+                }
             }
         }
         if(isCleanChild){
@@ -495,11 +497,10 @@ export class player_Landlord extends player_GameBase {
         isAni = isAni == false ? false : true
         let func = (nChairIDEx: number) => {
             let showFun = (parentNode :ccNode) => {
-                
                 if(bVisible){
-                    if(parentNode["cartoonType"] != type){
-                        parentNode["cartoonType"] = type
-                        let delayTime = isAni ? 0.5 : 0
+                    if((type == 1 && parentNode.Items.node_cartoon.children.length == 0) || (type == 2 && !parentNode.Items.node_spine.active)){
+                        
+                        var delayTime = isAni ? 0.5 : 0.1
                         if(type == 1){
                             parentNode.Items.node_spine.active = false
                         }else{
@@ -528,7 +529,10 @@ export class player_Landlord extends player_GameBase {
                                         parentNode.Items.node_cartoon.addChild(aniNode)
                                         const a = aniNode.getComponent(Animation);
                                         a.play(`tx_ddz_renwuhuxi`);
-                                        a.getState('tx_ddz_renwuhuxi').repeatCount = Infinity;
+                                        // a.getState('tx_ddz_renwuhuxi').repeatCount = Infinity;
+                                        a.on(Animation.EventType.FINISHED, () => {
+                                            a.play(`tx_ddz_renwuhuxi`);
+                                        });
                                     }
                                 });
                             }else{
@@ -549,7 +553,6 @@ export class player_Landlord extends player_GameBase {
                 }else{
                     parentNode.Items.node_spine.active = false
                     parentNode.Items.node_cartoon.removeAllChildren()
-                    parentNode["cartoonType"] = 0
                 }
                 
                 

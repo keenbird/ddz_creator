@@ -77,6 +77,11 @@ class _FWSceneManager extends (fw.FWClass) {
             app.popup.closeAllToast();
             app.popup.closeAllTip();
         }
+        //清理微信获取用户信息按钮
+        if (app.native.device.btnWechatUserInfo) {
+            app.native.device.btnWechatUserInfo.destroy()
+            app.native.device.btnWechatUserInfo = null
+        }
         //是否是子包
         if (sceneConfig.bSubPackage) {
             app.assetManager.loadBundle(sceneConfig.bundleConfig,bundle => {
@@ -228,20 +233,21 @@ class _FWSceneManager extends (fw.FWClass) {
     /**切换大厅热更新界面 */
     changePlazaUpdate(intentData: IntentParam = {}) {
         // //断开连接
-        // center.login.closeConnect();
-        // let callback = intentData.callback;
-        // intentData.callback = (err, scene) => {
-        //     //调整主界面
-        //     if (fw.DEBUG.bSelectServer) {
-        //         app.popup.showMain({
-        //             viewConfig: fw.BundleConfig.resources.res["selectServer/selectServer"]
-        //         });
-        //     } else {
-        //         center.login.selectServer(servers_default);
-        //     }
-        //     callback?.(err, scene);
-        // }
-        // fw.scene.changeScene(fw.SceneConfigs.update, intentData);
+        center.login.closeConnect();
+        
+        let callback = intentData.callback;
+        intentData.callback = (err, scene) => {
+            //调整主界面
+            if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
+                app.popup.showMain({
+                    viewConfig: fw.BundleConfig.login.res["selectServer/selectServer"]
+                });
+            } else {
+                center.login.selectServer(servers_default);
+            }
+            callback?.(err, scene);
+        }
+        fw.scene.changeScene(fw.SceneConfigs.login, intentData);
     }
     /**切换游戏热更新界面 */
     changeGameUpdate(intentData: IntentParam = {}) {

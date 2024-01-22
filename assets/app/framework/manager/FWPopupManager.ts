@@ -918,7 +918,7 @@ export class FWPopupManager extends (fw.FWComponent) {
         //添加Widget
         let widget = app.func.setWidget({ node: maskNode });
         //设置SpriteFrame
-        maskNode.loadBundleRes(fw.BundleConfig.resources.res[`img/atlas/default_sprite_splash/spriteFrame`], (res: SpriteFrame) => {
+        maskNode.loadBundleRes(fw.BundleConfig.resources.res[`ui/common/img/black/spriteFrame`], (res: SpriteFrame) => {
             //更换精灵
             sprite.spriteFrame = res;
             //调整颜色

@@ -1,10 +1,11 @@
-import { _decorator, sys } from 'cc';
+import { _decorator, sys ,Node as ccNode, UITransform } from 'cc';
 import { NETWORK_TYPE } from '../../config/ConstantConfig';
 const { ccclass } = _decorator;
 import { DeviceBase, LngAndLat } from './DeviceBase';
 
 @ccclass('DeviceWechat')
 export class DeviceWechat extends DeviceBase {
+    public btnWechatUserInfo:wx.UserInfoButton = null
     
     installApk(filePath: string): void {
         fw.print("未能实现安装",filePath)
@@ -212,7 +213,63 @@ export class DeviceWechat extends DeviceBase {
     shareTextToWhatsApp(shareStr: string) {
         return;
     }
-
+    getWechatUserInfo(parentNode:ccNode,parentClickCallback?:Function) {
+        let self = this
+        wx.getSetting({
+            success (res){
+              if (res.authSetting['scope.userInfo']) {
+                // 已经授权，可以直接调用 getUserInfo 获取头像昵称
+                wx.getUserInfo({
+                  success: function(res) {
+                    parentClickCallback?.()
+                  }
+                })
+              } else {
+                if(!fw.isNull(parentNode)){
+                    let sysInfo = wx.getSystemInfoSync();
+                    let size_scale_width = sysInfo.screenWidth / app.winSize.width
+                    let parentNode_width = parentNode.getComponent(UITransform).width * parentNode.scale.x
+                    let parentNode_height = parentNode.getComponent(UITransform).height* parentNode.scale.y
+                    let x = (parentNode.worldPosition.x  - parentNode_width/2) * size_scale_width
+                    let y = ( app.winSize.height -parentNode.worldPosition.y - parentNode_height/2) * size_scale_width
+                    let width = parentNode_width*size_scale_width
+                    let height = parentNode_height*size_scale_width
+                   
+                    // 否则，先通过 wx.createUserInfoButton 接口发起授权
+                    let button = wx.createUserInfoButton({
+                        type: 'text',
+                        text: '',
+                        style: {
+                        left: x ,
+                        top: y,
+                        width: width,
+                        height: height,
+                        lineHeight: 1,
+                        backgroundColor: '#ff000064',
+                        color: '#ffffff',
+                        textAlign: 'center',
+                        fontSize: 1,
+                        borderRadius: 4
+                        }
+                    })
+                    self.btnWechatUserInfo = button
+                    button.onTap((res) => {
+                        // 用户同意授权后回调，通过回调可获取用户头像昵称信息
+                        if(res.userInfo){
+                            parentClickCallback?.()
+                            button.destroy()
+                            //res.userInfo.avatarUrl
+                            //res.userInfo.nickName
+                            self.btnWechatUserInfo = null
+                        }
+                        
+                    })
+                    return button
+                }
+              }
+            }
+          })
+    }
 }
 
 

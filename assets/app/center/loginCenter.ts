@@ -73,6 +73,7 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     loginToServer() {
+        
         if (!app.socket.isWorking()) {
             this.connectServer()
             return
@@ -210,7 +211,7 @@ export class LoginCenter extends LoginMainInetMsg {
         this.m_strLoginMachineName = app.native.device.getMachineName()
         this.m_strLoginBuffHD = app.native.device.getHDID()
         this.m_strLoginUUID = app.native.device.getUUID()
-        
+
         var callback = function(bSuccess: boolean, response: any){
             this.m_strToken = response.data.token
             this.m_strSessionKey = response.data.thirdData.sessionKey
@@ -350,7 +351,7 @@ export class LoginCenter extends LoginMainInetMsg {
         // })
     }
 
-    OnRecv_LoginAttrNtf(dict: proto.client_proto.LoginAttrNtf) {
+    OnRecv_LoginAttrNtf(dict: proto.client_proto.ILoginAttrNtf) {
         center.user.setLoginActor(dict)
         this.loginPlaza()
     }
@@ -558,7 +559,7 @@ export class LoginCenter extends LoginMainInetMsg {
     selectServer(serverData: server_config) {
         if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
             app.popup.showDialog({
-                viewConfig: fw.BundleConfig.resources.res["testlogin/login_main"],
+                viewConfig: fw.BundleConfig.login.res["testlogin/login_main"],
             });
         } else {
             this.loginPlaza()

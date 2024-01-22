@@ -211,9 +211,13 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     /**退出配桌 */
     OnRecv_EXIT_MATCH_RESP(dict: proto.client_proto.IExitMatchTableResp) {
         if(dict.result > 0){
-            app.gameManager.setServerId(0)
-            app.gameManager.setRoomId(0)
-            this.exitFun ?.()
+            if(dict.result == 1 ){
+                app.gameManager.setServerId(0)
+                app.gameManager.setRoomId(0)
+                this.exitFun ?.()
+            }else if(dict.result == 2){
+                //服务器让我们继续申请匹配，但是不在这里响应
+            }
         }else{
             app.popup.showTip({
                 text: "正在游戏中,请不要退出",
@@ -339,7 +343,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     sendEnterRoomREQ(room_id: number) {
         let sData = proto.client_proto.EnterRoomReq.create();
         sData.roomId = room_id;
-        return this.sendData(this.cmd.RLSMI_EXIT_MATCH_REQ, sData);
+        return this.sendData(this.cmd.RLSMI_ENTER_ROOM_REQ, sData);
     }
 
     /**上桌 */

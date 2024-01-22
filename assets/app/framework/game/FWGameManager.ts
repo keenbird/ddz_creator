@@ -197,6 +197,11 @@ export class FWGameManager extends (fw.FWComponent) {
                             // center.gateway.connectRoom(app.gameManager.gameData.nServerID);
                             // //登录游戏服
                             // gameCenter.login.sendLoginGameServer();
+                            if(app.gameManager.isComeback){
+                                gameCenter.room.sendEnterRoomREQ(app.gameManager.room_id)
+                            }else{
+                                gameCenter.room.sendEnterMatchREQ(app.gameManager.room_id)
+                            }
                         } else {
                             this.changeScene(this.gameConfig);
                         }

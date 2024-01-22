@@ -208,6 +208,25 @@ export class func_Landlord extends func_GameBase {
             }
         }else if(ClientChairID == 1){
             for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(cardCount -i - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,0,1))
+            }
+        }else if(ClientChairID == 2){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i),0,1))
+            }
+        }
+        return posVecs
+    }
+
+    //获取摊牌的坐标
+    getCardPositionForTanCard(ClientChairID:number,cardCount:number):Vec3[]{
+        var posVecs:Vec3[] = []
+        if(ClientChairID == 0){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i-(cardCount-1)/2)-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS*0.5,0,1))
+            }
+        }else if(ClientChairID == 1){
+            for(var i=0;i<cardCount;i++){
                 posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(10 -i%10 - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,-70*(Math.floor(i/10)),1))
             }
         }else if(ClientChairID == 2){

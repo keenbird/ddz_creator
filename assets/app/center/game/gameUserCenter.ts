@@ -309,7 +309,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
         }
         return actor;
     }
-
+    //禁用，微信小游戏获取到的map值和其他平台不一样
     getActors() {
         return [...this.m_ActorMap.values()];
     }

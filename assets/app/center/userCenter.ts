@@ -8,6 +8,7 @@ import { GS_PLAZA_MSGID } from "../config/NetConfig";
 import { EventHelp, addEvent } from "../framework/manager/FWEventManager";
 import { PlazeMainInetMsg } from "../framework/network/awBuf/MainInetMsg";
 import proto from "./common";
+import { Type } from "protobufjs";
 
 enum cmds {
     PLAZA_ACTOR_PRIVATE = 0,//	玩家私有数据										s->c
@@ -200,7 +201,7 @@ export class UserCenter extends PlazeMainInetMsg {
     BITSETFLAG = BITSETFLAG
     /**易变属性 */
     _actorProp = new Proxy(<any>{}, {
-        set(target: object, p: string, newValue: any, receiver: any): boolean {
+        set(target: object, p: string , newValue: any, receiver: any): boolean {
             /**旧值 */
             let oldValue = Reflect.get(target, p);
             /**刷新数值 */
@@ -458,7 +459,7 @@ export class UserCenter extends PlazeMainInetMsg {
     //         callback: this.OnRecv_VipRewardInfo.bind(this)
     //     });
     }
-    /**获取属性事件名 =>（ACTOR[PROTO_ACTOR.UAT_GOLD] 或者 `ACTOR_EVENT_${`szMD5FaceFile`}`） */
+    /**获取属性事件名 =>（ACTOR[PROTO_ACTOR.UAT_GOLD] 或者 `ACTOR_EVENT_${PROTO_ACTOR.UAT_FACE_URL}`） */
     getActorEventName(actorName: string) {
         return ACTOR[actorName] ?? `ACTOR_EVENT_${actorName}`;
     }
@@ -471,7 +472,7 @@ export class UserCenter extends PlazeMainInetMsg {
         return this.nPlazaServerID;
     }
     /**获取玩家属性 */
-    getActorProp(actor: ACTOR | string): any {
+    getActorProp(actor: ACTOR | string | number): any {
         return this._actorProp[actor];
     }
     /**获取玩家vip等级 */
@@ -480,7 +481,7 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取玩家姓名 */
     getActorName(): string {
-        return this._actorProp[`szName`] ?? ``;
+        return this._actorProp[PROTO_ACTOR.UAT_NICKNAME] ?? ``;
     }
     /**得到玩家手机号 */
     getActorPhone() {
@@ -488,12 +489,11 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取玩家头像 */
     getActorMD5Face(): string {
-
-        return this._actorProp[PROTO_ACTOR.UAT_FACE_TYPE] == 0 ? this._actorProp[`szMD5FaceFile`] : this._actorProp[`szFaceSysId`]
+        return this._actorProp[PROTO_ACTOR.UAT_FACE_TYPE] == 1 ? this._actorProp[PROTO_ACTOR.UAT_FACE_ID] : this._actorProp[PROTO_ACTOR.UAT_FACE_URL]
     }
     /**设置玩家头像 */
     setActorMD5Face(md5Face: string): void {
-        this._actorProp[`szMD5FaceFile`] = md5Face;
+        this._actorProp[PROTO_ACTOR.UAT_FACE_URL] = md5Face;
     }
     /**获取玩家ID */
     getUserID(): number {
@@ -896,7 +896,7 @@ export class UserCenter extends PlazeMainInetMsg {
      * 玩家登录属性储存
      * @param dict 
      */
-    setLoginActor(dict: proto.client_proto.LoginAttrNtf){
+    setLoginActor(dict: proto.client_proto.ILoginAttrNtf){
         this._actorProp[PROTO_ACTOR.UAT_NICKNAME] = dict.nickname;
         this._actorProp["szPhone"] = dict.phone;
         this._actorProp[PROTO_ACTOR.UAT_UID] = dict.userId;PROTO_ACTOR.UAT_NICKNAME

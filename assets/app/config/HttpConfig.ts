@@ -130,4 +130,16 @@ export const servers: Array<server_config> = [
         url_downRes: "http://192.168.10.54/Static/",
         url_feedback: "http://192.168.10.54/"
     },
+    {
+        Name: "张探",
+        url_login: "192.168.1.48",
+        port_min: 11001,
+        port_max: 11001,
+        url_facedown: "http://192.168.10.54/Static/",
+        url_faceup: "http://192.168.10.54/",
+        url_active: "http://192.168.10.54:83/",
+        url_payroot: "http://192.168.10.54:91/",
+        url_downRes: "http://192.168.10.54/Static/",
+        url_feedback: "http://192.168.10.54/"
+    },
 ]
