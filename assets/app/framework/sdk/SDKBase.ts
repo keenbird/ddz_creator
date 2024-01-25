@@ -398,7 +398,7 @@ export abstract class SDKBase extends (fw.FWComponent) {
      * 登录成功后上报位置信息 没有权限会导致本次上报失败
      */
     uploadLngAndLat() {
-        let user_id = center.user.getActorProp(ACTOR.ACTOR_PROP_DBID);
+        let user_id = center.user.getActorProp(PROTO_ACTOR.UAT_UID);
         let day = new Date().getDay();
         let lastDay = app.file.getIntegerForKey("uploadLngAndLatDay", 0)
         fw.print("uploadLngAndLat", day, lastDay)

@@ -126,7 +126,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
     }
 
     isMe(pActor) {
-        return pActor[ACTOR.ACTOR_PROP_DBID] == center.login.getUserDBID()
+        return pActor[PROTO_ACTOR.UAT_UID] == center.login.getUserDBID()
     }
     // 玩家共有属性
     initPlayPublicInfo(dict: proto.client_proto.ICommonGamePlayerInfo,tableID:number) {
@@ -144,7 +144,6 @@ export class GameUserCenter extends GameServerMainInetMsg {
         actor[PROTO_ACTOR.UAT_DIAMOND] = dict.diamondNum; // 携带钻石
         actor.tableID = tableID; // 桌号
         actor.chairID = dict.chairId; // 椅子
-
         return actor
     }
 
@@ -184,15 +183,21 @@ export class GameUserCenter extends GameServerMainInetMsg {
             if(this.isMe(actor)){
                 app.event.dispatchEvent({
                     eventName: EVENT_ID.EVENT_PLAY_ACTOR_PRIVATE,
-                    dict: dict.useList[i]
-                })
-            }else{
-                app.event.dispatchEvent({
-                    eventName: EVENT_ID.EVENT_PLAY_ACTOR_PUBLIC,
-                    dict: dict
+                    dict: actor
                 })
             }
         }
+
+        for(var i=0;i<dict.useList.length;i++){
+            let nActorDBID = dict.useList[i].userId;
+            let actor = this.m_ActorMap.get(nActorDBID);
+            app.event.dispatchEvent({
+                eventName: EVENT_ID.EVENT_PLAY_ACTOR_PUBLIC,
+                dict: actor
+            })
+        }
+        
+        app.popup.closeAllToast()
         
         
     }

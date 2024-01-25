@@ -64,6 +64,7 @@ export class player_Landlord extends player_GameBase {
             const player = this.Items[`node_player_${i}`];
             if (player) {
                 player.active = false;
+                this.setPlayerCartoonVisible(i,false)
                 player.Items.btn_open_userinfo.onClickAndScale(() => {
                     //自己不处理
                     if (i == yx.func.getClientChairIDByServerChairID(yx.internet.nSelfChairID)) {
@@ -74,7 +75,7 @@ export class player_Landlord extends player_GameBase {
                     if (!playerInfo) {
                         return;
                     }
-                    this.showEmojiView({ nUserID: playerInfo[ACTOR.ACTOR_PROP_DBID] });
+                    // this.showEmojiView({ nUserID: playerInfo[PROTO_ACTOR.UAT_UID] });
                     
                     
                 });
@@ -95,7 +96,7 @@ export class player_Landlord extends player_GameBase {
         //隐藏对面两家牌数
         this.setPlayerCardNumVisible(null, false );
         //隐藏所有玩家玩偶形象
-        this.setPlayerCartoonVisible(null, false );
+        // this.setPlayerCartoonVisible(null, false );
         //隐藏所有玩家气泡
         this.setPlayerChatBubble(null, false );
         //隐藏所有玩家托管状态
@@ -114,6 +115,8 @@ export class player_Landlord extends player_GameBase {
 
         // //隐藏部分简单界面
         for (let nChairID = 0, j = yx.internet.nMaxPlayerCount; nChairID < j; ++nChairID) {
+            this.getMingpaiParent(nChairID,true)
+            this.getOutCardParent(nChairID,true)
             const player = this.getPlayerNode({ nChairID: nChairID });
             if (player) {
                 player.Items.Image_dizhu_icon.active = false;
@@ -297,16 +300,17 @@ export class player_Landlord extends player_GameBase {
         }
     }
     //设置对两家计时闹钟
-    setPlayerTimerVisible(nChairID: number, bVisible: boolean, time?: number, callback?: Function) {
+    setPlayerTimerVisible(nChairID: number, bVisible: boolean, time?: number, callback?: Function,needHideOther?:boolean,noClockAni?:boolean) {
         let self = this
-        let func = (nChairIDEx: number) => {
-            let showFun = (clockNode :ccNode) => {
-                clockNode.active = bVisible
+        let func = (nChairIDEx: number,bvisible:boolean) => {
+            let showFun = (clockNode :ccNode,bvisible:boolean) => {
+                clockNode.active = bvisible
                 if(!bVisible){
                     yx.func.playTimerAnimation(clockNode, false);
                 }
                 if(bVisible && time > 0){
-                    yx.func.setTimerSchedule(clockNode,time,callback)
+                    let needAni = noClockAni ? false : true
+                    yx.func.setTimerSchedule(clockNode,time,callback,needAni)
                 }
             }
             const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
@@ -317,7 +321,7 @@ export class player_Landlord extends player_GameBase {
                 const player = this.getPlayerNode({ nChairID: nChairIDEx });
                 if (player) {
                     node =  player.Items.node_clock
-                    showFun(node)
+                    showFun(node,bvisible)
                 }
             }
             
@@ -325,10 +329,18 @@ export class player_Landlord extends player_GameBase {
         }
         if (fw.isNull(nChairID)) {
             for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
-                func(k);
+                func(k,false);
             }
         } else {
-            func(nChairID);
+            if(needHideOther){
+                for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
+                    func(nChairID,nChairID == k);
+                }
+            }else{
+                func(nChairID,bVisible);
+            }
+            
+            
         }
     }
     //设置对两家牌数
@@ -493,7 +505,7 @@ export class player_Landlord extends player_GameBase {
         }
     }
     //设置玩家玩偶形象 type1:卡通形象  type2：地主农民形象
-    setPlayerCartoonVisible(nChairID: number, bVisible: boolean, type?: number, isAni?: boolean, animation?: string ) {
+    setPlayerCartoonVisible(nChairID: number, bVisible: boolean, type?: number, isAni?: boolean, isLandlord?: boolean, animation?: string ) {
         isAni = isAni == false ? false : true
         let func = (nChairIDEx: number) => {
             let showFun = (parentNode :ccNode) => {
@@ -537,8 +549,19 @@ export class player_Landlord extends player_GameBase {
                                 });
                             }else{
                                 var spk = parentNode.Items.node_spine.obtainComponent(FWSpine)
-                                
-                                this.loadBundleRes(fw.BundleConfig.Landlord.res[`effect/actor/landlordBoy/dizhu`],sp.SkeletonData, (skeletonData: sp.SkeletonData) => {
+                                var resNmae = `effect/actor/landlordBoy/dizhu`
+                                var sex = "m"
+                                const actor = gameCenter.user.getActorByChairId(nChairID);
+
+                                if (actor) {
+                                    sex = actor[PROTO_ACTOR.UAT_SEX]
+                                }
+                                if(isLandlord){
+                                    resNmae = sex == "m" ? `effect/actor/landlordBoy/dizhu` : `effect/actor/landlordGirl/Nvdizhu_ani07`
+                                }else{
+                                    resNmae = sex == "m" ? `effect/actor/farmerBoy/nanNongMin_Ani_02_backup` : `effect/actor/farmerGirl/Nvnongmin_ani03`
+                                }
+                                this.loadBundleRes(fw.BundleConfig.Landlord.res[resNmae],sp.SkeletonData, (skeletonData: sp.SkeletonData) => {
                                     
                                     spk.skeletonData  = skeletonData
                                     spk.animation = animation ? animation : "daiji"

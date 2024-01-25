@@ -238,10 +238,10 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         //     eventName: EVENT_ID.EVENT_PLAY_CHAT_MAGICFACE,
         //     data: data
         // });
-        app.gameManager.setServerId(0)
-        this.sendEnterMatchREQ(data.roomId)
-        
-        
+        if(data.result != 1){
+            app.gameManager.setServerId(0)
+            this.sendEnterMatchREQ(data.roomId)
+        }
     }
 
     //奖池变动

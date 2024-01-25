@@ -151,7 +151,7 @@ export class exchangeCenter extends PlazeMainInetMsg {
             upi: upi,
             account_number: accountnumber,
             ifsc_code: ifsc,
-            ac_id: center.user.getActorProp(ACTOR.ACTOR_PROP_DBID),
+            ac_id: center.user.getActorProp(PROTO_ACTOR.UAT_UID),
             phone: phone,
             user_name: name,
         }

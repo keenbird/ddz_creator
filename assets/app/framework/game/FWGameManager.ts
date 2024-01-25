@@ -217,8 +217,8 @@ export class FWGameManager extends (fw.FWComponent) {
     //     });
     }
     /**设置服务器ID */
-    public setServerId(data:GameData) {
-        this.gameData = data;
+    public setServerId(ser_id:number) {
+        this.gameData = {nServerID : ser_id};
     }
 
     /**设置RoomId */

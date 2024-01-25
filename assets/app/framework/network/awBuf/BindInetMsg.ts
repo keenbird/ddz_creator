@@ -146,14 +146,14 @@ export class BindInetMsg extends (fw.FWComponent) {
         let nSubID = pByteStream.readUInt16();
         let strBindStructName = this.mapStruct.get(nSubID);
         if (strBindStructName == null) {
-            // fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning RootID:${this.rootInetMsg.nRootID} MainID:${this.nMainID} SubID:${nSubID} didn't bind struct!!!`)
+            fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning RootID:${this.rootInetMsg.nRootID} MainID:${this.nMainID} SubID:${nSubID} didn't bind struct!!!`)
             return
         }
         let tblData = null;
         try {
             tblData = this.structParse.readTableFromByteStream(strBindStructName, pByteStream);
             if (tblData == null) {
-                fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning SubID:${nSubID} StructName:${strBindStructName} !!!`);
+                fw.printError(`${this.constructor.name}:OnRecvDataRoot()2: warning SubID:${nSubID} StructName:${strBindStructName} !!!`);
             }
         } catch (e) {
             fw.printWarn(strBindStructName, e);

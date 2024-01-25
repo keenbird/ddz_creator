@@ -299,36 +299,36 @@ $root.client_proto_ddz = (function() {
      * @name client_proto_ddz.DDZ_SUB_S_MSG_ID
      * @enum {number}
      * @property {number} DDZ_S_MSG_NULL=0 DDZ_S_MSG_NULL value
-     * @property {number} DDZ_S_MSG_USER_ENTER=1 DDZ_S_MSG_USER_ENTER value
-     * @property {number} DDZ_S_MSG_TIPS=2 DDZ_S_MSG_TIPS value
-     * @property {number} DDZ_S_MSG_SEND_CARD=3 DDZ_S_MSG_SEND_CARD value
-     * @property {number} DDZ_S_MSG_SHOW_CARD=4 DDZ_S_MSG_SHOW_CARD value
-     * @property {number} DDZ_S_MSG_CALL_POINT=5 DDZ_S_MSG_CALL_POINT value
-     * @property {number} DDZ_S_MSG_CALL_END=6 DDZ_S_MSG_CALL_END value
-     * @property {number} DDZ_S_MSG_DOUBLE=7 DDZ_S_MSG_DOUBLE value
-     * @property {number} DDZ_S_MSG_OUT_CARD=8 DDZ_S_MSG_OUT_CARD value
-     * @property {number} DDZ_S_MSG_PASS_CARD=9 DDZ_S_MSG_PASS_CARD value
-     * @property {number} DDZ_S_MSG_USE_MEMORY=10 DDZ_S_MSG_USE_MEMORY value
-     * @property {number} DDZ_S_MSG_TRUSTEESHIP=11 DDZ_S_MSG_TRUSTEESHIP value
-     * @property {number} DDZ_S_MSG_RECONNECT=12 DDZ_S_MSG_RECONNECT value
-     * @property {number} DDZ_S_MSG_GAMEEND=13 DDZ_S_MSG_GAMEEND value
+     * @property {number} DDZ_S_MSG_USER_ENTER=101 DDZ_S_MSG_USER_ENTER value
+     * @property {number} DDZ_S_MSG_TIPS=102 DDZ_S_MSG_TIPS value
+     * @property {number} DDZ_S_MSG_SEND_CARD=103 DDZ_S_MSG_SEND_CARD value
+     * @property {number} DDZ_S_MSG_SHOW_CARD=104 DDZ_S_MSG_SHOW_CARD value
+     * @property {number} DDZ_S_MSG_CALL_POINT=105 DDZ_S_MSG_CALL_POINT value
+     * @property {number} DDZ_S_MSG_CALL_END=106 DDZ_S_MSG_CALL_END value
+     * @property {number} DDZ_S_MSG_DOUBLE=107 DDZ_S_MSG_DOUBLE value
+     * @property {number} DDZ_S_MSG_OUT_CARD=108 DDZ_S_MSG_OUT_CARD value
+     * @property {number} DDZ_S_MSG_PASS_CARD=109 DDZ_S_MSG_PASS_CARD value
+     * @property {number} DDZ_S_MSG_USE_MEMORY=110 DDZ_S_MSG_USE_MEMORY value
+     * @property {number} DDZ_S_MSG_TRUSTEESHIP=111 DDZ_S_MSG_TRUSTEESHIP value
+     * @property {number} DDZ_S_MSG_RECONNECT=112 DDZ_S_MSG_RECONNECT value
+     * @property {number} DDZ_S_MSG_GAMEEND=113 DDZ_S_MSG_GAMEEND value
      */
     client_proto_ddz.DDZ_SUB_S_MSG_ID = (function() {
         var valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "DDZ_S_MSG_NULL"] = 0;
-        values[valuesById[1] = "DDZ_S_MSG_USER_ENTER"] = 1;
-        values[valuesById[2] = "DDZ_S_MSG_TIPS"] = 2;
-        values[valuesById[3] = "DDZ_S_MSG_SEND_CARD"] = 3;
-        values[valuesById[4] = "DDZ_S_MSG_SHOW_CARD"] = 4;
-        values[valuesById[5] = "DDZ_S_MSG_CALL_POINT"] = 5;
-        values[valuesById[6] = "DDZ_S_MSG_CALL_END"] = 6;
-        values[valuesById[7] = "DDZ_S_MSG_DOUBLE"] = 7;
-        values[valuesById[8] = "DDZ_S_MSG_OUT_CARD"] = 8;
-        values[valuesById[9] = "DDZ_S_MSG_PASS_CARD"] = 9;
-        values[valuesById[10] = "DDZ_S_MSG_USE_MEMORY"] = 10;
-        values[valuesById[11] = "DDZ_S_MSG_TRUSTEESHIP"] = 11;
-        values[valuesById[12] = "DDZ_S_MSG_RECONNECT"] = 12;
-        values[valuesById[13] = "DDZ_S_MSG_GAMEEND"] = 13;
+        values[valuesById[101] = "DDZ_S_MSG_USER_ENTER"] = 101;
+        values[valuesById[102] = "DDZ_S_MSG_TIPS"] = 102;
+        values[valuesById[103] = "DDZ_S_MSG_SEND_CARD"] = 103;
+        values[valuesById[104] = "DDZ_S_MSG_SHOW_CARD"] = 104;
+        values[valuesById[105] = "DDZ_S_MSG_CALL_POINT"] = 105;
+        values[valuesById[106] = "DDZ_S_MSG_CALL_END"] = 106;
+        values[valuesById[107] = "DDZ_S_MSG_DOUBLE"] = 107;
+        values[valuesById[108] = "DDZ_S_MSG_OUT_CARD"] = 108;
+        values[valuesById[109] = "DDZ_S_MSG_PASS_CARD"] = 109;
+        values[valuesById[110] = "DDZ_S_MSG_USE_MEMORY"] = 110;
+        values[valuesById[111] = "DDZ_S_MSG_TRUSTEESHIP"] = 111;
+        values[valuesById[112] = "DDZ_S_MSG_RECONNECT"] = 112;
+        values[valuesById[113] = "DDZ_S_MSG_GAMEEND"] = 113;
         return values;
     })();
 
@@ -338,14 +338,12 @@ $root.client_proto_ddz = (function() {
          * Properties of a DDZInfo.
          * @memberof client_proto_ddz
          * @interface IDDZInfo
-         * @property {number|Long|null} [score] DDZInfo score
          * @property {number|null} [maxTimes] DDZInfo maxTimes
          * @property {number|null} [trusteeshipRound] DDZInfo trusteeshipRound
          * @property {number|null} [showtimes] DDZInfo showtimes
          * @property {number|null} [doubletimes] DDZInfo doubletimes
          * @property {number|null} [superdoubletimes] DDZInfo superdoubletimes
          * @property {number|Long|null} [superdoubleDiamond] DDZInfo superdoubleDiamond
-         * @property {number|null} [calltimes] DDZInfo calltimes
          */
 
         /**
@@ -362,14 +360,6 @@ $root.client_proto_ddz = (function() {
                     if (properties[keys[i]] != null)
                         this[keys[i]] = properties[keys[i]];
         }
-
-        /**
-         * DDZInfo score.
-         * @member {number|Long} score
-         * @memberof client_proto_ddz.DDZInfo
-         * @instance
-         */
-        DDZInfo.prototype.score = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
         /**
          * DDZInfo maxTimes.
@@ -420,14 +410,6 @@ $root.client_proto_ddz = (function() {
         DDZInfo.prototype.superdoubleDiamond = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
 
         /**
-         * DDZInfo calltimes.
-         * @member {number} calltimes
-         * @memberof client_proto_ddz.DDZInfo
-         * @instance
-         */
-        DDZInfo.prototype.calltimes = 0;
-
-        /**
          * Creates a new DDZInfo instance using the specified properties.
          * @function create
          * @memberof client_proto_ddz.DDZInfo
@@ -451,22 +433,18 @@ $root.client_proto_ddz = (function() {
         DDZInfo.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.score != null && Object.hasOwnProperty.call(message, "score"))
-                writer.uint32(/* id 1, wireType 0 =*/8).int64(message.score);
             if (message.maxTimes != null && Object.hasOwnProperty.call(message, "maxTimes"))
-                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.maxTimes);
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.maxTimes);
             if (message.trusteeshipRound != null && Object.hasOwnProperty.call(message, "trusteeshipRound"))
-                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.trusteeshipRound);
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.trusteeshipRound);
             if (message.showtimes != null && Object.hasOwnProperty.call(message, "showtimes"))
-                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.showtimes);
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.showtimes);
             if (message.doubletimes != null && Object.hasOwnProperty.call(message, "doubletimes"))
-                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.doubletimes);
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.doubletimes);
             if (message.superdoubletimes != null && Object.hasOwnProperty.call(message, "superdoubletimes"))
-                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.superdoubletimes);
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.superdoubletimes);
             if (message.superdoubleDiamond != null && Object.hasOwnProperty.call(message, "superdoubleDiamond"))
-                writer.uint32(/* id 7, wireType 0 =*/56).int64(message.superdoubleDiamond);
-            if (message.calltimes != null && Object.hasOwnProperty.call(message, "calltimes"))
-                writer.uint32(/* id 8, wireType 0 =*/64).int32(message.calltimes);
+                writer.uint32(/* id 6, wireType 0 =*/48).int64(message.superdoubleDiamond);
             return writer;
         };
 
@@ -502,35 +480,27 @@ $root.client_proto_ddz = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1: {
-                        message.score = reader.int64();
-                        break;
-                    }
-                case 2: {
                         message.maxTimes = reader.int32();
                         break;
                     }
-                case 3: {
+                case 2: {
                         message.trusteeshipRound = reader.int32();
                         break;
                     }
-                case 4: {
+                case 3: {
                         message.showtimes = reader.int32();
                         break;
                     }
-                case 5: {
+                case 4: {
                         message.doubletimes = reader.int32();
                         break;
                     }
-                case 6: {
+                case 5: {
                         message.superdoubletimes = reader.int32();
                         break;
                     }
-                case 7: {
+                case 6: {
                         message.superdoubleDiamond = reader.int64();
-                        break;
-                    }
-                case 8: {
-                        message.calltimes = reader.int32();
                         break;
                     }
                 default:
@@ -568,9 +538,6 @@ $root.client_proto_ddz = (function() {
         DDZInfo.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.score != null && message.hasOwnProperty("score"))
-                if (!$util.isInteger(message.score) && !(message.score && $util.isInteger(message.score.low) && $util.isInteger(message.score.high)))
-                    return "score: integer|Long expected";
             if (message.maxTimes != null && message.hasOwnProperty("maxTimes"))
                 if (!$util.isInteger(message.maxTimes))
                     return "maxTimes: integer expected";
@@ -589,9 +556,6 @@ $root.client_proto_ddz = (function() {
             if (message.superdoubleDiamond != null && message.hasOwnProperty("superdoubleDiamond"))
                 if (!$util.isInteger(message.superdoubleDiamond) && !(message.superdoubleDiamond && $util.isInteger(message.superdoubleDiamond.low) && $util.isInteger(message.superdoubleDiamond.high)))
                     return "superdoubleDiamond: integer|Long expected";
-            if (message.calltimes != null && message.hasOwnProperty("calltimes"))
-                if (!$util.isInteger(message.calltimes))
-                    return "calltimes: integer expected";
             return null;
         };
 
@@ -607,15 +571,6 @@ $root.client_proto_ddz = (function() {
             if (object instanceof $root.client_proto_ddz.DDZInfo)
                 return object;
             var message = new $root.client_proto_ddz.DDZInfo();
-            if (object.score != null)
-                if ($util.Long)
-                    (message.score = $util.Long.fromValue(object.score)).unsigned = false;
-                else if (typeof object.score === "string")
-                    message.score = parseInt(object.score, 10);
-                else if (typeof object.score === "number")
-                    message.score = object.score;
-                else if (typeof object.score === "object")
-                    message.score = new $util.LongBits(object.score.low >>> 0, object.score.high >>> 0).toNumber();
             if (object.maxTimes != null)
                 message.maxTimes = object.maxTimes | 0;
             if (object.trusteeshipRound != null)
@@ -635,8 +590,6 @@ $root.client_proto_ddz = (function() {
                     message.superdoubleDiamond = object.superdoubleDiamond;
                 else if (typeof object.superdoubleDiamond === "object")
                     message.superdoubleDiamond = new $util.LongBits(object.superdoubleDiamond.low >>> 0, object.superdoubleDiamond.high >>> 0).toNumber();
-            if (object.calltimes != null)
-                message.calltimes = object.calltimes | 0;
             return message;
         };
 
@@ -654,11 +607,6 @@ $root.client_proto_ddz = (function() {
                 options = {};
             var object = {};
             if (options.defaults) {
-                if ($util.Long) {
-                    var long = new $util.Long(0, 0, false);
-                    object.score = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
-                } else
-                    object.score = options.longs === String ? "0" : 0;
                 object.maxTimes = 0;
                 object.trusteeshipRound = 0;
                 object.showtimes = 0;
@@ -669,13 +617,7 @@ $root.client_proto_ddz = (function() {
                     object.superdoubleDiamond = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
                 } else
                     object.superdoubleDiamond = options.longs === String ? "0" : 0;
-                object.calltimes = 0;
             }
-            if (message.score != null && message.hasOwnProperty("score"))
-                if (typeof message.score === "number")
-                    object.score = options.longs === String ? String(message.score) : message.score;
-                else
-                    object.score = options.longs === String ? $util.Long.prototype.toString.call(message.score) : options.longs === Number ? new $util.LongBits(message.score.low >>> 0, message.score.high >>> 0).toNumber() : message.score;
             if (message.maxTimes != null && message.hasOwnProperty("maxTimes"))
                 object.maxTimes = message.maxTimes;
             if (message.trusteeshipRound != null && message.hasOwnProperty("trusteeshipRound"))
@@ -691,8 +633,6 @@ $root.client_proto_ddz = (function() {
                     object.superdoubleDiamond = options.longs === String ? String(message.superdoubleDiamond) : message.superdoubleDiamond;
                 else
                     object.superdoubleDiamond = options.longs === String ? $util.Long.prototype.toString.call(message.superdoubleDiamond) : options.longs === Number ? new $util.LongBits(message.superdoubleDiamond.low >>> 0, message.superdoubleDiamond.high >>> 0).toNumber() : message.superdoubleDiamond;
-            if (message.calltimes != null && message.hasOwnProperty("calltimes"))
-                object.calltimes = message.calltimes;
             return object;
         };
 
@@ -1990,6 +1930,7 @@ $root.client_proto_ddz = (function() {
          * @property {number|null} [bankerchair] DDZ_S_CallEnd bankerchair
          * @property {Array.<number>|null} [backcards] DDZ_S_CallEnd backcards
          * @property {number|null} [backtimes] DDZ_S_CallEnd backtimes
+         * @property {number|null} [toptimes] DDZ_S_CallEnd toptimes
          */
 
         /**
@@ -2033,6 +1974,14 @@ $root.client_proto_ddz = (function() {
         DDZ_S_CallEnd.prototype.backtimes = 0;
 
         /**
+         * DDZ_S_CallEnd toptimes.
+         * @member {number} toptimes
+         * @memberof client_proto_ddz.DDZ_S_CallEnd
+         * @instance
+         */
+        DDZ_S_CallEnd.prototype.toptimes = 0;
+
+        /**
          * Creates a new DDZ_S_CallEnd instance using the specified properties.
          * @function create
          * @memberof client_proto_ddz.DDZ_S_CallEnd
@@ -2066,6 +2015,8 @@ $root.client_proto_ddz = (function() {
             }
             if (message.backtimes != null && Object.hasOwnProperty.call(message, "backtimes"))
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.backtimes);
+            if (message.toptimes != null && Object.hasOwnProperty.call(message, "toptimes"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.toptimes);
             return writer;
         };
 
@@ -2119,6 +2070,10 @@ $root.client_proto_ddz = (function() {
                         message.backtimes = reader.int32();
                         break;
                     }
+                case 4: {
+                        message.toptimes = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -2167,6 +2122,9 @@ $root.client_proto_ddz = (function() {
             if (message.backtimes != null && message.hasOwnProperty("backtimes"))
                 if (!$util.isInteger(message.backtimes))
                     return "backtimes: integer expected";
+            if (message.toptimes != null && message.hasOwnProperty("toptimes"))
+                if (!$util.isInteger(message.toptimes))
+                    return "toptimes: integer expected";
             return null;
         };
 
@@ -2193,6 +2151,8 @@ $root.client_proto_ddz = (function() {
             }
             if (object.backtimes != null)
                 message.backtimes = object.backtimes | 0;
+            if (object.toptimes != null)
+                message.toptimes = object.toptimes | 0;
             return message;
         };
 
@@ -2214,6 +2174,7 @@ $root.client_proto_ddz = (function() {
             if (options.defaults) {
                 object.bankerchair = 0;
                 object.backtimes = 0;
+                object.toptimes = 0;
             }
             if (message.bankerchair != null && message.hasOwnProperty("bankerchair"))
                 object.bankerchair = message.bankerchair;
@@ -2224,6 +2185,8 @@ $root.client_proto_ddz = (function() {
             }
             if (message.backtimes != null && message.hasOwnProperty("backtimes"))
                 object.backtimes = message.backtimes;
+            if (message.toptimes != null && message.hasOwnProperty("toptimes"))
+                object.toptimes = message.toptimes;
             return object;
         };
 
@@ -6945,26 +6908,23 @@ export namespace client_proto_ddz {
     /** DDZ_SUB_S_MSG_ID enum. */
     enum DDZ_SUB_S_MSG_ID {
         DDZ_S_MSG_NULL = 0,
-        DDZ_S_MSG_USER_ENTER = 1,
-        DDZ_S_MSG_TIPS = 2,
-        DDZ_S_MSG_SEND_CARD = 3,
-        DDZ_S_MSG_SHOW_CARD = 4,
-        DDZ_S_MSG_CALL_POINT = 5,
-        DDZ_S_MSG_CALL_END = 6,
-        DDZ_S_MSG_DOUBLE = 7,
-        DDZ_S_MSG_OUT_CARD = 8,
-        DDZ_S_MSG_PASS_CARD = 9,
-        DDZ_S_MSG_USE_MEMORY = 10,
-        DDZ_S_MSG_TRUSTEESHIP = 11,
-        DDZ_S_MSG_RECONNECT = 12,
-        DDZ_S_MSG_GAMEEND = 13
+        DDZ_S_MSG_USER_ENTER = 101,
+        DDZ_S_MSG_TIPS = 102,
+        DDZ_S_MSG_SEND_CARD = 103,
+        DDZ_S_MSG_SHOW_CARD = 104,
+        DDZ_S_MSG_CALL_POINT = 105,
+        DDZ_S_MSG_CALL_END = 106,
+        DDZ_S_MSG_DOUBLE = 107,
+        DDZ_S_MSG_OUT_CARD = 108,
+        DDZ_S_MSG_PASS_CARD = 109,
+        DDZ_S_MSG_USE_MEMORY = 110,
+        DDZ_S_MSG_TRUSTEESHIP = 111,
+        DDZ_S_MSG_RECONNECT = 112,
+        DDZ_S_MSG_GAMEEND = 113
     }
 
     /** Properties of a DDZInfo. */
     interface IDDZInfo {
-
-        /** DDZInfo score */
-        score?: (number|Long|null);
 
         /** DDZInfo maxTimes */
         maxTimes?: (number|null);
@@ -6983,9 +6943,6 @@ export namespace client_proto_ddz {
 
         /** DDZInfo superdoubleDiamond */
         superdoubleDiamond?: (number|Long|null);
-
-        /** DDZInfo calltimes */
-        calltimes?: (number|null);
     }
 
     /** Represents a DDZInfo. */
@@ -6996,9 +6953,6 @@ export namespace client_proto_ddz {
          * @param [properties] Properties to set
          */
         constructor(properties?: client_proto_ddz.IDDZInfo);
-
-        /** DDZInfo score. */
-        public score: (number|Long);
 
         /** DDZInfo maxTimes. */
         public maxTimes: number;
@@ -7017,9 +6971,6 @@ export namespace client_proto_ddz {
 
         /** DDZInfo superdoubleDiamond. */
         public superdoubleDiamond: (number|Long);
-
-        /** DDZInfo calltimes. */
-        public calltimes: number;
 
         /**
          * Creates a new DDZInfo instance using the specified properties.
@@ -7643,6 +7594,9 @@ export namespace client_proto_ddz {
 
         /** DDZ_S_CallEnd backtimes */
         backtimes?: (number|null);
+
+        /** DDZ_S_CallEnd toptimes */
+        toptimes?: (number|null);
     }
 
     /** Represents a DDZ_S_CallEnd. */
@@ -7662,6 +7616,9 @@ export namespace client_proto_ddz {
 
         /** DDZ_S_CallEnd backtimes. */
         public backtimes: number;
+
+        /** DDZ_S_CallEnd toptimes. */
+        public toptimes: number;
 
         /**
          * Creates a new DDZ_S_CallEnd instance using the specified properties.

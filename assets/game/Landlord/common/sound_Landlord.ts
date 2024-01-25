@@ -1,6 +1,7 @@
 import { _decorator, Node as ccNode,js } from 'cc';
 import { yx } from '../yx_Landlord';
 import { logic_Landlord } from '../ui/main/script/logic_Landlord';
+import { PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
 const { ccclass } = _decorator;
 const PATH_PREFIX: string = "audio/";
 const ResPath = (path: string): string => {
@@ -222,7 +223,9 @@ export class sound_Landlord  {
     logic: logic_Landlord = new logic_Landlord
     getSexByActor(pActor:any):string{
         let strSex = "man"
-
+        if(pActor){
+            strSex = pActor[PROTO_ACTOR.UAT_SEX] == "m" ? "man" : "woman"
+        }
         return strSex
     }
 

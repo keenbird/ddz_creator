@@ -8,6 +8,7 @@ import { ScreenOrientationType } from '../../../config/ConstantConfig';
 export class FWToastViewBase extends FWPopupViewBase {
     /**调整类型 */
     popupData: FWPopupToastParam = <any>{}
+    interval_callbackTime: number;
     onLoad() {
         //扩展调用
         //附加界面初始化
@@ -40,7 +41,8 @@ export class FWToastViewBase extends FWPopupViewBase {
             }
         }
         if (!fw.isNull(this.popupData.nUpdateIntervalTime)) {
-                this.setInterval(() => {
+            
+            this.interval_callbackTime = this.setInterval(() => {
                     let str = this.popupData.text;
                     this.popupData.nUpdateIntervalTime --;
                     str = str + this.popupData.nUpdateIntervalTime
@@ -95,5 +97,14 @@ export class FWToastViewBase extends FWPopupViewBase {
     /**关闭界面 */
     onClickClose(): boolean | void {
         app.popup.closeToast(this.node);
+
+        
+    }
+
+    onViewDestroy(): void {
+        if (this.interval_callbackTime) {
+            this.clearIntervalTimer(this.interval_callbackTime);
+            this.interval_callbackTime = null;
+        }
     }
 }

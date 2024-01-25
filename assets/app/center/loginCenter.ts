@@ -310,6 +310,8 @@ export class LoginCenter extends LoginMainInetMsg {
     }
     // 登录结果
     OnRecv_LoginEnd(dict: proto.client_proto.LoginResp) {
+        app.gameManager.setServerId(0)
+        app.gameManager.setRoomId(0)
         /**关闭登录计时器 */
         this.stopLoginingTimer()
         // 登录信息存储

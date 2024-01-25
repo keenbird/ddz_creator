@@ -27,18 +27,13 @@ export class game_GameBase extends FWSceneBase {
     public get config() {
         return (<any>this).__comConfig ??= this.obtainComponent(this.getCom(`config`));
     }
-    /**获取language对象 */
-    public get language() {
-        return (<any>this).__comLanguage ??= this.obtainComponent(this.getCom(`language`));
-    }
+  
     /**获取gamemain对象 -> 主界面 */
     public get bundle(): BundleConfigType {
         return app.gameManager.gameConfig.bundleConfig;
     }
     onLoad() {
         this.init_GameBase();
-        //初始化多语言
-        this.language;
         //父类
         super.onLoad();
     }
@@ -106,7 +101,7 @@ export class game_GameBase extends FWSceneBase {
     }
     /**展示游戏界面 */
     onShowGameView() {
-        this.showBg();
+        // this.showBg();
         app.popup.showMain({
             prefab: app.assetManager.loadBundleResSync(this.initMain()),
             callback: this.initMainCom.bind(this),

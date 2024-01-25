@@ -120,7 +120,7 @@ export const servers: Array<server_config> = [
     },
     {
         Name: "戴伟祥",
-        url_login: "192.168.1.49",
+        url_login: "192.168.1.50",
         port_min: 11001,
         port_max: 11001,
         url_facedown: "http://192.168.10.54/Static/",

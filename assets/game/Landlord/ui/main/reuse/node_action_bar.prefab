@@ -2993,7 +2993,7 @@
         "__id__": 171
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [],
     "_prefab": {
       "__id__": 183
@@ -3302,7 +3302,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Sprite_BtnNegative",
+    "_name": "Sprite_BtnPositive",
     "_objFlags": 0,
     "_parent": {
       "__id__": 138

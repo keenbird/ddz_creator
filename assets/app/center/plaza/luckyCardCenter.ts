@@ -354,7 +354,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
 
         this.updateLuckCardUserCard(dict)
 
-        this.mSelfDBID = center.user.getActorProp(ACTOR.ACTOR_PROP_DBID)
+        this.mSelfDBID = center.user.getActorProp(PROTO_ACTOR.UAT_UID)
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_PLAZA_LUCKCARD_USER_RET,
         })
@@ -478,7 +478,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
     }
 
     isGetSelfLuckCardInfos() {
-        return this.mSelfLuckCardInfosFlag && this.mSelfDBID == center.user.getActorProp(ACTOR.ACTOR_PROP_DBID)
+        return this.mSelfLuckCardInfosFlag && this.mSelfDBID == center.user.getActorProp(PROTO_ACTOR.UAT_UID)
     }
 
     onNewFirstRechrgeConfig(dict: proto.plaza_luckcard.first_recharge_cfg) {

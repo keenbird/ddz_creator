@@ -5,14 +5,16 @@ import { yx } from '../yx_Landlord';
 import proto from './../protobuf/Landlord_format';
 import { internet_GameBase } from '../../GameBase/internet/internet_GameBase';
 import { EVENT_ID } from '../../../app/config/EventConfig';
+import { MainInetMsg } from '../../../app/framework/network/awBuf/MainInetMsg';
 
 @ccclass('internet_Landlord')
-export class internet_Landlord extends internet_GameBase {
+export class internet_Landlord extends MainInetMsg {
     /**协议相关字段--began------------------------------------ */
     proto = proto.client_proto_ddz
     /**命令ID */
     cmd = this.proto.DDZ_SUB_S_MSG_ID
     ctscmd = this.proto.DDZ_SUB_C_MSG_ID
+    mainID = 300
     /**房间规则 */
     // gameConfig: proto.game_Landlord.IGameConfig
     /**协议相关字段--end------------------------------------ */
@@ -48,6 +50,8 @@ export class internet_Landlord extends internet_GameBase {
     }
     
     protected initEvents(): boolean | void {
+        this.initCmd(0, this.mainID);
+        // this.initRegister()
         //自己进入桌子
         this.bindEvent({
             eventName: [
@@ -56,10 +60,12 @@ export class internet_Landlord extends internet_GameBase {
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
                 //刷新自己的座位号
                 this.nSelfChairID = gameCenter.user.getSelfChairID();
+                console.log("nSelfChairID",this.nSelfChairID)
             },
         });
     }
-    protected initRegister(): void {
+     initRegister(): void {
+        
         this.bindMessage({
             name: `RepeatedInt32`,
             struct: this.proto.RepeatedInt32,
@@ -168,20 +174,25 @@ export class internet_Landlord extends internet_GameBase {
             callback: this.DDZ_S_MSG_TRUSTEESHIP.bind(this),
         });
         this.bindMessage({
-            cmd: this.cmd.DDZ_S_RECONNECT,
+            cmd: this.cmd.DDZ_S_MSG_RECONNECT,
             struct: this.proto.DDZ_S_Reconnect,
-            callback: this.DDZ_S_RECONNECT.bind(this),
+            callback: this.DDZ_S_MSG_RECONNECT.bind(this),
         });
         this.bindMessage({
-            cmd: this.cmd.DDZ_S_GAMEEND,
+            cmd: this.cmd.DDZ_S_MSG_GAMEEND,
             struct: this.proto.DDZ_S_GameEnd,
-            callback: this.DDZ_S_GAMEEND.bind(this),
+            callback: this.DDZ_S_MSG_GAMEEND.bind(this),
         });
         //大厅游戏消息
         // this.setGameRuleData(this.proto.GameRule, this.GameRule.bind(this));
         // this.setDropEndData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
         // this.setHalfWayJoinData(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
         // this.setReplace(this.proto.GameReconnectRoom, this.GameReconnectRoom.bind(this));
+    }
+    //销毁注册事件
+    unBindMsg(){
+        // this.unbindRecvFunc(this.cmd.DDZ_S_MSG_RECONNECT);
+        // this.unbindMsgStructPB(this.cmd.DDZ_S_MSG_RECONNECT);
     }
     /**玩家是否已经进入 */
     isUserCenter() {
@@ -206,6 +217,14 @@ export class internet_Landlord extends internet_GameBase {
         });
     }
     DDZ_C_OUT_CARD(data: proto.client_proto_ddz.IDDZ_C_OutCard) {
+        //判断飞机和三带一互转
+        if(data.cardtype == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards){
+            data.cardtype = yx.config.OutCardType.Triplet_Attached_Card
+        }
+        if(data.cardtype == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
+            data.cardtype = yx.config.OutCardType.Triplet_Attached_Pair
+        }
+
         this.sendMessage({
             cmd: this.ctscmd.DDZ_C_OUT_CARD,
             data: data,
@@ -305,6 +324,9 @@ export class internet_Landlord extends internet_GameBase {
         this.nGameState = yx.config.GameState.DOUBLE;
     }
     DDZ_S_MSG_OUT_CARD(data: proto.client_proto_ddz.IDDZ_S_OutCard) {
+        //判断飞机和三带一互转
+        data = yx.func.turnSequenceByCardNum(data)
+
         this.nGameState = yx.config.GameState.PLAY;
         this.m_MaxCardInfo.cardData = data.outcards
         this.m_MaxCardInfo.cardCount = data.outcards.length
@@ -320,7 +342,7 @@ export class internet_Landlord extends internet_GameBase {
     DDZ_S_MSG_TRUSTEESHIP(data: proto.client_proto_ddz.IDDZ_S_Trusteeship) {
         
     }
-    DDZ_S_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+    DDZ_S_MSG_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
         this.nGameState = data.gamestate;
         this.cleanLocalData()
         app.event.dispatchEvent({
@@ -358,7 +380,7 @@ export class internet_Landlord extends internet_GameBase {
             }
         }
     }
-    DDZ_S_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
+    DDZ_S_MSG_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
         this.nGameState = yx.config.GameState.SETTLEMENT;
         
     }
@@ -382,7 +404,13 @@ export class internet_Landlord extends internet_GameBase {
         this.bMingpai= [false,false,false]
         this.landlordSeat = -1
     }
-  
+    
+    /**销毁 */
+    onViewDestroy() {
+        
+        this.unBindMsg()
+        super.onViewDestroy();
+    }
 
     //---------------OLD CODE ----------------//
     MSG_GAMESCENE_S(data: proto.game_Landlord.IMSG_GAMESCENE_S) {

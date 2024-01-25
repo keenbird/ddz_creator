@@ -244,6 +244,7 @@ export class Application extends FWSceneBase {
         let list = app.func.isWin32() ? [
             fw.BundleConfig.resources.res[`shader`],
             fw.BundleConfig.resources.res[`ui/loading/loading_common`],
+            fw.BundleConfig.resources.res[`ui/toast/toast_common`],
         ] : [
             fw.BundleConfig.resources.res[`shader`],
             fw.BundleConfig.resources.res[`ui`],

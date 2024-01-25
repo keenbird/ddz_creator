@@ -31,6 +31,7 @@ export class AwBufWebSock extends WebSock {
     onmessage(event: MessageEvent) {
         let uncomprss_buffer = this._lzo1x_uncomprss_(event.data);
         this._encryptData_(uncomprss_buffer);
+        // console.log("uncomprss_buffer",uncomprss_buffer)
         this.onMessage(uncomprss_buffer);
     }
     //发送
@@ -73,7 +74,7 @@ export class AwBufWebSock extends WebSock {
     _encryptData_(buffer: ArrayBuffer) {
         let data_len = buffer.byteLength;
         //加密头信息之后的部分
-        if (data_len <= GS_HeadNull_Size) {
+        if (data_len < GS_HeadNull_Size) {
             return;
         }
         this._setAddr_(buffer);
@@ -85,35 +86,35 @@ export class AwBufWebSock extends WebSock {
     //压缩
     _lzo_compress_(buffer: ArrayBuffer) {
         let data_len = buffer.byteLength;
-        if (data_len <= GS_HeadNull_Size) {
+        this._setAddr_(buffer);
+        if (data_len < GS_HeadNull_Size) {
             return buffer;
         }
-        // this._setAddr_(buffer, 0);
-        let state = {
-            inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
-            outputBuffer: new Uint8Array(4)
-        };
-        if (lzo1x.compress(state) == lzo1x_ret.OK) {
-            if (state.outputBuffer.length < data_len - GS_HeadNull_Size) {
-                let buff = new ArrayBuffer(state.outputBuffer.length + GS_HeadNull_Size)
-                let newBuffer = new Uint8Array(buff);
-                let oldBuffer = new Uint8Array(buffer);
-                for (let index = 0; index < GS_HeadNull_Size; index++) {
-                    newBuffer[index] = oldBuffer[index];
-                }
-                for (let index = 0; index < state.outputBuffer.length; index++) {
-                    newBuffer[GS_HeadNull_Size + index] = state.outputBuffer[index];
-                }
-                this._setAddr_(buff);
-                return buff;
-            }
-        }
+        // let state = {
+        //     inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
+        //     outputBuffer: new Uint8Array(4)
+        // };
+        // if (lzo1x.compress(state) == lzo1x_ret.OK) {
+        //     if (state.outputBuffer.length < data_len - GS_HeadNull_Size) {
+        //         let buff = new ArrayBuffer(state.outputBuffer.length + GS_HeadNull_Size)
+        //         let newBuffer = new Uint8Array(buff);
+        //         let oldBuffer = new Uint8Array(buffer);
+        //         for (let index = 0; index < GS_HeadNull_Size; index++) {
+        //             newBuffer[index] = oldBuffer[index];
+        //         }
+        //         for (let index = 0; index < state.outputBuffer.length; index++) {
+        //             newBuffer[GS_HeadNull_Size + index] = state.outputBuffer[index];
+        //         }
+        //         this._setAddr_(buff);
+        //         return buff;
+        //     }
+        // }
         return buffer;
     }
     //解压
     _lzo1x_uncomprss_(buffer: ArrayBuffer) {
         let data_len = buffer.byteLength;
-        if (data_len <= GS_HeadNull_Size) {
+        if (data_len < GS_HeadNull_Size) {
             return buffer;
         }
         S_GS_HeadNull.initArrayBuffer(buffer);
@@ -121,25 +122,25 @@ export class AwBufWebSock extends WebSock {
         if (pHead.wMsgLen - pHead.wBodyLen== GS_HeadNull_Size) {
             return buffer;
         }
-        let new_len = pHead.wMsgLen - pHead.wBodyLen - GS_HeadNull_Size;
-        let state = {
-            inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
-            outputBuffer: new Uint8Array(4)
-        };
-        if (lzo1x.decompress(state) == lzo1x_ret.OK) {
-            if (state.outputBuffer.length == new_len) {
-                let buff = new ArrayBuffer(new_len + GS_HeadNull_Size)
-                let newBuffer = new Uint8Array(buff);
-                let oldBuffer = new Uint8Array(buffer);
-                for (let index = 0; index < GS_HeadNull_Size; index++) {
-                    newBuffer[index] = oldBuffer[index];
-                }
-                for (let index = 0; index < state.outputBuffer.length; index++) {
-                    newBuffer[GS_HeadNull_Size + index] = state.outputBuffer[index];
-                }
-                return buff;
-            }
-        }
+        // let new_len = pHead.wMsgLen - pHead.wBodyLen - GS_HeadNull_Size;
+        // let state = {
+        //     inputBuffer: new Uint8Array(buffer.slice(GS_HeadNull_Size, data_len)),
+        //     outputBuffer: new Uint8Array(4)
+        // };
+        // if (lzo1x.decompress(state) == lzo1x_ret.OK) {
+        //     if (state.outputBuffer.length == new_len) {
+        //         let buff = new ArrayBuffer(new_len + GS_HeadNull_Size)
+        //         let newBuffer = new Uint8Array(buff);
+        //         let oldBuffer = new Uint8Array(buffer);
+        //         for (let index = 0; index < GS_HeadNull_Size; index++) {
+        //             newBuffer[index] = oldBuffer[index];
+        //         }
+        //         for (let index = 0; index < state.outputBuffer.length; index++) {
+        //             newBuffer[GS_HeadNull_Size + index] = state.outputBuffer[index];
+        //         }
+        //         return buff;
+        //     }
+        // }
         return buffer;
     }
 }

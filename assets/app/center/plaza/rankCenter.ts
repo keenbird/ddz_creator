@@ -92,7 +92,7 @@ export class rankCenter extends PlazeMainInetMsg {
         for (let k = 0; k < this.rankingArray[rankType].rankData.length; k++) {
             let v = this.rankingArray[rankType][k];
             let a1 = v.actor_dbid
-            let a2 = myActor[ACTOR.ACTOR_PROP_DBID];
+            let a2 = myActor[PROTO_ACTOR.UAT_UID];
 
             if (a1 == a2) {
                 result = { data: v, nRanking: k }

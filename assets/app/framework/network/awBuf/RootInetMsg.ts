@@ -15,7 +15,8 @@ export class RootInetMsg {
 
     bindMsgListener(nMainID, pFun) {
         if (this.m_mapMainMsgListener[nMainID] != null) {
-            throw new Error(`${this.constructor.name}:bindMsgListener()`);
+            return true
+            // throw new Error(`${this.constructor.name}:bindMsgListener()`);
         }
         this.m_mapMainMsgListener[nMainID] = pFun
         return true
@@ -32,7 +33,7 @@ export class RootInetMsg {
 
         let pMsgListener = this.m_mapMainMsgListener[nMainID]
         if (pMsgListener == null) {
-            // fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning RootID:${this.nCmdRootID} MainID:${nMainID} didn't bind listener!!!`)
+            fw.printError(`${this.constructor.name}:OnRecvDataRoot(): warning RootID:${this.nCmdRootID} MainID:${nMainID} didn't bind listener!!!`)
             return
         }
         pMsgListener(pByteStream)

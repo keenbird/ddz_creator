@@ -142,7 +142,7 @@ export class shareCenter extends PlazeMainInetMsg {
 				uip: upi,
 				account_number: accountnumber,
 				ifsc_code: ifsc,
-				acid: center.user.getActorProp(ACTOR.ACTOR_PROP_DBID),
+				acid: center.user.getActorProp(PROTO_ACTOR.UAT_UID),
 				phone: phone,
 				user_name: name,
 			}
@@ -179,7 +179,7 @@ export class shareCenter extends PlazeMainInetMsg {
 				return ""
 			}
 			let params = {
-				uid: center.user.getActorProp(ACTOR.ACTOR_PROP_DBID),
+				uid: center.user.getActorProp(PROTO_ACTOR.UAT_UID),
 				cid: app.native.device.getOperatorsID(),
 				st: 1,
 				rid: 0,

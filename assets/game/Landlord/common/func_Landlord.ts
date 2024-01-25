@@ -3,6 +3,7 @@ const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
 import { func_GameBase } from '../../GameBase/common/func_GameBase';
+import proto from '../protobuf/Landlord_format';
 
 @ccclass('func_Landlord')
 export class func_Landlord extends func_GameBase {
@@ -72,15 +73,18 @@ export class func_Landlord extends func_GameBase {
     
     /**设置闹钟倒计时 */
     //@ts-ignore
-    setTimerSchedule(nodeTimer: ccNode,time :number,callback?:Function) {
+    setTimerSchedule(nodeTimer: ccNode,time :number,callback?:Function,needAni?:boolean) {
         if(fw.isNull(nodeTimer) || fw.isNull(nodeTimer.Items[`BMFont_TimeValue`])){
             return
         }
         nodeTimer["clockTime"] = time
+        let isAni = needAni == false ? false : true
         let updateLastTime = () => {
             nodeTimer.Items[`BMFont_TimeValue`].string = "" + nodeTimer["clockTime"]
-            if (nodeTimer["clockTime"] == 1 || nodeTimer["clockTime"] == 2 || nodeTimer["clockTime"] == 3 ) {
-                yx.func.playTimerAnimation(nodeTimer,true)
+            if(isAni){
+                if (nodeTimer["clockTime"] == 1 || nodeTimer["clockTime"] == 2 || nodeTimer["clockTime"] == 3 ) {
+                    yx.func.playTimerAnimation(nodeTimer,true)
+                }
             }
             if (nodeTimer["clockTime"] <= 0) {
                 if (nodeTimer["schedule_updateClockTime"]) {
@@ -226,8 +230,9 @@ export class func_Landlord extends func_GameBase {
                 posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i-(cardCount-1)/2)-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS*0.5,0,1))
             }
         }else if(ClientChairID == 1){
+            let max = cardCount >= 10 ? 10 : cardCount
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(10 -i%10 - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,-70*(Math.floor(i/10)),1))
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,-70*(Math.floor(i/max)),1))
             }
         }else if(ClientChairID == 2){
             for(var i=0;i<cardCount;i++){
@@ -245,8 +250,9 @@ export class func_Landlord extends func_GameBase {
                 posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i-(cardCount-1)/2)-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS*0.5,0,1))
             }
         }else if(ClientChairID == 1){
+            let max = cardCount >= 10 ? 10 : cardCount
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(20*(10 -i%10 - 1)*-1-yx.config.OUT_CARD_SIZE.width*0.4,-45*(Math.floor(i/10)),1))
+                posVecs.push(new Vec3(20*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*0.4,-45*(Math.floor(i/max)),1))
             }
         }else if(ClientChairID == 2){
             for(var i=0;i<cardCount;i++){
@@ -291,7 +297,16 @@ export class func_Landlord extends func_GameBase {
         return card
     }
 
-    
+    //根据张数 三带单转飞机带单/三带双转飞机带双
+    turnSequenceByCardNum(data: proto.client_proto_ddz.IDDZ_S_OutCard){
+        if(data.cardtype == yx.config.OutCardType.Triplet_Attached_Card && data.outcards.length > 4){
+            data.cardtype = yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards
+        }
+        if(data.cardtype == yx.config.OutCardType.Triplet_Attached_Pair && data.outcards.length > 5){
+            data.cardtype = yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs 
+        }
+        return data
+    }
 
 }
 

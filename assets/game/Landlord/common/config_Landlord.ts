@@ -175,20 +175,20 @@ export class config_Landlord extends config_GameBase {
         Double:2,
         /* 三张(3-3-3) */
         Triplet:3,
-        /* 三带一单(3-3-3-4) */
-        Triplet_Attached_Card:4,
-        /* 三带一对(3-3-3-4-4) */
-        Triplet_Attached_Pair:5,
         /* 顺子(3-4-5-6-7-...) */
-        Sequence:6,
+        Sequence:4,
         /* 连对(3-3-4-4-5-5-...) */
-        Sequence_Of_Pairs:7,
+        Sequence_Of_Pairs:5,
         /* 飞机(三连)(3-3-3-4-4-4) */
-        Sequence_Of_Triplets:8,
-        /* 飞机带单(3-3-3-4-4-4-5-6) */
-        Sequence_Of_Triplets_With_Attached_Cards:9,
-        /* 飞机带对(3-3-3-4-4-4-5-5-6-6) */
-        Sequence_Of_Triplets_With_Attached_Pairs:10,
+        Sequence_Of_Triplets:6,
+        /* 三带一单(3-3-3-4) */
+        Triplet_Attached_Card:7,
+        /* 三带一对(3-3-3-4-4) */
+        Triplet_Attached_Pair:8,
+        /* 四带二单(3-3-3-3-4-5 或 3-3-3-3-4-4) */
+        Quadplex_Attached_Two_Cards:9,
+        /* 四带二对(3-3-3-3-4-4-5-5) */
+        Quadplex_Attached_Two_Pairs:10,
         /*软炸*/
         softBomb:11,
         /* 炸弹(3-3-3-3) */
@@ -197,16 +197,19 @@ export class config_Landlord extends config_GameBase {
         LaiZiBomb:13,
         /* 王炸(J1-J2) */
         Rocket:14,
-        /* 四带二单(3-3-3-3-4-5 或 3-3-3-3-4-4) */
-        Quadplex_Attached_Two_Cards:15,
-        /* 四带二对(3-3-3-3-4-4-5-5) */
-        Quadplex_Attached_Two_Pairs:16,
+        //两个连续炸弹特殊牌型
+        Quadplex_Two_special:15,
+        //连炸
+        serial_bomb:16,
         /* 任意出牌 */
         Arbitrary:17,
-        //两个连续炸弹特殊牌型
-        Quadplex_Two_special:18,
-        //连炸
-        serial_bomb:19,
+
+        //服务器不用，所以不在原队列里
+        /* 飞机带单(3-3-3-4-4-4-5-6) */
+        Sequence_Of_Triplets_With_Attached_Cards:100,
+        /* 飞机带对(3-3-3-4-4-4-5-5-6-6) */
+        Sequence_Of_Triplets_With_Attached_Pairs:101,
+
         /* 不符合出牌规则 */
         Invalid:-1
     }

@@ -39,7 +39,7 @@ export class christmasCenter extends PlazeMainInetMsg {
     }
     requstChristmasRed() {
         let params: any = {
-            user_id: center.user.getActorProp(ACTOR.ACTOR_PROP_DBID),
+            user_id: center.user.getActorProp(PROTO_ACTOR.UAT_UID),
             timestamp: app.func.time(),
         }
         params.sign = app.http.getSign(params)

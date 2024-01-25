@@ -213,9 +213,9 @@ export class plaza_main extends (fw.FWComponent) {
 	/**更多 */
 	initBtnMore() {
 		this.Items.Node_more.onClickAndScale(() => {
-			// app.popup.showDialog({
-			// 	viewConfig: fw.BundleConfig.plaza.res[`service/service_main`]
-			// });
+			app.popup.showDialog({
+				viewConfig: fw.BundleConfig.resources.res[`ui/setting/setting`],
+			});
 		});
 	}
 	/**处理进大厅弹框逻辑 */

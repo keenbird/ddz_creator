@@ -10,7 +10,7 @@ export class AwBufProtocol implements IProtocolHelper {
         return isValid(center, true) && center.gateway.getHearbeat();
     }
     checkPackage(buffer: ArrayBuffer): boolean {
-        if (buffer.byteLength <= GS_HeadNull_Size)
+        if (buffer.byteLength < GS_HeadNull_Size)
             return false;
         return true;
     }

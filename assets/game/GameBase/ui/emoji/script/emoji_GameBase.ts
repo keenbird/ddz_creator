@@ -185,7 +185,7 @@ export class emoji_GameBase extends (fw.FWComponent) {
 				this.node.active = false;
 				//发送消息
 				if (this.data.playerInfo) {
-					gameCenter.room.sendUseMagic(this.data.playerInfo[ACTOR.ACTOR_PROP_DBID], element.index, 1);
+					gameCenter.room.sendUseMagic(this.data.playerInfo[PROTO_ACTOR.UAT_UID], element.index, 1);
 				} else if (this.data.nUserID) {
 					gameCenter.room.sendUseMagic(this.data.nUserID, element.index, 1);
 				} else {

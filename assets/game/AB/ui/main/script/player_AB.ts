@@ -71,7 +71,7 @@ export class player_AB extends player_GameBase {
                     if (!playerInfo) {
                         return;
                     }
-                    this.showEmojiView({ nUserID: playerInfo[ACTOR.ACTOR_PROP_DBID] });
+                    this.showEmojiView({ nUserID: playerInfo[PROTO_ACTOR.UAT_UID] });
                 });
             }
         }

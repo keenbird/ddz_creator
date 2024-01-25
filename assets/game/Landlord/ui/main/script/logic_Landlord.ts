@@ -786,7 +786,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 							for(var i=analyseResult.cbQuadrupleCount;i>0;i--){
 								var cbHandLogicValue = this.GetCardLogicValue(analyseResult.cbQuadrupleCardData[(i-1)*4])
 								if(cbHandLogicValue > cbLogicValue){
-									hitResult[cbHitCardCount-1].cbResultCard = {}
+									hitResult[cbHitCardCount-1].cbResultCard = []
 									for(var j=0;j<4;j++){
 										hitResult[cbHitCardCount-1].cbResultCard.push(analyseResult.cbQuadrupleCardData[(i-1)*4+j])
 									}
@@ -1424,7 +1424,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 				for (var i=0;i<analyseResult.cbQuadrupleCountLaiZi;i++){
 					var cbHandLogicValue = this.GetCardLogicValue(analyseResult.cbQuadrupleCardDataLaiZi[(i)*4])
 					if (cbHandLogicValue > cbLogicValue ){
-						hitResult[cbHitCardCount-1].cbResultCard = {}
+						hitResult[cbHitCardCount-1].cbResultCard = []
 						for(var j=0;j<4;j++){
 							hitResult[cbHitCardCount-1].cbResultCard.push(analyseResult.cbQuadrupleCardDataLaiZi[(i)*4+j])
 						}
@@ -1450,7 +1450,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 				for (var i=0;i<analyseResult.cbQuadrupleCount;i++){
 					var cbHandLogicValue = this.GetCardLogicValue(analyseResult.cbQuadrupleCardData[(i)*4])
 					if (cbHandLogicValue > cbLogicValue ){
-						hitResult[cbHitCardCount-1].cbResultCard = {}
+						hitResult[cbHitCardCount-1].cbResultCard = []
 						for(var j=0;j<4;j++){
 							hitResult[cbHitCardCount-1].cbResultCard.push(analyseResult.cbQuadrupleCardData[(i)*4+j])
 						}
@@ -1495,7 +1495,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 			if(analyseResult.bLaiZiBomb == true &&
 				cbTurnOutType != yx.config.OutCardType.serial_bomb &&
 				cbTurnOutType != yx.config.OutCardType.Rocket ){
-				hitResult[cbHitCardCount-1].cbResultCard = {}
+				hitResult[cbHitCardCount-1].cbResultCard = []
 				for (var j=0;j<4;j++ ){
 					hitResult[cbHitCardCount-1].cbResultCard.push(analyseResult.cbLaiZiBombCardData[j])
 				}
@@ -1820,7 +1820,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 				var cbCount = cbOrderCount[i]
 				while(cbCount > 0 && cbGetCount > 0){
 					cbResultCount = cbResultCount + 1
-					cbResultCard[cbResultCount-1] = pcbOrderData[i][cbCount-1]
+					cbResultCard[cbResultCount-1] = pcbOrderData1[i][cbCount-1]
 					cbCount = cbCount - 1
 					cbGetCount = cbGetCount - 1
 				}
@@ -2136,8 +2136,8 @@ export class logic_Landlord extends (fw.FWComponent) {
 				if ((cbLogicValue == yx.config.GAME_CARD_LOGIC_VALUE_MAX && nextLogicValue == yx.config.GAME_CARD_LOGIC_VALUE_MAX -1) ||
 					(cbLogicValue == yx.config.GAME_CARD_LOGIC_VALUE_MAX -1  && nextLogicValue == yx.config.GAME_CARD_LOGIC_VALUE_MAX) ){
 					result.bContainsRocket = true
-					result.cbRocketCardData[1] = cbCardData[i]
-					result.cbRocketCardData[2] = cbCardData[i+1]
+					result.cbRocketCardData[0] = cbCardData[i]
+					result.cbRocketCardData[1] = cbCardData[i+1]
 					i = i + 2
 					cbLogicValue =this.GetCardLogicValue(cbCardData[i])
 				}
@@ -2200,10 +2200,10 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}else if(cbCardCount == 1){  //单牌
 			return yx.config.OutCardType.Single
 		}else if(cbCardCount == 2){ //对子 或者 火箭
-			if((cbCardData[1] == 0x4F && cbCardData[2] == 0x4E) || (cbCardData[1] == 0x4E && cbCardData[2] == 0x4F)){
+			if((cbCardData[0] == 0x4F && cbCardData[1] == 0x4E) || (cbCardData[0] == 0x4E && cbCardData[1] == 0x4F)){
 				return yx.config.OutCardType.Rocket
 			}
-			if(this.GetCardLogicValue(cbCardData[1]) == this.GetCardLogicValue(cbCardData[2])){
+			if(this.GetCardLogicValue(cbCardData[0]) == this.GetCardLogicValue(cbCardData[1])){
 				return yx.config.OutCardType.Double
 			}
 		}

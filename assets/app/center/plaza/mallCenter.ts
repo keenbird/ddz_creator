@@ -339,7 +339,7 @@ export class mallCenter extends PlazeMainInetMsg {
         let url = httpConfig.path_pay + "payment/channelList";
         let params = {
             vip: center.user.getActorVipLevel(),
-            user_id: center.user.getActorProp(ACTOR.ACTOR_PROP_DBID),
+            user_id: center.user.getActorProp(PROTO_ACTOR.UAT_UID),
             channel_id: app.native.device.getOperatorsID(),
             subChannel_id: app.native.device.getOperatorsSubID(),
         };
