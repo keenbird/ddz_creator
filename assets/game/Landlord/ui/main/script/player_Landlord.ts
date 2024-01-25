@@ -302,6 +302,7 @@ export class player_Landlord extends player_GameBase {
     //设置对两家计时闹钟
     setPlayerTimerVisible(nChairID: number, bVisible: boolean, time?: number, callback?: Function,needHideOther?:boolean,noClockAni?:boolean) {
         let self = this
+        
         let func = (nChairIDEx: number,bvisible:boolean) => {
             let showFun = (clockNode :ccNode,bvisible:boolean) => {
                 clockNode.active = bvisible
@@ -314,7 +315,7 @@ export class player_Landlord extends player_GameBase {
                 }
             }
             const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
-
+            
             var node : ccNode
             if(ClientChairID != 0){
             
@@ -334,7 +335,7 @@ export class player_Landlord extends player_GameBase {
         } else {
             if(needHideOther){
                 for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
-                    func(nChairID,nChairID == k);
+                    func(k,nChairID == k);
                 }
             }else{
                 func(nChairID,bVisible);

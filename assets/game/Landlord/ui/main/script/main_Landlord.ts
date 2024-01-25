@@ -773,8 +773,9 @@ export class main_Landlord extends main_GameBase {
             }
         }
 
-        var _onTouchCancel = function(){
+        var _onTouchCancel = function(touch, event){
             console.log("_onTouchCancel")
+            _onTouchEnded(touch, event)
             this.markRegionCardData(0x00)
             if(!fw.isNull(this.mDragCardNode) ){
                 this.mDragCardNode.removeFromParent()
@@ -1300,6 +1301,9 @@ export class main_Landlord extends main_GameBase {
     }
 
     resetCardsPosition(nCardCount:number){
+        if(nCardCount == 0){
+            return
+        }
         var gmWidth = 0
         var cardPaddingOfHandCards = 0
         var delX = 24

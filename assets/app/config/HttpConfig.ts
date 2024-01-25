@@ -111,12 +111,12 @@ export const servers: Array<server_config> = [
         url_login: "192.168.1.49",
         port_min: 11001,
         port_max: 11001,
-        url_facedown: "http://192.168.125.109/Static/",
-        url_faceup: "http://192.168.125.109/",
-        url_active: "http://192.168.125.109:83/",
-        url_payroot: "http://192.168.125.109:81/",
-        url_downRes: "http://192.168.125.109/Static/",
-        url_feedback: "http://192.168.125.109/"
+        url_facedown: "http://192.168.10.54/Static/",
+        url_faceup: "http://192.168.10.54/",
+        url_active: "http://192.168.10.54:83/",
+        url_payroot: "http://192.168.10.54:91/",
+        url_downRes: "http://192.168.10.54/Static/",
+        url_feedback: "http://192.168.10.54/"
     },
     {
         Name: "戴伟祥",

@@ -31,7 +31,7 @@ export class AwBufWebSock extends WebSock {
     onmessage(event: MessageEvent) {
         let uncomprss_buffer = this._lzo1x_uncomprss_(event.data);
         this._encryptData_(uncomprss_buffer);
-        // console.log("uncomprss_buffer",uncomprss_buffer)
+        console.log("uncomprss_buffer",uncomprss_buffer)
         this.onMessage(uncomprss_buffer);
     }
     //发送
