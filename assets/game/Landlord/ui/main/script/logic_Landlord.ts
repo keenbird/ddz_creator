@@ -661,7 +661,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 			}else if(cbTurnOutType == yx.config.OutCardType.Invalid){
 				return [false,hitResult,cbHitCardCount-1]
 			}else if(cbTurnOutType == yx.config.OutCardType.Single || cbTurnOutType == yx.config.OutCardType.Double){
-				var cbTurnCardLogicValue = this.GetCardLogicValue(cbTurnCardData[0])
+				var cbTurnCardLogicValue = this.GetCardLogicValue(cbOutCardData[0])
 				//--搜索单张
 				if(cbTurnCardCount == 1){
 					var cbTempSingCount = unorderResult.cbSingleCardData_unOrder.length
@@ -1089,18 +1089,16 @@ export class logic_Landlord extends (fw.FWComponent) {
 						}
 
 						//再用拆炸弹的牌
-						if(analyseResult.cbQuadrupleCount > 0){
-							cbTempSingData = []
-                        	cbTempSingCount = 0
-							for(var i=0;i<unorderResult.cbSingleCount;i++){
-								//过滤掉癞子和大小王
-								if(this.GetCardLogicValue(unorderResult.cbSingleCardData[i]) >= this.GetCardLogicValue(0x02)
-								|| unorderResult.cbSingleCardData[i] == 0x4E
-								|| unorderResult.cbSingleCardData[i] == 0x4F){
-
+						if(unorderResult.cbSingleCardData_unBomb.length > 0){
+							for(var i=0;i<unorderResult.cbSingleCardData_unBomb.length;i++){
+								//过滤掉癞子和大小王 2
+								if(this.GetCardLogicValue(unorderResult.cbSingleCardData_unBomb[i]) >= this.GetCardLogicValue(0x02)
+								|| unorderResult.cbSingleCardData_unBomb[i] == 0x4E
+								|| unorderResult.cbSingleCardData_unBomb[i] == 0x4F){
+	
 								}else{
 									cbTempSingCount = cbTempSingCount + 1
-									cbTempSingData[cbTempSingCount-1] = unorderResult.cbSingleCardData[i]
+									cbTempSingData[cbTempSingCount-1] = unorderResult.cbSingleCardData_unBomb[i]
 								}
 							}
 							this.SortCardData(cbTempSingData,cbTempSingCount,yx.config.CardSortOrder.ASC)
@@ -1578,11 +1576,12 @@ export class logic_Landlord extends (fw.FWComponent) {
 		return [true,hitResult,cbHitCardCount-1]
 	}	
 	//获取单双数据(全部单牌 全部对牌 飞机带最优单双 三张带最优单双 四张带最优单双)
-	GetCardsByTriplets(cbHandCardData:number[],cbHandCardCount:number,cbResultCard:number[],cbTurnLineCount:number,CardType:number):[number,number[]]{
+	GetCardsByTriplets(cbHandCardData:number[],cbHandCardCount:number,cbResultCard:number[],cbTurnLineCount:number,CardType:number,tOrder?:number):[number,number[]]{
 		var bGetAll = false
 		var bTakeDouble = false
 		var cbCountSame = 0
 		var cbGetCount = 0
+		var order = null //当升序的时候，取值会优先取最小的对子或者单张
 		if(CardType == yx.config.OutCardType.Single){
 			cbGetCount = 13+2  //1~K+大小王
         	bGetAll = true
@@ -1593,28 +1592,30 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}else if(CardType == yx.config.OutCardType.Triplet_Attached_Card){
 			cbGetCount = 1
         	cbCountSame = 3
+			order = yx.config.CardSortOrder.DESC
 		}else if(CardType == yx.config.OutCardType.Triplet_Attached_Pair){
 			cbGetCount = 2
 			cbCountSame = 3
 			bTakeDouble = true
+			order = yx.config.CardSortOrder.DESC
 		}else if(CardType == yx.config.OutCardType.Quadplex_Attached_Two_Cards){
 			cbGetCount = 2
         	cbCountSame = 4
+			order = yx.config.CardSortOrder.DESC
 		}else if(CardType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs){
 			cbGetCount = 4
 			cbCountSame = 4
 			bTakeDouble = true
+			order = yx.config.CardSortOrder.DESC
 		}else if(CardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards){
 			cbGetCount = cbTurnLineCount
        	    cbCountSame = 3
+			order = yx.config.CardSortOrder.DESC
 		}else if(CardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
 			cbGetCount = cbTurnLineCount * 2
 			cbCountSame = 3
 			bTakeDouble = true
-		}else if(CardType == yx.config.OutCardType.Double){
-			cbGetCount = 13*2
-			bGetAll = true
-			bTakeDouble = true
+			order = yx.config.CardSortOrder.DESC
 		}
 		var cbResultCount = cbTurnLineCount * cbCountSame
 		if(cbResultCount > 0 && (cbHandCardCount < cbResultCount || cbTurnLineCount == 0)){
@@ -1627,6 +1628,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 			cbHandCardDataCopy1.push(cbHandCardData[i])
 		}
 		var [removeResult,cbHandCardDataCopy,cbHandCardCount] = this.RemoveCard(cbResultCard, cbResultCount, cbHandCardDataCopy1, cbHandCardCount)
+		order = tOrder ? tOrder: order
+		if(order != null){
+			this.SortCardData(cbHandCardDataCopy,cbHandCardCount,order)
+		}
+		
 		if(cbResultCount > 0 && removeResult == false){
 			return [0,cbResultCard]
 		}
@@ -1950,8 +1956,8 @@ export class logic_Landlord extends (fw.FWComponent) {
 				if(cbLaiziCount != 1 && cbLaiziCount != 2){
 					unorderResult.cbSingleCount++;
 					var  cbIndex = unorderResult.cbSingleCount
-					unorderResult.cbSingleCardData[cbIndex-1] = orderResult.cbDoubleCardData[i*3]
-					cbTripleTempData.push(orderResult.cbDoubleCardData[i*3])
+					unorderResult.cbSingleCardData[cbIndex-1] = orderResult.cbTripleCardData[i*3]
+					cbTripleTempData.push(orderResult.cbTripleCardData[i*3])
 				}
 			}
 			this.SortCardData(cbTripleTempData,cbTripleTempData.length,yx.config.CardSortOrder.ASC)
@@ -1966,8 +1972,8 @@ export class logic_Landlord extends (fw.FWComponent) {
 		
 					unorderResult.cbSingleCount++;
 					var  cbIndex = unorderResult.cbSingleCount
-					unorderResult.cbSingleCardData[cbIndex-1] = orderResult.cbDoubleCardData[i*4]
-					cbQuadrupleTempData.push(orderResult.cbDoubleCardData[i*4])
+					unorderResult.cbSingleCardData[cbIndex-1] = orderResult.cbQuadrupleCardData[i*4]
+					cbQuadrupleTempData.push(orderResult.cbQuadrupleCardData[i*4])
 				
 			}
 			this.SortCardData(cbQuadrupleTempData,cbQuadrupleTempData.length,yx.config.CardSortOrder.ASC)
@@ -2001,16 +2007,18 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		if(orderResult.cbTripleCount > 0){
 			var cbTripleTempData = []
-			for(var j=(i+1)*2;j<=((i+1)*2+1);j++){
-				//暂时没癞子
-			}
-			if(cbLaiziCount !=1 && cbLaiziCount !=2){
-				unorderResult.cbDoubleCount ++;
-                var  cbIndex = unorderResult.cbDoubleCount
-                unorderResult.cbDoubleCardData[cbIndex*2-2] = orderResult.cbTripleCardData[i * 2+1]
-                unorderResult.cbDoubleCardData[cbIndex*2-1]   = orderResult.cbTripleCardData[i * 2]
-                cbTripleTempData.push(orderResult.cbTripleCardData[i * 2+1])
-                cbTripleTempData.push(orderResult.cbTripleCardData[i * 2])
+			for(var i=0;i<orderResult.cbTripleCount;i++){
+				for(var j=(i+1)*2;j<=((i+1)*2+1);j++){
+					//暂时没癞子
+				}
+				if(cbLaiziCount !=1 && cbLaiziCount !=2){
+					unorderResult.cbDoubleCount ++;
+					var  cbIndex = unorderResult.cbDoubleCount
+					unorderResult.cbDoubleCardData[cbIndex*2-2] = orderResult.cbTripleCardData[i * 3]
+					unorderResult.cbDoubleCardData[cbIndex*2-1]   = orderResult.cbTripleCardData[i * 3 +1]
+					cbTripleTempData.push(orderResult.cbTripleCardData[i * 3])
+					cbTripleTempData.push(orderResult.cbTripleCardData[i * 3 +1])
+				}
 			}
 			this.SortCardData(cbTripleTempData,cbTripleTempData.length,yx.config.CardSortOrder.ASC)
 			for(var i=0;i<cbTripleTempData.length;i++){

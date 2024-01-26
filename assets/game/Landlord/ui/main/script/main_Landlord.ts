@@ -2136,6 +2136,7 @@ export class main_Landlord extends main_GameBase {
             },2)
         } 
         this.player.setPlayerCallStateVisible(null, false);
+        this.showTrustLayout(false)
         if(data.settleinfo.flag > 0){
             showTanpaiAndCoin()
             showSpringAni(data.settleinfo.flag,()=>{
@@ -2209,9 +2210,9 @@ export class main_Landlord extends main_GameBase {
                     let logicChair = yx.func.getClientChairIDByServerChairID(i)
                     let node_cell = aniNode.Items[`node_cell_`+logicChair]
                     if(isWin){
-                        txtColor = i==0 ? app.func.color(233, 102, 56, 255) : app.func.color(171, 115, 98, 255)
+                        txtColor = logicChair==0 ? app.func.color(233, 102, 56, 255) : app.func.color(171, 115, 98, 255)
                     }else{
-                        txtColor = i==0 ? app.func.color(47, 169, 255, 255) : app.func.color(101, 103, 135, 255)
+                        txtColor = logicChair==0 ? app.func.color(47, 169, 255, 255) : app.func.color(101, 103, 135, 255)
                     }
                     node_cell.Items.Text_Nick.obtainComponent(Label).color = txtColor
                     node_cell.Items.Text_FinalMutiple.obtainComponent(Label).color = txtColor
