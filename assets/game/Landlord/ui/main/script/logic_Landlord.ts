@@ -1262,20 +1262,22 @@ export class logic_Landlord extends (fw.FWComponent) {
 								}
 							}
 
-							if(analyseResult.cbQuadrupleCount > 0){
-								for(var i=0;i<unorderResult.cbSingleCount;i++){
-									//过滤掉癞子和大小王
-									if(this.GetCardLogicValue(unorderResult.cbSingleCardData[i]) >= this.GetCardLogicValue(0x02)
-									|| unorderResult.cbSingleCardData[i] == 0x4E
-									|| unorderResult.cbSingleCardData[i] == 0x4F){
+						
 
+							if(unorderResult.cbSingleCardData_unBomb.length > 0){
+								for(var i=0;i<unorderResult.cbSingleCardData_unBomb.length;i++){
+									//过滤掉癞子和大小王 2
+									if(this.GetCardLogicValue(unorderResult.cbSingleCardData_unBomb[i]) >= this.GetCardLogicValue(0x02)
+									|| unorderResult.cbSingleCardData_unBomb[i] == 0x4E
+									|| unorderResult.cbSingleCardData_unBomb[i] == 0x4F){
+		
 									}else{
 										cbTempSingCount = cbTempSingCount + 1
-										cbTempSingData[cbTempSingCount-1] = unorderResult.cbSingleCardData[i]
+										cbTempSingData[cbTempSingCount-1] = unorderResult.cbSingleCardData_unBomb[i]
 									}
 								}
 								this.SortCardData(cbTempSingData,cbTempSingCount,yx.config.CardSortOrder.ASC)
-								SearchBigCard(cbTempSingData,cbTempSingCount)
+								searchBigCard(cbTempSingData,cbTempSingCount)
 							}
 						}
 					}
@@ -1313,11 +1315,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 									var baseData = []
 									//校验是否合法
 									var cbTempValue = unorderResult.cbQuadrupleCardData[(outIndex)*4]
-									if(this.GetCardLogicValue(cbTempValue) > cbTurnCardHeadLogicValue){
+									if(self.GetCardLogicValue(cbTempValue) > cbTurnCardHeadLogicValue){
 										for(var idx = 0;idx<4;idx++){
 											hitResult[cbHitCardCount-1].cbResultCard.push(unorderResult.cbQuadrupleCardData[(outIndex)*4+idx])
 										}
-										var tmpCount, tmpResult = this.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,1,cbTurnOutType)
+										var tmpCount, tmpResult = self.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,1,cbTurnOutType)
                                     	// dump(tmpResult, " =========1========= tmpCount: " .. tmpCount)
 										if(tmpCount == 1){
 											hitResult[cbHitCardCount-1].cbCardCount = 6
@@ -1362,11 +1364,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 									var baseData = []
 									//校验是否合法
 									var cbTempValue = unorderResult.cbQuadrupleCardData[(outIndex)*4]
-									if(this.GetCardLogicValue(cbTempValue) > cbTurnCardHeadLogicValue){
+									if(self.GetCardLogicValue(cbTempValue) > cbTurnCardHeadLogicValue){
 										for(var idx = 0;idx<4;idx++){
 											hitResult[cbHitCardCount-1].cbResultCard.push(unorderResult.cbQuadrupleCardData[(outIndex)*4+idx])
 										}
-										var tmpCount, tmpResult = this.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,1,cbTurnOutType)
+										var tmpCount, tmpResult = self.GetCardsByTriplets(cbHandCardDataCopy,cbHandCardCount,hitResult[cbHitCardCount-1].cbResultCard,1,cbTurnOutType)
                                     	// dump(tmpResult, " =========1========= tmpCount: " .. tmpCount)
 										if(tmpCount == 1){
 											hitResult[cbHitCardCount-1].cbCardCount = 8

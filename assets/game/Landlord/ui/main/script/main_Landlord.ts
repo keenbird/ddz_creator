@@ -563,14 +563,24 @@ export class main_Landlord extends main_GameBase {
             // if this.m_gameLayer then
             //     this.m_gameLayer:removeChooseCardNode()
             // end
-            var size = self.Items.cardTouchLayout.getComponent(UITransform).contentSize
-            var rect = new Rect(0, 0, size.width, size.height)
+            // var size = self.Items.cardTouchLayout.getComponent(UITransform).contentSize
+            // var rect = new Rect(0, self.Items.node_handCard.worldPosition.y, size.width, 335 - self.Items.node_handCard.worldPosition.y)
             
             m_TouchPointStart = touch.getUILocation()
             touchEventType = "selCard"
-            if(rect.contains(m_TouchPointStart)){
+            let isTouchCard = false
+            for(var i=0;i<this.m_HandCardNode.length;i++){
+                var card = this.m_HandCardNode[i]
+                var cardRect = card.getComponent("card_Landlord").getTouchRect()
+                if(cardRect.contains(m_TouchPointStart)){
+                    isTouchCard = true
+                    break;  
+                }
+            }
+            if(isTouchCard){
                 return true
             }else{
+                this.putDownAllHandCard()
                 return false
             }
         }
@@ -613,43 +623,37 @@ export class main_Landlord extends main_GameBase {
             }
             if(touchEventType != preTouchEventType){
                 if(preTouchEventType == "selCard"){
-                    if(!fw.isNull(this.mDragCardNode) ){
-                        this.mDragCardNode.removeFromParent()
-                        this.mDragCardNode = null
-                    }
-                    this.mDragCardNode = new ccNode()
-                    this.Items.node_handCard.addChild(this.mDragCardNode)
-                    this.mDragCardNode.setSiblingIndex(999)
-                    this.mDragCardNode.setScale(new Vec3(0.8,0.8,0.8))
-                    var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
-				    var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length)
-                    var length = tempCache.length
-                    var startX = -((length - 1) * yx.config.CARD_PADDING_OF_HAND_CARDS + yx.config.CARD_SIZE.width) / 2 
-                    for(var i=0;i<length;i++){
-                        if(yx.func.verification(cbTempCardData[i])){
-                            var card = this.getOneCardByData(cbTempCardData[i],yx.config.CardSizeType.CardSizeType_Hands)
-                            card.setSiblingIndex(i)
-                            this.mDragCardNode.addChild(card)
-                            card.setPosition(startX+(i)*yx.config.CARD_PADDING_OF_HAND_CARDS,-yx.config.CARD_SIZE.height/2)
-                            if(i==length-1){
-                                card.getComponent("card_Landlord").setLogoVisible(true)
-                            }
-                        }else{
+                    // if(!fw.isNull(this.mDragCardNode) ){
+                    //     this.mDragCardNode.removeFromParent()
+                    //     this.mDragCardNode = null
+                    // }
+                    // this.mDragCardNode = new ccNode()
+                    // this.Items.node_handCard.addChild(this.mDragCardNode)
+                    // this.mDragCardNode.setSiblingIndex(999)
+                    // this.mDragCardNode.setScale(new Vec3(0.8,0.8,0.8))
+                    // var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
+				    // var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length)
+                    // var length = tempCache.length
+                    // var startX = -((length - 1) * yx.config.CARD_PADDING_OF_HAND_CARDS + yx.config.CARD_SIZE.width) / 2 
+                    // for(var i=0;i<length;i++){
+                    //     if(yx.func.verification(cbTempCardData[i])){
+                    //         var card = this.getOneCardByData(cbTempCardData[i],yx.config.CardSizeType.CardSizeType_Hands)
+                    //         card.setSiblingIndex(i)
+                    //         this.mDragCardNode.addChild(card)
+                    //         card.setPosition(startX+(i)*yx.config.CARD_PADDING_OF_HAND_CARDS,-yx.config.CARD_SIZE.height/2)
+                    //         if(i==length-1){
+                    //             card.getComponent("card_Landlord").setLogoVisible(true)
+                    //         }
+                    //     }else{
 
-                        }
-                    }
+                    //     }
+                    // }
                 }else if(preTouchEventType == "outCard"){
                     if(!fw.isNull(this.mDragCardNode) ){
                         this.mDragCardNode.removeFromParent()
                         this.mDragCardNode = null
                     }
-                    // var tempCache = yx.func.cardDatasFromVector(this.m_vecPopCache)
-                    // var cbTempCardData = tempCache.slice();
-                    // // var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, #tempCache)
-                    // tempCache = []
-                    // if(cbTempCardData.length != 0){
-
-                    // }
+            
                 }
             }
 
@@ -746,24 +750,24 @@ export class main_Landlord extends main_GameBase {
                 var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length)
                 tempCache = []
                 if(cbTempCardData.length != 0){
-                    var maxCardInfo = yx.internet.m_MaxCardInfo
-                    var isLarger = false
-	                var cardDataType = -1
-                    cardDataType = self.logic.GetCardType(cbTempCardData, cbTempCardData.length)
-                    isLarger = self.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
-                    if  (cardDataType == -1 || ! isLarger){
-                        self.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
-                        self.scheduleOnce(function(){
-                            self.displayHandsAnalyseTips(false)
-                            self.putDownAllHandCard()
-                        },0.4)
-                    }
-                    self.clearPopCardCache()
-                    yx.internet.DDZ_C_OUT_CARD({
-                        cards:cbTempCardData,
-                        cardtype: cardDataType
-                    })
-                    self.putDownAllHandCard()
+                    // var maxCardInfo = yx.internet.m_MaxCardInfo
+                    // var isLarger = false
+	                // var cardDataType = -1
+                    // cardDataType = self.logic.GetCardType(cbTempCardData, cbTempCardData.length)
+                    // isLarger = self.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cbTempCardData, cbTempCardData.length)
+                    // if  (cardDataType == -1 || ! isLarger){
+                    //     self.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
+                    //     self.scheduleOnce(function(){
+                    //         self.displayHandsAnalyseTips(false)
+                    //         self.putDownAllHandCard()
+                    //     },0.4)
+                    // }
+                    // self.clearPopCardCache()
+                    // yx.internet.DDZ_C_OUT_CARD({
+                    //     cards:cbTempCardData,
+                    //     cardtype: cardDataType
+                    // })
+                    // self.putDownAllHandCard()
                 }else{
                     tmpFun()
                 }
@@ -952,7 +956,7 @@ export class main_Landlord extends main_GameBase {
             },1)
         }
         
-        
+        this.showXbeiAni(2,data.toptimes)
         this.ShowOutCard(nChairID,cardData,cardType,true)
     }
     //重设手牌位置
@@ -1594,7 +1598,7 @@ export class main_Landlord extends main_GameBase {
     showLastThreeCardAndMove(lastThreeCache:number[],nChairID?:number,isAni?:boolean){
         let needAni = isAni == false ? false : true
         let self = this
-        this.Items.node_showThreeNormal.active = true
+        this.Items.node_showThreeNormal.active = isAni 
         let startPosArr = []
         let endPosArr = []
         let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2,isLast:boolean)=>{
@@ -2137,6 +2141,7 @@ export class main_Landlord extends main_GameBase {
         } 
         this.player.setPlayerCallStateVisible(null, false);
         this.showTrustLayout(false)
+        this.setBaseScorePool(data.settleinfo.doubletimes[yx.internet.nSelfChairID],false)
         if(data.settleinfo.flag > 0){
             showTanpaiAndCoin()
             showSpringAni(data.settleinfo.flag,()=>{

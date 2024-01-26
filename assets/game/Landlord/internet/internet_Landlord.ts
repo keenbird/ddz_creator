@@ -345,6 +345,7 @@ export class internet_Landlord extends MainInetMsg {
     DDZ_S_MSG_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
         this.nGameState = data.gamestate;
         this.cleanLocalData()
+        this.ddzBaseInfo = data.gameInfo
         app.event.dispatchEvent({
             eventName: `GameReconnectRoom`,
             data: data,
