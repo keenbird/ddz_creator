@@ -161,18 +161,22 @@ export class main_Landlord extends main_GameBase {
         
         //--------------test-------------//
         //this.DDZ_S_MSG_TIPS({type:2,curchair:255,countdown:5},[false,false,false])
+        // app.popup.closeAllToast()
+        // yx.internet.nSelfChairID = 0
         // this.scheduleOnce(function(){
-            // this.didReceiveSendCard()
-            // yx.internet.nSelfChairID = 0
+            
+            // this.didReceiveSendCard([1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23],true)
+            // // 
             // this.showBasePool(true);
+            // this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_PublicOutCard,15,null)
             // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23],
             //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
             //     outchair : 2
             // }
             // this.didReceiveOutCard(data)
             // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     outcards : [17,18,19,20,21,22,23,24,25,26,27,28,29],
+            //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23],
             //     cardtype : yx.config.OutCardType.Bomb,
             //     outchair : 1
             // }
@@ -186,27 +190,26 @@ export class main_Landlord extends main_GameBase {
             //     this.didReceiveOutCard(data)
             // }, 2);
             // this.scheduleOnce(function(){
-            //     this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
-            // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
+            //     this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23])
+            // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23])
             // }, 4);
             // // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.scheduleOnce(function(){
-            //     // this.showLastThreeCardAndMove([78,79,50],0)
+            //     // this.showLastThreeCardAndMove([78,79,50],0,true)
             //     // this.showDipaiBieshu(true,true,3)
                 
             //     // this.showXbeiAni(3,15)
-            //     // this.didReceiveMingpai()
             //     let dataSeettle:proto.client_proto_ddz.IDDZ_S_GameEnd = {
             //         handcards:[
             //             {
-            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23]
             //             },
             //             {
-            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23]
             //             },
             //             {
-            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13]
+            //                 data:[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23]
             //             },
             //         ],
             //         settleinfo:{
@@ -220,8 +223,8 @@ export class main_Landlord extends main_GameBase {
             //         }
             //     }
             //     yx.internet.nSelfChairID = 1
-            //     this.DDZ_S_GAMEEND(dataSeettle)
-            // }, 6);
+            //     this.DDZ_S_MSG_GAMEEND(dataSeettle)
+            // }, 3);
             // app.popup.showToast("assssssssssssssssssssssssss");
             // app.popup.showTip({ text: "Something went wrong with login, please login again" })
         // }, 5);
@@ -354,7 +357,7 @@ export class main_Landlord extends main_GameBase {
                 if(!fw.isNull(aniNode)){
                     this.Items.BMFont_MutipleValue.addChild(aniNode)
                     aniNode.Items["BitmapFontLabel_19"].string = "" + beishu
-                    var tScale = yx.config.changeOldResScale
+                    var tScale = 1
                     aniNode.scale = v3(tScale, tScale, tScale)
                     const a = aniNode.getComponent(Animation);
                     
@@ -820,11 +823,13 @@ export class main_Landlord extends main_GameBase {
             case yx.config.ActionBarStatus.ActionBarStatus_Double: {
                 barNode = this.Items.Node_BarStatusDouble
                 if(data){
-                    var bmt = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.Items.BMFont_Title
-                    bmt.string = "加倍x" + data[0]
+                    var bmt = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.Items.bmt
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[0] == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    
 
-                    var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.BMFont_Title
-                    bmt1.string = "超级加倍x" + data[1]
+                    var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.bmt
+                    bmt1.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[1] == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    
                 }
                 break;
             }
@@ -832,8 +837,9 @@ export class main_Landlord extends main_GameBase {
             case yx.config.ActionBarStatus.ActionBarStatus_PublicCard: {
                 barNode = this.Items.Node_BarStatusPublicCard
                 if(data){
-                    var bmt = this.Items.Node_BarStatusPublicCard.Items.BMFont_Title
-                    bmt.string = "明牌x" + data
+                    var bmt = this.Items.Node_BarStatusPublicCard.Items.bmt
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    
                 }
                 break;
             }
@@ -1001,6 +1007,9 @@ export class main_Landlord extends main_GameBase {
             }else{
                 card.setPosition(posVecs[i])
             }
+            if(i == cardData.length-1){
+                card.getComponent("card_Landlord").setLogoVisible(true)    
+            }
         }
         if(needAni){
             //牌堆整体表现
@@ -1045,9 +1054,9 @@ export class main_Landlord extends main_GameBase {
         var posVecs = yx.func.getCardPositionForMingpai(ClientChairID,cardData.length)
         var mingpaiParent:ccNode = this.player.getMingpaiParent(nChairID,true)
 
-        const tScale = 0.4
+        const tScale = 1
         for(var i=0;i<cardData.length;i++){
-            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_OutCard)
+            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_PoolCard)
             card.setScale(new Vec3(tScale,tScale,tScale))
             mingpaiParent.addChild(card)
             card.setPosition(posVecs[i])
@@ -1606,10 +1615,10 @@ export class main_Landlord extends main_GameBase {
                 .hide()
                 .delay(0.4)
                 .show()
-                .to(0.4, { scale: new Vec3(1.6,1.6,1.6) })
+                .to(0.4, { scale: new Vec3(1.25,1.25,1.25) })
                 
                 .parallel(
-                    tween().to(0.5, { scale: new Vec3(1.05,1.05,1.05)}),
+                    tween().to(0.5, { scale: new Vec3(0.90,0.90,0.90)}),
                     tween().to(0.5, { position: new Vec3(endPos.x-2, endPos.y, 1) })
                 )
                 .call(() => {
@@ -1645,9 +1654,9 @@ export class main_Landlord extends main_GameBase {
                 endPosArr.push(endPos)
     
                 let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
-                card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
+                card.getComponent("card_Landlord").getCardNode().setPosition(-27,-39)
                 this.Items.node_showThreeAniNode.addChild(card)
-                card.setScale(new Vec3(0,1.6,1.6))
+                card.setScale(new Vec3(0,1.25,1.25))
                 card.setPosition(bgPos.x,bgPos.y )
                 
                 showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
@@ -1656,8 +1665,8 @@ export class main_Landlord extends main_GameBase {
             for(let i=0;i<lastThreeCache.length;i++){
                 let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
                 let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
-                card.getComponent("card_Landlord").getCardNode().setPosition(-25,-32)
-                card.setScale(new Vec3(1.05,1.05,1.05))
+                card.getComponent("card_Landlord").getCardNode().setPosition(-27,-39)
+                card.setScale(new Vec3(0.90,0.90,0.90))
                 baseBg.addChild(card)
                 card.setPosition(-2,0)
             }
@@ -2132,7 +2141,7 @@ export class main_Landlord extends main_GameBase {
                 let logicChair = yx.func.getClientChairIDByServerChairID(i)
                 if(logicChair != 0){
                     this.didReceiveTanpai(i,data.handcards[i].data)
-                    this.player.getMingpaiParent(logicChair,true)
+                    this.player.getMingpaiParent(i,true)
                 }
             }
             this.scheduleOnce(()=>{
@@ -2141,6 +2150,7 @@ export class main_Landlord extends main_GameBase {
         } 
         this.player.setPlayerCallStateVisible(null, false);
         this.showTrustLayout(false)
+        this.resetActionBar()
         this.setBaseScorePool(data.settleinfo.doubletimes[yx.internet.nSelfChairID],false)
         if(data.settleinfo.flag > 0){
             showTanpaiAndCoin()

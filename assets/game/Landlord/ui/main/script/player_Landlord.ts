@@ -138,6 +138,7 @@ export class player_Landlord extends player_GameBase {
         if (!yx.internet.isUserCenter()) {
             return;
         }
+        let self = this
         const nClientChairID = yx.func.getClientChairIDByServerChairID(nServerChairID);
         const player = this.Items[`node_player_${nClientChairID}`];
         if (player) {
@@ -147,19 +148,23 @@ export class player_Landlord extends player_GameBase {
                 player.active = true;
                 //名称
                 player.Items.player_name.string = `${playerInfo[PROTO_ACTOR.UAT_NICKNAME]}`;
+                //头像
+                app.file.updateHead({
+                    bAutoShowHide: true,
+                    node: player.Items.headIcon,
+                    serverPicID: self.getHeadData(playerInfo),
+                });
                 //金币
                 player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
                 this.setPlayerCartoonVisible(nServerChairID,true,1,false)
-                // player.Items.Node_chip.active = nServerChairID == yx.internet.nSelfChairID;
-                //头像
-                // app.file.updateHead({
-                //     node: player.Items.Sprite_head,
-                //     serverPicID: playerInfo.szMD5FaceFile,
-                // });
+              
             } else {
                 player.active = false;
             }
         }
+    }
+    getHeadData(Actor){
+        return Actor[PROTO_ACTOR.UAT_FACE_TYPE] == 1 ? Actor[PROTO_ACTOR.UAT_FACE_ID] : Actor[PROTO_ACTOR.UAT_FACE_URL]
     }
     //获取出牌节点
     getOutCardParent(nChairID: number,isCleanChild?:boolean):ccNode{
@@ -203,23 +208,28 @@ export class player_Landlord extends player_GameBase {
         let self = this
         let func = (nChairIDEx: number) => {
             let showFun = (bgNode :ccNode,cCharID:number) => {
-                
+                const offsetX = 130
                 if(bVisible){
                     bgNode.Items.BFL_settlement_score.string = num >= 0 ? "+" + num : "" + num
-                    bgNode.updateSprite(app.game.getRes(`ui/main/texture/player/${num >= 0 ? `yxc_pz_sz_y` : `yxc_pz_sz_s`}/spriteFrame`))
-                    this.loadBundleRes(app.game.getRes(`ui/main/font/${num >= 0 ? `yxc_pz_sz_yy-num` : `yxc_pz_sz_ss-num`}`), Font, (res) => {
+                    let fontsize = num >= 0 ? 17 : 5
+                    bgNode.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/player/${num >= 0 ? `yxc_pz_sz_y` : `yxc_pz_sz_s`}/spriteFrame`])
+                    this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/main/font/${num >= 0 ? `yxc_pz_sz_yy-num` : `yxc_pz_sz_ss-num`}`], Font, (res) => {
                         bgNode.Items.BFL_settlement_score.getComponent(Label).font = res;
+                        bgNode.Items.BFL_settlement_score.getComponent(Label).fontSize = fontsize
                     });
                     const BFL_settlement_score_width = 153
                     const img_settlement_bg_width = 228
-                    const offsetX = 130
+                    
                     var  offsetWidth = bgNode.Items.BFL_settlement_score.getComponent(UITransform).width > BFL_settlement_score_width ? bgNode.Items.BFL_settlement_score.getComponent(UITransform).width - BFL_settlement_score_width : 0
                     var addWidth = bgNode.Items.BFL_settlement_score.getComponent(UITransform).width > BFL_settlement_score_width ? img_settlement_bg_width + (bgNode.Items.BFL_settlement_score.getComponent(UITransform).width - BFL_settlement_score_width) : img_settlement_bg_width
                     bgNode.obtainComponent(UITransform).setContentSize(new Size(addWidth, bgNode.obtainComponent(UITransform).height))
-                    bgNode.setPosition(self.img_settlement_bg_x[cCharID] + offsetX + offsetWidth/2,bgNode.getPosition().y)
+                    bgNode.setPosition(self.img_settlement_bg_x[cCharID]  + offsetWidth/2,bgNode.getPosition().y)
                 }
                 if(isAni){
+                    
                     if(bVisible){
+                        bgNode.active = true
+                        bgNode.setPosition(self.img_settlement_bg_x[cCharID] + offsetX + offsetWidth/2,bgNode.getPosition().y)
                         var y = bgNode.getPosition().y
                         bgNode.obtainComponent(UIOpacity).opacity = 1;
                         tween(bgNode)
@@ -240,7 +250,7 @@ export class player_Landlord extends player_GameBase {
                 }
             }
             const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
-            showFun(this.getSettlementBgByChair(nChairIDEx),ClientChairID)
+            showFun(self.getSettlementBgByChair(nChairIDEx),ClientChairID)
             
         }
         if (fw.isNull(nChairID)) {
@@ -315,7 +325,7 @@ export class player_Landlord extends player_GameBase {
                 }
             }
             const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
-            
+
             var node : ccNode
             if(ClientChairID != 0){
             

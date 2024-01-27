@@ -12,6 +12,7 @@ const config = {
         //可动态调用，无需声明
         //大厅
         main: <BundleConfigType>{},
+        secondary: <BundleConfigType>{},
         plaza: <BundleConfigType>{},
         login: <BundleConfigType>{},
         resources: <BundleConfigType>{},

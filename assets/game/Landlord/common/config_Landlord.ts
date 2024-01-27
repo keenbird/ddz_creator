@@ -131,11 +131,11 @@ export class config_Landlord extends config_GameBase {
     CARD_TYPE_LAIZI = "laizi"		//癞子
 
     //偏移值Y（选中牌之后弹起的高度）
-    CARD_POP_OFFSET_Y = 30
+    CARD_POP_OFFSET_Y = 20
     //手牌左右距离总和
     CARD_PADDING_TOTAL_OF_HAND_CARDS = 35
     /** 扑克牌的尺寸 */
-    CARD_SIZE = new Size(161, 212)
+    CARD_SIZE = new Size(164, 218)
     /** 间距（手牌之间的间隔, 17张铺满来算的） */
     CARD_PADDING_OF_HAND_CARDS =  ((app.winSize.width - this.CARD_PADDING_TOTAL_OF_HAND_CARDS - this.CARD_SIZE.width) / (17 - 1))
     //--滑动出牌高度Y
@@ -222,17 +222,17 @@ export class config_Landlord extends config_GameBase {
     SearchMode = {
         /* 全区间模式（两点固定区间进行快捷选取） */
         SearchMode_FullRegion : 1,
-        /* 半区间模式（选1个，预发搜索要压的牌） */
+    /* 半区间模式（选1个，预发搜索要压的牌） */
         SearchMode_HalfRegion : 2,
         /* 滑动模式（滑动选牌进行搜索） */
         SearchMode_Sliding : 3,
     }
     //间距（打出的牌之间的间隔）
-    CARD_PADDING_OF_OUT_CARDS = 35
+    CARD_PADDING_OF_OUT_CARDS = 30
     //出牌缩小比例
-    CARD_SCALE_OUT_CARDS = 0.6
+    CARD_SCALE_OUT_CARDS = 1
     /** 扑克牌的尺寸 */
-    OUT_CARD_SIZE = new Size(107, 141)
+    OUT_CARD_SIZE = new Size(90.2, 77.55)
 
     /* 动作条状态 */
     ActionBarStatus = {

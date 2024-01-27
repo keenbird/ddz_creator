@@ -89,7 +89,7 @@ export class card_Landlord extends (fw.FWComponent) {
 		if(cardType == yx.config.CARD_TYPE_JOKER){
 			this.m_pCardNode.Items.ImageView_CardType.active = false
 		}else{
-			var cardTypeRes = this.pokerResPath + `type.${cardType}/spriteFrame`
+			var cardTypeRes = this.pokerResPath + `logo.${cardType}/spriteFrame`
 			this.m_pCardNode.Items.ImageView_CardType.updateSprite(app.game.getRes(cardTypeRes))
 		}
 

@@ -232,11 +232,11 @@ export class func_Landlord extends func_GameBase {
         }else if(ClientChairID == 1){
             let max = cardCount >= 10 ? 10 : cardCount
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,-70*(Math.floor(i/max)),1))
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS,-70*(Math.floor(i/max))+70,1))
             }
         }else if(ClientChairID == 2){
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i%10),-70*(Math.floor(i/10)),1))
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i%10),-70*(Math.floor(i/10))+70,1))
             }
         }
         return posVecs
@@ -244,6 +244,21 @@ export class func_Landlord extends func_GameBase {
 
     //获取明牌的坐标
     getCardPositionForMingpai(ClientChairID:number,cardCount:number):Vec3[]{
+        var posVecs:Vec3[] = []
+        if(ClientChairID == 0){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(yx.config.CARD_PADDING_OF_OUT_CARDS*(i-(cardCount-1)/2)-yx.config.OUT_CARD_SIZE.width*yx.config.CARD_SCALE_OUT_CARDS*0.5,0,1))
+            }
+        }else if(ClientChairID == 1){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(20*(cardCount -i - 1)*-1-yx.config.CARD_SIZE.width*0.36,0,1))
+            }
+        }else if(ClientChairID == 2){
+            for(var i=0;i<cardCount;i++){
+                posVecs.push(new Vec3(20*(i),0,1))
+            }
+        }
+        return posVecs
         var posVecs:Vec3[] = []
         if(ClientChairID == 0){
             for(var i=0;i<cardCount;i++){

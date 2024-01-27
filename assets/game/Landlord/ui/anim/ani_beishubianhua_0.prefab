@@ -203,14 +203,14 @@
     "_string": "130",
     "_horizontalAlign": 1,
     "_verticalAlign": 1,
-    "_actualFontSize": 30,
-    "_fontSize": 30,
+    "_actualFontSize": 25,
+    "_fontSize": 25,
     "_fontFamily": "Arial",
-    "_lineHeight": 43,
+    "_lineHeight": 40,
     "_overflow": 0,
     "_enableWrapText": true,
     "_font": {
-      "__uuid__": "3ac492a8-8e5f-4fcb-8147-aa865757dca0",
+      "__uuid__": "dc32933f-d5c7-4d7a-8f62-64516ca5bcc9",
       "__expectedType__": "cc.BitmapFont"
     },
     "_isSystemFontUsed": false,
@@ -257,8 +257,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 59.06,
-      "height": 43
+      "width": 65.63,
+      "height": 40
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -1374,7 +1374,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -16.2297,
+      "x": 0,
       "y": 3.3298,
       "z": 0
     },

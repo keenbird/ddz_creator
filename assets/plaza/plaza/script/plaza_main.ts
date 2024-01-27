@@ -28,7 +28,7 @@ export class plaza_main extends (fw.FWComponent) {
 	gameSpecialItemsBase: Prefab;
 	mCheckRegLogin: boolean; // 是否是注册登录
 	guideNode: ccNode;//新手引导节点
-
+	hideRecord: Record<string, boolean>={};
 	protected doLifeFunc(): void {
 		//缓存大厅，不清理
 		app.runtime.permanentView.set(this.node, true);
@@ -40,15 +40,8 @@ export class plaza_main extends (fw.FWComponent) {
 		var intentData: IntentParam = {}
 		this.Items.Button_test_002.onClickAndScale(() => {
 			// app.gameManager.gotoGame(`Landlord`, 1);
-			
 			center.game.room.sendBEFORE_MATCH_REQ(10101)
-			// intentData.bCleanAllView = true
-			// intentData.callback = (err, scene) => {
-			// 	app.popup.showMain({
-			// 		viewConfig: fw.BundleConfig.Landlord.res[`ui/main/main`],
-			// 	});
-			// }
-			// fw.scene.changeScene(fw.SceneConfigs.Landlord,intentData);
+			// this.updateSecondary(0)
 		});
 		//正常逻辑
 		super.doLifeFunc();
@@ -501,7 +494,7 @@ export class plaza_main extends (fw.FWComponent) {
 			default:
 				data = {
 					active: true,
-					res: fw.BundleConfig.plaza.res[`plaza/secondary/plaza_secondary`],
+					res: fw.BundleConfig.secondary.res[`plaza_secondary`],
 					visible: (view: ccNode, bActive?: boolean) => {
 						//调整二级界面显隐
 						view.active = bActive ??= !view.active;
@@ -515,6 +508,7 @@ export class plaza_main extends (fw.FWComponent) {
 			viewConfig: data.res,
 			parent: this.Items.Node_secondary,
 			callback: (view, dataEx) => {
+				this.setPlazaNodeShowup(false)
 				//调整数据
 				//调整显示
 				data.visible && data.visible(view, data.active);
@@ -522,6 +516,22 @@ export class plaza_main extends (fw.FWComponent) {
 				data.callback && data.callback(view, data);
 			}
 		});
+	}
+	//当有全屏二级界面的时候，隐藏其他节点(除开二级节点)
+	setPlazaNodeShowup(isShow:boolean) {
+		if(isShow){
+			for(var i=0;i<this.node.children.length;i++){
+				let node = this.node.children[i]
+				node.active = this.hideRecord[node.name] ? this.hideRecord[node.name] : false
+			}
+		}else{
+			for(var i=0;i<this.node.children.length;i++){
+				let node = this.node.children[i]
+				this.hideRecord[node.name] = node.active
+				node.active = false
+			}
+			this.Items.Node_secondary.active = true
+		}
 	}
 	/**刷新运营按钮排序 */
 	updateActivityBtnSort(area: number) {

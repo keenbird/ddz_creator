@@ -1,0 +1,154 @@
+{
+  "ver": "1.0.6",
+  "importer": "bitmap-font",
+  "imported": true,
+  "uuid": "f78b7d91-82db-4bc2-a922-f4ad147a03a1",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "_fntConfig": {
+      "commonHeight": 46,
+      "fontSize": 32,
+      "atlasName": "D:\\workspace\\art\\003_爱玩斗地主（新项目）\\美术资源\\02_UI\\游戏场切图\\yxc_img_djs-num.png",
+      "fontDefDictionary": {
+        "9": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 0
+        },
+        "32": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 0
+        },
+        "48": {
+          "rect": {
+            "x": 63,
+            "y": 0,
+            "width": 31,
+            "height": 46
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 31
+        },
+        "49": {
+          "rect": {
+            "x": 94,
+            "y": 90,
+            "width": 20,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 20
+        },
+        "50": {
+          "rect": {
+            "x": 63,
+            "y": 46,
+            "width": 31,
+            "height": 46
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 31
+        },
+        "51": {
+          "rect": {
+            "x": 94,
+            "y": 45,
+            "width": 30,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 30
+        },
+        "52": {
+          "rect": {
+            "x": 0,
+            "y": 45,
+            "width": 32,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 32
+        },
+        "53": {
+          "rect": {
+            "x": 0,
+            "y": 90,
+            "width": 31,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        },
+        "54": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 32,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 32
+        },
+        "55": {
+          "rect": {
+            "x": 94,
+            "y": 0,
+            "width": 30,
+            "height": 45
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 30
+        },
+        "56": {
+          "rect": {
+            "x": 32,
+            "y": 46,
+            "width": 31,
+            "height": 46
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 31
+        },
+        "57": {
+          "rect": {
+            "x": 32,
+            "y": 0,
+            "width": 31,
+            "height": 46
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 31
+        }
+      },
+      "kerningDict": {}
+    },
+    "fontSize": 32,
+    "textureUuid": "6d8b55c4-3db8-4486-9f83-e8e8f89179bb"
+  }
+}

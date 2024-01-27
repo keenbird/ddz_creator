@@ -138,12 +138,14 @@ class _FWComponent extends Component {
             (data.bShowView ?? true) && (view.active = true);
         }
         if (!fw.isValid(view)) {
+            app.popup.showLoading();
             this.loadBundleRes(data.viewConfig,(res: Prefab) => {
                 let bOnlyOne = data.bOnlyOne ?? true;
                 view = views[data.viewConfig.all];
                 if (!bOnlyOne || !fw.isValid(view)) {
                     let parent = data.parent ?? this.node;
                     if (!fw.isValid(parent)) {
+                        app.popup.closeLoading()
                         return;
                     }
                     view = instantiate(res);
@@ -153,6 +155,7 @@ class _FWComponent extends Component {
                     } else {
                         parent.insertChild(view, data.zOrder);
                     }
+                    app.popup.closeLoading()
                     views[data.viewConfig.all] = view;
                 }
                 func();
