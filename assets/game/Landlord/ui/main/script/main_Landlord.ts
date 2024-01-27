@@ -1879,9 +1879,7 @@ export class main_Landlord extends main_GameBase {
         this.showLastThreeCardAndMove(data.backcards,data.bankerchair)
         this.showDipaiBieshu(true,true,data.backtimes)
         this.player.setPlayerDizhuVisible(data.bankerchair,true)
-        for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
-            this.player.setPlayerCartoonVisible(i,true,2,true,data.bankerchair == i)
-        }
+        
         this.setBaseScorePool(data.toptimes,true)
     }
     DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double,isAni?:boolean) {
@@ -2048,9 +2046,7 @@ export class main_Landlord extends main_GameBase {
             }
             this.player.setPlayerDizhuVisible(reconnData.bankerchair,false)
             this.showDipaiBieshu(true,false,reconnData.backtimes)
-            for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
-                this.player.setPlayerCartoonVisible(i,true,2,false,reconnData.bankerchair == i)
-            }
+          
             this.showLastThreeCardAndMove(reconnData.backcards,null,false)
         }
         //出牌阶段
@@ -2137,6 +2133,7 @@ export class main_Landlord extends main_GameBase {
         //摊牌以及展示结算流水
         let showTanpaiAndCoin =  (callback?:Function)=>{
             for(let i=0;i<yx.internet.nMaxPlayerCount;i++){
+                this.player.getOutCardParent(i,true)
                 this.player.setSettlementScoreVisible(i,true,data.settleinfo.golds[i],true)
                 let logicChair = yx.func.getClientChairIDByServerChairID(i)
                 if(logicChair != 0){

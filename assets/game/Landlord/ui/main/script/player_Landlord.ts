@@ -64,7 +64,6 @@ export class player_Landlord extends player_GameBase {
             const player = this.Items[`node_player_${i}`];
             if (player) {
                 player.active = false;
-                this.setPlayerCartoonVisible(i,false)
                 player.Items.btn_open_userinfo.onClickAndScale(() => {
                     //自己不处理
                     if (i == yx.func.getClientChairIDByServerChairID(yx.internet.nSelfChairID)) {
@@ -95,18 +94,13 @@ export class player_Landlord extends player_GameBase {
         this.setPlayerTimerVisible(null, false);
         //隐藏对面两家牌数
         this.setPlayerCardNumVisible(null, false );
-        //隐藏所有玩家玩偶形象
-        // this.setPlayerCartoonVisible(null, false );
         //隐藏所有玩家气泡
         this.setPlayerChatBubble(null, false );
         //隐藏所有玩家托管状态
         this.setPlayerTrusteeship(null, false );
         
         //------------test----------------//    
-        // this.setPlayerCartoonVisible(null, true , 2);
-        // this.scheduleOnce(() => {
-        //     this.setPlayerCartoonVisible(null, true , 1);
-        // },3)
+    
         
         // this.scheduleOnce(function(){
         //     this.setPlayerDizhuVisible(0,true)
@@ -156,7 +150,6 @@ export class player_Landlord extends player_GameBase {
                 });
                 //金币
                 player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
-                this.setPlayerCartoonVisible(nServerChairID,true,1,false)
               
             } else {
                 player.active = false;
@@ -249,8 +242,7 @@ export class player_Landlord extends player_GameBase {
                     bgNode.active = bVisible
                 }
             }
-            const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
-            showFun(self.getSettlementBgByChair(nChairIDEx),ClientChairID)
+            showFun(self.getSettlementBgByChair(nChairIDEx),nChairIDEx)
             
         }
         if (fw.isNull(nChairID)) {
@@ -515,96 +507,7 @@ export class player_Landlord extends player_GameBase {
             func(nChairID);
         }
     }
-    //设置玩家玩偶形象 type1:卡通形象  type2：地主农民形象
-    setPlayerCartoonVisible(nChairID: number, bVisible: boolean, type?: number, isAni?: boolean, isLandlord?: boolean, animation?: string ) {
-        isAni = isAni == false ? false : true
-        let func = (nChairIDEx: number) => {
-            let showFun = (parentNode :ccNode) => {
-                if(bVisible){
-                    if((type == 1 && parentNode.Items.node_cartoon.children.length == 0) || (type == 2 && !parentNode.Items.node_spine.active)){
-                        
-                        var delayTime = isAni ? 0.5 : 0.1
-                        if(type == 1){
-                            parentNode.Items.node_spine.active = false
-                        }else{
-                            parentNode.Items.node_cartoon.removeAllChildren()
-                        }
-                        if(isAni){
-                            this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_node_huantouxiang`], (res: Prefab) => {
-                                let aniNode = instantiate(res);
-                                if(!fw.isNull(aniNode)){
-                                    parentNode.addChild(aniNode)
-                                    
-                                    const a = aniNode.getComponent(Animation);
-            
-                                    a.play(`ani_node_huantouxiang`);
-                                    a.on(Animation.EventType.FINISHED, () => {
-                                        aniNode.removeFromParent(true)
-                                    });
-                                }
-                            });
-                        }
-                        this.scheduleOnce(() => {
-                            if(type == 1){
-                                this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/tx_ddz_renwuhuxi`], (res: Prefab) => {
-                                    let aniNode = instantiate(res);
-                                    if(!fw.isNull(aniNode)){
-                                        parentNode.Items.node_cartoon.addChild(aniNode)
-                                        const a = aniNode.getComponent(Animation);
-                                        a.play(`tx_ddz_renwuhuxi`);
-                                        // a.getState('tx_ddz_renwuhuxi').repeatCount = Infinity;
-                                        a.on(Animation.EventType.FINISHED, () => {
-                                            a.play(`tx_ddz_renwuhuxi`);
-                                        });
-                                    }
-                                });
-                            }else{
-                                var spk = parentNode.Items.node_spine.obtainComponent(FWSpine)
-                                var resNmae = `effect/actor/landlordBoy/dizhu`
-                                var sex = "m"
-                                const actor = gameCenter.user.getActorByChairId(nChairID);
-
-                                if (actor) {
-                                    sex = actor[PROTO_ACTOR.UAT_SEX]
-                                }
-                                if(isLandlord){
-                                    resNmae = sex == "m" ? `effect/actor/landlordBoy/dizhu` : `effect/actor/landlordGirl/Nvdizhu_ani07`
-                                }else{
-                                    resNmae = sex == "m" ? `effect/actor/farmerBoy/nanNongMin_Ani_02_backup` : `effect/actor/farmerGirl/Nvnongmin_ani03`
-                                }
-                                this.loadBundleRes(fw.BundleConfig.Landlord.res[resNmae],sp.SkeletonData, (skeletonData: sp.SkeletonData) => {
-                                    
-                                    spk.skeletonData  = skeletonData
-                                    spk.animation = animation ? animation : "daiji"
-                                    parentNode.Items.node_spine.active = true
-                            
-                                });
-                            }
-                        },delayTime)
-                    }
-                    
-                    
-                }else{
-                    parentNode.Items.node_spine.active = false
-                    parentNode.Items.node_cartoon.removeAllChildren()
-                }
-                
-                
-            }
-          
-         
-            const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairIDEx);
-            showFun(this.Items[`node_actor_${ClientChairID}`])
-
-        }
-        if (fw.isNull(nChairID)) {
-            for (let k = 0, j = yx.internet.nMaxPlayerCount; k < j; ++k) {
-                func(k);
-            }
-        } else {
-            func(nChairID);
-        }
-    }
+    
     //设置玩家准备状态
     setPlayerReadyStateVisible(nChairID: number, bVisible: boolean) {
         let self = this
