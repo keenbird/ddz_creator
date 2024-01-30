@@ -40,8 +40,11 @@ export class plaza_main extends (fw.FWComponent) {
 		var intentData: IntentParam = {}
 		this.Items.Button_test_002.onClickAndScale(() => {
 			// app.gameManager.gotoGame(`Landlord`, 1);
-			center.game.room.sendBEFORE_MATCH_REQ(10101)
+			// center.game.room.sendBEFORE_MATCH_REQ(10101)
 			// this.updateSecondary(0)
+			center.game.room.sendRLSMI_SECOND_LIST_REQ(proto.client_proto.GAME_TYPE.GT_LANDLORD,()=>{
+				this.updateSecondary(SecondaryType.Game)
+			})
 		});
 		//正常逻辑
 		super.doLifeFunc();
@@ -487,11 +490,10 @@ export class plaza_main extends (fw.FWComponent) {
 	}
 	/**二级界面 */
 	updateSecondary(nType: SecondaryType, extend?: UpdateSecondaryExtendParam) {
-		let data: UpdateSecondaryParam;
+		let data: UpdateSecondaryParam = null;
 		//初始化数据
 		switch (nType) {
 			case SecondaryType.Game:
-			default:
 				data = {
 					active: true,
 					res: fw.BundleConfig.secondary.res[`plaza_secondary`],
@@ -500,22 +502,35 @@ export class plaza_main extends (fw.FWComponent) {
 						view.active = bActive ??= !view.active;
 					},
 				}
+				break;
+			default:
+				// data = {
+				// 	active: true,
+				// 	res: fw.BundleConfig.secondary.res[`plaza_secondary`],
+				// 	visible: (view: ccNode, bActive?: boolean) => {
+				// 		//调整二级界面显隐
+				// 		view.active = bActive ??= !view.active;
+				// 	},
+				// }
 		}
-		//扩展数据
-		data.extend = extend;
-		//调整界面显隐
-		this.addView({
-			viewConfig: data.res,
-			parent: this.Items.Node_secondary,
-			callback: (view, dataEx) => {
-				this.setPlazaNodeShowup(false)
-				//调整数据
-				//调整显示
-				data.visible && data.visible(view, data.active);
-				//执行回调
-				data.callback && data.callback(view, data);
-			}
-		});
+		if(data != null){
+			//扩展数据
+			data.extend = extend;
+			//调整界面显隐
+			this.addView({
+				viewConfig: data.res,
+				parent: this.Items.Node_secondary,
+				callback: (view, dataEx) => {
+					this.setPlazaNodeShowup(false)
+					//调整数据
+					//调整显示
+					data.visible && data.visible(view, data.active);
+					//执行回调
+					data.callback && data.callback(view, data);
+				}
+			});
+		}
+		
 	}
 	//当有全屏二级界面的时候，隐藏其他节点(除开二级节点)
 	setPlazaNodeShowup(isShow:boolean) {

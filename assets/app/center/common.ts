@@ -2983,15 +2983,17 @@ $root.client_proto = (function() {
      * @enum {number}
      * @property {number} RT_NULL=0 RT_NULL value
      * @property {number} RT_CLASSICS=1 RT_CLASSICS value
-     * @property {number} RT_MATCH=2 RT_MATCH value
-     * @property {number} RT_FRIEND=3 RT_FRIEND value
+     * @property {number} RT_CONTINUE_BOMB=2 RT_CONTINUE_BOMB value
+     * @property {number} RT_MATCH=3 RT_MATCH value
+     * @property {number} RT_FRIEND=4 RT_FRIEND value
      */
     client_proto.ROOM_TYPE = (function() {
         var valuesById = {}, values = Object.create(valuesById);
         values[valuesById[0] = "RT_NULL"] = 0;
         values[valuesById[1] = "RT_CLASSICS"] = 1;
-        values[valuesById[2] = "RT_MATCH"] = 2;
-        values[valuesById[3] = "RT_FRIEND"] = 3;
+        values[valuesById[2] = "RT_CONTINUE_BOMB"] = 2;
+        values[valuesById[3] = "RT_MATCH"] = 3;
+        values[valuesById[4] = "RT_FRIEND"] = 4;
         return values;
     })();
 
@@ -3017,6 +3019,1123 @@ $root.client_proto = (function() {
         values[valuesById[5] = "RL_GREAT_MASTER"] = 5;
         values[valuesById[6] = "RL_YOUNG_KING"] = 6;
         return values;
+    })();
+
+    client_proto.SecondRoomListReq = (function() {
+
+        /**
+         * Properties of a SecondRoomListReq.
+         * @memberof client_proto
+         * @interface ISecondRoomListReq
+         * @property {number|null} [gameType] SecondRoomListReq gameType
+         */
+
+        /**
+         * Constructs a new SecondRoomListReq.
+         * @memberof client_proto
+         * @classdesc Represents a SecondRoomListReq.
+         * @implements ISecondRoomListReq
+         * @constructor
+         * @param {client_proto.ISecondRoomListReq=} [properties] Properties to set
+         */
+        function SecondRoomListReq(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SecondRoomListReq gameType.
+         * @member {number} gameType
+         * @memberof client_proto.SecondRoomListReq
+         * @instance
+         */
+        SecondRoomListReq.prototype.gameType = 0;
+
+        /**
+         * Creates a new SecondRoomListReq instance using the specified properties.
+         * @function create
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {client_proto.ISecondRoomListReq=} [properties] Properties to set
+         * @returns {client_proto.SecondRoomListReq} SecondRoomListReq instance
+         */
+        SecondRoomListReq.create = function create(properties) {
+            return new SecondRoomListReq(properties);
+        };
+
+        /**
+         * Encodes the specified SecondRoomListReq message. Does not implicitly {@link client_proto.SecondRoomListReq.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {client_proto.ISecondRoomListReq} message SecondRoomListReq message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SecondRoomListReq.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.gameType != null && Object.hasOwnProperty.call(message, "gameType"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.gameType);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SecondRoomListReq message, length delimited. Does not implicitly {@link client_proto.SecondRoomListReq.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {client_proto.ISecondRoomListReq} message SecondRoomListReq message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SecondRoomListReq.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SecondRoomListReq message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.SecondRoomListReq} SecondRoomListReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SecondRoomListReq.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.SecondRoomListReq();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.gameType = reader.int32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SecondRoomListReq message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.SecondRoomListReq} SecondRoomListReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SecondRoomListReq.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SecondRoomListReq message.
+         * @function verify
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SecondRoomListReq.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                if (!$util.isInteger(message.gameType))
+                    return "gameType: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates a SecondRoomListReq message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.SecondRoomListReq} SecondRoomListReq
+         */
+        SecondRoomListReq.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.SecondRoomListReq)
+                return object;
+            var message = new $root.client_proto.SecondRoomListReq();
+            if (object.gameType != null)
+                message.gameType = object.gameType | 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SecondRoomListReq message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {client_proto.SecondRoomListReq} message SecondRoomListReq
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SecondRoomListReq.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults)
+                object.gameType = 0;
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                object.gameType = message.gameType;
+            return object;
+        };
+
+        /**
+         * Converts this SecondRoomListReq to JSON.
+         * @function toJSON
+         * @memberof client_proto.SecondRoomListReq
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SecondRoomListReq.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for SecondRoomListReq
+         * @function getTypeUrl
+         * @memberof client_proto.SecondRoomListReq
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SecondRoomListReq.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.SecondRoomListReq";
+        };
+
+        return SecondRoomListReq;
+    })();
+
+    client_proto.OneRoomInfo = (function() {
+
+        /**
+         * Properties of an OneRoomInfo.
+         * @memberof client_proto
+         * @interface IOneRoomInfo
+         * @property {number|null} [roomId] OneRoomInfo roomId
+         * @property {string|null} [roomName] OneRoomInfo roomName
+         * @property {number|null} [roomLevel] OneRoomInfo roomLevel
+         * @property {number|Long|null} [enterMin] OneRoomInfo enterMin
+         * @property {number|Long|null} [enterMax] OneRoomInfo enterMax
+         * @property {number|null} [baseScore] OneRoomInfo baseScore
+         * @property {number|null} [playerNum] OneRoomInfo playerNum
+         */
+
+        /**
+         * Constructs a new OneRoomInfo.
+         * @memberof client_proto
+         * @classdesc Represents an OneRoomInfo.
+         * @implements IOneRoomInfo
+         * @constructor
+         * @param {client_proto.IOneRoomInfo=} [properties] Properties to set
+         */
+        function OneRoomInfo(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * OneRoomInfo roomId.
+         * @member {number} roomId
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.roomId = 0;
+
+        /**
+         * OneRoomInfo roomName.
+         * @member {string} roomName
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.roomName = "";
+
+        /**
+         * OneRoomInfo roomLevel.
+         * @member {number} roomLevel
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.roomLevel = 0;
+
+        /**
+         * OneRoomInfo enterMin.
+         * @member {number|Long} enterMin
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.enterMin = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * OneRoomInfo enterMax.
+         * @member {number|Long} enterMax
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.enterMax = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * OneRoomInfo baseScore.
+         * @member {number} baseScore
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.baseScore = 0;
+
+        /**
+         * OneRoomInfo playerNum.
+         * @member {number} playerNum
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         */
+        OneRoomInfo.prototype.playerNum = 0;
+
+        /**
+         * Creates a new OneRoomInfo instance using the specified properties.
+         * @function create
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {client_proto.IOneRoomInfo=} [properties] Properties to set
+         * @returns {client_proto.OneRoomInfo} OneRoomInfo instance
+         */
+        OneRoomInfo.create = function create(properties) {
+            return new OneRoomInfo(properties);
+        };
+
+        /**
+         * Encodes the specified OneRoomInfo message. Does not implicitly {@link client_proto.OneRoomInfo.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {client_proto.IOneRoomInfo} message OneRoomInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OneRoomInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.roomId != null && Object.hasOwnProperty.call(message, "roomId"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.roomId);
+            if (message.roomName != null && Object.hasOwnProperty.call(message, "roomName"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.roomName);
+            if (message.roomLevel != null && Object.hasOwnProperty.call(message, "roomLevel"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.roomLevel);
+            if (message.enterMin != null && Object.hasOwnProperty.call(message, "enterMin"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int64(message.enterMin);
+            if (message.enterMax != null && Object.hasOwnProperty.call(message, "enterMax"))
+                writer.uint32(/* id 5, wireType 0 =*/40).int64(message.enterMax);
+            if (message.baseScore != null && Object.hasOwnProperty.call(message, "baseScore"))
+                writer.uint32(/* id 6, wireType 0 =*/48).int32(message.baseScore);
+            if (message.playerNum != null && Object.hasOwnProperty.call(message, "playerNum"))
+                writer.uint32(/* id 7, wireType 0 =*/56).int32(message.playerNum);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified OneRoomInfo message, length delimited. Does not implicitly {@link client_proto.OneRoomInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {client_proto.IOneRoomInfo} message OneRoomInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OneRoomInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an OneRoomInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.OneRoomInfo} OneRoomInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OneRoomInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.OneRoomInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.roomId = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.roomName = reader.string();
+                        break;
+                    }
+                case 3: {
+                        message.roomLevel = reader.int32();
+                        break;
+                    }
+                case 4: {
+                        message.enterMin = reader.int64();
+                        break;
+                    }
+                case 5: {
+                        message.enterMax = reader.int64();
+                        break;
+                    }
+                case 6: {
+                        message.baseScore = reader.int32();
+                        break;
+                    }
+                case 7: {
+                        message.playerNum = reader.int32();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an OneRoomInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.OneRoomInfo} OneRoomInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OneRoomInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an OneRoomInfo message.
+         * @function verify
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        OneRoomInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                if (!$util.isInteger(message.roomId))
+                    return "roomId: integer expected";
+            if (message.roomName != null && message.hasOwnProperty("roomName"))
+                if (!$util.isString(message.roomName))
+                    return "roomName: string expected";
+            if (message.roomLevel != null && message.hasOwnProperty("roomLevel"))
+                if (!$util.isInteger(message.roomLevel))
+                    return "roomLevel: integer expected";
+            if (message.enterMin != null && message.hasOwnProperty("enterMin"))
+                if (!$util.isInteger(message.enterMin) && !(message.enterMin && $util.isInteger(message.enterMin.low) && $util.isInteger(message.enterMin.high)))
+                    return "enterMin: integer|Long expected";
+            if (message.enterMax != null && message.hasOwnProperty("enterMax"))
+                if (!$util.isInteger(message.enterMax) && !(message.enterMax && $util.isInteger(message.enterMax.low) && $util.isInteger(message.enterMax.high)))
+                    return "enterMax: integer|Long expected";
+            if (message.baseScore != null && message.hasOwnProperty("baseScore"))
+                if (!$util.isInteger(message.baseScore))
+                    return "baseScore: integer expected";
+            if (message.playerNum != null && message.hasOwnProperty("playerNum"))
+                if (!$util.isInteger(message.playerNum))
+                    return "playerNum: integer expected";
+            return null;
+        };
+
+        /**
+         * Creates an OneRoomInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.OneRoomInfo} OneRoomInfo
+         */
+        OneRoomInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.OneRoomInfo)
+                return object;
+            var message = new $root.client_proto.OneRoomInfo();
+            if (object.roomId != null)
+                message.roomId = object.roomId | 0;
+            if (object.roomName != null)
+                message.roomName = String(object.roomName);
+            if (object.roomLevel != null)
+                message.roomLevel = object.roomLevel | 0;
+            if (object.enterMin != null)
+                if ($util.Long)
+                    (message.enterMin = $util.Long.fromValue(object.enterMin)).unsigned = false;
+                else if (typeof object.enterMin === "string")
+                    message.enterMin = parseInt(object.enterMin, 10);
+                else if (typeof object.enterMin === "number")
+                    message.enterMin = object.enterMin;
+                else if (typeof object.enterMin === "object")
+                    message.enterMin = new $util.LongBits(object.enterMin.low >>> 0, object.enterMin.high >>> 0).toNumber();
+            if (object.enterMax != null)
+                if ($util.Long)
+                    (message.enterMax = $util.Long.fromValue(object.enterMax)).unsigned = false;
+                else if (typeof object.enterMax === "string")
+                    message.enterMax = parseInt(object.enterMax, 10);
+                else if (typeof object.enterMax === "number")
+                    message.enterMax = object.enterMax;
+                else if (typeof object.enterMax === "object")
+                    message.enterMax = new $util.LongBits(object.enterMax.low >>> 0, object.enterMax.high >>> 0).toNumber();
+            if (object.baseScore != null)
+                message.baseScore = object.baseScore | 0;
+            if (object.playerNum != null)
+                message.playerNum = object.playerNum | 0;
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an OneRoomInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {client_proto.OneRoomInfo} message OneRoomInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        OneRoomInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.roomId = 0;
+                object.roomName = "";
+                object.roomLevel = 0;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.enterMin = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.enterMin = options.longs === String ? "0" : 0;
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.enterMax = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.enterMax = options.longs === String ? "0" : 0;
+                object.baseScore = 0;
+                object.playerNum = 0;
+            }
+            if (message.roomId != null && message.hasOwnProperty("roomId"))
+                object.roomId = message.roomId;
+            if (message.roomName != null && message.hasOwnProperty("roomName"))
+                object.roomName = message.roomName;
+            if (message.roomLevel != null && message.hasOwnProperty("roomLevel"))
+                object.roomLevel = message.roomLevel;
+            if (message.enterMin != null && message.hasOwnProperty("enterMin"))
+                if (typeof message.enterMin === "number")
+                    object.enterMin = options.longs === String ? String(message.enterMin) : message.enterMin;
+                else
+                    object.enterMin = options.longs === String ? $util.Long.prototype.toString.call(message.enterMin) : options.longs === Number ? new $util.LongBits(message.enterMin.low >>> 0, message.enterMin.high >>> 0).toNumber() : message.enterMin;
+            if (message.enterMax != null && message.hasOwnProperty("enterMax"))
+                if (typeof message.enterMax === "number")
+                    object.enterMax = options.longs === String ? String(message.enterMax) : message.enterMax;
+                else
+                    object.enterMax = options.longs === String ? $util.Long.prototype.toString.call(message.enterMax) : options.longs === Number ? new $util.LongBits(message.enterMax.low >>> 0, message.enterMax.high >>> 0).toNumber() : message.enterMax;
+            if (message.baseScore != null && message.hasOwnProperty("baseScore"))
+                object.baseScore = message.baseScore;
+            if (message.playerNum != null && message.hasOwnProperty("playerNum"))
+                object.playerNum = message.playerNum;
+            return object;
+        };
+
+        /**
+         * Converts this OneRoomInfo to JSON.
+         * @function toJSON
+         * @memberof client_proto.OneRoomInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        OneRoomInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for OneRoomInfo
+         * @function getTypeUrl
+         * @memberof client_proto.OneRoomInfo
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        OneRoomInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.OneRoomInfo";
+        };
+
+        return OneRoomInfo;
+    })();
+
+    client_proto.OneRoomTypeInfo = (function() {
+
+        /**
+         * Properties of an OneRoomTypeInfo.
+         * @memberof client_proto
+         * @interface IOneRoomTypeInfo
+         * @property {number|null} [roomType] OneRoomTypeInfo roomType
+         * @property {string|null} [typeName] OneRoomTypeInfo typeName
+         * @property {Array.<client_proto.IOneRoomInfo>|null} [roomList] OneRoomTypeInfo roomList
+         */
+
+        /**
+         * Constructs a new OneRoomTypeInfo.
+         * @memberof client_proto
+         * @classdesc Represents an OneRoomTypeInfo.
+         * @implements IOneRoomTypeInfo
+         * @constructor
+         * @param {client_proto.IOneRoomTypeInfo=} [properties] Properties to set
+         */
+        function OneRoomTypeInfo(properties) {
+            this.roomList = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * OneRoomTypeInfo roomType.
+         * @member {number} roomType
+         * @memberof client_proto.OneRoomTypeInfo
+         * @instance
+         */
+        OneRoomTypeInfo.prototype.roomType = 0;
+
+        /**
+         * OneRoomTypeInfo typeName.
+         * @member {string} typeName
+         * @memberof client_proto.OneRoomTypeInfo
+         * @instance
+         */
+        OneRoomTypeInfo.prototype.typeName = "";
+
+        /**
+         * OneRoomTypeInfo roomList.
+         * @member {Array.<client_proto.IOneRoomInfo>} roomList
+         * @memberof client_proto.OneRoomTypeInfo
+         * @instance
+         */
+        OneRoomTypeInfo.prototype.roomList = $util.emptyArray;
+
+        /**
+         * Creates a new OneRoomTypeInfo instance using the specified properties.
+         * @function create
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {client_proto.IOneRoomTypeInfo=} [properties] Properties to set
+         * @returns {client_proto.OneRoomTypeInfo} OneRoomTypeInfo instance
+         */
+        OneRoomTypeInfo.create = function create(properties) {
+            return new OneRoomTypeInfo(properties);
+        };
+
+        /**
+         * Encodes the specified OneRoomTypeInfo message. Does not implicitly {@link client_proto.OneRoomTypeInfo.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {client_proto.IOneRoomTypeInfo} message OneRoomTypeInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OneRoomTypeInfo.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.roomType != null && Object.hasOwnProperty.call(message, "roomType"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.roomType);
+            if (message.typeName != null && Object.hasOwnProperty.call(message, "typeName"))
+                writer.uint32(/* id 2, wireType 2 =*/18).string(message.typeName);
+            if (message.roomList != null && message.roomList.length)
+                for (var i = 0; i < message.roomList.length; ++i)
+                    $root.client_proto.OneRoomInfo.encode(message.roomList[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified OneRoomTypeInfo message, length delimited. Does not implicitly {@link client_proto.OneRoomTypeInfo.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {client_proto.IOneRoomTypeInfo} message OneRoomTypeInfo message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        OneRoomTypeInfo.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes an OneRoomTypeInfo message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.OneRoomTypeInfo} OneRoomTypeInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OneRoomTypeInfo.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.OneRoomTypeInfo();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.roomType = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.typeName = reader.string();
+                        break;
+                    }
+                case 3: {
+                        if (!(message.roomList && message.roomList.length))
+                            message.roomList = [];
+                        message.roomList.push($root.client_proto.OneRoomInfo.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes an OneRoomTypeInfo message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.OneRoomTypeInfo} OneRoomTypeInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        OneRoomTypeInfo.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies an OneRoomTypeInfo message.
+         * @function verify
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        OneRoomTypeInfo.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                if (!$util.isInteger(message.roomType))
+                    return "roomType: integer expected";
+            if (message.typeName != null && message.hasOwnProperty("typeName"))
+                if (!$util.isString(message.typeName))
+                    return "typeName: string expected";
+            if (message.roomList != null && message.hasOwnProperty("roomList")) {
+                if (!Array.isArray(message.roomList))
+                    return "roomList: array expected";
+                for (var i = 0; i < message.roomList.length; ++i) {
+                    var error = $root.client_proto.OneRoomInfo.verify(message.roomList[i]);
+                    if (error)
+                        return "roomList." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates an OneRoomTypeInfo message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.OneRoomTypeInfo} OneRoomTypeInfo
+         */
+        OneRoomTypeInfo.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.OneRoomTypeInfo)
+                return object;
+            var message = new $root.client_proto.OneRoomTypeInfo();
+            if (object.roomType != null)
+                message.roomType = object.roomType | 0;
+            if (object.typeName != null)
+                message.typeName = String(object.typeName);
+            if (object.roomList) {
+                if (!Array.isArray(object.roomList))
+                    throw TypeError(".client_proto.OneRoomTypeInfo.roomList: array expected");
+                message.roomList = [];
+                for (var i = 0; i < object.roomList.length; ++i) {
+                    if (typeof object.roomList[i] !== "object")
+                        throw TypeError(".client_proto.OneRoomTypeInfo.roomList: object expected");
+                    message.roomList[i] = $root.client_proto.OneRoomInfo.fromObject(object.roomList[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from an OneRoomTypeInfo message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {client_proto.OneRoomTypeInfo} message OneRoomTypeInfo
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        OneRoomTypeInfo.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.arrays || options.defaults)
+                object.roomList = [];
+            if (options.defaults) {
+                object.roomType = 0;
+                object.typeName = "";
+            }
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                object.roomType = message.roomType;
+            if (message.typeName != null && message.hasOwnProperty("typeName"))
+                object.typeName = message.typeName;
+            if (message.roomList && message.roomList.length) {
+                object.roomList = [];
+                for (var j = 0; j < message.roomList.length; ++j)
+                    object.roomList[j] = $root.client_proto.OneRoomInfo.toObject(message.roomList[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this OneRoomTypeInfo to JSON.
+         * @function toJSON
+         * @memberof client_proto.OneRoomTypeInfo
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        OneRoomTypeInfo.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for OneRoomTypeInfo
+         * @function getTypeUrl
+         * @memberof client_proto.OneRoomTypeInfo
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        OneRoomTypeInfo.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.OneRoomTypeInfo";
+        };
+
+        return OneRoomTypeInfo;
+    })();
+
+    client_proto.SecondRoomListResp = (function() {
+
+        /**
+         * Properties of a SecondRoomListResp.
+         * @memberof client_proto
+         * @interface ISecondRoomListResp
+         * @property {number|null} [gameType] SecondRoomListResp gameType
+         * @property {number|null} [defaultRoomType] SecondRoomListResp defaultRoomType
+         * @property {Array.<client_proto.IOneRoomTypeInfo>|null} [typeList] SecondRoomListResp typeList
+         */
+
+        /**
+         * Constructs a new SecondRoomListResp.
+         * @memberof client_proto
+         * @classdesc Represents a SecondRoomListResp.
+         * @implements ISecondRoomListResp
+         * @constructor
+         * @param {client_proto.ISecondRoomListResp=} [properties] Properties to set
+         */
+        function SecondRoomListResp(properties) {
+            this.typeList = [];
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * SecondRoomListResp gameType.
+         * @member {number} gameType
+         * @memberof client_proto.SecondRoomListResp
+         * @instance
+         */
+        SecondRoomListResp.prototype.gameType = 0;
+
+        /**
+         * SecondRoomListResp defaultRoomType.
+         * @member {number} defaultRoomType
+         * @memberof client_proto.SecondRoomListResp
+         * @instance
+         */
+        SecondRoomListResp.prototype.defaultRoomType = 0;
+
+        /**
+         * SecondRoomListResp typeList.
+         * @member {Array.<client_proto.IOneRoomTypeInfo>} typeList
+         * @memberof client_proto.SecondRoomListResp
+         * @instance
+         */
+        SecondRoomListResp.prototype.typeList = $util.emptyArray;
+
+        /**
+         * Creates a new SecondRoomListResp instance using the specified properties.
+         * @function create
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {client_proto.ISecondRoomListResp=} [properties] Properties to set
+         * @returns {client_proto.SecondRoomListResp} SecondRoomListResp instance
+         */
+        SecondRoomListResp.create = function create(properties) {
+            return new SecondRoomListResp(properties);
+        };
+
+        /**
+         * Encodes the specified SecondRoomListResp message. Does not implicitly {@link client_proto.SecondRoomListResp.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {client_proto.ISecondRoomListResp} message SecondRoomListResp message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SecondRoomListResp.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.gameType != null && Object.hasOwnProperty.call(message, "gameType"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.gameType);
+            if (message.defaultRoomType != null && Object.hasOwnProperty.call(message, "defaultRoomType"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.defaultRoomType);
+            if (message.typeList != null && message.typeList.length)
+                for (var i = 0; i < message.typeList.length; ++i)
+                    $root.client_proto.OneRoomTypeInfo.encode(message.typeList[i], writer.uint32(/* id 3, wireType 2 =*/26).fork()).ldelim();
+            return writer;
+        };
+
+        /**
+         * Encodes the specified SecondRoomListResp message, length delimited. Does not implicitly {@link client_proto.SecondRoomListResp.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {client_proto.ISecondRoomListResp} message SecondRoomListResp message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        SecondRoomListResp.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a SecondRoomListResp message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.SecondRoomListResp} SecondRoomListResp
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SecondRoomListResp.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.SecondRoomListResp();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.gameType = reader.int32();
+                        break;
+                    }
+                case 2: {
+                        message.defaultRoomType = reader.int32();
+                        break;
+                    }
+                case 3: {
+                        if (!(message.typeList && message.typeList.length))
+                            message.typeList = [];
+                        message.typeList.push($root.client_proto.OneRoomTypeInfo.decode(reader, reader.uint32()));
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a SecondRoomListResp message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.SecondRoomListResp} SecondRoomListResp
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        SecondRoomListResp.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a SecondRoomListResp message.
+         * @function verify
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        SecondRoomListResp.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                if (!$util.isInteger(message.gameType))
+                    return "gameType: integer expected";
+            if (message.defaultRoomType != null && message.hasOwnProperty("defaultRoomType"))
+                if (!$util.isInteger(message.defaultRoomType))
+                    return "defaultRoomType: integer expected";
+            if (message.typeList != null && message.hasOwnProperty("typeList")) {
+                if (!Array.isArray(message.typeList))
+                    return "typeList: array expected";
+                for (var i = 0; i < message.typeList.length; ++i) {
+                    var error = $root.client_proto.OneRoomTypeInfo.verify(message.typeList[i]);
+                    if (error)
+                        return "typeList." + error;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Creates a SecondRoomListResp message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.SecondRoomListResp} SecondRoomListResp
+         */
+        SecondRoomListResp.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.SecondRoomListResp)
+                return object;
+            var message = new $root.client_proto.SecondRoomListResp();
+            if (object.gameType != null)
+                message.gameType = object.gameType | 0;
+            if (object.defaultRoomType != null)
+                message.defaultRoomType = object.defaultRoomType | 0;
+            if (object.typeList) {
+                if (!Array.isArray(object.typeList))
+                    throw TypeError(".client_proto.SecondRoomListResp.typeList: array expected");
+                message.typeList = [];
+                for (var i = 0; i < object.typeList.length; ++i) {
+                    if (typeof object.typeList[i] !== "object")
+                        throw TypeError(".client_proto.SecondRoomListResp.typeList: object expected");
+                    message.typeList[i] = $root.client_proto.OneRoomTypeInfo.fromObject(object.typeList[i]);
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a SecondRoomListResp message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {client_proto.SecondRoomListResp} message SecondRoomListResp
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        SecondRoomListResp.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.arrays || options.defaults)
+                object.typeList = [];
+            if (options.defaults) {
+                object.gameType = 0;
+                object.defaultRoomType = 0;
+            }
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                object.gameType = message.gameType;
+            if (message.defaultRoomType != null && message.hasOwnProperty("defaultRoomType"))
+                object.defaultRoomType = message.defaultRoomType;
+            if (message.typeList && message.typeList.length) {
+                object.typeList = [];
+                for (var j = 0; j < message.typeList.length; ++j)
+                    object.typeList[j] = $root.client_proto.OneRoomTypeInfo.toObject(message.typeList[j], options);
+            }
+            return object;
+        };
+
+        /**
+         * Converts this SecondRoomListResp to JSON.
+         * @function toJSON
+         * @memberof client_proto.SecondRoomListResp
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        SecondRoomListResp.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for SecondRoomListResp
+         * @function getTypeUrl
+         * @memberof client_proto.SecondRoomListResp
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        SecondRoomListResp.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.SecondRoomListResp";
+        };
+
+        return SecondRoomListResp;
     })();
 
     client_proto.BeforeMatchTableReq = (function() {
@@ -3229,6 +4348,7 @@ $root.client_proto = (function() {
          * @memberof client_proto
          * @interface IBeforeMatchTableResp
          * @property {number|null} [roomId] BeforeMatchTableResp roomId
+         * @property {number|null} [svrId] BeforeMatchTableResp svrId
          * @property {number|null} [result] BeforeMatchTableResp result
          */
 
@@ -3254,6 +4374,14 @@ $root.client_proto = (function() {
          * @instance
          */
         BeforeMatchTableResp.prototype.roomId = 0;
+
+        /**
+         * BeforeMatchTableResp svrId.
+         * @member {number} svrId
+         * @memberof client_proto.BeforeMatchTableResp
+         * @instance
+         */
+        BeforeMatchTableResp.prototype.svrId = 0;
 
         /**
          * BeforeMatchTableResp result.
@@ -3289,8 +4417,10 @@ $root.client_proto = (function() {
                 writer = $Writer.create();
             if (message.roomId != null && Object.hasOwnProperty.call(message, "roomId"))
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.roomId);
+            if (message.svrId != null && Object.hasOwnProperty.call(message, "svrId"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.svrId);
             if (message.result != null && Object.hasOwnProperty.call(message, "result"))
-                writer.uint32(/* id 2, wireType 0 =*/16).int32(message.result);
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.result);
             return writer;
         };
 
@@ -3330,6 +4460,10 @@ $root.client_proto = (function() {
                         break;
                     }
                 case 2: {
+                        message.svrId = reader.int32();
+                        break;
+                    }
+                case 3: {
                         message.result = reader.int32();
                         break;
                     }
@@ -3371,6 +4505,9 @@ $root.client_proto = (function() {
             if (message.roomId != null && message.hasOwnProperty("roomId"))
                 if (!$util.isInteger(message.roomId))
                     return "roomId: integer expected";
+            if (message.svrId != null && message.hasOwnProperty("svrId"))
+                if (!$util.isInteger(message.svrId))
+                    return "svrId: integer expected";
             if (message.result != null && message.hasOwnProperty("result"))
                 if (!$util.isInteger(message.result))
                     return "result: integer expected";
@@ -3391,6 +4528,8 @@ $root.client_proto = (function() {
             var message = new $root.client_proto.BeforeMatchTableResp();
             if (object.roomId != null)
                 message.roomId = object.roomId | 0;
+            if (object.svrId != null)
+                message.svrId = object.svrId | 0;
             if (object.result != null)
                 message.result = object.result | 0;
             return message;
@@ -3411,10 +4550,13 @@ $root.client_proto = (function() {
             var object = {};
             if (options.defaults) {
                 object.roomId = 0;
+                object.svrId = 0;
                 object.result = 0;
             }
             if (message.roomId != null && message.hasOwnProperty("roomId"))
                 object.roomId = message.roomId;
+            if (message.svrId != null && message.hasOwnProperty("svrId"))
+                object.svrId = message.svrId;
             if (message.result != null && message.hasOwnProperty("result"))
                 object.result = message.result;
             return object;
@@ -7672,8 +8814,9 @@ export namespace client_proto {
     enum ROOM_TYPE {
         RT_NULL = 0,
         RT_CLASSICS = 1,
-        RT_MATCH = 2,
-        RT_FRIEND = 3
+        RT_CONTINUE_BOMB = 2,
+        RT_MATCH = 3,
+        RT_FRIEND = 4
     }
 
     /** ROOM_LEVEL enum. */
@@ -7685,6 +8828,454 @@ export namespace client_proto {
         RL_MASTER = 4,
         RL_GREAT_MASTER = 5,
         RL_YOUNG_KING = 6
+    }
+
+    /** Properties of a SecondRoomListReq. */
+    interface ISecondRoomListReq {
+
+        /** SecondRoomListReq gameType */
+        gameType?: (number|null);
+    }
+
+    /** Represents a SecondRoomListReq. */
+    class SecondRoomListReq implements ISecondRoomListReq {
+
+        /**
+         * Constructs a new SecondRoomListReq.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.ISecondRoomListReq);
+
+        /** SecondRoomListReq gameType. */
+        public gameType: number;
+
+        /**
+         * Creates a new SecondRoomListReq instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SecondRoomListReq instance
+         */
+        public static create(properties?: client_proto.ISecondRoomListReq): client_proto.SecondRoomListReq;
+
+        /**
+         * Encodes the specified SecondRoomListReq message. Does not implicitly {@link client_proto.SecondRoomListReq.verify|verify} messages.
+         * @param message SecondRoomListReq message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.ISecondRoomListReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SecondRoomListReq message, length delimited. Does not implicitly {@link client_proto.SecondRoomListReq.verify|verify} messages.
+         * @param message SecondRoomListReq message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.ISecondRoomListReq, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SecondRoomListReq message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SecondRoomListReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.SecondRoomListReq;
+
+        /**
+         * Decodes a SecondRoomListReq message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SecondRoomListReq
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.SecondRoomListReq;
+
+        /**
+         * Verifies a SecondRoomListReq message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SecondRoomListReq message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SecondRoomListReq
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.SecondRoomListReq;
+
+        /**
+         * Creates a plain object from a SecondRoomListReq message. Also converts values to other types if specified.
+         * @param message SecondRoomListReq
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.SecondRoomListReq, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SecondRoomListReq to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SecondRoomListReq
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of an OneRoomInfo. */
+    interface IOneRoomInfo {
+
+        /** OneRoomInfo roomId */
+        roomId?: (number|null);
+
+        /** OneRoomInfo roomName */
+        roomName?: (string|null);
+
+        /** OneRoomInfo roomLevel */
+        roomLevel?: (number|null);
+
+        /** OneRoomInfo enterMin */
+        enterMin?: (number|Long|null);
+
+        /** OneRoomInfo enterMax */
+        enterMax?: (number|Long|null);
+
+        /** OneRoomInfo baseScore */
+        baseScore?: (number|null);
+
+        /** OneRoomInfo playerNum */
+        playerNum?: (number|null);
+    }
+
+    /** Represents an OneRoomInfo. */
+    class OneRoomInfo implements IOneRoomInfo {
+
+        /**
+         * Constructs a new OneRoomInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.IOneRoomInfo);
+
+        /** OneRoomInfo roomId. */
+        public roomId: number;
+
+        /** OneRoomInfo roomName. */
+        public roomName: string;
+
+        /** OneRoomInfo roomLevel. */
+        public roomLevel: number;
+
+        /** OneRoomInfo enterMin. */
+        public enterMin: (number|Long);
+
+        /** OneRoomInfo enterMax. */
+        public enterMax: (number|Long);
+
+        /** OneRoomInfo baseScore. */
+        public baseScore: number;
+
+        /** OneRoomInfo playerNum. */
+        public playerNum: number;
+
+        /**
+         * Creates a new OneRoomInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns OneRoomInfo instance
+         */
+        public static create(properties?: client_proto.IOneRoomInfo): client_proto.OneRoomInfo;
+
+        /**
+         * Encodes the specified OneRoomInfo message. Does not implicitly {@link client_proto.OneRoomInfo.verify|verify} messages.
+         * @param message OneRoomInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.IOneRoomInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified OneRoomInfo message, length delimited. Does not implicitly {@link client_proto.OneRoomInfo.verify|verify} messages.
+         * @param message OneRoomInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.IOneRoomInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an OneRoomInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns OneRoomInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.OneRoomInfo;
+
+        /**
+         * Decodes an OneRoomInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns OneRoomInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.OneRoomInfo;
+
+        /**
+         * Verifies an OneRoomInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an OneRoomInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns OneRoomInfo
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.OneRoomInfo;
+
+        /**
+         * Creates a plain object from an OneRoomInfo message. Also converts values to other types if specified.
+         * @param message OneRoomInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.OneRoomInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this OneRoomInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for OneRoomInfo
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of an OneRoomTypeInfo. */
+    interface IOneRoomTypeInfo {
+
+        /** OneRoomTypeInfo roomType */
+        roomType?: (number|null);
+
+        /** OneRoomTypeInfo typeName */
+        typeName?: (string|null);
+
+        /** OneRoomTypeInfo roomList */
+        roomList?: (client_proto.IOneRoomInfo[]|null);
+    }
+
+    /** Represents an OneRoomTypeInfo. */
+    class OneRoomTypeInfo implements IOneRoomTypeInfo {
+
+        /**
+         * Constructs a new OneRoomTypeInfo.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.IOneRoomTypeInfo);
+
+        /** OneRoomTypeInfo roomType. */
+        public roomType: number;
+
+        /** OneRoomTypeInfo typeName. */
+        public typeName: string;
+
+        /** OneRoomTypeInfo roomList. */
+        public roomList: client_proto.IOneRoomInfo[];
+
+        /**
+         * Creates a new OneRoomTypeInfo instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns OneRoomTypeInfo instance
+         */
+        public static create(properties?: client_proto.IOneRoomTypeInfo): client_proto.OneRoomTypeInfo;
+
+        /**
+         * Encodes the specified OneRoomTypeInfo message. Does not implicitly {@link client_proto.OneRoomTypeInfo.verify|verify} messages.
+         * @param message OneRoomTypeInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.IOneRoomTypeInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified OneRoomTypeInfo message, length delimited. Does not implicitly {@link client_proto.OneRoomTypeInfo.verify|verify} messages.
+         * @param message OneRoomTypeInfo message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.IOneRoomTypeInfo, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes an OneRoomTypeInfo message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns OneRoomTypeInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.OneRoomTypeInfo;
+
+        /**
+         * Decodes an OneRoomTypeInfo message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns OneRoomTypeInfo
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.OneRoomTypeInfo;
+
+        /**
+         * Verifies an OneRoomTypeInfo message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates an OneRoomTypeInfo message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns OneRoomTypeInfo
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.OneRoomTypeInfo;
+
+        /**
+         * Creates a plain object from an OneRoomTypeInfo message. Also converts values to other types if specified.
+         * @param message OneRoomTypeInfo
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.OneRoomTypeInfo, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this OneRoomTypeInfo to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for OneRoomTypeInfo
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a SecondRoomListResp. */
+    interface ISecondRoomListResp {
+
+        /** SecondRoomListResp gameType */
+        gameType?: (number|null);
+
+        /** SecondRoomListResp defaultRoomType */
+        defaultRoomType?: (number|null);
+
+        /** SecondRoomListResp typeList */
+        typeList?: (client_proto.IOneRoomTypeInfo[]|null);
+    }
+
+    /** Represents a SecondRoomListResp. */
+    class SecondRoomListResp implements ISecondRoomListResp {
+
+        /**
+         * Constructs a new SecondRoomListResp.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.ISecondRoomListResp);
+
+        /** SecondRoomListResp gameType. */
+        public gameType: number;
+
+        /** SecondRoomListResp defaultRoomType. */
+        public defaultRoomType: number;
+
+        /** SecondRoomListResp typeList. */
+        public typeList: client_proto.IOneRoomTypeInfo[];
+
+        /**
+         * Creates a new SecondRoomListResp instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns SecondRoomListResp instance
+         */
+        public static create(properties?: client_proto.ISecondRoomListResp): client_proto.SecondRoomListResp;
+
+        /**
+         * Encodes the specified SecondRoomListResp message. Does not implicitly {@link client_proto.SecondRoomListResp.verify|verify} messages.
+         * @param message SecondRoomListResp message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.ISecondRoomListResp, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified SecondRoomListResp message, length delimited. Does not implicitly {@link client_proto.SecondRoomListResp.verify|verify} messages.
+         * @param message SecondRoomListResp message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.ISecondRoomListResp, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a SecondRoomListResp message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns SecondRoomListResp
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.SecondRoomListResp;
+
+        /**
+         * Decodes a SecondRoomListResp message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns SecondRoomListResp
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.SecondRoomListResp;
+
+        /**
+         * Verifies a SecondRoomListResp message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a SecondRoomListResp message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns SecondRoomListResp
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.SecondRoomListResp;
+
+        /**
+         * Creates a plain object from a SecondRoomListResp message. Also converts values to other types if specified.
+         * @param message SecondRoomListResp
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.SecondRoomListResp, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this SecondRoomListResp to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for SecondRoomListResp
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
     }
 
     /** Properties of a BeforeMatchTableReq. */
@@ -7790,6 +9381,9 @@ export namespace client_proto {
         /** BeforeMatchTableResp roomId */
         roomId?: (number|null);
 
+        /** BeforeMatchTableResp svrId */
+        svrId?: (number|null);
+
         /** BeforeMatchTableResp result */
         result?: (number|null);
     }
@@ -7805,6 +9399,9 @@ export namespace client_proto {
 
         /** BeforeMatchTableResp roomId. */
         public roomId: number;
+
+        /** BeforeMatchTableResp svrId. */
+        public svrId: number;
 
         /** BeforeMatchTableResp result. */
         public result: number;

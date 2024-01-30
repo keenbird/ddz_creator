@@ -1,0 +1,121 @@
+{
+  "ver": "1.0.6",
+  "importer": "bitmap-font",
+  "imported": true,
+  "uuid": "845d11bf-bbd3-4c8b-93f7-fbc03808ecac",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "_fntConfig": {
+      "commonHeight": 29,
+      "fontSize": 32,
+      "atlasName": "selectedscenes_img_frying-export.png",
+      "fontDefDictionary": {
+        "9": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 152
+        },
+        "32": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 19
+        },
+        "20027": {
+          "rect": {
+            "x": 0,
+            "y": 28,
+            "width": 28,
+            "height": 27
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        },
+        "20856": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 28,
+            "height": 28
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        },
+        "22320": {
+          "rect": {
+            "x": 83,
+            "y": 28,
+            "width": 27,
+            "height": 28
+          },
+          "xOffset": 0,
+          "yOffset": 0,
+          "xAdvance": 30
+        },
+        "26007": {
+          "rect": {
+            "x": 56,
+            "y": 0,
+            "width": 28,
+            "height": 28
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        },
+        "28856": {
+          "rect": {
+            "x": 28,
+            "y": 0,
+            "width": 28,
+            "height": 28
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        },
+        "32463": {
+          "rect": {
+            "x": 56,
+            "y": 28,
+            "width": 27,
+            "height": 27
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 30
+        },
+        "36830": {
+          "rect": {
+            "x": 28,
+            "y": 28,
+            "width": 28,
+            "height": 28
+          },
+          "xOffset": 0,
+          "yOffset": 1,
+          "xAdvance": 31
+        }
+      },
+      "kerningDict": {}
+    },
+    "fontSize": 32,
+    "textureUuid": "06fd9938-1083-42c1-b8b0-992ef19cd79f"
+  }
+}

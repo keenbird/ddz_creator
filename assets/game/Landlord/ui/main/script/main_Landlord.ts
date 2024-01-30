@@ -824,11 +824,11 @@ export class main_Landlord extends main_GameBase {
                 barNode = this.Items.Node_BarStatusDouble
                 if(data){
                     var bmt = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.Items.bmt
-                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[0] == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[0] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
 
                     var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.bmt
-                    bmt1.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[1] == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    bmt1.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[1] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
                 }
                 break;
@@ -838,7 +838,7 @@ export class main_Landlord extends main_GameBase {
                 barNode = this.Items.Node_BarStatusPublicCard
                 if(data){
                     var bmt = this.Items.Node_BarStatusPublicCard.Items.bmt
-                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data == 2 ? `yxc_img_x2` : `yxc_img_x4`}/spriteFrame`])
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
                 }
                 break;

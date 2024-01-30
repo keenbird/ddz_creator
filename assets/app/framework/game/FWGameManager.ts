@@ -336,7 +336,6 @@ export class FWGameManager extends (fw.FWComponent) {
      * 清理游戏数据
      */
     clean() {
-        gameCenter.room.clean();
         gameCenter.user.clean();
         gameCenter.robot.clean();
     }

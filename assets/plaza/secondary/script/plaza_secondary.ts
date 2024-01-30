@@ -12,17 +12,86 @@ export enum SecondaryType {
 
 @ccclass('plaza_secondary')
 export class plaza_secondary extends (fw.FWComponent) {
-
+	gameBtn:ccNode[];
 	protected doLifeFunc(): void {
 	
-		this.Items.btn_close.onClickAndScale(() => {
-			this.onClickClose()
-		});
+		
 		//正常逻辑
 		super.doLifeFunc();
 	}
 	initData() {
+		this.initGameList()
+	}
+	initGameList() {
+		if(center.game.room.m_RoomInfo == null){
+			return
+		}
+		this.Items.gameListScrollView.Items.content.removeAllChildren()
+		this.gameBtn = []
+		for(var i=0;i<center.game.room.m_RoomInfo.typeList.length;i++){
+			let data = center.game.room.m_RoomInfo.typeList[i]
+			let item = this.Items.gameListItem.clone()
+			this.Items.gameListScrollView.Items.content.addChild(item)
+			item.active = true
+			item.Items.lab_nolmal.string = data.typeName
+			item.Items.spr_click_txt.string = data.typeName
+			item.onClickAndScale(() => {
+				app.file.setStringForKey("gameRoomChose"+center.game.room.m_RoomInfo.gameType, data.roomType+'', { all: false }) 
+				this.choseType(data.roomType)
+			});
+			item["roomType"] = data.roomType
+			this.gameBtn.push(item)
+		}
+		let gameRoomChose = app.file.getStringForKey("gameRoomChose"+center.game.room.m_RoomInfo.gameType, "", { all: false }) 
+		if(gameRoomChose!= ""){
+			this.choseType( app.func.toNumber(gameRoomChose))	
+		}else{
+			this.choseType(center.game.room.m_RoomInfo.defaultGroupType)
+		}
 		
+	}
+	choseType(roomType:number){
+		for(var i=0;i<this.gameBtn.length;i++){
+			if(roomType == this.gameBtn[i]["roomType"]){
+				this.gameBtn[i].Items.spr_click.active = true
+				this.initRoomList(roomType)
+			}else{
+				this.gameBtn[i].Items.spr_click.active = false
+			}
+		}
+	}
+	initRoomList(roomType:number) {
+		let data = null
+		for(let i=0;i<center.game.room.m_RoomInfo.typeList.length;i++){
+			if(roomType == center.game.room.m_RoomInfo.typeList[i].roomType){
+				data = center.game.room.m_RoomInfo.typeList[i].roomList
+				break;
+			}
+		}
+		this.hideAllRoomItem()
+		if(data){
+			for(let i=0;i<data.length;i++){
+				if(!fw.isNull(this.Items.room_layout.Items["room_"+ (data[i].roomLevel)])){
+					let node  = this.Items.room_layout.Items["room_"+ (data[i].roomLevel)]
+					node.active = true
+					node.Items.base_coin.string = data[i].baseScore
+					let min_str = "准入"
+					min_str = min_str + app.func.FormatNumber(data[i].enterMin)
+					if(data[i].enterMax>0){
+						min_str = min_str +"-"+ app.func.FormatNumber(data[i].enterMax)
+					}
+					node.Items.min_coin.string = min_str
+					node.onClickAndScale(() => {
+						center.game.room.sendBEFORE_MATCH_REQ(data[i].roomId)
+					});
+				}
+			}
+		}
+	}
+	hideAllRoomItem() {
+		for(var i=0;i<6;i++){
+			this.Items.room_layout.Items["room_"+ (i+1)].active = false
+		}
 	}
 	onClickClose() {
 		this.node.removeFromParent(true)
@@ -36,15 +105,17 @@ export class plaza_secondary extends (fw.FWComponent) {
 		
 	}
 	protected fitSceneNode(){
-		if(app.isIphoneX){
-			this.scheduleOnce(()=>{
-				// this.Items.Node_activitys.setPosition(v3(this.Items.Node_activitys.getPosition().x+66,this.Items.Node_activitys.getPosition().y,1))
+		// if(app.isIphoneX){
+		// 	this.scheduleOnce(()=>{
+		// 		// this.Items.Node_activitys.setPosition(v3(this.Items.Node_activitys.getPosition().x+66,this.Items.Node_activitys.getPosition().y,1))
 		
-			},0)
-			}
+		// 	},0)
+		// 	}
 	}
 	protected initBtns(): boolean | void {
-		
+		this.Items.btn_close.onClickAndScale(() => {
+			this.onClickClose()
+		});
 	}
 	protected initEvents(): boolean | void {
 		//返回键事件
@@ -58,6 +129,13 @@ export class plaza_secondary extends (fw.FWComponent) {
 				
 			}
 		});
+
+		this.bindEvent({
+			eventName: `ReceiveRoomInfo`,
+			callback: () => {
+				this.initData()
+			}
+		});
 		
 	}
 	onViewEnter() {
@@ -65,189 +143,7 @@ export class plaza_secondary extends (fw.FWComponent) {
 	}
 
 	
-	/**处理进大厅弹框逻辑 */
-	async onEnterProcess() {
-		let view = app.popup.showLoading({ nAutoOutTime: 10 });
-		while (true) {
-			let nBuffNum = center.user.getBuffNum()
-			//ios 审核不走登录弹窗
-			if (app.sdk.isIosDev()) {
-				if (nBuffNum == 1 && center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
-					center.taskActive.savePopupSignSevenActiveFromLogin()
-					//ios签到
-				}
-				break
-			}
-			// 检测是否跨天
-			center.scratchCard.checkRefreshScratchCard()
-			if (this.mIsFromLogin) {
-				center.roomList.sendGetBaiRenWinMaxInfo()
-			}
-			// 注册登录流程
-			if (this.mIsFromLogin && this.mCheckRegLogin) {
 
-				// if (app.sdk.isSdkOpen("sharepopup")) {
-				// 	app.popup.showDialog({
-				// 		viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLeoNewLayer`]
-				// 	});
-				// } else {
-				// 	if (center.task.isFreeBonusOpen()) {
-				// 		app.popup.showDialog({
-				// 			viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLayer`],
-				// 		});
-				// 	}
-				// }
-
-
-				//  弹一次10日任务 
-				// if (center.task.isShowTenDayTask(false)) {
-				// 	app.popup.showDialog({
-				// 		viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-				// 	});
-				// }
-
-
-				// let nBuffNum = center.user.getBuffNum()
-				// if (nBuffNum > 1) {
-				// 	if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
-				// 		app.popup.showDialog({
-				// 			viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
-				// 		});
-				// 	}
-				// } else {
-				// 	if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
-				// 		center.taskActive.savePopupSignSevenActiveFromLogin()
-				// 		if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
-				// 			app.popup.showDialog({
-				// 				viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
-				// 			});
-				// 		}
-				// 	}
-				// }
-
-				// // 提现引导
-				// app.popup.showDialog({
-				// 	viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
-				// });
-
-			} else if (this.mIsFromLogin) {
-				// 正常登录流程
-				// center.user.popGift(false, true, false)
-
-				// let runningNotice = center.activity.getRunningNoticeList()
-				// if (this.mIsFromLogin && runningNotice.length > 0) {
-				// 	let entity = runningNotice[0]
-				// 	if (entity.content != "") {
-				// 		if (center.activity.getNoticeMessagePopNum(entity.nrid) < 5) {
-				// 			center.activity.addNoticeMessagePopNum(entity.nrid)
-				// 			center.activity.setOneInfoItemHaveRead(entity.nrid)
-				// 			center.activity.notifyUnReadNum()
-				// 			let content = entity.content
-				// 			app.popup.showDialog({
-				// 				viewConfig: fw.BundleConfig.plaza.res[`notice/notice_dialog`],
-				// 				callback: (view, dataEx) => {
-				// 					(<plaza_noticeDialog>(view.getComponent(`NoticeDialog`))).data = content
-				// 				}
-				// 			});
-				// 		}
-				// 	}
-				// }
-
-				// if (app.sdk.isSdkOpen("sharepopup")) {
-				// 	app.popup.showDialog({
-				// 		viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLeoNewLayer`]
-				// 	});
-				// } else {
-				// 	if (center.task.isFreeBonusOpen()) {
-				// 		let lastLoginTime = app.file.getIntegerForKey("lastLoginTime", 0)
-				// 		let nowTiem = app.func.time()
-				// 		let cDateCurrectTime = new Date()
-				// 		let cDateTodayTime = new Date(js.formatStr("%s-%s-%s", cDateCurrectTime.getFullYear(), cDateCurrectTime.getMonth(), cDateCurrectTime.getDate())).getTime()
-				// 		let isTodayFirstLogin = false
-				// 		if (cDateTodayTime >= lastLoginTime) {
-				// 			isTodayFirstLogin = true
-				// 		}
-				// 		app.file.setIntegerForKey("lastLoginTime", nowTiem)
-				// 		if (isTodayFirstLogin && !this.mCheckRegLogin) {
-				// 			app.popup.showDialog({
-				// 				viewConfig: fw.BundleConfig.plaza.res[`freeBoonus/freeBoonusLayer`],
-				// 			});
-				// 		} else if (center.share.isFreeCashOpen()) {
-				// 			this.showFreeCashPop()
-				// 		}
-
-				// 	} else if (center.share.isFreeCashOpen()) {
-				// 		this.showFreeCashPop()
-				// 	}
-				// }
-
-				// await center.luckyCard.showVipCardView() //周卡 月卡功能
-
-				// // 激活且可领取
-				// if (center.scratchCard.isActive() && center.scratchCard.canGetScratchcardReward()) {
-				// 	await this.showScratchCardPop()
-				// }
-
-
-				// //  弹一次10日任务 
-				// if (center.task.isShowTenDayTask(false)) {
-				// 	app.popup.showDialog({
-				// 		viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-				// 	});
-				// }
-
-
-				// let nBuffNum = center.user.getBuffNum()
-				// if (nBuffNum > 1) {
-				// 	if (center.taskActive.isMultiopenSevenRewardActiveFromLogin()) {
-				// 		app.popup.showDialog({
-				// 			viewConfig: fw.BundleConfig.plaza.res[`siginboradLuck/siginboradLuck`],
-				// 		});
-				// 	}
-				// } else {
-				// 	if (center.taskActive.isCanPopupSignSevenActiveFromLogin()) {
-				// 		center.taskActive.savePopupSignSevenActiveFromLogin()
-				// 		if (await app.dynamicActivity.showStandardActivity(`Siginborad`)) {
-				// 			app.popup.showDialog({
-				// 				viewConfig: fw.BundleConfig.Siginborad.res[`ui/siginborad/siginborad_panel`],
-				// 			});
-				// 		}
-				// 	}
-				// }
-
-			} else {
-				// let withdrawGuideGame = center.user.checkWithdrawGuide()
-				// if (withdrawGuideGame) {
-				// 	// 提现引导
-				// 	app.popup.showDialog({
-				// 		viewConfig: fw.BundleConfig.plaza.res[`withdraw/withdraw_plaza_guide`],
-				// 		data: {
-				// 			withdrawGuideGame: true,
-				// 		}
-				// 	});
-				// } else {
-				// 	center.user.popGift(true, false, false);
-
-				// 	// 破产弹窗
-				// 	if (center.task.isCanGetSubsydy()) {
-				// 		app.popup.showDialog({
-				// 			viewConfig: fw.BundleConfig.plaza.res[`bankruptcy/bankruptcy`],
-				// 		});
-				// 	}
-
-				// 	//  弹一次10日任务 
-				// 	if (center.task.isShowTenDayTask(false)) {
-				// 		app.popup.showDialog({
-				// 			viewConfig: fw.BundleConfig.plaza.res[`tenDayTask/TenDayTask`],
-				// 		});
-				// 	}
-				// }
-			}
-			this.mIsFromLogin = false
-			break
-		}
-		app.popup.closeLoading(view);
-	}
 
 	onViewDestroy() {
 		super.onViewDestroy();

@@ -1,0 +1,15 @@
+info face="selectedscenes_img_frying-export" size=32 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=0,0
+common lineHeight=29 base=26 scaleW=128 scaleH=64 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="selectedscenes_img_frying-export.png"
+chars count=9
+char id=36830 x=28 y=28 width=28 height=28 xoffset=0 yoffset=1 xadvance=31 page=0 chnl=0 letter="连"
+char id=28856 x=28 y=0 width=28 height=28 xoffset=0 yoffset=1 xadvance=31 page=0 chnl=0 letter="炸"
+char id=26007 x=56 y=0 width=28 height=28 xoffset=0 yoffset=1 xadvance=31 page=0 chnl=0 letter="斗"
+char id=22320 x=83 y=28 width=27 height=28 xoffset=0 yoffset=0 xadvance=30 page=0 chnl=0 letter="地"
+char id=20027 x=0 y=28 width=28 height=27 xoffset=0 yoffset=1 xadvance=31 page=0 chnl=0 letter="主"
+char id=32463 x=56 y=28 width=27 height=27 xoffset=0 yoffset=1 xadvance=30 page=0 chnl=0 letter="经"
+char id=20856 x=0 y=0 width=28 height=28 xoffset=0 yoffset=1 xadvance=31 page=0 chnl=0 letter="典"
+char id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=19 page=0 chnl=0 letter=" "
+char id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=152 page=0 chnl=0 letter="        "
+
+kernings count=0

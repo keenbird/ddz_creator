@@ -28,6 +28,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     m_jackpotDataConfig: Map<number, { time: number, data: JackpotData[] }>;
     bOnline: boolean;
     exitFun:Function; //退出回调
+    dataFun:Function; //请求数据回调
 
     initData() {
         this.m_RoomInfo = new GameRoomInfo();
@@ -97,8 +98,8 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     initRegister() {
         // this.bindMsgStructPB(this.cmd.RLSMI_FIRST_LAYOUT_RESP, proto.client_proto.room_info_s);
         // this.bindRecvFunc(this.cmd.RLSMI_FIRST_LAYOUT_RESP, this.OnRecv_RoomInfo.bind(this));
-        // this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_RESP, proto.client_proto.table_state_s);
-        // this.bindRecvFunc(this.cmd.RLSMI_SECOND_LIST_RESP, this.OnRecv_RoomTableState.bind(this));
+        this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_RESP, proto.client_proto.SecondRoomListResp);
+        this.bindRecvFunc(this.cmd.RLSMI_SECOND_LIST_RESP, this.OnRecv_RoomInfo.bind(this));
         this.bindMsgStructPB(this.cmd.RLSMI_BEFORE_MATCH_RESP, proto.client_proto.BeforeMatchTableResp);
         this.bindRecvFunc(this.cmd.RLSMI_BEFORE_MATCH_RESP, this.OnRecv_BEFORE_MATCH_RESP.bind(this));
         this.bindMsgStructPB(this.cmd.RLSMI_ENTER_MATCH_RESP, proto.client_proto.EnterMatchTableResp);
@@ -115,7 +116,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
         // ////////-send struct//////////
         this.bindMsgStructPB(this.cmd.RLSMI_FIRST_LAYOUT_REQ, proto.client_proto.LoginReq);
-        this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_REQ, proto.client_proto.LoginReq);
+        this.bindMsgStructPB(this.cmd.RLSMI_SECOND_LIST_REQ, proto.client_proto.SecondRoomListReq);
         this.bindMsgStructPB(this.cmd.RLSMI_BEFORE_MATCH_REQ, proto.client_proto.BeforeMatchTableReq);
         this.bindMsgStructPB(this.cmd.RLSMI_ENTER_MATCH_REQ, proto.client_proto.EnterMatchTableReq);
         this.bindMsgStructPB(this.cmd.RLSMI_EXIT_MATCH_REQ, proto.client_proto.ExitMatchTableReq);
@@ -133,22 +134,23 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         return INVAL_TABLEID
     }
 
-    OnRecv_RoomInfo(dict: proto.game_room.Iroom_info_s) {
+    OnRecv_RoomInfo(dict: proto.client_proto.ISecondRoomListResp) {
         // dump(dict, " ======= OnRecv_RoomInfo ======= ")
         this.m_RoomInfo.update(dict);
         // 房间快冲
-        this.m_RoomQuickRecharge.update(dict)
-
-        for (let i = 0; i < dict.max_table_count; i++) {
-            this.table[i] = new GameRoomTable(dict.max_chair_count);
+        // this.m_RoomQuickRecharge.update(dict)
+        if(dict.typeList.length == 0){
+            this.dataFun = null
+            app.popup.showToast("网络有误，请联系客服")
+            return
         }
-        this.tableRobot = new GameRoomRobotTable(dict.max_chair_count,dict.max_chair_count*(dict.max_table_count-1));
-
-        this.setRoomOnline(true)
-
         app.event.dispatchEvent({
             eventName: `ReceiveRoomInfo`,
         });
+        if(this.dataFun){
+            this.dataFun()
+            this.dataFun = null
+        }
     }
     //桌子状态变化
     OnRecv_RoomTableState(dict: proto.game_room.Itable_state_s) {
@@ -311,6 +313,14 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             eventName: EVENT_ID.EVENT_GAME_ROOM_C_JOIN_QUEUE_RET,
             data: dict
         });
+    }
+
+    //请求房间二级列表配置
+    sendRLSMI_SECOND_LIST_REQ(gameType: number,callback:Function) {
+        this.dataFun = callback
+        let sData = proto.client_proto.SecondRoomListReq.create();
+        sData.gameType = gameType;
+        return this.sendData(this.cmd.RLSMI_SECOND_LIST_REQ, sData);
     }
 
     //请求判断配桌，成功则加载资源
@@ -866,45 +876,15 @@ class GameRoomRobotTable extends GameRoomTable{
     }
 }
 class GameRoomInfo {
-    nGroupID: number;
-    szDLLName: string;
-    szServerName: string;
-    nMaxTableCount: number;
-    nMaxChairCount: number;
-    nServerID: number;
+    defaultGroupType: number;
     gameType: number;
-    groupType: number;
-    nPlayType: number;
-    nRID: number;
-    kindId: number;
-    nScore: number;
-    EnterRule: proto.game_room.IEnterRule[];
-    nTax: number;
-    nTaxPer: number;
-    nPopGold: number;
-    nGameChildType: number;
-    btPreventCheat: number;
+    typeList: proto.client_proto.IOneRoomTypeInfo[]
 
-    update(dict: proto.game_room.Iroom_info_s) {
-        this.nGroupID = dict.group_id;
-        this.szDLLName = dict.dll_name;
-        this.szServerName = dict.server_name;
-        this.nMaxTableCount = dict.max_table_count;
-        this.nMaxChairCount = dict.max_chair_count;
-        this.nServerID = dict.server_id;
-        this.gameType = dict.game_type;
-        this.groupType = dict.group_type;
-        this.nPlayType = dict.play_type;
-        this.nRID = dict.quick_rid;
-        this.kindId = dict.kind_id;
-        this.nScore = dict.score;
-        this.EnterRule = dict.enter_rule;
-        // 台费
-        this.nTax = dict.tax;
-        this.nTaxPer = dict.taxper;
-        this.nPopGold = dict.pop_gold;
-        this.nGameChildType = dict.game_child_type;
-        this.btPreventCheat = dict.is_prevent_cheat;
+    update(dict: proto.client_proto.ISecondRoomListResp) {
+
+        this.gameType = dict.gameType;
+        this.defaultGroupType = dict.defaultRoomType;
+        this.typeList = dict.typeList
     }
 }
 
