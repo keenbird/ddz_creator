@@ -2147,7 +2147,7 @@ export class main_Landlord extends main_GameBase {
         this.player.setPlayerCallStateVisible(null, false);
         this.showTrustLayout(false)
         this.resetActionBar()
-        this.setBaseScorePool(data.settleinfo.doubletimes[yx.internet.nSelfChairID],false)
+        this.setBaseScorePool(data.settleinfo.toptimes[yx.internet.nSelfChairID],false)
         if(data.settleinfo.flag > 0){
             showTanpaiAndCoin()
             showSpringAni(data.settleinfo.flag,()=>{

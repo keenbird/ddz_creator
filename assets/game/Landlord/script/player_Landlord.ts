@@ -69,7 +69,7 @@ export class player_Landlord extends player_GameBase {
                     if (!playerInfo) {
                         return;
                     }
-                    // this.showEmojiView({ nUserID: playerInfo[PROTO_ACTOR.UAT_UID] });
+                    this.showEmojiView({ nUserID: playerInfo[PROTO_ACTOR.UAT_UID],playerInfo:playerInfo });
                     
                     
                 });

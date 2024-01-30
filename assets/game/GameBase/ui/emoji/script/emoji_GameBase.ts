@@ -2,7 +2,7 @@
 import { _decorator, Prefab, instantiate, Node as ccNode, Vec3, Sprite, SpriteFrame, tween, sp } from 'cc';
 const { ccclass } = _decorator;
 
-import { ACTOR } from '../../../../../app/config/cmd/ActorCMD';
+import { ACTOR, PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
 import { DF_RATE } from '../../../../../app/config/ConstantConfig';
 
 // 给 emojiNode 添加 data
@@ -24,9 +24,6 @@ export class emoji_GameBase extends (fw.FWComponent) {
 			emoji.setData(data);
 			//执行回调
 			data.callback && data.callback(view, data);
-			//更新界面价格
-			let magicFaceOne = gameCenter.room.getMagicFace(1);
-			view.Items.Label_tip.string = `Each use costs ${magicFaceOne.gold / DF_RATE}`;
 			//检测位置（屏幕左边正常显示，屏幕右边翻转）
 			if (!data.bManual) {
 				emoji.updateOrientation();
@@ -156,6 +153,7 @@ export class emoji_GameBase extends (fw.FWComponent) {
 	data: EmojiParam;
 	setData(data: EmojiParam) {
 		this.data = data ?? {};
+
 	}
 	initData() {
 		emoji_GameBase.getEmojiDefList();
@@ -198,13 +196,16 @@ export class emoji_GameBase extends (fw.FWComponent) {
 		for (let j = childs.length; index < j; ++index) {
 			childs[index].active = false;
 		}
+		this.Items.Label_name.string = "昵称："+this.data.playerInfo[PROTO_ACTOR.UAT_NICKNAME]
+		this.Items.Label_id.string = "ID："+this.data.playerInfo[PROTO_ACTOR.UAT_UID]
 	}
 	updateOrientation() {
 		let wPos = fw._v3;
 		this.node.getWorldPosition(wPos);
 		let bMirror = wPos.x > app.winSize.width / 2;
 		this.node.mirror({ x: true }, bMirror);
-		this.Items.Label_tip.mirror({ x: true }, bMirror);
+		this.Items.Label_name.mirror({ x: true }, bMirror);
+		this.Items.Label_id.mirror({ x: true }, bMirror);
 	}
 }
 

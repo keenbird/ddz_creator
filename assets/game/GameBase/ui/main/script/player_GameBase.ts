@@ -129,6 +129,8 @@ declare global {
 			nChairID?: number
 			/**玩家节点 */
 			playerNode?: ccNode
+			/**玩家信息 */
+			playerInfo?: any
 		}
 	}
 }
