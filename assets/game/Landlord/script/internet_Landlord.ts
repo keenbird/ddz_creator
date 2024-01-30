@@ -3,7 +3,6 @@ const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
 import proto from './../protobuf/Landlord_format';
-import { internet_GameBase } from '../../GameBase/internet/internet_GameBase';
 import { EVENT_ID } from '../../../app/config/EventConfig';
 import { MainInetMsg } from '../../../app/framework/network/awBuf/MainInetMsg';
 

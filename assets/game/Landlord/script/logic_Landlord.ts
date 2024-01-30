@@ -1,6 +1,5 @@
 import { _decorator } from 'cc';
-import { yx } from '../../../yx_Landlord';
-import { RenderEntityBoolSharedBufferView } from '../../../../../../engine/cocos/2d/renderer/render-entity';
+import { yx } from '../yx_Landlord';
 const { ccclass } = _decorator;
  
 interface AnalyseResultEx {

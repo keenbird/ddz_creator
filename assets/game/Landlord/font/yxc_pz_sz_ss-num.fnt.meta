@@ -10,7 +10,7 @@
   "userData": {
     "_fntConfig": {
       "commonHeight": 60,
-      "fontSize": 10,
+      "fontSize": 32,
       "atlasName": "yxc_pz_sz_ss-num.png",
       "fontDefDictionary": {
         "32": {
@@ -247,7 +247,7 @@
       },
       "kerningDict": {}
     },
-    "fontSize": 10,
+    "fontSize": 32,
     "textureUuid": "2906a22b-fe6a-4982-809c-c270ae4d7bc6"
   }
 }

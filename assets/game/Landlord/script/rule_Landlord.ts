@@ -1,7 +1,7 @@
 import { _decorator } from 'cc';
 const { ccclass } = _decorator;
 
-import { FWDialogViewBase } from '../../../../../app/framework/view/popup/FWDialogViewBase';
+import { FWDialogViewBase } from '../../../app/framework/view/popup/FWDialogViewBase';
 
 @ccclass('rule_Landlord')
 export class rule_Landlord extends FWDialogViewBase {

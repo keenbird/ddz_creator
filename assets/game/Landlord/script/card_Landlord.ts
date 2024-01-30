@@ -1,6 +1,5 @@
 import { Size, _decorator ,Node as ccNode,Animation,instantiate,Prefab,v3, Color,Sprite, Rect } from 'cc';
-import { forEach } from '../../../../../../engine/cocos/asset/asset-manager/utilities';
-import { yx } from '../../../yx_Landlord';
+import { yx } from '../yx_Landlord';
 const { ccclass } = _decorator;
  
 @ccclass('card_Landlord')
@@ -17,7 +16,7 @@ export class card_Landlord extends (fw.FWComponent) {
 	m_pCardNode:ccNode;
 	cardBgSize:Size;
 	m_nCardZOrder:number;
-	pokerResPath:string = "ui/main/texture/poker/";
+	pokerResPath:string = "img/poker/";
 	setCardData(cardData : number,sizeType :number) {
 		this.m_cbCardData = cardData
 		this.m_nCardSizeType = sizeType

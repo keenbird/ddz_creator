@@ -1,17 +1,16 @@
 import { _decorator, Node as ccNode, instantiate, math, ProgressBar,NodeEventType,sp, Animation, AnimationClip, Prefab, tween,v3, UIOpacity, Tween, Sprite, UITransform, Button, Label, Vec3, Vec2, Rect, Size } from 'cc';
 const { ccclass } = _decorator;
 
-import { yx } from '../../../yx_Landlord';
+import { yx } from '../yx_Landlord';
 import { player_Landlord } from './player_Landlord';
-import proto from './../../../protobuf/Landlord_format';
-import { ACTOR, PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
-import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
-import { DF_RATE, DF_SYMBOL } from '../../../../../app/config/ConstantConfig';
-import { main_GameBase } from '../../../../GameBase/ui/main/script/main_GameBase';
-import { boolean } from '../../../../../../engine/cocos/core/data/class-decorator';
+import proto from './../protobuf/Landlord_format';
+import { ACTOR, PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
+import { FWSpine } from '../../../app/framework/extensions/FWSpine';
+import { DF_RATE, DF_SYMBOL } from '../../../app/config/ConstantConfig';
+import { main_GameBase } from '../../GameBase/ui/main/script/main_GameBase';
 import { logic_Landlord } from './logic_Landlord';
-import { landlordSoundInitData, sound_Landlord } from '../../../../Landlord/common/sound_Landlord';
-import { EVENT_ID } from '../../../../../app/config/EventConfig';
+import { landlordSoundInitData, sound_Landlord } from './sound_Landlord';
+import { EVENT_ID } from '../../../app/config/EventConfig';
 
 @ccclass('main_Landlord')
 export class main_Landlord extends main_GameBase {
@@ -824,11 +823,11 @@ export class main_Landlord extends main_GameBase {
                 barNode = this.Items.Node_BarStatusDouble
                 if(data){
                     var bmt = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegative.Items.bmt
-                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[0] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`img/table/btn/${data[0] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
 
                     var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.bmt
-                    bmt1.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data[1] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
+                    bmt1.updateSprite(fw.BundleConfig.Landlord.res[`img/table/btn/${data[1] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
                 }
                 break;
@@ -838,7 +837,7 @@ export class main_Landlord extends main_GameBase {
                 barNode = this.Items.Node_BarStatusPublicCard
                 if(data){
                     var bmt = this.Items.Node_BarStatusPublicCard.Items.bmt
-                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/table/btn/${data == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
+                    bmt.updateSprite(fw.BundleConfig.Landlord.res[`img/table/btn/${data == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
                 }
                 break;

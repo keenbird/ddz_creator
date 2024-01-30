@@ -1,13 +1,12 @@
 import { Animation, Label, Sprite, Tween, UITransform, _decorator, Node as ccNode, tween,Font ,Size,v3,UIOpacity,Prefab,instantiate,sp,Texture2D,assetManager} from 'cc';
 const { ccclass } = _decorator;
 
-import { yx } from '../../../yx_Landlord';
-import proto from './../../../protobuf/Landlord_format';
-import { ACTOR,PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
-import { EVENT_ID } from '../../../../../app/config/EventConfig';
-import { DF_RATE } from '../../../../../app/config/ConstantConfig';
-import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
-import { player_GameBase } from '../../../../GameBase/ui/main/script/player_GameBase';
+import { yx } from '../yx_Landlord';
+import { ACTOR,PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
+import { EVENT_ID } from '../../../app/config/EventConfig';
+import { DF_RATE } from '../../../app/config/ConstantConfig';
+import { FWSpine } from '../../../app/framework/extensions/FWSpine';
+import { player_GameBase } from '../../GameBase/ui/main/script/player_GameBase';
 
 @ccclass('player_Landlord')
 export class player_Landlord extends player_GameBase {
@@ -57,10 +56,6 @@ export class player_Landlord extends player_GameBase {
     initPlayer() {
         //默认隐藏所有玩家
         for (let i = 0; i < yx.internet.nMaxPlayerCount; ++i) {
-            var SettlementBg =this.getSettlementBgByChair(i)
-            if(!fw.isNull(SettlementBg)){
-                this.img_settlement_bg_x[i] = SettlementBg.getPosition().x
-            }
             const player = this.Items[`node_player_${i}`];
             if (player) {
                 player.active = false;
@@ -109,6 +104,10 @@ export class player_Landlord extends player_GameBase {
 
         // //隐藏部分简单界面
         for (let nChairID = 0, j = yx.internet.nMaxPlayerCount; nChairID < j; ++nChairID) {
+            var SettlementBg =this.getSettlementBgByChair(nChairID)
+            if(!fw.isNull(SettlementBg)){
+                this.img_settlement_bg_x[nChairID] = SettlementBg.getPosition().x
+            }
             this.getMingpaiParent(nChairID,true)
             this.getOutCardParent(nChairID,true)
             const player = this.getPlayerNode({ nChairID: nChairID });
@@ -117,6 +116,8 @@ export class player_Landlord extends player_GameBase {
                 // player.Items.node_trusteeship.active = false;
             }
         }
+
+        
     }
     /**刷新所有玩家 */
     updateAllPlayers() {
@@ -204,11 +205,11 @@ export class player_Landlord extends player_GameBase {
                 const offsetX = 130
                 if(bVisible){
                     bgNode.Items.BFL_settlement_score.string = num >= 0 ? "+" + num : "" + num
-                    let fontsize = num >= 0 ? 17 : 5
-                    bgNode.updateSprite(fw.BundleConfig.Landlord.res[`ui/main/texture/player/${num >= 0 ? `yxc_pz_sz_y` : `yxc_pz_sz_s`}/spriteFrame`])
-                    this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/main/font/${num >= 0 ? `yxc_pz_sz_yy-num` : `yxc_pz_sz_ss-num`}`], Font, (res) => {
+                    // let fontsize = num >= 0 ? 17 : 5
+                    bgNode.updateSprite(fw.BundleConfig.Landlord.res[`img/player/${num >= 0 ? `yxc_pz_sz_y` : `yxc_pz_sz_s`}/spriteFrame`])
+                    this.loadBundleRes(fw.BundleConfig.Landlord.res[`font/${num >= 0 ? `yxc_pz_sz_yy-num` : `yxc_pz_sz_ss-num`}`], Font, (res) => {
                         bgNode.Items.BFL_settlement_score.getComponent(Label).font = res;
-                        bgNode.Items.BFL_settlement_score.getComponent(Label).fontSize = fontsize
+                        // bgNode.Items.BFL_settlement_score.getComponent(Label).fontSize = fontsize
                     });
                     const BFL_settlement_score_width = 153
                     const img_settlement_bg_width = 228
@@ -354,7 +355,7 @@ export class player_Landlord extends player_GameBase {
             let showFun = (cardNode :ccNode) => {
                 cardNode.active = bVisible
                 
-                if(bVisible && cardNum ){
+                if(bVisible && cardNum != null ){
                     cardNode.Items.BMFont_SurplusValue.string = cardNum + ""
                     if(cardNum > 0 && cardNum <= 2 && !noBaojin){
                         cardNode.Items.ani_jinbaoqi.active = true
@@ -546,10 +547,10 @@ export class player_Landlord extends player_GameBase {
                     player.Items.Image_dizhu_icon.active = true;
     
                     if(nChairIDEx == nChairID){
-                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`ui/main/texture/player/yxc_tb_dizhu/spriteFrame`));
+                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`img/player/yxc_tb_dizhu/spriteFrame`));
                         
                     }else{
-                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`ui/main/texture/player/yxc_tb_nongming/spriteFrame`));
+                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`img/player/yxc_tb_nongming/spriteFrame`));
                     }
                     if(yx.func.getClientChairIDByServerChairID(nChairID) == 0){
                         yx.main.resetHandCardPos()

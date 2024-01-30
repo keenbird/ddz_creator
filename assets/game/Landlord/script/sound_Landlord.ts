@@ -1,6 +1,6 @@
 import { _decorator, Node as ccNode,js } from 'cc';
 import { yx } from '../yx_Landlord';
-import { logic_Landlord } from '../ui/main/script/logic_Landlord';
+import { logic_Landlord } from './logic_Landlord';
 import { PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
 const { ccclass } = _decorator;
 const PATH_PREFIX: string = "audio/";
