@@ -1,7 +1,7 @@
 import { Label, Node as ccNode, Slider, UITransform, _decorator } from 'cc';
 const { ccclass } = _decorator;
 
-import { FWDialogViewBase } from '../../../../app/framework/view/popup/FWDialogViewBase';
+import { FWDialogViewBase } from '../../../app/framework/view/popup/FWDialogViewBase';
 
 //刷新数据类型
 export enum SettingUpdateType {

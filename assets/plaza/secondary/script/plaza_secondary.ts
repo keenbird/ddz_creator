@@ -51,14 +51,23 @@ export class plaza_secondary extends (fw.FWComponent) {
 		
 	}
 	choseType(roomType:number){
+		let isHave = false
 		for(var i=0;i<this.gameBtn.length;i++){
 			if(roomType == this.gameBtn[i]["roomType"]){
+				isHave = true
 				this.gameBtn[i].Items.spr_click.active = true
 				this.initRoomList(roomType)
+				this.Items.title_game.string = this.gameBtn[i].Items.lab_nolmal.string
 			}else{
 				this.gameBtn[i].Items.spr_click.active = false
 			}
 		}
+		if(!isHave && this.gameBtn[0]){
+			this.gameBtn[0].Items.spr_click.active = true
+			this.initRoomList(this.gameBtn[0]["roomType"])
+			this.Items.title_game.string = this.gameBtn[0].Items.lab_nolmal.string
+		}
+		
 	}
 	initRoomList(roomType:number) {
 		let data = null
@@ -133,7 +142,7 @@ export class plaza_secondary extends (fw.FWComponent) {
 		this.bindEvent({
 			eventName: `ReceiveRoomInfo`,
 			callback: () => {
-				this.initData()
+				this.initGameList()
 			}
 		});
 		

@@ -170,7 +170,7 @@ export class main_GameBase extends (fw.FWComponent) {
     /**设置界面 */
     onClickSetting() {
         app.popup.showDialog({
-            viewConfig: fw.BundleConfig.resources.res[`ui/setting/setting`],
+            viewConfig: fw.BundleConfig.setting.res[`setting`],
         });
     }
     /**设置帮助 */

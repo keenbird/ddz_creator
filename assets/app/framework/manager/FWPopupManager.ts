@@ -196,7 +196,7 @@ export class FWPopupManager extends (fw.FWComponent) {
         if (node.parent != this._dialogNode) {
             node.parent = this._dialogNode;
         }
-
+        this.closeAllLoading()
         //当前是展示这个弹窗则直接调用
         if(this._curDialog == item) {
             node.active = true;
@@ -239,6 +239,7 @@ export class FWPopupManager extends (fw.FWComponent) {
     /** 加载弹窗预设 */
     private _loadDialogPrefab(item:DialogQueueItem) {
         let data = item.popupData;
+        this.showLoading()
         this.loadBundleRes(data.viewConfig, Prefab, (prefab) => {
             item.bLoading = false;
             //是否有效 这里因为弹窗管理 管理的是虚拟节点 应该是不需要这个判断了
@@ -253,6 +254,7 @@ export class FWPopupManager extends (fw.FWComponent) {
                 if(item.bRemove) return ;
                 // 资源加载失败不要这个弹窗了
                 this.closeItemDialog(item);
+                this.closeAllLoading()
             }
         });
     }

@@ -13,6 +13,7 @@ const config = {
         //大厅
         main: <BundleConfigType>{},
         secondary: <BundleConfigType>{},
+        setting: <BundleConfigType>{},
         plaza: <BundleConfigType>{},
         login: <BundleConfigType>{},
         resources: <BundleConfigType>{},

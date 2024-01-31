@@ -210,7 +210,7 @@ export class plaza_main extends (fw.FWComponent) {
 	initBtnMore() {
 		this.Items.Node_more.onClickAndScale(() => {
 			app.popup.showDialog({
-				viewConfig: fw.BundleConfig.resources.res[`ui/setting/setting`],
+				viewConfig: fw.BundleConfig.setting.res[`setting`],
 			});
 		});
 	}

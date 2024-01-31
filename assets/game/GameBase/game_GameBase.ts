@@ -181,7 +181,7 @@ export class game_GameBase extends FWSceneBase {
     /**设置界面 */
     onClickSetting() {
         app.popup.showDialog({
-            viewConfig: app.game.getRes(`ui/setting/setting`),
+            viewConfig: fw.BundleConfig.setting.res[`setting`],
         });
     }
     /**设置帮助 */
