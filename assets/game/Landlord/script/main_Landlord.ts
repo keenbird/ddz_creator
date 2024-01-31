@@ -525,6 +525,9 @@ export class main_Landlord extends main_GameBase {
     }
     //再来一局
     startGameAgain(){
+        gameCenter.user.clean();
+        this.resetActionBarOnFree()
+        this.clearOneGame()
         gameCenter.room.sendEnterMatchREQ(app.gameManager.room_id)
     }
     //出牌判断，正确则发送出牌命令
@@ -2156,6 +2159,7 @@ export class main_Landlord extends main_GameBase {
             },2)
         } 
         this.player.setPlayerCallStateVisible(null, false);
+        this.player.setPlayerTimerVisible(null, false);
         this.showTrustLayout(false)
         this.resetActionBar()
         this.setBaseScorePool(data.settleinfo.toptimes[yx.internet.nSelfChairID],false)

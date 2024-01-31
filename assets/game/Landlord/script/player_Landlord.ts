@@ -113,6 +113,10 @@ export class player_Landlord extends player_GameBase {
             const player = this.getPlayerNode({ nChairID: nChairID });
             if (player) {
                 player.Items.Image_dizhu_icon.active = false;
+                // let playerInfo = this.actorByClientChairID[nChairID];
+                // if (!playerInfo) {
+                //     player.active = false
+                // }
                 // player.Items.node_trusteeship.active = false;
             }
         }
@@ -124,7 +128,21 @@ export class player_Landlord extends player_GameBase {
         for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
             let Actors = gameCenter.user.getActorByChairId(i)
             if(Actors){
+                if(Actors[PROTO_ACTOR.UAT_UID] == center.user.getUserID()){
+                    yx.internet.nSelfChairID = Actors.chairID
+                }
+            }
+        }
+        for(var i=0;i<yx.internet.nMaxPlayerCount;i++){
+            let Actors = gameCenter.user.getActorByChairId(i)
+            if(Actors){
                 this.updateOnePlayer(i);
+            }else{
+                const nClientChairID = yx.func.getClientChairIDByServerChairID(i);
+                const player = this.Items[`node_player_${nClientChairID}`];
+                if (player) {
+                    player.active = false;
+                }
             }
         }
     }
@@ -153,6 +171,7 @@ export class player_Landlord extends player_GameBase {
                 player.Items.player_coin.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD]}`;
               
             } else {
+                this.actorByClientChairID[nClientChairID] = null;
                 player.active = false;
             }
         }
