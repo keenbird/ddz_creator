@@ -234,7 +234,7 @@ export class card_Landlord extends (fw.FWComponent) {
 		var num = lianzhaNum ? lianzhaNum : 1
 		this.m_pCardNode.Items.ImageView_MarkOfBoom.active = isBoom
 		if(isBoom){
-			var boomLogoRes =  this.pokerResPath + `yxc_zd${lianzhaNum}/spriteFrame`
+			var boomLogoRes =  this.pokerResPath + `yxc_zd${num}/spriteFrame`
 			this.m_pCardNode.Items.ImageView_MarkOfBoom.updateSprite(app.game.getRes(boomLogoRes))
 		}
 	}

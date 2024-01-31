@@ -190,6 +190,7 @@ export class internet_Landlord extends MainInetMsg {
     }
     //销毁注册事件
     unBindMsg(){
+        this.unbindMsgListener(this.mainID)
         // this.unbindRecvFunc(this.cmd.DDZ_S_MSG_RECONNECT);
         // this.unbindMsgStructPB(this.cmd.DDZ_S_MSG_RECONNECT);
     }
@@ -260,7 +261,7 @@ export class internet_Landlord extends MainInetMsg {
     DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips) {
         switch (data.type) {
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_START: {
-                   
+                this.cleanLocalData()
                     break;
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_SHOW_START: {

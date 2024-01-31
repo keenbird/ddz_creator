@@ -55,7 +55,18 @@ export class main_Landlord extends main_GameBase {
         this.clearOneGame();
         //初始化时间
         this.initTimeLabel();
+        //适配
+		this.fitSceneNode();
     }
+    protected fitSceneNode(){
+		if(app.isIphoneX){
+			this.scheduleOnce(()=>{
+				this.Items.node_top_left.setPosition(v3(this.Items.node_top_left.getPosition().x+66,this.Items.node_top_left.getPosition().y,1))
+                this.Items.node_outcard_pos_2.setPosition(v3(this.Items.node_outcard_pos_2.getPosition().x+66,this.Items.node_outcard_pos_2.getPosition().y,1))
+                this.Items.node_player_2.setPosition(v3(this.Items.node_player_2.getPosition().x+66,this.Items.node_player_2.getPosition().y,1))
+			},0)
+		}
+	}
     protected initEvents(): boolean | void {
         //玩家金币金币变更
         this.bindEvent({

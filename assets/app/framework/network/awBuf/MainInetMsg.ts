@@ -20,6 +20,11 @@ export class MainInetMsg extends BindInetMsg {
     initRegister() {
 
     }
+
+    unbindMsgListener(nMainID) {
+        this.rootInetMsg = app.socket.getRootInetMsg(this.nRootID);
+        this.rootInetMsg.unbindMsgListener(nMainID)
+    }
 }
 
 export class GatewayMainInetMsg extends MainInetMsg {

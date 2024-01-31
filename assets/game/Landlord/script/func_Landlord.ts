@@ -135,7 +135,7 @@ export class func_Landlord extends func_GameBase {
     //整理扑克的数据，丢到一个table里
     cardDatasFromVector(sourceVec):any[]{
         var result = []
-        if(sourceVec.length>0){
+        if(sourceVec && sourceVec.length>0){
             for(var i=0;i<sourceVec.length;i++){
                 if(!fw.isNull(sourceVec[i])){
                     result.push(sourceVec[i].getComponent("card_Landlord").getCardData())

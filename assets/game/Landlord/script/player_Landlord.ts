@@ -547,10 +547,10 @@ export class player_Landlord extends player_GameBase {
                     player.Items.Image_dizhu_icon.active = true;
     
                     if(nChairIDEx == nChairID){
-                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`img/player/yxc_tb_dizhu/spriteFrame`));
+                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_tb_dizhu/spriteFrame`]);
                         
                     }else{
-                        player.Items.Image_dizhu_icon.updateSpriteSync(app.game.getRes(`img/player/yxc_tb_nongming/spriteFrame`));
+                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_tb_nongming/spriteFrame`]);
                     }
                     if(yx.func.getClientChairIDByServerChairID(nChairID) == 0){
                         yx.main.resetHandCardPos()

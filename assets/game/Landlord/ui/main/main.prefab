@@ -634,7 +634,7 @@
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
     "_originalHeight": 0,
-    "_alignMode": 2,
+    "_alignMode": 0,
     "_lockFlags": 0,
     "_id": ""
   },
@@ -964,7 +964,7 @@
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
     "_originalHeight": 0,
-    "_alignMode": 2,
+    "_alignMode": 0,
     "_lockFlags": 0,
     "_id": ""
   },
@@ -4544,7 +4544,7 @@
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
     "_originalHeight": 0,
-    "_alignMode": 2,
+    "_alignMode": 0,
     "_lockFlags": 0,
     "_id": ""
   },

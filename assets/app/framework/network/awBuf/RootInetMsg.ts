@@ -22,6 +22,15 @@ export class RootInetMsg {
         return true
     }
 
+    unbindMsgListener(nMainID) {
+        if (this.m_mapMainMsgListener[nMainID] != null) {
+            this.m_mapMainMsgListener[nMainID] = null
+            return true
+            // throw new Error(`${this.constructor.name}:bindMsgListener()`);
+        }
+        return true
+    }
+
     OnRecvDataRoot(data: ArrayBuffer) {
         this._readByteStream.setBuffers(data);
         let pByteStream = this._readByteStream;
