@@ -68,6 +68,9 @@ export class func_Landlord extends func_GameBase {
         if(isPlay){
             a.play(`clock`);
             yx.main.sound.playClockEffect()
+        }else{
+            a.play(`clock`);
+            a.stop()
         }
     }
     
@@ -78,6 +81,7 @@ export class func_Landlord extends func_GameBase {
             return
         }
         nodeTimer["clockTime"] = time
+        yx.func.playTimerAnimation(nodeTimer,false)
         let isAni = needAni == false ? false : true
         let updateLastTime = () => {
             nodeTimer.Items[`BMFont_TimeValue`].string = "" + nodeTimer["clockTime"]
