@@ -94,11 +94,9 @@ export class main_Landlord extends main_GameBase {
         //         this.doReconnect(arg1.data);
         //     }
         // });
-        console.log("LHtableinfo0")
         this.bindEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
-                console.log("LHtableinfo3",arg1.data)
                 this.initTableInfo(arg1.data);
             }
         });

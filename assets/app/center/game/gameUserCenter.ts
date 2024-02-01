@@ -203,7 +203,6 @@ export class GameUserCenter extends GameServerMainInetMsg {
             roomName : dict.roomName,
             roomBase : dict.roomBase,
         }
-        console.log("LHtableinfo2",data)
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             data: data

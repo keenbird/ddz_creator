@@ -66,7 +66,6 @@ export class internet_Landlord extends MainInetMsg {
                 console.log("nSelfChairID",this.nSelfChairID)
             },
         });
-        console.log("LHtableinfo-1")
         this.bindEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
