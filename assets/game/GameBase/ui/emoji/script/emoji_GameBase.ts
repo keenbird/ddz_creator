@@ -153,12 +153,14 @@ export class emoji_GameBase extends (fw.FWComponent) {
 	data: EmojiParam;
 	setData(data: EmojiParam) {
 		this.data = data ?? {};
-
 	}
 	initData() {
 		emoji_GameBase.getEmojiDefList();
 	}
 	protected initView(): boolean | void {
+		this.updateView();
+	}
+	protected onViewEnter(): boolean | void {
 		this.updateView();
 	}
 	updateView() {
