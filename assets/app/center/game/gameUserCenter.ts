@@ -199,7 +199,15 @@ export class GameUserCenter extends GameServerMainInetMsg {
         
         app.popup.closeAllToast()
         
-        
+        let data= {
+            roomName : dict.roomName,
+            roomBase : dict.roomBase,
+        }
+        console.log("LHtableinfo2",data)
+        app.event.dispatchEvent({
+            eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
+            data: data
+        });
     }
     /**
      * 单机游戏机器人创建

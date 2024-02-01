@@ -357,6 +357,7 @@ export class sound_Landlord  {
         }
 
         this.playSound(path)
+        console.log("LH1",path,initData)
     }
 
 

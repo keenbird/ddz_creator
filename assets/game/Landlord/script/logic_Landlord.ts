@@ -134,13 +134,13 @@ export class logic_Landlord extends (fw.FWComponent) {
 		//@param cbCardCount	打出的张数
 		//@return 是否是合法的序列
 	//]]
-	resortZOrderForOutCard(cbCardData:number[],cbCardCount:number,bFirstOut?:boolean):number[] {
+	resortZOrderForOutCard(cbCardData:number[],cbCardCount:number,cardType?:number):number[] {
 		//1.先对扑克进行排序
     	this.SortCardData(cbCardData,cbCardCount,yx.config.CardSortOrder.DESC)
 		//2.分析手牌的组成
 		var analyseResult = this.AnalyzeCardData(cbCardData,cbCardCount,yx.config.CardSortOrder.DESC)
 		//3.根据牌型的组成判断牌型
-		var outType = this.GetCardType(cbCardData,cbCardCount,bFirstOut)
+		var outType = cardType && cardType != -1 ? cardType : this.GetCardType(cbCardData,cbCardCount)
 		//4.对扑克重新排序，如：飞机带单44443333=>44433343
 		if(outType == yx.config.OutCardType.Invalid){
 			return cbCardData
@@ -236,7 +236,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 				cbSingCardData.push(analyseResult.cbRocketCardData[1])
 			}
 			for(var i=0;i<analyseResult.cbQuadrupleCount;i++){
-				cbSingCardData.push(analyseResult.cbQuadrupleCardData[(i+1)*4-3])
+				cbSingCardData.push(analyseResult.cbQuadrupleCardData[(i+1)*4-1])
 			}
 			for(var i=0;i<analyseResult.cbSingleCardData.length;i++){
 				cbSingCardData.push(analyseResult.cbSingleCardData[i])
@@ -294,8 +294,8 @@ export class logic_Landlord extends (fw.FWComponent) {
 		return cbCardData
 		
 	}
-	CompareCard(cbLCardData:number[], cbLCardCount:number, cbRCardData:number[], cbRCardCount:number,cbInRCardType?:number):boolean{
-		var cbLCardType = this.GetCardType(cbLCardData, cbLCardCount)
+	CompareCard(cbLCardData:number[], cbLCardCount:number, cbRCardData:number[], cbRCardCount:number,cbInLCardType?:number,cbInRCardType?:number):boolean{
+		var cbLCardType = cbInLCardType ? cbInLCardType :this.GetCardType(cbLCardData, cbLCardCount)
 		var cbRCardType = cbInRCardType ? cbInRCardType : this.GetCardType(cbRCardData, cbRCardCount )
 		//下手牌非法，无需比较，不可以出牌
 		if(cbRCardType == yx.config.OutCardType.Invalid){
@@ -501,7 +501,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		var cbHandCardDataCopy = cbHandCardData.slice()
 		var cbHandCardCountCopy = cbHandCardCount
 
-		var cbOutCardData = this.resortZOrderForOutCard(cbTurnCardData,cbTurnCardCount,false) //clone(cbTurnCardData)
+		var cbOutCardData = this.resortZOrderForOutCard(cbTurnCardData,cbTurnCardCount,SearchOutCardType) //clone(cbTurnCardData)
 		var cbOutCardCount = cbTurnCardCount
 
 
@@ -2200,7 +2200,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return result
 	}
-	GetCardType(cbPreCardData:number[],cbCardCount:number,bFirstOut?:boolean) {
+	GetCardType(cbPreCardData:number[],cbCardCount:number) {
 		var  cbCardData = []
    		cbCardData = cbPreCardData.slice();
 		this.SortCardData(cbCardData,cbCardCount,yx.config.CardSortOrder.DESC)
@@ -2246,17 +2246,17 @@ export class logic_Landlord extends (fw.FWComponent) {
 				var cbValue1 = this.GetCardLogicValue(AnalyseResult.cbFourCardData[0])
             	var cbValue2 = this.GetCardLogicValue(AnalyseResult.cbFourCardData[4])+1
 				if((cbValue1 != this.GetCardLogicValue(0x02) && cbValue1 == cbValue2) ){ //|| self.m_cbLaiZiCardData > 0){
-					if(bFirstOut == true){
+					// if(bFirstOut == true){
 						return yx.config.OutCardType.Quadplex_Two_special //首出可以组成两种特殊牌型
-					}else{
-						var maxValue = yx.config.CARD_SPECIAL_VALUE_MAX
-						var cbcolorShapeValue = this.GetCardColorShape(cbCardData[0])
-						if(cbcolorShapeValue>=yx.config.CARD_SPECIAL_VALUE && cbcolorShapeValue <= maxValue){
-							return yx.config.OutCardType.Quadplex_Attached_Two_Pairs
-						}else{
-							return yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards
-						}
-					}
+					// }else{
+					// 	var maxValue = yx.config.CARD_SPECIAL_VALUE_MAX
+					// 	var cbcolorShapeValue = this.GetCardColorShape(cbCardData[0])
+					// 	if(cbcolorShapeValue>=yx.config.CARD_SPECIAL_VALUE && cbcolorShapeValue <= maxValue){
+					// 		return yx.config.OutCardType.Quadplex_Attached_Two_Pairs
+					// 	}else{
+					// 		return yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards
+					// 	}
+					// }
 				}else{
 					return yx.config.OutCardType.Quadplex_Attached_Two_Pairs
 				}

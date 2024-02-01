@@ -40,8 +40,11 @@ export class FWToastViewBase extends FWPopupViewBase {
                 }, this.popupData.nUpdateDelayTime);
             }
         }
+        if (this.interval_callbackTime) {
+            this.clearIntervalTimer(this.interval_callbackTime);
+            this.interval_callbackTime = null;
+        }
         if (!fw.isNull(this.popupData.nUpdateIntervalTime)) {
-            
             this.interval_callbackTime = this.setInterval(() => {
                     let str = this.popupData.text;
                     this.popupData.nUpdateIntervalTime --;

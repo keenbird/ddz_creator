@@ -241,7 +241,7 @@ export class card_Landlord extends (fw.FWComponent) {
 	//设置是否展示右下角标
 	setLogoVisible(isVisible:boolean)  {
 		
-		this.m_pCardNode.Items.ImageView_CardTypeLogo.active = isVisible
+		this.m_pCardNode.Items.ImageView_CardTypeLogo.active = isVisible && !this.isJoker()
 	}
 
 	//获取右下角牌标的图片名字

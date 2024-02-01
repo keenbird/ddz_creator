@@ -191,7 +191,9 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.sendEnterMatchREQ(dict.roomId)
             }
         })
-       
+
+        gameCenter.user.clean();
+
         let pActor = center.user.getActor()
         pActor.tableID = 1
         pActor.chairID = 1
@@ -204,6 +206,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             roomName : dict.roomName,
             roomBase : dict.roomBase,
         }
+        console.log("LHtableinfo1",data)
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             data: data

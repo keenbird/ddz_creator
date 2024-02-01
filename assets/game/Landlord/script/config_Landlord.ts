@@ -143,23 +143,7 @@ export class config_Landlord extends config_GameBase {
     //- 扑克牌单击手势最大偏移值(超过属于滑动，低于属于单击) */
     CARD_GESTURE_TAP_OFFSET_MAX = 5
 
-    //游戏状态
-    GameStatus ={
-        ///* 空闲 */
-        GameStatus_Free : 10,	
-        //* 发牌 */
-        GameStatus_Config : 11,
-        //* 叫分 */
-        GameStatus_CallPoints : 12,
-        ///*加倍阶段*/
-        GameStatus_PlayDouble : 15,
-        ///* 对局 */
-        GameStatus_Playing : 16,
-        ///* 结算 */
-        GameStatus_End: 17,
-        ///* 弃牌 */
-        GameStatus_Discard: 18,
-    }
+
 
     
 

@@ -2081,6 +2081,7 @@ $root.client_proto = (function() {
          * @property {number|null} [tableId] CommonGameScenePush tableId
          * @property {string|null} [gameId] CommonGameScenePush gameId
          * @property {string|null} [roomName] CommonGameScenePush roomName
+         * @property {number|null} [roomBase] CommonGameScenePush roomBase
          * @property {Array.<client_proto.ICommonGamePlayerInfo>|null} [useList] CommonGameScenePush useList
          */
 
@@ -2133,6 +2134,14 @@ $root.client_proto = (function() {
         CommonGameScenePush.prototype.roomName = "";
 
         /**
+         * CommonGameScenePush roomBase.
+         * @member {number} roomBase
+         * @memberof client_proto.CommonGameScenePush
+         * @instance
+         */
+        CommonGameScenePush.prototype.roomBase = 0;
+
+        /**
          * CommonGameScenePush useList.
          * @member {Array.<client_proto.ICommonGamePlayerInfo>} useList
          * @memberof client_proto.CommonGameScenePush
@@ -2172,9 +2181,11 @@ $root.client_proto = (function() {
                 writer.uint32(/* id 3, wireType 2 =*/26).string(message.gameId);
             if (message.roomName != null && Object.hasOwnProperty.call(message, "roomName"))
                 writer.uint32(/* id 4, wireType 2 =*/34).string(message.roomName);
+            if (message.roomBase != null && Object.hasOwnProperty.call(message, "roomBase"))
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.roomBase);
             if (message.useList != null && message.useList.length)
                 for (var i = 0; i < message.useList.length; ++i)
-                    $root.client_proto.CommonGamePlayerInfo.encode(message.useList[i], writer.uint32(/* id 5, wireType 2 =*/42).fork()).ldelim();
+                    $root.client_proto.CommonGamePlayerInfo.encode(message.useList[i], writer.uint32(/* id 6, wireType 2 =*/50).fork()).ldelim();
             return writer;
         };
 
@@ -2226,6 +2237,10 @@ $root.client_proto = (function() {
                         break;
                     }
                 case 5: {
+                        message.roomBase = reader.int32();
+                        break;
+                    }
+                case 6: {
                         if (!(message.useList && message.useList.length))
                             message.useList = [];
                         message.useList.push($root.client_proto.CommonGamePlayerInfo.decode(reader, reader.uint32()));
@@ -2278,6 +2293,9 @@ $root.client_proto = (function() {
             if (message.roomName != null && message.hasOwnProperty("roomName"))
                 if (!$util.isString(message.roomName))
                     return "roomName: string expected";
+            if (message.roomBase != null && message.hasOwnProperty("roomBase"))
+                if (!$util.isInteger(message.roomBase))
+                    return "roomBase: integer expected";
             if (message.useList != null && message.hasOwnProperty("useList")) {
                 if (!Array.isArray(message.useList))
                     return "useList: array expected";
@@ -2310,6 +2328,8 @@ $root.client_proto = (function() {
                 message.gameId = String(object.gameId);
             if (object.roomName != null)
                 message.roomName = String(object.roomName);
+            if (object.roomBase != null)
+                message.roomBase = object.roomBase | 0;
             if (object.useList) {
                 if (!Array.isArray(object.useList))
                     throw TypeError(".client_proto.CommonGameScenePush.useList: array expected");
@@ -2343,6 +2363,7 @@ $root.client_proto = (function() {
                 object.tableId = 0;
                 object.gameId = "";
                 object.roomName = "";
+                object.roomBase = 0;
             }
             if (message.roomId != null && message.hasOwnProperty("roomId"))
                 object.roomId = message.roomId;
@@ -2352,6 +2373,8 @@ $root.client_proto = (function() {
                 object.gameId = message.gameId;
             if (message.roomName != null && message.hasOwnProperty("roomName"))
                 object.roomName = message.roomName;
+            if (message.roomBase != null && message.hasOwnProperty("roomBase"))
+                object.roomBase = message.roomBase;
             if (message.useList && message.useList.length) {
                 object.useList = [];
                 for (var j = 0; j < message.useList.length; ++j)
@@ -4350,6 +4373,8 @@ $root.client_proto = (function() {
          * @property {number|null} [roomId] BeforeMatchTableResp roomId
          * @property {number|null} [svrId] BeforeMatchTableResp svrId
          * @property {number|null} [result] BeforeMatchTableResp result
+         * @property {number|null} [gameType] BeforeMatchTableResp gameType
+         * @property {number|null} [roomType] BeforeMatchTableResp roomType
          */
 
         /**
@@ -4392,6 +4417,22 @@ $root.client_proto = (function() {
         BeforeMatchTableResp.prototype.result = 0;
 
         /**
+         * BeforeMatchTableResp gameType.
+         * @member {number} gameType
+         * @memberof client_proto.BeforeMatchTableResp
+         * @instance
+         */
+        BeforeMatchTableResp.prototype.gameType = 0;
+
+        /**
+         * BeforeMatchTableResp roomType.
+         * @member {number} roomType
+         * @memberof client_proto.BeforeMatchTableResp
+         * @instance
+         */
+        BeforeMatchTableResp.prototype.roomType = 0;
+
+        /**
          * Creates a new BeforeMatchTableResp instance using the specified properties.
          * @function create
          * @memberof client_proto.BeforeMatchTableResp
@@ -4421,6 +4462,10 @@ $root.client_proto = (function() {
                 writer.uint32(/* id 2, wireType 0 =*/16).int32(message.svrId);
             if (message.result != null && Object.hasOwnProperty.call(message, "result"))
                 writer.uint32(/* id 3, wireType 0 =*/24).int32(message.result);
+            if (message.gameType != null && Object.hasOwnProperty.call(message, "gameType"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.gameType);
+            if (message.roomType != null && Object.hasOwnProperty.call(message, "roomType"))
+                writer.uint32(/* id 5, wireType 0 =*/40).int32(message.roomType);
             return writer;
         };
 
@@ -4467,6 +4512,14 @@ $root.client_proto = (function() {
                         message.result = reader.int32();
                         break;
                     }
+                case 4: {
+                        message.gameType = reader.int32();
+                        break;
+                    }
+                case 5: {
+                        message.roomType = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -4511,6 +4564,12 @@ $root.client_proto = (function() {
             if (message.result != null && message.hasOwnProperty("result"))
                 if (!$util.isInteger(message.result))
                     return "result: integer expected";
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                if (!$util.isInteger(message.gameType))
+                    return "gameType: integer expected";
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                if (!$util.isInteger(message.roomType))
+                    return "roomType: integer expected";
             return null;
         };
 
@@ -4532,6 +4591,10 @@ $root.client_proto = (function() {
                 message.svrId = object.svrId | 0;
             if (object.result != null)
                 message.result = object.result | 0;
+            if (object.gameType != null)
+                message.gameType = object.gameType | 0;
+            if (object.roomType != null)
+                message.roomType = object.roomType | 0;
             return message;
         };
 
@@ -4552,6 +4615,8 @@ $root.client_proto = (function() {
                 object.roomId = 0;
                 object.svrId = 0;
                 object.result = 0;
+                object.gameType = 0;
+                object.roomType = 0;
             }
             if (message.roomId != null && message.hasOwnProperty("roomId"))
                 object.roomId = message.roomId;
@@ -4559,6 +4624,10 @@ $root.client_proto = (function() {
                 object.svrId = message.svrId;
             if (message.result != null && message.hasOwnProperty("result"))
                 object.result = message.result;
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                object.gameType = message.gameType;
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                object.roomType = message.roomType;
             return object;
         };
 
@@ -6208,6 +6277,8 @@ $root.client_proto = (function() {
          * @interface IComebackRoomInfoPush
          * @property {number|null} [roomId] ComebackRoomInfoPush roomId
          * @property {number|null} [svrId] ComebackRoomInfoPush svrId
+         * @property {number|null} [gameType] ComebackRoomInfoPush gameType
+         * @property {number|null} [roomType] ComebackRoomInfoPush roomType
          */
 
         /**
@@ -6242,6 +6313,22 @@ $root.client_proto = (function() {
         ComebackRoomInfoPush.prototype.svrId = 0;
 
         /**
+         * ComebackRoomInfoPush gameType.
+         * @member {number} gameType
+         * @memberof client_proto.ComebackRoomInfoPush
+         * @instance
+         */
+        ComebackRoomInfoPush.prototype.gameType = 0;
+
+        /**
+         * ComebackRoomInfoPush roomType.
+         * @member {number} roomType
+         * @memberof client_proto.ComebackRoomInfoPush
+         * @instance
+         */
+        ComebackRoomInfoPush.prototype.roomType = 0;
+
+        /**
          * Creates a new ComebackRoomInfoPush instance using the specified properties.
          * @function create
          * @memberof client_proto.ComebackRoomInfoPush
@@ -6269,6 +6356,10 @@ $root.client_proto = (function() {
                 writer.uint32(/* id 1, wireType 0 =*/8).int32(message.roomId);
             if (message.svrId != null && Object.hasOwnProperty.call(message, "svrId"))
                 writer.uint32(/* id 2, wireType 0 =*/16).int32(message.svrId);
+            if (message.gameType != null && Object.hasOwnProperty.call(message, "gameType"))
+                writer.uint32(/* id 3, wireType 0 =*/24).int32(message.gameType);
+            if (message.roomType != null && Object.hasOwnProperty.call(message, "roomType"))
+                writer.uint32(/* id 4, wireType 0 =*/32).int32(message.roomType);
             return writer;
         };
 
@@ -6309,6 +6400,14 @@ $root.client_proto = (function() {
                     }
                 case 2: {
                         message.svrId = reader.int32();
+                        break;
+                    }
+                case 3: {
+                        message.gameType = reader.int32();
+                        break;
+                    }
+                case 4: {
+                        message.roomType = reader.int32();
                         break;
                     }
                 default:
@@ -6352,6 +6451,12 @@ $root.client_proto = (function() {
             if (message.svrId != null && message.hasOwnProperty("svrId"))
                 if (!$util.isInteger(message.svrId))
                     return "svrId: integer expected";
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                if (!$util.isInteger(message.gameType))
+                    return "gameType: integer expected";
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                if (!$util.isInteger(message.roomType))
+                    return "roomType: integer expected";
             return null;
         };
 
@@ -6371,6 +6476,10 @@ $root.client_proto = (function() {
                 message.roomId = object.roomId | 0;
             if (object.svrId != null)
                 message.svrId = object.svrId | 0;
+            if (object.gameType != null)
+                message.gameType = object.gameType | 0;
+            if (object.roomType != null)
+                message.roomType = object.roomType | 0;
             return message;
         };
 
@@ -6390,11 +6499,17 @@ $root.client_proto = (function() {
             if (options.defaults) {
                 object.roomId = 0;
                 object.svrId = 0;
+                object.gameType = 0;
+                object.roomType = 0;
             }
             if (message.roomId != null && message.hasOwnProperty("roomId"))
                 object.roomId = message.roomId;
             if (message.svrId != null && message.hasOwnProperty("svrId"))
                 object.svrId = message.svrId;
+            if (message.gameType != null && message.hasOwnProperty("gameType"))
+                object.gameType = message.gameType;
+            if (message.roomType != null && message.hasOwnProperty("roomType"))
+                object.roomType = message.roomType;
             return object;
         };
 
@@ -8450,6 +8565,9 @@ export namespace client_proto {
         /** CommonGameScenePush roomName */
         roomName?: (string|null);
 
+        /** CommonGameScenePush roomBase */
+        roomBase?: (number|null);
+
         /** CommonGameScenePush useList */
         useList?: (client_proto.ICommonGamePlayerInfo[]|null);
     }
@@ -8474,6 +8592,9 @@ export namespace client_proto {
 
         /** CommonGameScenePush roomName. */
         public roomName: string;
+
+        /** CommonGameScenePush roomBase. */
+        public roomBase: number;
 
         /** CommonGameScenePush useList. */
         public useList: client_proto.ICommonGamePlayerInfo[];
@@ -9386,6 +9507,12 @@ export namespace client_proto {
 
         /** BeforeMatchTableResp result */
         result?: (number|null);
+
+        /** BeforeMatchTableResp gameType */
+        gameType?: (number|null);
+
+        /** BeforeMatchTableResp roomType */
+        roomType?: (number|null);
     }
 
     /** Represents a BeforeMatchTableResp. */
@@ -9405,6 +9532,12 @@ export namespace client_proto {
 
         /** BeforeMatchTableResp result. */
         public result: number;
+
+        /** BeforeMatchTableResp gameType. */
+        public gameType: number;
+
+        /** BeforeMatchTableResp roomType. */
+        public roomType: number;
 
         /**
          * Creates a new BeforeMatchTableResp instance using the specified properties.
@@ -10219,6 +10352,12 @@ export namespace client_proto {
 
         /** ComebackRoomInfoPush svrId */
         svrId?: (number|null);
+
+        /** ComebackRoomInfoPush gameType */
+        gameType?: (number|null);
+
+        /** ComebackRoomInfoPush roomType */
+        roomType?: (number|null);
     }
 
     /** Represents a ComebackRoomInfoPush. */
@@ -10235,6 +10374,12 @@ export namespace client_proto {
 
         /** ComebackRoomInfoPush svrId. */
         public svrId: number;
+
+        /** ComebackRoomInfoPush gameType. */
+        public gameType: number;
+
+        /** ComebackRoomInfoPush roomType. */
+        public roomType: number;
 
         /**
          * Creates a new ComebackRoomInfoPush instance using the specified properties.

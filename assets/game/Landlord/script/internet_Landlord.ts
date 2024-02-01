@@ -40,6 +40,10 @@ export class internet_Landlord extends MainInetMsg {
     bMingpai: boolean[] = [false,false,false]
     /**当局地主座位号 */
     landlordSeat: number = -1
+    /**房间名字 */
+    roomName: string = ""
+    /**房间底分 */
+    roomBase: number = -1
     /**上个人出的牌 */
     m_MaxCardInfo={
         cardData : [],
@@ -61,6 +65,14 @@ export class internet_Landlord extends MainInetMsg {
                 this.nSelfChairID = gameCenter.user.getSelfChairID();
                 console.log("nSelfChairID",this.nSelfChairID)
             },
+        });
+        console.log("LHtableinfo-1")
+        this.bindEvent({
+            eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
+            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
+                this.roomName = arg1.data.roomName
+                this.roomBase = arg1.data.roomBase
+            }
         });
     }
      initRegister(): void {

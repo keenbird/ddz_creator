@@ -32,6 +32,7 @@ export class main_Landlord extends main_GameBase {
     m_vecCardsPosition: Vec3[]= [];
     m_vecSelectedCache: any[]= [];
     mDragCardNode: ccNode;
+    mChoseCardNode: ccNode;
     m_vecPopCache: any[]= [];
     m_RegionData :any;
     callPointTimes: number = 0; //已经叫地主的次数 大于3等于已经第二轮
@@ -57,6 +58,11 @@ export class main_Landlord extends main_GameBase {
         this.initTimeLabel();
         //适配
 		this.fitSceneNode();
+        //房间基础信息
+        this.initTableInfo({
+            roomName : yx.internet.roomName,
+            roomBase : yx.internet.roomBase,
+        });
     }
     protected fitSceneNode(){
 		if(app.isIphoneX){
@@ -88,10 +94,11 @@ export class main_Landlord extends main_GameBase {
         //         this.doReconnect(arg1.data);
         //     }
         // });
-
+        console.log("LHtableinfo0")
         this.bindEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
+                console.log("LHtableinfo3",arg1.data)
                 this.initTableInfo(arg1.data);
             }
         });
@@ -160,7 +167,6 @@ export class main_Landlord extends main_GameBase {
         this.showTrustLayout(false)
         this.showCardRecorder(false)
         this.showGameTip(false)
-        this.showDipaiBieshu(false,false)
         this.showBasePool(false);
         this.resetBaseCardPool();
         this.setBaseScorePool( 1 );
@@ -207,7 +213,6 @@ export class main_Landlord extends main_GameBase {
             // // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // this.scheduleOnce(function(){
             //     // this.showLastThreeCardAndMove([78,79,50],0,true)
-            //     // this.showDipaiBieshu(true,true,3)
                 
             //     // this.showXbeiAni(3,15)
             //     let dataSeettle:proto.client_proto_ddz.IDDZ_S_GameEnd = {
@@ -320,37 +325,7 @@ export class main_Landlord extends main_GameBase {
     showBasePool(isShow: boolean){
         this.Items.three_card_pool_bg.active = isShow
     }
-    //是否展示底牌倍数
-    showDipaiBieshu(isShow: boolean,isAni : boolean, beishu ?: number){
-        if(isShow){
-            this.Items.Text_dipaibeishu.string = beishu+""
-            if(isAni){
-                this.Items.Img_dipaiBeisu.active = false
-                this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua_1`], (res: Prefab) => {
-                    let aniNode = instantiate(res);
-                    if(!fw.isNull(aniNode)){
-                        this.Items.Img_dipaiBeisu.active = true
-                        this.Items.Img_dipaiBeisu.addChild(aniNode)
-                        aniNode.Items["Text_dipaibeishu"].string = "" + beishu +"倍"
-                        aniNode.eulerAngles  = new Vec3(0,0,15)
-                        aniNode.setPosition(0,1)
-                        var tScale = yx.config.changeOldResScale
-                        aniNode.scale = v3(tScale, tScale, tScale)
-                        const a = aniNode.getComponent(Animation);
-                        
-                        a.on(Animation.EventType.FINISHED, () => {
-                            aniNode.removeFromParent(true)
-                        });
-                        a.play(`ani_beishubianhua_1`);
-                    }
-                });
-            }else{
-                this.Items.Img_dipaiBeisu.active = true
-            }
-        }else{
-            this.Items.Img_dipaiBeisu.active = false
-        }
-    }
+
     //恢复底牌为背牌
     resetBaseCardPool(){
         let childs = this.Items.Layout_BaseCardPool.children;
@@ -541,13 +516,23 @@ export class main_Landlord extends main_GameBase {
             return
         }
         
-		cardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length)
+		cardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length ,yx.internet.m_MaxCardInfo.nType)
 
         if(cardData.length != 0){
             var maxCardInfo = yx.internet.m_MaxCardInfo
             var isLarger = false
             cardType = this.logic.GetCardType(cardData, cardData.length)
-            isLarger = this.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cardData, cardData.length)
+            if(cardType == yx.config.OutCardType.Quadplex_Two_special ){
+                if(maxCardInfo.nType != -1){
+                    //不是首出就直接用上家牌型来对比
+                    cardType = maxCardInfo.nType
+                }else{
+                    //首出时候可选飞机或者四带二
+                    this.showChoseCardLayout(cardData)
+                    return
+                }
+            }
+            isLarger = this.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cardData, cardData.length,maxCardInfo.nType,cardType)
             if  (cardType == -1 || ! isLarger){
                 if(cardType == -1 ){
                     this.displayHandsAnalyseTips(true, yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard)
@@ -567,12 +552,67 @@ export class main_Landlord extends main_GameBase {
             this.putDownAllHandCard()
         }
     }
+
+    //是否展示选牌型界面
+    showChoseCardLayout(cardData?:number[]){
+        let self = this
+        var createrCard = function(parentNode:ccNode,carddata:number[]){
+            for(let i=0;i<carddata.length;i++){
+                var card = self.getOneCardByData(carddata[i],yx.config.CardSizeType.CardSizeType_OutCard)
+                parentNode.addChild(card)
+                card.setPosition(yx.config.OUT_CARD_SIZE.width*(i+0.5),-yx.config.OUT_CARD_SIZE.height+20)
+            }                
+        }
+        this.hideChoseCardLayout()
+        this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/main/reuse/node_multiple_choose_card`], (res: Prefab) => {
+            let layout = instantiate(res);
+            if(!fw.isNull(layout)){
+                this.viewZOrderNode[this.viewZOrder.Anim].addChild(layout)
+                var tScale = yx.config.changeOldResScale
+                layout.scale = v3(tScale, tScale, tScale)
+                this.mChoseCardNode = layout
+
+                let planeTemp  = this.logic.resortZOrderForOutCard(cardData, cardData.length ,yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards)
+                createrCard(layout.Items.Node_1,planeTemp)
+                layout.Items.Sequence_Of_Triplets_Layout.onClickAndScale(() => {
+                    this.clearPopCardCache()
+                    yx.internet.DDZ_C_OUT_CARD({
+                        cards:planeTemp,
+                        cardtype: yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards
+                    })
+                    this.putDownAllHandCard()
+                    this.hideChoseCardLayout()
+                });
+
+                let quadplexTemp  = this.logic.resortZOrderForOutCard(cardData, cardData.length ,yx.config.OutCardType.Quadplex_Attached_Two_Pairs)
+                createrCard(layout.Items.Node_2,quadplexTemp)
+                layout.Items.Quadplex_Attached_Two_Pairs_Layout.onClickAndScale(() => {
+                    this.clearPopCardCache()
+                    yx.internet.DDZ_C_OUT_CARD({
+                        cards:quadplexTemp,
+                        cardtype: yx.config.OutCardType.Quadplex_Attached_Two_Pairs
+                    })
+                    this.putDownAllHandCard()
+                    this.hideChoseCardLayout()
+                });
+            }
+        });
+    }
+    //隐藏选牌型界面
+    hideChoseCardLayout(){
+      
+        if(this.mChoseCardNode != null){
+            this.mChoseCardNode.removeFromParent(true)
+            this.mChoseCardNode = null
+        }
+    }
     //创建卡牌触摸屏
     initCardTouchLayerEvent(){
         let self = this
         var touchEventType = "selCard" //选牌
         var m_TouchPointStart = new Vec2(0,0)
-        var _onTouchBegan = function(touch, event){
+        var isTouchCard = false
+        var _onTouchBegan = function(touch){
             console.log("touch:",touch)
             touch.preventSwallow = true;
             // --移除多种牌型选择框
@@ -584,7 +624,7 @@ export class main_Landlord extends main_GameBase {
             
             m_TouchPointStart = touch.getUILocation()
             touchEventType = "selCard"
-            let isTouchCard = false
+            isTouchCard = false
             for(var i=0;i<this.m_HandCardNode.length;i++){
                 var card = this.m_HandCardNode[i]
                 var cardRect = card.getComponent("card_Landlord").getTouchRect()
@@ -597,11 +637,15 @@ export class main_Landlord extends main_GameBase {
                 return true
             }else{
                 this.putDownAllHandCard()
+                this.hideChoseCardLayout()
                 return false
             }
         }
 
         var _onTouchMove = function(touch, event){
+            if(!isTouchCard){
+                return
+            }
             console.log("_onTouchMove")
             var touchPos = touch.getUILocation()
             var rectX = (touchPos.x < m_TouchPointStart.x) ? touchPos.x : m_TouchPointStart.x
@@ -613,7 +657,7 @@ export class main_Landlord extends main_GameBase {
 
             var preTouchEventType = touchEventType
             
-            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y + 20){// &&  this:getGameStatus() == yx.config.GameStatus.GameStatus_Playing ){
+            if (touchPos.y > yx.config.OUT_CARD_OFFSET_Y + this.Items.node_handCard.worldPosition.y + 20 &&  this.getGameStatus() == yx.config.GameState.PLAY ){
                 touchEventType = "outCard" // 出牌
             }else{
                 touchEventType = "selCard"
@@ -683,8 +727,12 @@ export class main_Landlord extends main_GameBase {
         }
         
         var _onTouchEnded = function(touch, event){
+            if(!isTouchCard){
+                return
+            }
             console.log("_onTouchEnded")
             touch.preventSwallow = true;
+            self.hideChoseCardLayout()
             var tmpFun = function(){
                 var  touchPos = touch.getUILocation()
                 var moveDelta = new Vec2(touchPos.x - m_TouchPointStart.x, touchPos.y - m_TouchPointStart.y)
@@ -715,7 +763,7 @@ export class main_Landlord extends main_GameBase {
                     }
 
                     //弃牌阶段禁用 滑动出牌
-                    if  (self.getGameStatus() == yx.config.GameStatus.GameStatus_Playing){
+                    if  (self.getGameStatus() == yx.config.GameState.PLAY){
                         //区间搜索出牌
 					    // self.regionSearch(cardData)
                     }else{
@@ -745,7 +793,7 @@ export class main_Landlord extends main_GameBase {
                     self.m_HandCardNode[i].getComponent("card_Landlord").setSelected(false)
                 }
 
-                if(self.getGameStatus() == yx.config.GameStatus.GameStatus_Playing){
+                if(self.getGameStatus() == yx.config.GameState.PLAY){
                     self.slidingSearch()
                 }else{
                     self.m_vecSelectedCache = []
@@ -763,7 +811,7 @@ export class main_Landlord extends main_GameBase {
                 }
                 var tempCache = yx.func.cardDatasFromVector(self.m_vecPopCache)
                
-                var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length)
+                var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length,yx.internet.m_MaxCardInfo.nType)
                 tempCache = []
                 if(cbTempCardData.length != 0){
                     // var maxCardInfo = yx.internet.m_MaxCardInfo
@@ -794,6 +842,9 @@ export class main_Landlord extends main_GameBase {
         }
 
         var _onTouchCancel = function(touch, event){
+            if(!isTouchCard){
+                return
+            }
             console.log("_onTouchCancel")
             _onTouchEnded(touch, event)
             this.markRegionCardData(0x00)
@@ -899,7 +950,7 @@ export class main_Landlord extends main_GameBase {
     }
     //玩家出牌命令
     didReceiveOutCard(data:proto.client_proto_ddz.IDDZ_S_OutCard){
-        var cardData = data.outcards
+        var cardData = cardData = this.logic.resortZOrderForOutCard(data.outcards, data.outcards.length ,data.cardtype)
         var cardType = data.cardtype
         var nChairID = data.outchair
         
@@ -974,8 +1025,9 @@ export class main_Landlord extends main_GameBase {
                 this.sound.playAlertorSound(soundData)
             },1)
         }
-        
-        this.showXbeiAni(2,data.toptimes)
+        if(bSecondBomb){
+            this.showXbeiAni(2,data.toptimes)
+        }
         this.ShowOutCard(nChairID,cardData,cardType,true)
     }
     //重设手牌位置
@@ -1022,6 +1074,8 @@ export class main_Landlord extends main_GameBase {
             }
             if(i == cardData.length-1){
                 card.getComponent("card_Landlord").setLogoVisible(true)    
+            }else{
+                card.getComponent("card_Landlord").setLogoVisible(false) 
             }
         }
         if(needAni){
@@ -1230,6 +1284,7 @@ export class main_Landlord extends main_GameBase {
         var nSelectedLen = pSelectedCard.length
 
         //获取弹起扑克的数据
+        self.updateDisplayOfOutCardBtn()
         var pPopCard = yx.func.cardDatasFromVector(self.m_vecPopCache)
         var nPopCardLen = pPopCard.length
         var popCardType = this.logic.GetCardType(pPopCard,nPopCardLen)
@@ -1240,7 +1295,7 @@ export class main_Landlord extends main_GameBase {
 	    var [pUnionCard,nUnionCardLen] = this.logic.mergeCardData(pSelectedCard, nSelectedLen, pPopCard, nPopCardLen)
 
         //如果是特殊牌型弹出提示语(双炸、飞机带炸)
-	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen,true)
+	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen,false)
         if(unionCardType == yx.config.OutCardType.Quadplex_Two_special ){
             //显示特殊牌型提示语
             this.showGameTip("special")
@@ -1279,7 +1334,7 @@ export class main_Landlord extends main_GameBase {
             }
         }
        
-        var outType = this.logic.GetCardType(yx.internet.m_MaxCardInfo.cardData,yx.internet.m_MaxCardInfo.cardCount,false)
+        var outType = yx.internet.m_MaxCardInfo.nType
 	    //只有顺子、连对进行划牌搜索
         
         if(outType == yx.config.OutCardType.Sequence 
@@ -1289,7 +1344,7 @@ export class main_Landlord extends main_GameBase {
             var selectCardType = this.logic.GetCardType(pSelectedCard,nSelectedLen)
 		    //只有在划的牌不能组成牌型时再去搜索
             if(selectCardType == yx.config.OutCardType.Invalid){
-                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,false, yx.config.OutCardType.Invalid)
+                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,true, yx.internet.m_MaxCardInfo.nType)
                 if (cbHitCount > 0 ){
                     this.putDownAllHandCard()
                     //有具体的压牌牌型，按最小能压的来出
@@ -1771,7 +1826,7 @@ export class main_Landlord extends main_GameBase {
                             var nSelectedLen = pSelectedCard.length
                                                    
                             var bFind : boolean
-                            [bFind,this.m_SearchResult,this.m_cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_FullRegion,false, yx.config.OutCardType.Invalid)
+                            [bFind,this.m_SearchResult,this.m_cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_FullRegion,true, yx.internet.m_MaxCardInfo.nType)
                             this.m_cbTipIndex = 0
                             if(this.m_cbHitCount > 0){
                                 this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_CanAfford,data.countdown,null)
@@ -1890,7 +1945,6 @@ export class main_Landlord extends main_GameBase {
     DDZ_S_MSG_CALL_END(data: proto.client_proto_ddz.IDDZ_S_CallEnd) {
         this.resetActionBar()
         this.showLastThreeCardAndMove(data.backcards,data.bankerchair)
-        this.showDipaiBieshu(true,true,data.backtimes)
         this.player.setPlayerDizhuVisible(data.bankerchair,true)
         
         this.setBaseScorePool(data.toptimes,true)
@@ -1949,6 +2003,7 @@ export class main_Landlord extends main_GameBase {
         }else{
             this.player.setPlayerTimerVisible(data.outchair,false)
         }
+        this.hideChoseCardLayout()
         this.didReceiveOutCard(data)
     }
     DDZ_S_MSG_PASS_CARD(data: proto.client_proto_ddz.IDDZ_S_PassCard) {
@@ -2058,7 +2113,6 @@ export class main_Landlord extends main_GameBase {
                 bdouble = reconnData.bdouble
             }
             this.player.setPlayerDizhuVisible(reconnData.bankerchair,false)
-            this.showDipaiBieshu(true,false,reconnData.backtimes)
           
             this.showLastThreeCardAndMove(reconnData.backcards,null,false)
         }
