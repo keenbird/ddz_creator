@@ -59,6 +59,8 @@ export class LoginCenter extends LoginMainInetMsg {
         this.bindMsgStructPB(this.cmd.LSMI_LOGIN_ATTR_NTF, proto.client_proto.LoginAttrNtf)
         this.bindRecvFunc(this.cmd.LSMI_LOGIN_ATTR_NTF, this.OnRecv_LoginAttrNtf.bind(this))
 
+        this.bindMsgStructPB(this.cmd.LSMI_LOGIN_OFFSITE_PUSH, proto.client_proto.LoginOffsitePush)
+        this.bindRecvFunc(this.cmd.LSMI_LOGIN_OFFSITE_PUSH, this.OnRecv_LoginOffistePush.bind(this))
         
 
         // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_TIPS, proto.login_server.login_tips_s)
@@ -356,6 +358,30 @@ export class LoginCenter extends LoginMainInetMsg {
     OnRecv_LoginAttrNtf(dict: proto.client_proto.ILoginAttrNtf) {
         center.user.setLoginActor(dict)
         this.loginPlaza()
+    }
+    //异地登录
+    OnRecv_LoginOffistePush(dict: proto.client_proto.ILoginOffsitePush) {
+        let interruptCallback = () => {
+            
+            fw.scene.changePlazaUpdate();
+        }
+        app.gameManager.setServerId(0)
+        app.gameManager.setRoomId(0)
+        /**关闭登录计时器 */
+        this.stopLoginingTimer()
+        this.closeConnect();
+        app.popup.showTip({
+            title: `系统通知`,
+            text: `您的账号在别的地方登录,请退出重进`,
+            btnList: [
+                {
+                    text: `确定`,
+                    styleId: 3,
+                    callback: interruptCallback,
+                },
+            ],
+            closeCallback: interruptCallback,
+        });
     }
 
     checkRegLogin() {

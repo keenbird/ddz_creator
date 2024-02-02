@@ -27,6 +27,7 @@ $root.client_proto = (function() {
      * @property {number} LSMI_LOGIN_REQ=1 LSMI_LOGIN_REQ value
      * @property {number} LSMI_LOGIN_RESP=2 LSMI_LOGIN_RESP value
      * @property {number} LSMI_LOGIN_ATTR_NTF=3 LSMI_LOGIN_ATTR_NTF value
+     * @property {number} LSMI_LOGIN_OFFSITE_PUSH=4 LSMI_LOGIN_OFFSITE_PUSH value
      */
     client_proto.LOGIN_SUB_MSG_ID = (function() {
         var valuesById = {}, values = Object.create(valuesById);
@@ -34,6 +35,7 @@ $root.client_proto = (function() {
         values[valuesById[1] = "LSMI_LOGIN_REQ"] = 1;
         values[valuesById[2] = "LSMI_LOGIN_RESP"] = 2;
         values[valuesById[3] = "LSMI_LOGIN_ATTR_NTF"] = 3;
+        values[valuesById[4] = "LSMI_LOGIN_OFFSITE_PUSH"] = 4;
         return values;
     })();
 
@@ -70,6 +72,7 @@ $root.client_proto = (function() {
          * @property {string|null} [channel] LoginReq channel
          * @property {string|null} [packageName] LoginReq packageName
          * @property {string|null} [deviceId] LoginReq deviceId
+         * @property {number|null} [versionInt] LoginReq versionInt
          */
 
         /**
@@ -160,6 +163,14 @@ $root.client_proto = (function() {
         LoginReq.prototype.deviceId = "";
 
         /**
+         * LoginReq versionInt.
+         * @member {number} versionInt
+         * @memberof client_proto.LoginReq
+         * @instance
+         */
+        LoginReq.prototype.versionInt = 0;
+
+        /**
          * Creates a new LoginReq instance using the specified properties.
          * @function create
          * @memberof client_proto.LoginReq
@@ -201,6 +212,8 @@ $root.client_proto = (function() {
                 writer.uint32(/* id 8, wireType 2 =*/66).string(message.packageName);
             if (message.deviceId != null && Object.hasOwnProperty.call(message, "deviceId"))
                 writer.uint32(/* id 9, wireType 2 =*/74).string(message.deviceId);
+            if (message.versionInt != null && Object.hasOwnProperty.call(message, "versionInt"))
+                writer.uint32(/* id 10, wireType 0 =*/80).int32(message.versionInt);
             return writer;
         };
 
@@ -271,6 +284,10 @@ $root.client_proto = (function() {
                         message.deviceId = reader.string();
                         break;
                     }
+                case 10: {
+                        message.versionInt = reader.int32();
+                        break;
+                    }
                 default:
                     reader.skipType(tag & 7);
                     break;
@@ -333,6 +350,9 @@ $root.client_proto = (function() {
             if (message.deviceId != null && message.hasOwnProperty("deviceId"))
                 if (!$util.isString(message.deviceId))
                     return "deviceId: string expected";
+            if (message.versionInt != null && message.hasOwnProperty("versionInt"))
+                if (!$util.isInteger(message.versionInt))
+                    return "versionInt: integer expected";
             return null;
         };
 
@@ -366,6 +386,8 @@ $root.client_proto = (function() {
                 message.packageName = String(object.packageName);
             if (object.deviceId != null)
                 message.deviceId = String(object.deviceId);
+            if (object.versionInt != null)
+                message.versionInt = object.versionInt | 0;
             return message;
         };
 
@@ -392,6 +414,7 @@ $root.client_proto = (function() {
                 object.channel = "";
                 object.packageName = "";
                 object.deviceId = "";
+                object.versionInt = 0;
             }
             if (message.loginType != null && message.hasOwnProperty("loginType"))
                 object.loginType = message.loginType;
@@ -411,6 +434,8 @@ $root.client_proto = (function() {
                 object.packageName = message.packageName;
             if (message.deviceId != null && message.hasOwnProperty("deviceId"))
                 object.deviceId = message.deviceId;
+            if (message.versionInt != null && message.hasOwnProperty("versionInt"))
+                object.versionInt = message.versionInt;
             return object;
         };
 
@@ -1135,6 +1160,247 @@ $root.client_proto = (function() {
         };
 
         return LoginAttrNtf;
+    })();
+
+    client_proto.LoginOffsitePush = (function() {
+
+        /**
+         * Properties of a LoginOffsitePush.
+         * @memberof client_proto
+         * @interface ILoginOffsitePush
+         * @property {string|null} [loginIp] LoginOffsitePush loginIp
+         * @property {number|Long|null} [loginTime] LoginOffsitePush loginTime
+         */
+
+        /**
+         * Constructs a new LoginOffsitePush.
+         * @memberof client_proto
+         * @classdesc Represents a LoginOffsitePush.
+         * @implements ILoginOffsitePush
+         * @constructor
+         * @param {client_proto.ILoginOffsitePush=} [properties] Properties to set
+         */
+        function LoginOffsitePush(properties) {
+            if (properties)
+                for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                    if (properties[keys[i]] != null)
+                        this[keys[i]] = properties[keys[i]];
+        }
+
+        /**
+         * LoginOffsitePush loginIp.
+         * @member {string} loginIp
+         * @memberof client_proto.LoginOffsitePush
+         * @instance
+         */
+        LoginOffsitePush.prototype.loginIp = "";
+
+        /**
+         * LoginOffsitePush loginTime.
+         * @member {number|Long} loginTime
+         * @memberof client_proto.LoginOffsitePush
+         * @instance
+         */
+        LoginOffsitePush.prototype.loginTime = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+
+        /**
+         * Creates a new LoginOffsitePush instance using the specified properties.
+         * @function create
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {client_proto.ILoginOffsitePush=} [properties] Properties to set
+         * @returns {client_proto.LoginOffsitePush} LoginOffsitePush instance
+         */
+        LoginOffsitePush.create = function create(properties) {
+            return new LoginOffsitePush(properties);
+        };
+
+        /**
+         * Encodes the specified LoginOffsitePush message. Does not implicitly {@link client_proto.LoginOffsitePush.verify|verify} messages.
+         * @function encode
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {client_proto.ILoginOffsitePush} message LoginOffsitePush message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        LoginOffsitePush.encode = function encode(message, writer) {
+            if (!writer)
+                writer = $Writer.create();
+            if (message.loginIp != null && Object.hasOwnProperty.call(message, "loginIp"))
+                writer.uint32(/* id 1, wireType 2 =*/10).string(message.loginIp);
+            if (message.loginTime != null && Object.hasOwnProperty.call(message, "loginTime"))
+                writer.uint32(/* id 2, wireType 0 =*/16).int64(message.loginTime);
+            return writer;
+        };
+
+        /**
+         * Encodes the specified LoginOffsitePush message, length delimited. Does not implicitly {@link client_proto.LoginOffsitePush.verify|verify} messages.
+         * @function encodeDelimited
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {client_proto.ILoginOffsitePush} message LoginOffsitePush message or plain object to encode
+         * @param {$protobuf.Writer} [writer] Writer to encode to
+         * @returns {$protobuf.Writer} Writer
+         */
+        LoginOffsitePush.encodeDelimited = function encodeDelimited(message, writer) {
+            return this.encode(message, writer).ldelim();
+        };
+
+        /**
+         * Decodes a LoginOffsitePush message from the specified reader or buffer.
+         * @function decode
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @param {number} [length] Message length if known beforehand
+         * @returns {client_proto.LoginOffsitePush} LoginOffsitePush
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        LoginOffsitePush.decode = function decode(reader, length) {
+            if (!(reader instanceof $Reader))
+                reader = $Reader.create(reader);
+            var end = length === undefined ? reader.len : reader.pos + length, message = new $root.client_proto.LoginOffsitePush();
+            while (reader.pos < end) {
+                var tag = reader.uint32();
+                switch (tag >>> 3) {
+                case 1: {
+                        message.loginIp = reader.string();
+                        break;
+                    }
+                case 2: {
+                        message.loginTime = reader.int64();
+                        break;
+                    }
+                default:
+                    reader.skipType(tag & 7);
+                    break;
+                }
+            }
+            return message;
+        };
+
+        /**
+         * Decodes a LoginOffsitePush message from the specified reader or buffer, length delimited.
+         * @function decodeDelimited
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+         * @returns {client_proto.LoginOffsitePush} LoginOffsitePush
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        LoginOffsitePush.decodeDelimited = function decodeDelimited(reader) {
+            if (!(reader instanceof $Reader))
+                reader = new $Reader(reader);
+            return this.decode(reader, reader.uint32());
+        };
+
+        /**
+         * Verifies a LoginOffsitePush message.
+         * @function verify
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {Object.<string,*>} message Plain object to verify
+         * @returns {string|null} `null` if valid, otherwise the reason why it is not
+         */
+        LoginOffsitePush.verify = function verify(message) {
+            if (typeof message !== "object" || message === null)
+                return "object expected";
+            if (message.loginIp != null && message.hasOwnProperty("loginIp"))
+                if (!$util.isString(message.loginIp))
+                    return "loginIp: string expected";
+            if (message.loginTime != null && message.hasOwnProperty("loginTime"))
+                if (!$util.isInteger(message.loginTime) && !(message.loginTime && $util.isInteger(message.loginTime.low) && $util.isInteger(message.loginTime.high)))
+                    return "loginTime: integer|Long expected";
+            return null;
+        };
+
+        /**
+         * Creates a LoginOffsitePush message from a plain object. Also converts values to their respective internal types.
+         * @function fromObject
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {Object.<string,*>} object Plain object
+         * @returns {client_proto.LoginOffsitePush} LoginOffsitePush
+         */
+        LoginOffsitePush.fromObject = function fromObject(object) {
+            if (object instanceof $root.client_proto.LoginOffsitePush)
+                return object;
+            var message = new $root.client_proto.LoginOffsitePush();
+            if (object.loginIp != null)
+                message.loginIp = String(object.loginIp);
+            if (object.loginTime != null)
+                if ($util.Long)
+                    (message.loginTime = $util.Long.fromValue(object.loginTime)).unsigned = false;
+                else if (typeof object.loginTime === "string")
+                    message.loginTime = parseInt(object.loginTime, 10);
+                else if (typeof object.loginTime === "number")
+                    message.loginTime = object.loginTime;
+                else if (typeof object.loginTime === "object")
+                    message.loginTime = new $util.LongBits(object.loginTime.low >>> 0, object.loginTime.high >>> 0).toNumber();
+            return message;
+        };
+
+        /**
+         * Creates a plain object from a LoginOffsitePush message. Also converts values to other types if specified.
+         * @function toObject
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {client_proto.LoginOffsitePush} message LoginOffsitePush
+         * @param {$protobuf.IConversionOptions} [options] Conversion options
+         * @returns {Object.<string,*>} Plain object
+         */
+        LoginOffsitePush.toObject = function toObject(message, options) {
+            if (!options)
+                options = {};
+            var object = {};
+            if (options.defaults) {
+                object.loginIp = "";
+                if ($util.Long) {
+                    var long = new $util.Long(0, 0, false);
+                    object.loginTime = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                } else
+                    object.loginTime = options.longs === String ? "0" : 0;
+            }
+            if (message.loginIp != null && message.hasOwnProperty("loginIp"))
+                object.loginIp = message.loginIp;
+            if (message.loginTime != null && message.hasOwnProperty("loginTime"))
+                if (typeof message.loginTime === "number")
+                    object.loginTime = options.longs === String ? String(message.loginTime) : message.loginTime;
+                else
+                    object.loginTime = options.longs === String ? $util.Long.prototype.toString.call(message.loginTime) : options.longs === Number ? new $util.LongBits(message.loginTime.low >>> 0, message.loginTime.high >>> 0).toNumber() : message.loginTime;
+            return object;
+        };
+
+        /**
+         * Converts this LoginOffsitePush to JSON.
+         * @function toJSON
+         * @memberof client_proto.LoginOffsitePush
+         * @instance
+         * @returns {Object.<string,*>} JSON object
+         */
+        LoginOffsitePush.prototype.toJSON = function toJSON() {
+            return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+        };
+
+        /**
+         * Gets the default type url for LoginOffsitePush
+         * @function getTypeUrl
+         * @memberof client_proto.LoginOffsitePush
+         * @static
+         * @param {string} [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns {string} The default type url
+         */
+        LoginOffsitePush.getTypeUrl = function getTypeUrl(typeUrlPrefix) {
+            if (typeUrlPrefix === undefined) {
+                typeUrlPrefix = "type.googleapis.com";
+            }
+            return typeUrlPrefix + "/client_proto.LoginOffsitePush";
+        };
+
+        return LoginOffsitePush;
     })();
 
     /**
@@ -7781,7 +8047,8 @@ export namespace client_proto {
         LSMI_LOGIN_NULL = 0,
         LSMI_LOGIN_REQ = 1,
         LSMI_LOGIN_RESP = 2,
-        LSMI_LOGIN_ATTR_NTF = 3
+        LSMI_LOGIN_ATTR_NTF = 3,
+        LSMI_LOGIN_OFFSITE_PUSH = 4
     }
 
     /** LOGIN_TYPE_DEF enum. */
@@ -7821,6 +8088,9 @@ export namespace client_proto {
 
         /** LoginReq deviceId */
         deviceId?: (string|null);
+
+        /** LoginReq versionInt */
+        versionInt?: (number|null);
     }
 
     /** Represents a LoginReq. */
@@ -7858,6 +8128,9 @@ export namespace client_proto {
 
         /** LoginReq deviceId. */
         public deviceId: string;
+
+        /** LoginReq versionInt. */
+        public versionInt: number;
 
         /**
          * Creates a new LoginReq instance using the specified properties.
@@ -8185,6 +8458,109 @@ export namespace client_proto {
 
         /**
          * Gets the default type url for LoginAttrNtf
+         * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
+         * @returns The default type url
+         */
+        public static getTypeUrl(typeUrlPrefix?: string): string;
+    }
+
+    /** Properties of a LoginOffsitePush. */
+    interface ILoginOffsitePush {
+
+        /** LoginOffsitePush loginIp */
+        loginIp?: (string|null);
+
+        /** LoginOffsitePush loginTime */
+        loginTime?: (number|Long|null);
+    }
+
+    /** Represents a LoginOffsitePush. */
+    class LoginOffsitePush implements ILoginOffsitePush {
+
+        /**
+         * Constructs a new LoginOffsitePush.
+         * @param [properties] Properties to set
+         */
+        constructor(properties?: client_proto.ILoginOffsitePush);
+
+        /** LoginOffsitePush loginIp. */
+        public loginIp: string;
+
+        /** LoginOffsitePush loginTime. */
+        public loginTime: (number|Long);
+
+        /**
+         * Creates a new LoginOffsitePush instance using the specified properties.
+         * @param [properties] Properties to set
+         * @returns LoginOffsitePush instance
+         */
+        public static create(properties?: client_proto.ILoginOffsitePush): client_proto.LoginOffsitePush;
+
+        /**
+         * Encodes the specified LoginOffsitePush message. Does not implicitly {@link client_proto.LoginOffsitePush.verify|verify} messages.
+         * @param message LoginOffsitePush message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encode(message: client_proto.ILoginOffsitePush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Encodes the specified LoginOffsitePush message, length delimited. Does not implicitly {@link client_proto.LoginOffsitePush.verify|verify} messages.
+         * @param message LoginOffsitePush message or plain object to encode
+         * @param [writer] Writer to encode to
+         * @returns Writer
+         */
+        public static encodeDelimited(message: client_proto.ILoginOffsitePush, writer?: $protobuf.Writer): $protobuf.Writer;
+
+        /**
+         * Decodes a LoginOffsitePush message from the specified reader or buffer.
+         * @param reader Reader or buffer to decode from
+         * @param [length] Message length if known beforehand
+         * @returns LoginOffsitePush
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): client_proto.LoginOffsitePush;
+
+        /**
+         * Decodes a LoginOffsitePush message from the specified reader or buffer, length delimited.
+         * @param reader Reader or buffer to decode from
+         * @returns LoginOffsitePush
+         * @throws {Error} If the payload is not a reader or valid buffer
+         * @throws {$protobuf.util.ProtocolError} If required fields are missing
+         */
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): client_proto.LoginOffsitePush;
+
+        /**
+         * Verifies a LoginOffsitePush message.
+         * @param message Plain object to verify
+         * @returns `null` if valid, otherwise the reason why it is not
+         */
+        public static verify(message: { [k: string]: any }): (string|null);
+
+        /**
+         * Creates a LoginOffsitePush message from a plain object. Also converts values to their respective internal types.
+         * @param object Plain object
+         * @returns LoginOffsitePush
+         */
+        public static fromObject(object: { [k: string]: any }): client_proto.LoginOffsitePush;
+
+        /**
+         * Creates a plain object from a LoginOffsitePush message. Also converts values to other types if specified.
+         * @param message LoginOffsitePush
+         * @param [options] Conversion options
+         * @returns Plain object
+         */
+        public static toObject(message: client_proto.LoginOffsitePush, options?: $protobuf.IConversionOptions): { [k: string]: any };
+
+        /**
+         * Converts this LoginOffsitePush to JSON.
+         * @returns JSON object
+         */
+        public toJSON(): { [k: string]: any };
+
+        /**
+         * Gets the default type url for LoginOffsitePush
          * @param [typeUrlPrefix] your custom typeUrlPrefix(default "type.googleapis.com")
          * @returns The default type url
          */
