@@ -34,7 +34,7 @@ export class main_Landlord extends main_GameBase {
     mDragCardNode: ccNode;
     mChoseCardNode: ccNode;
     m_vecPopCache: any[]= [];
-    m_RegionData :any;
+    m_RegionData :number[] = [0,0];
     callPointTimes: number = 0; //已经叫地主的次数 大于3等于已经第二轮
     schedule_updateTime:any;
     m_SearchResult:any;   //搜索可出的牌型
@@ -763,7 +763,7 @@ export class main_Landlord extends main_GameBase {
                     //弃牌阶段禁用 滑动出牌
                     if  (self.getGameStatus() == yx.config.GameState.PLAY){
                         //区间搜索出牌
-					    // self.regionSearch(cardData)
+					    self.regionSearch(cardData)
                     }else{
                         var pSelectedCard = [cardData]
                         var nSelectedLen = pSelectedCard.length
@@ -809,7 +809,7 @@ export class main_Landlord extends main_GameBase {
                 }
                 var tempCache = yx.func.cardDatasFromVector(self.m_vecPopCache)
                
-                var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length,yx.internet.m_MaxCardInfo.nType)
+                var cbTempCardData = self.logic.resortZOrderForOutCard(tempCache, tempCache.length)
                 tempCache = []
                 if(cbTempCardData.length != 0){
                     // var maxCardInfo = yx.internet.m_MaxCardInfo
@@ -1228,11 +1228,11 @@ export class main_Landlord extends main_GameBase {
 
     markRegionCardData(data){
         if(data == 0x00){
-            this.m_RegionData = {}
+            this.m_RegionData = [0,0]
         }else{
             var  size = this.m_vecPopCache.length
             if  (this.m_vecPopCache.length == 1 ||  this.m_vecPopCache.length == 2){
-                this.m_RegionData[size] = data
+                this.m_RegionData[size-1] = data
             }
         }
     }
@@ -1256,6 +1256,7 @@ export class main_Landlord extends main_GameBase {
                 }
             }
          }
+         this.clearPopCardCache()
     }
 
     displayHandsAnalyseTips(isShow:boolean, type?:number){
@@ -1274,7 +1275,7 @@ export class main_Landlord extends main_GameBase {
     getMaxCardDataInfo(){
         return  yx.internet.m_MaxCardInfo
     }
-
+    //滑动搜索
     slidingSearch(){
         let self = this
         //获取选中扑克的数据
@@ -1342,7 +1343,7 @@ export class main_Landlord extends main_GameBase {
             var selectCardType = this.logic.GetCardType(pSelectedCard,nSelectedLen)
 		    //只有在划的牌不能组成牌型时再去搜索
             if(selectCardType == yx.config.OutCardType.Invalid){
-                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,true, yx.internet.m_MaxCardInfo.nType)
+                var [bFind,searchResult,cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_Sliding,false, yx.internet.m_MaxCardInfo.nType)
                 if (cbHitCount > 0 ){
                     this.putDownAllHandCard()
                     //有具体的压牌牌型，按最小能压的来出
@@ -1352,8 +1353,203 @@ export class main_Landlord extends main_GameBase {
         }
         this.m_vecSelectedCache = []
     }
-    
-    
+    //区间搜索
+    regionSearch(cbCurrentCardData:number){
+        let self = this
+        this.updateDisplayOfOutCardBtn()
+        if(yx.internet.m_MaxCardInfo.nType == -1){
+            console.log("LH1",yx.func.cardDatasFromVector(this.m_vecPopCache))
+            if(this.m_vecPopCache.length == 1 || this.m_vecPopCache.length == 2){
+                this.markRegionCardData(cbCurrentCardData)
+            }
+            if(this.m_vecPopCache.length == 2){
+                console.log("LH2",this.m_RegionData[0],this.m_RegionData[1])
+                if(this.m_RegionData[0] != 0x00 && this.m_RegionData[1] != 0x00){
+                    var cbHandsData = yx.func.cardDatasFromVector(this.m_HandCardNode)
+                    var cbHandsLen = cbHandsData.length
+
+                    var cbRegionData = this.logic.GetRegionData(this.m_RegionData[0], this.m_RegionData[1], cbHandsData, cbHandsLen)
+                    var cbRegionLen = cbRegionData.length
+
+                    var pFuncOfPopCards = function(cbCardData:number[], cbCardCount:number){
+                        self.putDownAllHandCard()
+                        yx.func.popCardsByData(cbCardData, cbCardCount,self.m_HandCardNode,null, self.logic.getLaiZiCardData())
+                        self.updateDisplayOfOutCardBtn()
+                    }
+
+                    var vecSortUnit = []
+                    var vecResultData = []
+
+                    //优先级配置（值越小，优先级越高）
+                    var arrTypePriority = [
+                        yx.config.OutCardType.Sequence_Of_Pairs,
+                        yx.config.OutCardType.Sequence,
+                        yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
+                        yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards,
+                        yx.config.OutCardType.Quadplex_Attached_Two_Pairs,
+                        yx.config.OutCardType.Quadplex_Attached_Two_Cards,
+                        yx.config.OutCardType.Sequence_Of_Triplets,
+                        yx.config.OutCardType.Triplet_Attached_Pair,
+                        yx.config.OutCardType.Triplet_Attached_Card,
+                        yx.config.OutCardType.Triplet,
+                        yx.config.OutCardType.Bomb,
+                        yx.config.OutCardType.Rocket,
+                        yx.config.OutCardType.Double
+                    ]
+
+                    
+                    var [bFind, regionResult, regionResultCount] = this.logic.RegionSearch(cbHandsData,cbHandsLen,this.m_RegionData[0], this.m_RegionData[1], yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount,yx.internet.m_MaxCardInfo.nType)
+                    
+                    if(bFind){
+                        for (let i=0;i<regionResultCount;i++ ){
+                            var tag = "RegionSearch"
+                            var cardType = this.logic.GetCardType(regionResult[i].cbResultCard, regionResult[i].cbCardCount)
+                            var map = {
+                                first : i,
+                                second : cardType
+                            }
+                            vecSortUnit.push( map)
+
+                            var vec = []
+                            for (let j=0;j<regionResult[i].cbCardCount;j++ ){
+                                vec.push(regionResult[i].cbResultCard[j])
+                            }
+                            vecResultData.push(vec)
+                        }
+
+                        var priorityOfType = function(cardType){
+                            for (let i=0;i<arrTypePriority.length;i++ ){
+                                if (arrTypePriority[i] == cardType ){
+                                    return i
+                                }
+                            }
+                            return -1
+                        }
+
+                        var sortFunc = function(lhs, rhs) {
+                            var lhsIDX = lhs.first;
+                            var lhsType = lhs.second;
+                        
+                            var rhsIDX = rhs.first;
+                            var rhsType = rhs.second;
+                        
+                            if (priorityOfType(lhsType) < priorityOfType(rhsType)) {
+                                return -1;
+                            } else if (priorityOfType(lhsType) > priorityOfType(rhsType)) {
+                                return 1;
+                            } else {
+                                var lHeadLogicValue = this.logic.GetCardLogicValue(vecResultData[lhsIDX][0]);
+                                var rHeadLogicValue = this.logic.GetCardLogicValue(vecResultData[rhsIDX][0]);
+                        
+                                if (lHeadLogicValue < rHeadLogicValue) {
+                                    return -1;
+                                } else if (lHeadLogicValue > rHeadLogicValue) {
+                                    return 1;
+                                } else {
+                                    return 0;
+                                }
+                            }
+                        };
+                        
+                        vecSortUnit.sort(sortFunc.bind(this))
+
+                        var bestResult = vecSortUnit[0]
+                        var IDX = bestResult.first
+                        var Type = bestResult.second
+                        pFuncOfPopCards(regionResult[IDX].cbResultCard, regionResult[IDX].cbCardCount)
+                    }
+                }
+                this.markRegionCardData(0x00)
+            }
+        }else{
+            //TODO 有最大牌，压牌，此处进行半区间搜索
+            var cbHandsData = yx.func.cardDatasFromVector(this.m_HandCardNode)
+            var cbHandsLen = cbHandsData.length  
+            
+            //分析手牌扑克
+            var analyseResult = this.logic.AnalyzeCardData(cbHandsData, cbHandsLen) //非拆牌结果
+            var unorderResult = this.logic.AnalyzeCardDataUnOrder(analyseResult) //拆牌结果
+            var outcardType = yx.internet.m_MaxCardInfo.nType
+            if(outcardType == yx.config.OutCardType.Single){
+                if(this.m_vecPopCache.length <= 1){
+                    //TODO 没有弹起的扑克
+                    var cbCardCount = 1
+                    var cbCardData = [0]
+                    var nCount = 0
+
+                    nCount = unorderResult.cbSingleCount * 1
+                    for (let i=0;i<nCount;i++){
+                        if (cbCurrentCardData == unorderResult.cbSingleCardData[i] ){
+                            var idx = Math.floor(i / 1)
+                            cbCardData[0] = unorderResult.cbSingleCardData[idx]
+                            break
+                        }
+                    }
+                    if(cbCardData[0] != 0){
+                        if (this.logic.GetCardLogicValue(cbCardData[0]) > this.logic.GetCardLogicValue(yx.internet.m_MaxCardInfo.cardData[0]) ){
+                 
+                            this.putDownAllHandCard()
+                            yx.func.popCardsByData(cbCardData, cbCardCount,self.m_HandCardNode,null, this.logic.getLaiZiCardData())
+                        }
+                    }
+                }
+            }else if(outcardType == yx.config.OutCardType.Double){
+                if(this.m_vecPopCache.length <= 1){
+                    //TODO 没有弹起的扑克
+                    var cbCardCount = 2
+                    var cbCardData = [0]
+                    var nCount = unorderResult.cbDoubleCount * 2
+
+                    nCount = unorderResult.cbSingleCount * 1
+                    for (let i=0;i<nCount;i++){
+                        if (cbCurrentCardData == unorderResult.cbDoubleCardData[i] ){
+                            var idx = i % 2 == 0 ? i : i-1
+                            cbCardData[0] = unorderResult.cbDoubleCardData[idx]
+                            cbCardData[1] = unorderResult.cbDoubleCardData[idx+1]
+                            break
+                        }
+                    }
+                    if(cbCardData[0] != 0){
+                        if (this.logic.GetCardLogicValue(cbCardData[0]) > this.logic.GetCardLogicValue(yx.internet.m_MaxCardInfo.cardData[0]) ){
+                 
+                            this.putDownAllHandCard()
+                            yx.func.popCardsByData(cbCardData, cbCardCount,self.m_HandCardNode,null, this.logic.getLaiZiCardData())
+                        }
+                    }
+                }
+            }else if(outcardType == yx.config.OutCardType.Triplet){
+                if(this.m_vecPopCache.length <= 1){
+                    //TODO 没有弹起的扑克
+                    var cbCardCount = 3
+                    var cbCardData:number[] = []
+                    var nCount = 0
+
+                    nCount = unorderResult.cbSingleCount * 1
+                    for (let i=0;i<nCount;i++){
+                        if (cbCurrentCardData == unorderResult.cbTripleCardData[i] ){
+                            var idx = Math.floor(i/3) * 3 
+                            cbCardData[0] = unorderResult.cbTripleCardData[idx]
+                            cbCardData[1] = unorderResult.cbTripleCardData[idx+1]
+                            cbCardData[2] = unorderResult.cbTripleCardData[idx+2]
+                            break
+                        }
+                    }
+                    if(cbCardData[0] != 0){
+                        if (this.logic.GetCardLogicValue(cbCardData[0]) > this.logic.GetCardLogicValue(yx.internet.m_MaxCardInfo.cardData[0]) ){
+                 
+                            this.putDownAllHandCard()
+                            yx.func.popCardsByData(cbCardData, cbCardCount,self.m_HandCardNode,null, this.logic.getLaiZiCardData())
+                        }
+                    }
+                }
+            }else if(outcardType == yx.config.OutCardType.Triplet_Attached_Card){
+
+            }else if(outcardType == yx.config.OutCardType.Triplet_Attached_Pair){
+
+            }
+            this.updateDisplayOfOutCardBtn()
+        }
+    }
     getGameStatus() : number{
         return yx.internet.nGameState
     }
@@ -1372,11 +1568,13 @@ export class main_Landlord extends main_GameBase {
 
     updatePopCache(){
         this.m_vecPopCache = []
+        console.log("LH3",this.m_HandCardNode.length,yx.func.cardDatasFromVector(this.m_vecPopCache))
         for(var i=0;i<this.m_HandCardNode.length;i++){
             if(this.m_HandCardNode[i].getComponent("card_Landlord").getStatusPop() == true){
                 this.m_vecPopCache.push(this.m_HandCardNode[i])
             }
         }
+        console.log("LH4",yx.func.cardDatasFromVector(this.m_vecPopCache))
     }
 
     resetCardsPosition(nCardCount:number){
@@ -1824,7 +2022,7 @@ export class main_Landlord extends main_GameBase {
                             var nSelectedLen = pSelectedCard.length
                                                    
                             var bFind : boolean
-                            [bFind,this.m_SearchResult,this.m_cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_FullRegion,true, yx.internet.m_MaxCardInfo.nType)
+                            [bFind,this.m_SearchResult,this.m_cbHitCount] = this.logic.SearchOutCard(pSelectedCard, nSelectedLen, yx.internet.m_MaxCardInfo.cardData, yx.internet.m_MaxCardInfo.cardCount, yx.config.SearchMode.SearchMode_FullRegion,false, yx.internet.m_MaxCardInfo.nType)
                             this.m_cbTipIndex = 0
                             if(this.m_cbHitCount > 0){
                                 this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_CanAfford,data.countdown,null)
@@ -1998,6 +2196,7 @@ export class main_Landlord extends main_GameBase {
         let logicChair = yx.func.getClientChairIDByServerChairID(data.outchair)
         if(logicChair == 0){
             this.resetActionBar()
+            this.putDownAllHandCard()
         }else{
             this.player.setPlayerTimerVisible(data.outchair,false)
         }

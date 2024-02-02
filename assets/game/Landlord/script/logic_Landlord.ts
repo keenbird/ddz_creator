@@ -485,6 +485,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 	getLaiZiCardData():number{
 		return 0
 	}
+	//搜索提示牌型
 	SearchOutCard(cbHandCardData:number[],cbHandCardCount:number,cbTurnCardData:number[],cbTurnCardCount:number,mode:number,bSearchType:any,SearchOutCardType:number):[boolean,any[],number]{
 		let self = this
 		if (cbHandCardCount == 0) {
@@ -516,7 +517,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		//--计算手牌癞子数量
 		var cbLaiZiCount = 0
 		
-		var cbTurnOutType = bSearchType == true ? SearchOutCardType : this.GetCardType(cbOutCardData,cbOutCardCount)
+		var cbTurnOutType = SearchOutCardType ? SearchOutCardType : this.GetCardType(cbOutCardData,cbOutCardCount)
 		//-- 找大于连炸的牌
 		if(cbTurnOutType == yx.config.OutCardType.serial_bomb){
 			var cbLogicValue = this.GetCardLogicValue(cbOutCardData[0])
@@ -557,23 +558,24 @@ export class logic_Landlord extends (fw.FWComponent) {
 						for(var outIDX=1;outIDX <=rs.cbSingleCount;outIDX++){
 							var curSequenceLen = 1
                         	startIDX = outIDX
-							for(var innerIDX=outIDX;innerIDX <=rs.rs.cbSingleCount - 1;innerIDX++){
-								var lastLogicValue = this.GetCardLogicValue(rs.cbSingleCardData[innerIDX-1])
-                            	var nextLogicValue = this.GetCardLogicValue(rs.cbSingleCardData[innerIDX])
+							for(var innerIDX=outIDX;innerIDX <=rs.cbSingleCount - 1;innerIDX++){
+								var lastLogicValue = self.GetCardLogicValue(rs.cbSingleCardData[innerIDX-1])
+                            	var nextLogicValue = self.GetCardLogicValue(rs.cbSingleCardData[innerIDX])
+								//连续
+								if(lastLogicValue - 1 != nextLogicValue || lastLogicValue >= self.GetCardLogicValue(0x02)){
+									break
+								}else{
+									curSequenceLen = curSequenceLen + 1
+								}
 							}
-							//连续
-							if(lastLogicValue - 1 != nextLogicValue || lastLogicValue >= this.GetCardLogicValue(0x02)){
-								break
-							}else{
-								curSequenceLen = curSequenceLen + 1
+							if(curSequenceLen >= minSequenceLen && curSequenceLen >= maxSequenceLen){
+								maxSequenceLen = curSequenceLen
+								vec[0] = maxSequenceLen     //记录最大连数
+								vec[1] = startIDX * 1       //记录最大连数的起始位置
 							}
                             
 						}
-						if(curSequenceLen >= minSequenceLen && curSequenceLen >= maxSequenceLen){
-							maxSequenceLen = curSequenceLen
-                            vec[0] = maxSequenceLen     //记录最大连数
-                            vec[1] = startIDX * 1       //记录最大连数的起始位置
-						}
+						
 					}else{
 						vec[0] = 0
                     	vec[1] = 0
@@ -594,7 +596,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 					var offset = vecInfo[1]
 					if(len >= minSequenceLen){
 						var baseData = []
-						for(var i=offset;i<=offset+len;i++){
+						for(var i=offset;i<offset+len;i++){
 							baseData.push(unorderResult.cbSingleCardData[i-1])
 						}
 						if(this.GetCardLogicValue(baseData[0]) >= this.GetCardLogicValue(0x02)){
@@ -1576,6 +1578,138 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return [true,hitResult,cbHitCardCount-1]
 	}	
+	// 获取区间数据
+	// cbStartCardData		起始扑克
+	// cbEndCardData		结束扑克
+	// cbHandCardData		手牌数据
+	// cbHandCardCount		手牌张数
+	GetRegionData(cbStartCardData:number,cbEndCardData:number,cbHandCardData:number[],cbHandCardCount:number):[number[],number]{
+		var cbRegionData = []
+		var cbRegionCount = 0
+
+		var _startIDX = 0
+		var _endIDX = 0 
+		//查找起始和结束的索引
+		for (let i=0;i<cbHandCardData.length;i++ ){
+			let v = cbHandCardData[i]
+			if (v == cbStartCardData ){
+				_startIDX = i
+			}
+			if (v == cbEndCardData ){
+				_endIDX = i
+			}
+		}
+
+		var direction = _endIDX - _startIDX
+		var distance = Math.abs(direction)
+
+		//获得区间扑克值
+		var regionData = []
+		if (direction > 0 ){
+			for (let i=_startIDX;i<=_startIDX+distance;i++){
+				regionData.push(cbHandCardData[i])
+			}
+		}else{
+			for (let i=_endIDX;i<=_endIDX+distance;i++){
+				regionData.push(cbHandCardData[i])
+			}
+			
+		}
+  
+		for (let i=0;i<regionData.length;i++){
+			cbRegionData.push(regionData[i])
+		}
+    	cbRegionCount = distance
+
+    	return [cbRegionData,cbRegionData.length]
+	}
+	/*[[
+		@brief 区间搜索出牌(比如点了3，7，自动弹起后面34567等等)
+		@param cbHandCardData		手牌数据
+		@param cbHandCardCount		手牌张数
+		@param cbRegionHead			区间头
+		@param cbRegionTail			区间尾
+		@param cbTurnCardData		上家出牌数据(牌序：大-->小)
+		@param cbTurnCardCount		出牌张数
+		@param hitResult			可以打出的结果
+		@param cbHitCount			记录结果次数
+	*/
+	RegionSearch(cbHandCardData:number[],cbHandCardCount:number,cbRegionHead:number,cbRegionTail:number,cbTurnCardData:number[],cbTurnCardCount:number,cbTurnCardtype:number):[boolean,any[],number]{
+		this.cbRegionHead = cbRegionHead
+    	this.cbRegionTail = cbRegionTail
+
+		var [cbRegionData,cbRegionLen] = this.GetRegionData(cbRegionHead,cbRegionTail,cbHandCardData,cbHandCardCount)
+		if(cbTurnCardCount == -1){
+			var bRect:boolean
+			var hitResult:any[]
+			var cbHitCount:number
+			[bRect,hitResult,cbHitCount] = this.SearchOutCard(cbRegionData,cbRegionLen,cbTurnCardData,cbTurnCardCount,yx.config.SearchMode.SearchMode_FullRegion,false,yx.config.OutCardType.Arbitrary)
+			if (cbHitCount == 0 ){
+				//TODO 区间未搜索到可出牌型，搜索完整手牌
+				[bRect,hitResult,cbHitCount] = this.SearchOutCard(cbHandCardData,cbHandCardCount,cbTurnCardData,cbTurnCardCount,yx.config.SearchMode.SearchMode_FullRegion,false,yx.config.OutCardType.Arbitrary)
+			}  
+			if ( cbHitCount > 0 && this.GetCardType(hitResult[0].cbResultCard,hitResult[0].cbCardCount) == yx.config.OutCardType.Sequence ){
+				var bFind = false
+				var cbBeginIdx =0 
+				var cbEndIdx = 0
+				for (let i=0;i<hitResult[0].cbCardCount;i++ ){
+					var bContainsHead = false
+					var bContainsTail = false
+					var j = i
+					while (j<hitResult[0].cbCardCount ){
+						if (this.GetCardLogicValue(hitResult[0].cbResultCard[j]) == this.GetCardLogicValue(this.cbRegionHead) ){
+							hitResult[0].cbResultCard[j] = this.cbRegionHead
+							bContainsHead = true
+						}
+						if (this.GetCardLogicValue(hitResult[0].cbResultCard[j]) == this.GetCardLogicValue(this.cbRegionTail) ){
+							hitResult[0].cbResultCard[j] = this.cbRegionTail
+							bContainsTail = true
+						}
+						if( bContainsHead == true && bContainsTail== true ){
+							bFind = true
+							break
+						}
+						j = j + 1
+					}
+					if (bFind == true ){
+						cbBeginIdx = i
+						cbEndIdx = j
+						break
+					}
+				}
+				if (bFind == true ){
+					var cbResult = []
+					for (let k=cbBeginIdx;k<=cbEndIdx;k++){
+						cbResult.push(hitResult[0].cbResultCard[k])
+					}
+					hitResult[0].cbResultCard = []
+					for (let i=0;i<cbResult.length;i++){
+						hitResult[0].cbResultCard.push(cbResult[i])
+					}
+					if (hitResult[0].cbResultCard.length <= 2 ){
+						hitResult[0].cbCardCount = hitResult[0].cbResultCard.length
+					}
+					
+					return [true,hitResult,cbHitCount]
+				}
+				return [false,hitResult,cbHitCount]
+			}   
+		}else{
+			//TODO 压上家的区间搜索
+			var bRect:boolean
+			var hitResult:any[]
+			var cbHitCount:number
+			[bRect,hitResult,cbHitCount] = this.SearchOutCard(cbRegionData,cbRegionLen,cbTurnCardData,cbTurnCardCount,yx.config.SearchMode.SearchMode_FullRegion,false,cbTurnCardtype)
+			if (cbHitCount == 0 ){
+				//TODO 区间未搜索到可出牌型，搜索完整手牌
+				[bRect,hitResult,cbHitCount] = this.SearchOutCard(cbHandCardData,cbHandCardCount,cbTurnCardData,cbTurnCardCount,yx.config.SearchMode.SearchMode_FullRegion,false,cbTurnCardtype)
+			}
+			if (cbHitCount > 0 ){
+				return [true,hitResult,cbHitCount ]
+			}
+			return [false,hitResult,cbHitCount]
+		}
+	}
 	//获取单双数据(全部单牌 全部对牌 飞机带最优单双 三张带最优单双 四张带最优单双)
 	GetCardsByTriplets(cbHandCardData:number[],cbHandCardCount:number,cbResultCard:number[],cbTurnLineCount:number,CardType:number,tOrder?:number):[number,number[]]{
 		var bGetAll = false
@@ -1911,7 +2045,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
     	return [true,cbHandCardData,cbHandCardCount]
 	}
-	AnalyzeCardDataUnOrder(orderResult:CardsAnalyseResult,order:number){
+	AnalyzeCardDataUnOrder(orderResult:CardsAnalyseResult,order?:number){
 		if(orderResult == null){
 			return
 		}
