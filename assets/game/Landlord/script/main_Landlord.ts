@@ -513,8 +513,8 @@ export class main_Landlord extends main_GameBase {
             app.popup.showToast("请至少选1张牌")
             return
         }
-        
-		cardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length ,yx.internet.m_MaxCardInfo.nType)
+        console.log("checkPopCard POP LEN :",tempCache.length)
+		cardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length )
 
         if(cardData.length != 0){
             var maxCardInfo = yx.internet.m_MaxCardInfo
@@ -1262,7 +1262,7 @@ export class main_Landlord extends main_GameBase {
         if(isShow){
             this.Items.node_no_card_bigger_than_others.active = true
             if(type == yx.config.HandsAnalyseTipType.HandsAnalyseTipType_NoAvaliableCard){
-                this.Items.nobiggerLabel.string = "没有大于大家的牌"
+                this.Items.nobiggerLabel.string = "没有大于上家的牌"
             }else if(type == yx.config.HandsAnalyseTipType.HandsAnalyseTipType_InvalidCard){
                 this.Items.nobiggerLabel.string = "不符合出牌规则"
             }
