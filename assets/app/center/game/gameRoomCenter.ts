@@ -196,7 +196,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
 
         let pActor = center.user.getActor()
         pActor.tableID = 1
-        pActor.chairID = 1
+        pActor.chairID = 0
         app.event.dispatchEvent({
             eventName: EVENT_ID.EVENT_PLAY_ACTOR_MATCH,
             data: pActor

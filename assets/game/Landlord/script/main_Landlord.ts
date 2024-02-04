@@ -196,16 +196,20 @@ export class main_Landlord extends main_GameBase {
             // }
             // this.didReceiveOutCard(data2)
             // this.scheduleOnce(function(){
-            //     let data:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //         outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            //         cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
-            //         outchair : 2
-            //     }
-            //     this.didReceiveOutCard(data)
-            // }, 2);
-            // this.scheduleOnce(function(){
+            //     // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
+            //     //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
+            //     //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
+            //     //     outchair : 2
+            //     // }
+            //     // this.didReceiveOutCard(data)
+            //     yx.internet.nSelfChairID = 0
+            //     this.player.initPlayer()
             //     this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23])
             // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23])
+            // this.showLastThreeCardAndMove([78,79,50],0,true)
+            // }, 2);
+            // this.scheduleOnce(function(){
+                
             // }, 4);
             // // this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13])
             // // this.didReceiveMingpai(2,[1,2,3,4,5,6,7,8,9,10,11,12,13])
@@ -333,13 +337,13 @@ export class main_Landlord extends main_GameBase {
     }
     //设置底牌倍数
     setBaseScorePool(beishu : number,isAni?:boolean){
-        this.Items.BMFont_MutipleValue.string = "" + beishu
+        this.Items.BMFont_MutipleValue.string =  beishu + "倍"
         if(isAni){
             this.loadBundleRes(fw.BundleConfig.Landlord.res[`ui/anim/ani_beishubianhua_0`], (res: Prefab) => {
                 let aniNode = instantiate(res);
                 if(!fw.isNull(aniNode)){
                     this.Items.BMFont_MutipleValue.addChild(aniNode)
-                    aniNode.Items["BitmapFontLabel_19"].string = "" + beishu
+                    aniNode.Items["BitmapFontLabel_19"].string = "" + beishu + "倍"
                     var tScale = 1
                     aniNode.scale = v3(tScale, tScale, tScale)
                     const a = aniNode.getComponent(Animation);
@@ -1121,10 +1125,11 @@ export class main_Landlord extends main_GameBase {
 
         const tScale = 1
         for(var i=0;i<cardData.length;i++){
-            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+            var card = this.getOneCardByData(cardData[i],yx.config.CardSizeType.CardSizeType_Public)
             card.setScale(new Vec3(tScale,tScale,tScale))
             mingpaiParent.addChild(card)
             card.setPosition(posVecs[i])
+            card.getComponent("card_Landlord").showMarkAsPublicCard(i==(cardData.length-1))
         }
     }
     //展示摊牌
@@ -1875,21 +1880,20 @@ export class main_Landlord extends main_GameBase {
         this.Items.node_showThreeNormal.active = isAni 
         let startPosArr = []
         let endPosArr = []
-        let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2,isLast:boolean)=>{
+        let showFun = (card:ccNode,bg:ccNode,baseBg:ccNode,endPos:Vec2,isLast:boolean,card_small:ccNode)=>{
             tween(card)
                 .hide()
                 .delay(0.4)
                 .show()
-                .to(0.4, { scale: new Vec3(1.25,1.25,1.25) })
+                .to(0.4, { scale: new Vec3(0.8,0.8,0.8) })
                 
                 .parallel(
-                    tween().to(0.5, { scale: new Vec3(0.90,0.90,0.90)}),
+                    tween().to(0.5, { scale: new Vec3(0.65,0.4,1)}),
                     tween().to(0.5, { position: new Vec3(endPos.x-2, endPos.y, 1) })
                 )
                 .call(() => {
-                    card.removeFromParent()
-                    baseBg.addChild(card)
-                    card.setPosition(-2,0)
+                    card.removeFromParent(true)
+                    card_small.active = true
                 })
                 .start()
             
@@ -1918,22 +1922,26 @@ export class main_Landlord extends main_GameBase {
                 endPos.y = bgPos.y + (baseBg.worldPosition.y -  bg.worldPosition.y)
                 endPosArr.push(endPos)
     
-                let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
-                card.getComponent("card_Landlord").getCardNode().setPosition(-27,-39)
+                let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_OutCard)
+                card.getComponent("card_Landlord").getCardNode().setPosition(-37,-48)
                 this.Items.node_showThreeAniNode.addChild(card)
-                card.setScale(new Vec3(0,1.25,1.25))
+                card.setScale(new Vec3(0,0.8,0.8))
                 card.setPosition(bgPos.x,bgPos.y )
                 
-                showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1)
+                let card_small = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+                card_small.getComponent("card_Landlord").getCardNode().setPosition(-32,-26)
+                baseBg.addChild(card_small)
+                card_small.active = false
+                showFun(card,bg,baseBg,endPos,i==lastThreeCache.length-1,card_small)
             }
         }else{
             for(let i=0;i<lastThreeCache.length;i++){
                 let baseBg = this.Items.Layout_BaseCardPool.Items["Sprite_BaseCardBG_"+i]
-                let card = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
-                card.getComponent("card_Landlord").getCardNode().setPosition(-27,-39)
-                card.setScale(new Vec3(0.90,0.90,0.90))
-                baseBg.addChild(card)
-                card.setPosition(-2,0)
+                let card_small = this.getOneCardByData(lastThreeCache[i],yx.config.CardSizeType.CardSizeType_PoolCard)
+                card_small.getComponent("card_Landlord").getCardNode().setPosition(-32,-26)
+                // card.setScale(new Vec3(0.90,0.90,0.90))
+                baseBg.addChild(card_small)
+                // card.setPosition(-2,0)
             }
         }
         
@@ -2068,45 +2076,53 @@ export class main_Landlord extends main_GameBase {
         this.showXbeiAni(yx.internet.ddzBaseInfo.showtimes,data.toptimes)
         //播放明牌音效
 
+        this.player.setPlayerCallStateVisible(data.showchair,true,"yxc_img_mpz")
     }
     DDZ_S_MSG_CALL_POINT(data: proto.client_proto_ddz.IDDZ_S_CallPoint,isAni?:boolean) {
         let needAni = isAni == false ? false : true
         //播放叫/抢地主音效
-        let content = ""
+        //let content = ""
+        let spr = ""
         let soundTag = 0
         let bGrapAgain = false
         let callTimes = 0
         switch (data.callcode) {
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_CALL: {
-                content = "不叫"
+                //content = "不叫"
+                spr = "yxc_img_bjz"
                 soundTag = yx.config.ActionEvent.CallNegative
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_CALL: {
-                content = "叫地主"
+                // content = "叫地主"
+                spr = "yxc_img_jdzz"
                 soundTag = yx.config.ActionEvent.CallPositive
                 callTimes = 3
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_NO_ROB: {
-                content = "不抢"
+                // content = "不抢"
+                spr = "yxc_img_bqz"
                 soundTag = yx.config.ActionEvent.GrabNegative
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_1: {
-                content = "抢地主"
+                // content = "抢地主"
+                spr = "yxc_img_qdzhu"
                 soundTag = yx.config.ActionEvent.GrabPositive
                 callTimes = 2
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_2: {
-                content = "抢地主"
+                // content = "抢地主"
+                spr = "yxc_img_qdzhu"
                 soundTag = yx.config.ActionEvent.GrabPositive
                 callTimes = 2
                 break;
             }
             case proto.client_proto_ddz.DDZ_CALL_STATUS.DDZ_CALL_STATUS_ROB_3: {
-                content = "抢地主"
+                // content = "抢地主"
+                spr = "yxc_img_qdzhu"
                 soundTag = yx.config.ActionEvent.GrabPositive
                 callTimes = 2
                 bGrapAgain = true
@@ -2116,9 +2132,9 @@ export class main_Landlord extends main_GameBase {
                
                 break;
         }
-        if(content != ""){
+        if(spr != ""){
             this.callPointTimes++
-            this.player.setPlayerCallStateVisible(data.callchair,true,content)
+            this.player.setPlayerCallStateVisible(data.callchair,true,spr)
             if(needAni){
                 if(callTimes > 0){
                     this.showXbeiAni(callTimes,data.toptimes)
@@ -2149,29 +2165,33 @@ export class main_Landlord extends main_GameBase {
     DDZ_S_MSG_DOUBLE(data: proto.client_proto_ddz.IDDZ_S_Double,isAni?:boolean) {
         let needAni = isAni == false ? false : true
         //播放加倍/超级加倍音效
-        let content = ""
+        // let content = ""
+        let spr = ""
         let soundTag = 0
         switch (data.opetimes) {
             case 1: { //不加倍
-                content = "不加倍"
+                // content = "不加倍"
+                spr = "yxc_img_bjbz"
                 soundTag = yx.config.ActionEvent.DoubleNegative
                 break;
             }
             case yx.internet.ddzBaseInfo.doubletimes: { //加倍
-                content = "加倍"
+                // content = "加倍"
+                spr = "yxc_img_jb"
                 soundTag = yx.config.ActionEvent.DoublePositive
                 break;
             }
             case yx.internet.ddzBaseInfo.superdoubletimes: {  //超级加倍
-                content = "超级加倍"
+                // content = "超级加倍"
+                spr = "yxc_img_cjjb"
                 soundTag = yx.config.ActionEvent.DoubleSuper
                 break;
             }
             default:
                 break;
         }
-        if(content != ""){
-            this.player.setPlayerCallStateVisible(data.opechair,true,content)
+        if(spr != ""){
+            this.player.setPlayerCallStateVisible(data.opechair,true,spr)
             if(needAni){
                 var soundData:landlordSoundInitData = {
                     // pActor : player:getActor(),
@@ -2217,7 +2237,7 @@ export class main_Landlord extends main_GameBase {
             bSmall : this.logic.isSmallCard(),
         }
         this.sound.playPassSound(soundData)
-        this.player.setPlayerCallStateVisible(data.passchair,true,"不要")
+        this.player.setPlayerCallStateVisible(data.passchair,true,"yxc_img_ybqi")
             
     }
     DDZ_S_MSG_USE_MEMORY(data: proto.client_proto_ddz.IDDZ_S_UseMemory) {
@@ -2321,7 +2341,7 @@ export class main_Landlord extends main_GameBase {
                     this.ShowOutCard(i,reconnData.turncards[i].data,-1,false)
                 }else{
                     if(reconnData.passornull[i]){
-                        this.player.setPlayerCallStateVisible(i,true,"不要")
+                        this.player.setPlayerCallStateVisible(i,true,"yxc_img_ybqi")
                     }
                 }
             }

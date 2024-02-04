@@ -236,7 +236,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1031,
+      "width": 859,
       "height": 80
     },
     "_anchorPoint": {
@@ -266,9 +266,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 153,
-      "g": 56,
-      "b": 18,
+      "r": 255,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_string": "Hello !",
@@ -355,8 +355,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 1071,
-      "height": 75
+      "width": 899,
+      "height": 68
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -391,7 +391,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "67e28724-c514-4726-ae56-e47926ed0486@f9941",
+      "__uuid__": "a3fa971d-76fa-4f2e-9559-6de466bb531a@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 1,

@@ -27,8 +27,8 @@ export class card_Landlord extends (fw.FWComponent) {
 	}
 	//初始化扑克大小
 	initCardType() {
-		var jokerFileName = ["Node_JokerCard_L", "Node_JokerCard_S", "Node_JokerCard_S", "Node_OutJokerCard", "Node_OutJokerCard"]
-    	var commFileName = ["Node_CommonCard_L", "Node_CommonCard_S", "Node_CommonCard_S", "Node_OutCommonCard", "Node_OutCommonCard"]
+		var jokerFileName = ["Node_JokerCard_L", "Node_PoolJokerCard", "Node_JokerCard_S", "Node_OutJokerCard", "Node_OutJokerCard"]
+    	var commFileName = ["Node_CommonCard_L", "Node_PoolCommonCard", "Node_CommonCard_S", "Node_OutCommonCard", "Node_OutCommonCard"]
 		var dic = {}
 		for (const key in yx.config.CardSizeType) {
 			if (yx.config.CardSizeType.hasOwnProperty(key)) {
@@ -81,7 +81,7 @@ export class card_Landlord extends (fw.FWComponent) {
 	}
 	//修改牌面
 	initCardUI() {
-		var faceValueRes = this.pokerResPath + `num_${this.cardColorToString(this.m_nCardColorValue)}_${this.cardValueToString(this.m_cbCardFaceValue)}/spriteFrame`
+		var faceValueRes = this.pokerResPath + `num_${this.cardColorToString(this.m_nCardColorValue)}_${this.cardValueToString(this.m_cbCardFaceValue,true)}/spriteFrame`
 		this.m_pCardNode.Items.ImageView_CardFaceValue.updateSprite(app.game.getRes(faceValueRes))
 
 		var  cardType = this.cardTypeToString(this.m_nCardColorShape)
@@ -141,7 +141,7 @@ export class card_Landlord extends (fw.FWComponent) {
 		return typeString
 	}
 	//获取牌值的字符串
-	cardValueToString(cardValue:number):string  {
+	cardValueToString(cardValue:number,isSamll?:boolean):string  {
 		if(cardValue > 15 || cardValue < 0){
 			return ""
 		}
@@ -150,6 +150,13 @@ export class card_Landlord extends (fw.FWComponent) {
 			"6", "7", "8", "9", "10", 
 			"J", "Q", "K", "JR", "JR"
 		]
+		if(isSamll && this.m_nCardSizeType == yx.config.CardSizeType.CardSizeType_PoolCard){
+			cardNames = [
+				"A", "2", "3", "4", "5", 
+				"6", "7", "8", "9", "10", 
+				"J", "Q", "K", "JRs", "JRs"
+			]
+		}
 		return cardNames[cardValue-1]
 	}
 	//设置卡牌弹起

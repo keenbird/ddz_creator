@@ -95,7 +95,6 @@ export class player_Landlord extends player_GameBase {
         this.setPlayerTrusteeship(null, false );
         
         //------------test----------------//    
-    
         
         // this.scheduleOnce(function(){
         //     this.setPlayerDizhuVisible(0,true)
@@ -288,13 +287,13 @@ export class player_Landlord extends player_GameBase {
         return node
     }
     //设置玩家叫牌状态
-    setPlayerCallStateVisible(nChairID: number, bVisible: boolean, content?: string) {
+    setPlayerCallStateVisible(nChairID: number, bVisible: boolean, spr?: string) {
         let self = this
         let func = (nChairIDEx: number) => {
             let showFun = (stateNode :ccNode) => {
                 
-                if(content){
-                    stateNode.string = content
+                if(spr){
+                    stateNode.updateSprite(app.game.getRes(`img/player/${spr}/spriteFrame`));
                 }
                 stateNode.active = bVisible
                 
@@ -566,10 +565,10 @@ export class player_Landlord extends player_GameBase {
                     player.Items.Image_dizhu_icon.active = true;
     
                     if(nChairIDEx == nChairID){
-                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_tb_dizhu/spriteFrame`]);
+                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_img_dzbz/spriteFrame`]);
                         
                     }else{
-                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_tb_nongming/spriteFrame`]);
+                        player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_img_nmbz/spriteFrame`]);
                     }
                     if(yx.func.getClientChairIDByServerChairID(nChairID) == 0){
                         yx.main.resetHandCardPos()
