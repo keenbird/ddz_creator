@@ -2018,6 +2018,7 @@ export class main_Landlord extends main_GameBase {
                             }
                         }
                     }
+                    this.player.setPlayerCallStateVisible(null,false)
                     break;
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_OUT_START: {
@@ -2237,7 +2238,7 @@ export class main_Landlord extends main_GameBase {
             bSmall : this.logic.isSmallCard(),
         }
         this.sound.playPassSound(soundData)
-        this.player.setPlayerCallStateVisible(data.passchair,true,"yxc_img_ybqi")
+        this.player.setPlayerCallStateVisible(data.passchair,true,"yxc_img_bc")
             
     }
     DDZ_S_MSG_USE_MEMORY(data: proto.client_proto_ddz.IDDZ_S_UseMemory) {
@@ -2341,7 +2342,7 @@ export class main_Landlord extends main_GameBase {
                     this.ShowOutCard(i,reconnData.turncards[i].data,-1,false)
                 }else{
                     if(reconnData.passornull[i]){
-                        this.player.setPlayerCallStateVisible(i,true,"yxc_img_ybqi")
+                        this.player.setPlayerCallStateVisible(i,true,"yxc_img_bc")
                     }
                 }
             }

@@ -11,7 +11,7 @@ export class PlazaCenter extends PlazeMainInetMsg {
     }
 
     initEvents() {
-        this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_LOGIN);
+        // this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_LOGIN);
     }
 
     initRegister() {

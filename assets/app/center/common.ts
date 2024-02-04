@@ -2684,7 +2684,7 @@ $root.client_proto = (function() {
          * Properties of a GameUserAttriChangePush.
          * @memberof client_proto
          * @interface IGameUserAttriChangePush
-         * @property {number|null} [chairId] GameUserAttriChangePush chairId
+         * @property {number|null} [userId] GameUserAttriChangePush userId
          * @property {Array.<client_proto.IUserAttriData>|null} [attriList] GameUserAttriChangePush attriList
          */
 
@@ -2705,12 +2705,12 @@ $root.client_proto = (function() {
         }
 
         /**
-         * GameUserAttriChangePush chairId.
-         * @member {number} chairId
+         * GameUserAttriChangePush userId.
+         * @member {number} userId
          * @memberof client_proto.GameUserAttriChangePush
          * @instance
          */
-        GameUserAttriChangePush.prototype.chairId = 0;
+        GameUserAttriChangePush.prototype.userId = 0;
 
         /**
          * GameUserAttriChangePush attriList.
@@ -2744,8 +2744,8 @@ $root.client_proto = (function() {
         GameUserAttriChangePush.encode = function encode(message, writer) {
             if (!writer)
                 writer = $Writer.create();
-            if (message.chairId != null && Object.hasOwnProperty.call(message, "chairId"))
-                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.chairId);
+            if (message.userId != null && Object.hasOwnProperty.call(message, "userId"))
+                writer.uint32(/* id 1, wireType 0 =*/8).int32(message.userId);
             if (message.attriList != null && message.attriList.length)
                 for (var i = 0; i < message.attriList.length; ++i)
                     $root.client_proto.UserAttriData.encode(message.attriList[i], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim();
@@ -2784,7 +2784,7 @@ $root.client_proto = (function() {
                 var tag = reader.uint32();
                 switch (tag >>> 3) {
                 case 1: {
-                        message.chairId = reader.int32();
+                        message.userId = reader.int32();
                         break;
                     }
                 case 2: {
@@ -2828,9 +2828,9 @@ $root.client_proto = (function() {
         GameUserAttriChangePush.verify = function verify(message) {
             if (typeof message !== "object" || message === null)
                 return "object expected";
-            if (message.chairId != null && message.hasOwnProperty("chairId"))
-                if (!$util.isInteger(message.chairId))
-                    return "chairId: integer expected";
+            if (message.userId != null && message.hasOwnProperty("userId"))
+                if (!$util.isInteger(message.userId))
+                    return "userId: integer expected";
             if (message.attriList != null && message.hasOwnProperty("attriList")) {
                 if (!Array.isArray(message.attriList))
                     return "attriList: array expected";
@@ -2855,8 +2855,8 @@ $root.client_proto = (function() {
             if (object instanceof $root.client_proto.GameUserAttriChangePush)
                 return object;
             var message = new $root.client_proto.GameUserAttriChangePush();
-            if (object.chairId != null)
-                message.chairId = object.chairId | 0;
+            if (object.userId != null)
+                message.userId = object.userId | 0;
             if (object.attriList) {
                 if (!Array.isArray(object.attriList))
                     throw TypeError(".client_proto.GameUserAttriChangePush.attriList: array expected");
@@ -2886,9 +2886,9 @@ $root.client_proto = (function() {
             if (options.arrays || options.defaults)
                 object.attriList = [];
             if (options.defaults)
-                object.chairId = 0;
-            if (message.chairId != null && message.hasOwnProperty("chairId"))
-                object.chairId = message.chairId;
+                object.userId = 0;
+            if (message.userId != null && message.hasOwnProperty("userId"))
+                object.userId = message.userId;
             if (message.attriList && message.attriList.length) {
                 object.attriList = [];
                 for (var j = 0; j < message.attriList.length; ++j)
@@ -9056,8 +9056,8 @@ export namespace client_proto {
     /** Properties of a GameUserAttriChangePush. */
     interface IGameUserAttriChangePush {
 
-        /** GameUserAttriChangePush chairId */
-        chairId?: (number|null);
+        /** GameUserAttriChangePush userId */
+        userId?: (number|null);
 
         /** GameUserAttriChangePush attriList */
         attriList?: (client_proto.IUserAttriData[]|null);
@@ -9072,8 +9072,8 @@ export namespace client_proto {
          */
         constructor(properties?: client_proto.IGameUserAttriChangePush);
 
-        /** GameUserAttriChangePush chairId. */
-        public chairId: number;
+        /** GameUserAttriChangePush userId. */
+        public userId: number;
 
         /** GameUserAttriChangePush attriList. */
         public attriList: client_proto.IUserAttriData[];

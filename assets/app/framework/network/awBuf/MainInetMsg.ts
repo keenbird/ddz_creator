@@ -39,17 +39,17 @@ export class LoginMainInetMsg extends MainInetMsg {
 }
 export abstract class PlazeMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {
-        // this.initCmd(Root_cmd.CMDROOT_PLAZA_MSG, nMainID);
+        this.initCmd(Root_cmd.CMDROOT_PLAZA_MSG, nMainID);
     }
 
-    protected initEvents(): boolean | void {
-        super.initEvents()
-        this.bindEvent({
-            eventName:EVENT_ID.EVENT_CLEAN_USER_DATA,
-            callback:this.cleanUserData.bind(this)
-        })
-    }
-    abstract cleanUserData():void;
+    // protected initEvents(): boolean | void {
+    //     super.initEvents()
+    //     this.bindEvent({
+    //         eventName:EVENT_ID.EVENT_CLEAN_USER_DATA,
+    //         callback:this.cleanUserData.bind(this)
+    //     })
+    // }
+    // abstract cleanUserData():void;
 }
 export class GameServerMainInetMsg extends MainInetMsg {
     initMainID(nMainID: number) {

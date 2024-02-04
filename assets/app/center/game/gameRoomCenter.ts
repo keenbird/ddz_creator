@@ -74,13 +74,13 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         //         this.OnUserDestory(data.dict)
         //     }
         // });
-        app.event.bindEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
-            callback: (data) => {
-                let varTB = data.dict
-                this.OnUserPropVariable(varTB.actor, varTB.btPropID, varTB.nOldValue, varTB.nNewValue)
-            }
-        });
+        // app.event.bindEvent({
+        //     eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
+        //     callback: (data) => {
+        //         let varTB = data.dict
+        //         this.OnUserPropVariable(varTB.actor, varTB.btPropID, varTB.nOldValue, varTB.nNewValue)
+        //     }
+        // });
         // app.event.bindEvent({
         //     eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_PUBLIC,
         //     callback: (data) => {

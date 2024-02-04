@@ -200,6 +200,7 @@ export class plaza_main extends (fw.FWComponent) {
 				});
 			})
 		}
+		this.updatePlayerInfo()
 		//刷新特殊游戏 新手引导没了不需要了
 		// this.updateSpecialGame();
 		//请求历史单笔最大充值金额
@@ -741,7 +742,7 @@ export class plaza_main extends (fw.FWComponent) {
 		this.updateGold();
 		center.user.event.bindEvent({
 			valideTarget: this.node,
-			eventName: ACTOR.ACTOR_PROP_GOLD,
+			eventName: PROTO_ACTOR.UAT_GOLD,
 			callback: this.updateGold.bind(this)
 		});
 		let node_coin = this.Items.node_coin;
@@ -751,7 +752,7 @@ export class plaza_main extends (fw.FWComponent) {
 		this.updateDiamond();
 		center.user.event.bindEvent({
 			valideTarget: this.node,
-			eventName: ACTOR.ACTOR_PROP_DIAMONDS,
+			eventName: PROTO_ACTOR.UAT_DIAMOND,
 			callback: this.updateDiamond.bind(this)
 		});
 		let updateVipLevel = () => {

@@ -1,9 +1,10 @@
 import { _decorator } from "cc";
 const { ccclass } = _decorator;
 
+
+import { LoginCenter } from "./loginCenter";
 import { UserCenter } from "./userCenter";
 import { PlazaCenter } from "./plazaCenter";
-import { LoginCenter } from "./loginCenter";
 import { GatewayCenter } from "./gatewayCenter";
 
 import { GameCenter } from "./game/gameCenter";

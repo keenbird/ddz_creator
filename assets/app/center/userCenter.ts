@@ -261,8 +261,19 @@ export class UserCenter extends PlazeMainInetMsg {
     }
 
     initEvents() {
-        super.initEvents()
+        // super.initEvents()
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_ACTOR);
+
+        //游戏广播中假如收到我的属性变更，这里要处理
+        this.bindEvent({
+            eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
+            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
+                //刷新自身金币
+                if(arg1.dict.actor[PROTO_ACTOR.UAT_UID] == this.getUserID()){
+                    this.setActorProp(arg1.dict.btPropID,arg1.dict.nNewValue);
+                }
+            }
+        });
     }
     initRegister() {
     //     //玩家私有数据
@@ -277,6 +288,12 @@ export class UserCenter extends PlazeMainInetMsg {
             cmd: this.cmd.UISMI_USER_ATTRI_CHANGE_PUSH,
             callback: this.OnRecv_ActorVariable.bind(this)
         });
+        //用户数据变更推送
+        this.bindMessage({
+            struct: proto.client_proto.UserADataChangePush,
+            cmd: this.cmd.UISMI_USER_DATA_CHANGE_PUSH,
+            callback: this.OnRecv_UserDataChange.bind(this)
+        });
         //请求背包数据
         this.bindMessage({
             struct: proto.client_proto.UserBagDataReq,
@@ -288,6 +305,7 @@ export class UserCenter extends PlazeMainInetMsg {
             cmd: this.cmd.UISMI_USER_BAG_RESP,
             callback: this.OnRecv_UserBagResp.bind(this)
         });
+        
     //     //提示客户端
     //     this.bindMessage({
     //         struct: proto.plaza_actorprop.ator_tips_s,
@@ -474,6 +492,10 @@ export class UserCenter extends PlazeMainInetMsg {
     /**获取玩家属性 */
     getActorProp(actor: ACTOR | string | number): any {
         return this._actorProp[actor];
+    }
+    /**设置玩家属性 */
+    setActorProp(actor: ACTOR | string | number,value:string | number): any {
+        return this._actorProp[actor] = value;
     }
     /**获取玩家vip等级 */
     getActorVipLevel() {
@@ -1102,10 +1124,13 @@ export class UserCenter extends PlazeMainInetMsg {
                 dict: v,
             });
         });
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
-            dict: dict.attriList,
-        });
+        // app.event.dispatchEvent({
+        //     eventName: EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
+        //     dict: dict.attriList,
+        // });
+    }
+    OnRecv_UserDataChange(dict: proto.client_proto.IUserADataChangePush) {
+        
     }
     /**
      * 玩家修改资料返回

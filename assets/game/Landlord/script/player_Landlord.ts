@@ -21,10 +21,12 @@ export class player_Landlord extends player_GameBase {
     protected initEvents(): boolean | void {
         //玩家金币金币变更
         this.bindEvent({
-            eventName: ACTOR[PROTO_ACTOR.UAT_GOLD],
+            eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
                 //刷新自身金币
-                this.updateOnePlayer(yx.internet.nSelfChairID);
+                if(arg1.dict.btPropID == PROTO_ACTOR.UAT_GOLD){
+                    this.updateOnePlayer(arg1.dict.actor.chairID);
+                }
             }
         });
         //自己进入桌子

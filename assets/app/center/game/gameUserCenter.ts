@@ -41,8 +41,8 @@ export class GameUserCenter extends GameServerMainInetMsg {
     //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PUBLIC, proto.game_actor.public_info_s);
     //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PUBLIC, { callback: this.OnRecv_ActorPublicInfo.bind(this), printLog: false });
         this.bindMsgStructPB(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, proto.client_proto.GameUserAttriChangePush);
-        this.bindRecvFunc(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, { callback: this.OnRecv_ActorVariableInfo.bind(this), printLog: false });
-    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
+        this.bindRecvFunc(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, this.OnRecv_ActorVariableInfo.bind(this));
+         //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
     //     this.bindRecvFunc(this.cmd.GAME_ACTOR_DESTORY, { callback: this.OnRecv_ActorDestory.bind(this), printLog: false });
     }
 
@@ -236,8 +236,8 @@ export class GameUserCenter extends GameServerMainInetMsg {
 
     OnRecv_ActorVariableInfo(dict: proto.client_proto.IGameUserAttriChangePush) {
         // fw.print(dict, " ========OnRecv_ActorVariableInfo====== ")
-        let chairId = dict.chairId;
-        let actor = this.getActorByChairId(chairId)
+        let userId = dict.userId;
+        let actor = this.getActorByDBIDEx(userId)
         if (actor) {
             let Variable = dict.attriList;
             let nActorDBID = actor[PROTO_ACTOR.UAT_UID]
@@ -245,11 +245,12 @@ export class GameUserCenter extends GameServerMainInetMsg {
                 const v = Variable[k];
                 let btPropID = v.key;
                 let nOldValue = actor[btPropID];
+                let nNewValue = v.valueType == 1 ?  app.func.toNumber(v.value) : v.value
                 let eventTB = {
                     actor: actor,
                     nOldValue: nOldValue,
                     btPropID: btPropID,
-                    nNewValue: v.valueType == 1 ?  app.func.toNumber(v.value) : v.value,
+                    nNewValue: nNewValue,
                 }
                 this.setActorProp(nActorDBID, btPropID, v.value);
                 this.event.dispatchEvent({
