@@ -1693,7 +1693,9 @@ export class logic_Landlord extends (fw.FWComponent) {
 					return [true,hitResult,cbHitCount]
 				}
 				return [false,hitResult,cbHitCount]
-			}   
+			} else{
+				return [false,hitResult,cbHitCount]
+			} 
 		}else{
 			//TODO 压上家的区间搜索
 			var bRect:boolean

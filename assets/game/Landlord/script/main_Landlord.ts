@@ -1226,14 +1226,12 @@ export class main_Landlord extends main_GameBase {
         }
     }
 
-    markRegionCardData(data){
+    markRegionCardData(data:number,data2?:number){
         if(data == 0x00){
             this.m_RegionData = [0,0]
         }else{
-            var  size = this.m_vecPopCache.length
-            if  (this.m_vecPopCache.length == 1 ||  this.m_vecPopCache.length == 2){
-                this.m_RegionData[size-1] = data
-            }
+            this.m_RegionData[0] = data
+            this.m_RegionData[1] = data2
         }
     }
 
@@ -1363,6 +1361,9 @@ export class main_Landlord extends main_GameBase {
                 this.markRegionCardData(cbCurrentCardData)
             }
             if(this.m_vecPopCache.length == 2){
+                let regionData = yx.func.cardDatasFromVector(this.m_vecPopCache)
+                this.logic.SortCardData(regionData,regionData.length)  
+                this.markRegionCardData(regionData[0],regionData[1])
                 console.log("LH2",this.m_RegionData[0],this.m_RegionData[1])
                 if(this.m_RegionData[0] != 0x00 && this.m_RegionData[1] != 0x00){
                     var cbHandsData = yx.func.cardDatasFromVector(this.m_HandCardNode)
@@ -1497,7 +1498,7 @@ export class main_Landlord extends main_GameBase {
                 if(this.m_vecPopCache.length <= 1){
                     //TODO 没有弹起的扑克
                     var cbCardCount = 2
-                    var cbCardData = [0]
+                    var cbCardData = [0,0]
                     var nCount = unorderResult.cbDoubleCount * 2
 
                     nCount = unorderResult.cbSingleCount * 1
@@ -1521,7 +1522,7 @@ export class main_Landlord extends main_GameBase {
                 if(this.m_vecPopCache.length <= 1){
                     //TODO 没有弹起的扑克
                     var cbCardCount = 3
-                    var cbCardData:number[] = []
+                    var cbCardData:number[] = [0,0,0]
                     var nCount = 0
 
                     nCount = unorderResult.cbSingleCount * 1
