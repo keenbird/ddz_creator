@@ -941,7 +941,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 									hitResult[cbHitCardCount-1].cbResultCard[2] = baseData[2]
 									var [a,b] =this.GetCardsByTriplets(cbHandCardDataCopy, cbHandCardCount, hitResult[cbHitCardCount-1].cbResultCard, 1, cbTurnOutType) 
 									if(a==1){
-										return [true,hitResult,cbHitCardCount-1]
+										hitResult[cbHitCardCount-1].cbCardCount = 5
+                                    	cbHitCardCount = cbHitCardCount + 1
+										if(cbHitCardCount > yx.config.MAX_COUNT){
+											return [true,hitResult,cbHitCardCount-1]
+										}
 									}
 								}
 							}
