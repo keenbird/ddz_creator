@@ -1023,7 +1023,7 @@ export class main_Landlord extends main_GameBase {
                 this.sound.playAlertorSound(soundData)
             },1)
         }
-        if(bSecondBomb){
+        if(bSecondBomb || cardType == yx.config.OutCardType.Rocket){
             this.showXbeiAni(2,data.toptimes)
         }
         this.ShowOutCard(nChairID,cardData,cardType,true)
