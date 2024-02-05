@@ -4,11 +4,11 @@ const { ccclass } = _decorator;
 import { yx } from '../yx_Landlord';
 import proto from './../protobuf/Landlord_format';
 import { EVENT_ID } from '../../../app/config/EventConfig';
-import { MainInetMsg } from '../../../app/framework/network/awBuf/MainInetMsg';
+import { GameServerMainInetMsg, MainInetMsg } from '../../../app/framework/network/awBuf/MainInetMsg';
 import { GS_GAME_MSGID } from '../../../app/config/NetConfig';
 
 @ccclass('internet_Landlord')
-export class internet_Landlord extends MainInetMsg {
+export class internet_Landlord extends GameServerMainInetMsg {
     /**协议相关字段--began------------------------------------ */
     proto = proto.client_proto_ddz
     /**命令ID */
@@ -54,7 +54,7 @@ export class internet_Landlord extends MainInetMsg {
     }
     
     protected initEvents(): boolean | void {
-        this.initCmd(0, this.mainID);
+        this.initMainID( this.mainID);
         // this.initRegister()
         //自己进入桌子
         this.bindEvent({
@@ -203,8 +203,6 @@ export class internet_Landlord extends MainInetMsg {
     //销毁注册事件
     unBindMsg(){
         this.unbindMsgListener(this.mainID)
-        // this.unbindRecvFunc(this.cmd.DDZ_S_MSG_RECONNECT);
-        // this.unbindMsgStructPB(this.cmd.DDZ_S_MSG_RECONNECT);
     }
     /**玩家是否已经进入 */
     isUserCenter() {
@@ -273,7 +271,7 @@ export class internet_Landlord extends MainInetMsg {
     DDZ_S_MSG_TIPS(data: proto.client_proto_ddz.IDDZ_S_Tips) {
         switch (data.type) {
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_START: {
-                this.cleanLocalData()
+                    this.cleanLocalData()
                     break;
                 }
             case proto.client_proto_ddz.DDZ_TIPS.DDZ_TIPS_SHOW_START: {

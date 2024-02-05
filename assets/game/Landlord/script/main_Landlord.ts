@@ -11,6 +11,7 @@ import { main_GameBase } from '../../GameBase/ui/main/script/main_GameBase';
 import { logic_Landlord } from './logic_Landlord';
 import { landlordSoundInitData, sound_Landlord } from './sound_Landlord';
 import { EVENT_ID } from '../../../app/config/EventConfig';
+import { forEach } from '../../../../engine/cocos/asset/asset-manager/utilities';
 
 @ccclass('main_Landlord')
 export class main_Landlord extends main_GameBase {
@@ -525,13 +526,17 @@ export class main_Landlord extends main_GameBase {
             var isLarger = false
             cardType = this.logic.GetCardType(cardData, cardData.length)
             if(cardType == yx.config.OutCardType.Quadplex_Two_special ){
-                if(maxCardInfo.nType != -1){
-                    //不是首出就直接用上家牌型来对比
-                    cardType = maxCardInfo.nType
+                if(yx.config.m_use_serial_bomb){
+                    cardType = yx.config.OutCardType.serial_bomb
                 }else{
-                    //首出时候可选飞机或者四带二
-                    this.showChoseCardLayout(cardData)
-                    return
+                    if(maxCardInfo.nType != -1){
+                        //不是首出就直接用上家牌型来对比
+                        cardType = maxCardInfo.nType
+                    }else{
+                        //首出时候可选飞机或者四带二
+                        this.showChoseCardLayout(cardData)
+                        return
+                    }
                 }
             }
             isLarger = this.logic.CompareCard(maxCardInfo.cardData, maxCardInfo.cardCount, cardData, cardData.length,maxCardInfo.nType,cardType)
@@ -1168,7 +1173,7 @@ export class main_Landlord extends main_GameBase {
             aniName = "ani_node_zhadan"
         }else if(cardType == yx.config.OutCardType.Rocket  ){
             aniName = "ani_node_huojian"
-        }else if(cardType == yx.config.OutCardType.serial_bomb || cardType == yx.config.OutCardType.Quadplex_Two_special ){
+        }else if(cardType == yx.config.OutCardType.serial_bomb || (cardType == yx.config.OutCardType.Quadplex_Two_special && yx.config.m_use_serial_bomb)){
             aniName = "ani_node_lianzha"
         }
         if(aniName != ""){
@@ -1298,7 +1303,7 @@ export class main_Landlord extends main_GameBase {
 
         //如果是特殊牌型弹出提示语(双炸、飞机带炸)
 	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen,false)
-        if(unionCardType == yx.config.OutCardType.Quadplex_Two_special ){
+        if(unionCardType == yx.config.OutCardType.Quadplex_Two_special && !yx.config.m_use_serial_bomb){
             //显示特殊牌型提示语
             this.showGameTip("special")
             //tipsFunc.newHintTip("带牌包含'炸弹'，但不算'炸弹'，请谨慎出牌!")
@@ -1812,29 +1817,100 @@ export class main_Landlord extends main_GameBase {
     }
     //判断炸弹加上炸弹标签
     showBoomMask(){
-        var boomArr = []
-        for(var i=0;i<this.m_HandCardNode.length;i++){
-            var card = this.m_HandCardNode[i]
-            var isJoker = card.getComponent("card_Landlord").isJoker()
-            if(isJoker){
-            }else{
-                if(boomArr.length == 0){
-                    boomArr.push(card)
-                }else{
-                    if(card.getComponent("card_Landlord").getCardFaceValue() == boomArr[0].getComponent("card_Landlord").getCardFaceValue()){
-                        boomArr.push(card)
-                    }else{
-                        boomArr = []
-                        boomArr.push(card)
-                    }
+        var handNum = this.m_HandCardNode.length
+        for(let i=0;i<handNum;i++){
+            this.m_HandCardNode[i].getComponent("card_Landlord").markBoom(false)
+        }
+        if(handNum < 4){
+            return
+        }
+        var boomTable = []
+        var bgnIndex = 3
+        while (bgnIndex < handNum ){
+            var isBoom = true
+            var firstCardValue = this.logic.GetCardFaceValue(this.m_HandCardNode[bgnIndex].getComponent("card_Landlord").getCardData())		//第一张牌的牌面值
+            //4到1的顺序，比对牌面值是否相等
+            for(let i=bgnIndex-1;i>=bgnIndex-3;i--){
+                var curCardValue = this.logic.GetCardFaceValue(this.m_HandCardNode[i].getComponent("card_Landlord").getCardData())
+                if (curCardValue != firstCardValue ){
+                    isBoom = false
+                    break;
                 }
             }
-            card.getComponent("card_Landlord").markBoom(false)
-            if(boomArr.length == 4){
-                boomArr[0].getComponent("card_Landlord").markBoom(true)
-                boomArr = []
+            if(isBoom){
+                var tempBoomTable = []
+                for(let i=bgnIndex;i>=bgnIndex-3;i--){
+                    tempBoomTable.push(this.m_HandCardNode[i])
+                    var curCardValue = this.logic.GetCardFaceValue(this.m_HandCardNode[i].getComponent("card_Landlord").getCardData())
+                    if(i==bgnIndex-3){
+                        this.m_HandCardNode[i].getComponent("card_Landlord").markBoom(true,1)
+                    }
+                }
+                boomTable.push(tempBoomTable)
+                bgnIndex = bgnIndex + 4
+            }else{
+                bgnIndex = bgnIndex + 1
             }
         }
+
+        if(!yx.config.m_use_serial_bomb){
+            return
+        }
+
+        var concatTwoTable = function(m_vecPopCache,intable){
+            intable.forEach(v => {
+                m_vecPopCache.push(v)
+            });
+        }
+
+        var dealserialBomb = function(m_vecPopCache,lianzhaNum){
+            for(let i=0;i<m_vecPopCache.length;i++){
+                if(i< lianzhaNum*4){
+                    m_vecPopCache[i].getComponent("card_Landlord").markBoom(false)
+                }
+            }
+            m_vecPopCache[3].getComponent("card_Landlord").markBoom(true,lianzhaNum)
+        }
+
+        if(boomTable.length > 1){
+            var tableIndex = 0
+            while(tableIndex < boomTable.length){
+                var lianzhaNum = 1
+                var isSerial = false
+                var m_vecPopCache = []
+                for(let i=tableIndex;i<boomTable.length;i++){
+                    concatTwoTable(m_vecPopCache,boomTable[i])
+                    if(i>tableIndex){
+                        var tempCache = yx.func.cardDatasFromVector(m_vecPopCache)
+                        var cbTempCardData = this.logic.resortZOrderForOutCard(tempCache, tempCache.length )
+                        var cardDataType = yx.config.OutCardType.Invalid
+                        cardDataType = this.logic.GetCardType(cbTempCardData, cbTempCardData.length)
+                        if(cardDataType ==  yx.config.OutCardType.serial_bomb){
+                            isSerial = true
+						    lianzhaNum = lianzhaNum + 1
+                        
+                        }else{
+                            isSerial = false
+                        }
+                        if(isSerial){
+                            if(i==boomTable.length-1){
+                                dealserialBomb(m_vecPopCache,lianzhaNum)
+                                break;
+                            }
+                        }else{
+                            if(lianzhaNum > 1){
+                                dealserialBomb(m_vecPopCache,lianzhaNum)
+                            }
+                            break;
+                        }
+                    }
+                }
+                tableIndex = tableIndex + lianzhaNum
+            }
+        }
+
+        
+        
     }
     //插入三张牌
     insertThreeCard(lastThreeCache:number[],nChairID:number){

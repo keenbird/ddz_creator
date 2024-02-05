@@ -2,7 +2,7 @@ import { _decorator,Size } from 'cc';
 const { ccclass } = _decorator;
 
 import { config_GameBase } from '../../GameBase/common/config_GameBase';
-import { yx } from '../yx_Landlord';
+import  proto  from '../../../app/center/common';
 
 @ccclass('config_Landlord')
 export class config_Landlord extends config_GameBase {
@@ -197,7 +197,8 @@ export class config_Landlord extends config_GameBase {
         /* 不符合出牌规则 */
         Invalid:-1
     }
-    m_use_serial_bomb = false
+    //是否允许连炸
+    m_use_serial_bomb = center.game.room.getRoomType() == proto.client_proto.ROOM_TYPE.RT_CONTINUE_BOMB
     //特殊牌型数值最大 44443333
     CARD_SPECIAL_VALUE_MAX = 0xC0
     //特殊牌型数值 44443333

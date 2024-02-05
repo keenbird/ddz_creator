@@ -187,7 +187,16 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         }else{
             app.popup.showToast("进入房间失败");
         }
-        
+    }
+
+    // 获取游戏类型(斗地主/麻将)
+    getGameType() {
+        return this.gameType
+    }
+
+    // 获取房间类型(经典/连炸/比赛/好友)
+    getRoomType() {
+        return this.roomType
     }
 
     //返回配桌
