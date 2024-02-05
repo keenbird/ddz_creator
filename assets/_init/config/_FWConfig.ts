@@ -37,7 +37,7 @@ const config = {
     scene: {
         //普通
         AB: <OneSceneConfig>{ bGame: true },
-        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true,preloadList:[`ui/main/main`,`ui`]},
+        Landlord: <OneSceneConfig>{ bGame: true ,bSubPackage: true,preloadList:[`ui/main/main`,`ui`,`img/poker`]},
         //大厅
         plaza: <OneSceneConfig>{ frameRate: 30, bSubPackage: true, preloadList: sys.isBrowser ? [] : ['activity',  'shop'] },
         //登录选择界面
