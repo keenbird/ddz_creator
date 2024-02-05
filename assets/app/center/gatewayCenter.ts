@@ -1,6 +1,6 @@
 import { ERRID_MSG } from '../config/ConstantConfig';
 import { EVENT_ID } from '../config/EventConfig';
-import { GS_GATEWAY_MSGID, sint64, slong, stchar, uchar } from '../config/NetConfig';
+import { GS_GATEWAY_MSGID, GS_PLAZA_MSGID, sint64, slong, stchar, uchar } from '../config/NetConfig';
 import { GatewayMainInetMsg } from '../framework/network/awBuf/MainInetMsg';
 import proto from './common';
 
@@ -18,7 +18,7 @@ export class GatewayCenter extends GatewayMainInetMsg {
     /**网络延迟 发收一次的时间*/
     mServerDelayTime: number = 0
     initEvents() {
-        this.initMainID(GS_GATEWAY_MSGID.GS_GATEWAY_MSGID_COMMAND);
+        this.initMainID(GS_PLAZA_MSGID.GS_GATEWAY_MSGID_COMMAND);
     }
     initRegister() {
     //     this.bindMessage({
