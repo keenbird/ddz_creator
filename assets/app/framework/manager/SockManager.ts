@@ -63,10 +63,6 @@ export class SockManager extends Component {
 
         this.rootInetMsg = new Map();
         this.rootInetMsg.set(Root_cmd.CMDROOT_GATEWAY_MSG, new RootInetMsg(Root_cmd.CMDROOT_GATEWAY_MSG))
-        // this.rootInetMsg.set(Root_cmd.CMDROOT_LOGIN_MSG, new RootInetMsg(Root_cmd.CMDROOT_LOGIN_MSG))
-        // this.rootInetMsg.set(Root_cmd.CMDROOT_PLAZA_MSG, new RootInetMsg(Root_cmd.CMDROOT_PLAZA_MSG))
-        // this.rootInetMsg.set(Root_cmd.CMDROOT_GAMESERVER_MSG, new RootInetMsg(Root_cmd.CMDROOT_GAMESERVER_MSG))
-        // this.rootInetMsg.set(Root_cmd.CMDROOT_WEB_MSG, new RootInetMsg(Root_cmd.CMDROOT_WEB_MSG))
     }
 
     public getRootInetMsg(nCmdRootID: number) {

@@ -1,4 +1,4 @@
-import { GS_LOGIN_MSGID, sint, sint64, slong, stchar, uchar } from "../config/NetConfig";
+import { GS_LOGIN_MSGID, GS_PLAZA_MSGID, sint, sint64, slong, stchar, uchar } from "../config/NetConfig";
 import { LoginMainInetMsg } from "../framework/network/awBuf/MainInetMsg";
 import { httpConfig, server_config, servers_default } from "../config/HttpConfig";
 import { EVENT_ID } from "../config/EventConfig";
@@ -40,7 +40,7 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     initEvents() {
-        this.initMainID(GS_LOGIN_MSGID.GS_LOGIN_MSGID_LOGIN);
+        this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_LOGIN);
         app.event.bindEvent({
             eventName: "WebSocketConnected",
             callback: () => {

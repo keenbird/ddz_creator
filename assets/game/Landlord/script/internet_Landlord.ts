@@ -5,6 +5,7 @@ import { yx } from '../yx_Landlord';
 import proto from './../protobuf/Landlord_format';
 import { EVENT_ID } from '../../../app/config/EventConfig';
 import { MainInetMsg } from '../../../app/framework/network/awBuf/MainInetMsg';
+import { GS_GAME_MSGID } from '../../../app/config/NetConfig';
 
 @ccclass('internet_Landlord')
 export class internet_Landlord extends MainInetMsg {
@@ -13,7 +14,7 @@ export class internet_Landlord extends MainInetMsg {
     /**命令ID */
     cmd = this.proto.DDZ_SUB_S_MSG_ID
     ctscmd = this.proto.DDZ_SUB_C_MSG_ID
-    mainID = 300
+    mainID = GS_GAME_MSGID.GS_GAME_MSGID_DDZ
     /**房间规则 */
     // gameConfig: proto.game_Landlord.IGameConfig
     /**协议相关字段--end------------------------------------ */

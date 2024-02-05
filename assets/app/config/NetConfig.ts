@@ -35,17 +35,17 @@ export const MAX_NET_PACKAGE_SIZE = 65535 - 8; //65535 uShort最大长度  -8作
 
 export enum Root_cmd {
     CMDROOT_GATEWAY_MSG = 0, //代理前端消息
-    CMDROOT_LOGIN_MSG = 1, //登录服务器消息
-    CMDROOT_PLAZA_MSG = 2, //广场消息
-    CMDROOT_GAMESERVER_MSG = 3, //游戏服务器消息
-    CMDROOT_WEB_MSG = 4, //WEB服务器消息
 }
 
 export enum GS_PLAZA_MSGID {
-    GS_PLAZA_MSGID_TIPS = 0, //提示 s->c
+    
     GS_PLAZA_MSGID_LOGIN = 1, //登录 c->s->c
+    GS_GATEWAY_MSGID_COMMAND=2, //心跳 c->s->c
+    GS_GAME_MSGID_ROOM=3, //房间 c->s
     GS_PLAZA_MSGID_ACTOR = 4, //玩家 s->c
     
+    //暂时无用
+    GS_PLAZA_MSGID_TIPS = 0, //提示 s->c
     GS_PLAZA_MSGID_CHAT = 3, //聊天 c->s->c
     GS_PLAZA_MSGID_CONTAINER = 4, //容器 s->c
     GS_PLAZA_MSGID_TASK = 5, //任务 c->s->c
@@ -90,26 +90,13 @@ export enum GS_PLAZA_MSGID {
     GS_PLAZA_MSGID_IPLMATCH = 45, //IPLMatch
 }
 
-export enum GS_GATEWAY_MSGID {
-    GS_GATEWAY_MSGID_COMMAND = 2,
-    GS_GATEWAY_MSGID_P2P = 1,
-}
-
-export enum GS_LOGIN_MSGID {
-    GS_LOGIN_MSGID_LOGIN = 1,
-}
 
 export enum GS_GAME_MSGID {
-    GS_GAME_MSGID_ROOM = 3, //房间 c->s->c	
     
-    GS_GAME_MSGID_TIPS = 1, //提示 s->c
-    GS_GAME_MSGID_LOGIN = 2, //登录 c->s->c		
-    GS_GAME_MSGID_ACTOR = 299, //玩家 s->c
-    GS_GAME_MSGID_CHAT = 4, //聊天 c->s->c	
-    GS_GAME_MSGID_LUA = 5, //LUA c->s	
-    GS_GAME_MSGID_MATCH = 6, //比赛 c->s->c
-    GS_GAME_MSGID_SMGAME = 7, //小游戏 c->s->c
-    GS_GAME_MSGID_MATCH_DALI = 8, //大奖赛 c->s->c
+	
+    GS_GAME_MSGID_ACTOR = 299, //通用数据 s->c
+    GS_GAME_MSGID_DDZ = 300, //斗地主c->s->c	
+
 }
 
 let eInetSInt8 = 0

@@ -1,7 +1,7 @@
 import { ACTOR, INVAL_CHAIRID, INVAL_TABLEID, INVAL_USERID, TABLESTATE_FREE, TABLESTATE_PLAY ,PROTO_ACTOR} from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { httpConfig } from "../../config/HttpConfig";
-import { BYTE, GS_GAME_MSGID, sint, sint64, slong, stchar, uchar, uint, uint64, ulong, ushort } from "../../config/NetConfig";
+import { BYTE, GS_GAME_MSGID, GS_PLAZA_MSGID, sint, sint64, slong, stchar, uchar, uint, uint64, ulong, ushort } from "../../config/NetConfig";
 import { GameServerMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 import proto from "../common";
 
@@ -29,6 +29,8 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     bOnline: boolean;
     exitFun:Function; //退出回调
     dataFun:Function; //请求数据回调
+    gameType: number = 0; //游戏类型
+    roomType: number = 0; //房间类型
 
     initData() {
         this.m_RoomInfo = new GameRoomInfo();
@@ -55,7 +57,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     }
 
     initEvents() {
-        this.initMainID(GS_GAME_MSGID.GS_GAME_MSGID_ROOM);
+        this.initMainID(GS_PLAZA_MSGID.GS_GAME_MSGID_ROOM);
         app.event.bindEvent({
             eventName: EVENT_ID.EVENT_PLAY_ACTOR_PUBLIC,
             callback: (data) => {
@@ -178,7 +180,14 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     // 返回配桌之前的判断
     OnRecv_BEFORE_MATCH_RESP(dict: proto.client_proto.IBeforeMatchTableResp) {
         fw.print("roomManager:OnRecv_BEFORE_MATCH_RESP")
-        app.gameManager.gotoGame(`Landlord`, dict.roomId);
+        if(dict.result == 1){
+            this.gameType = dict.gameType
+            this.roomType = dict.roomType
+            app.gameManager.gotoGame(`Landlord`, dict.roomId);
+        }else{
+            app.popup.showToast("进入房间失败");
+        }
+        
     }
 
     //返回配桌
@@ -263,6 +272,8 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         //     data: data,
         // });
         app.gameManager.setServerId(data.svrId)
+        this.gameType = data.gameType
+        this.roomType = data.roomType
         app.gameManager.gotoGame(`Landlord`, data.roomId,true);
     }
 

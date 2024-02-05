@@ -261,7 +261,7 @@ export class UserCenter extends PlazeMainInetMsg {
     }
 
     initEvents() {
-        // super.initEvents()
+        super.initEvents()
         this.initMainID(GS_PLAZA_MSGID.GS_PLAZA_MSGID_ACTOR);
 
         //游戏广播中假如收到我的属性变更，这里要处理
