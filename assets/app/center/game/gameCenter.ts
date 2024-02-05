@@ -36,7 +36,6 @@ export class GameCenter extends (fw.FWComponent) {
     room: GameRoomCenter;
     chat: GameChatCenter;
     tips: GameTipsCenter;
-    robot:GameRobotCenter;
     onLoad() {
         super.onLoad()
         globalThis.gameCenter = this;
@@ -45,7 +44,6 @@ export class GameCenter extends (fw.FWComponent) {
         this.room = this.obtainComponent(GameRoomCenter);
         this.chat = this.obtainComponent(GameChatCenter);
         this.tips = this.obtainComponent(GameTipsCenter);
-        this.robot = this.obtainComponent(GameRobotCenter);
     }
 }
 

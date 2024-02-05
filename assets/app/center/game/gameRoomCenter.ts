@@ -1,18 +1,10 @@
 import { ACTOR, INVAL_CHAIRID, INVAL_TABLEID, INVAL_USERID, TABLESTATE_FREE, TABLESTATE_PLAY ,PROTO_ACTOR} from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { httpConfig } from "../../config/HttpConfig";
-import { BYTE, GS_GAME_MSGID, GS_PLAZA_MSGID, sint, sint64, slong, stchar, uchar, uint, uint64, ulong, ushort } from "../../config/NetConfig";
+import {  GS_PLAZA_MSGID } from "../../config/NetConfig";
 import { GameServerMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 import proto from "../common";
 
-let ROOMGROUP_GOLD = "0"	//金币场
-let ROOMGROUP_MATCH = "1"	//比赛场
-let ROOMGROUP_PRIVATE = "2"	//私人场
-let ROOMGROUP_DIAMOND = "3"	//钻石场
-let ROOMGROUP_TWO_DDZ = "4"    //二人斗地主
-let ROOMGROUP_BIGAWARD_MATCH = "5"    //大奖赛
-
-let D_GameVersion = 11
 export class GameRoomCenter extends GameServerMainInetMsg {
     cmd = proto.client_proto.ROOM_LIST_SUB_MSG_ID;
     declare m_RoomInfo: GameRoomInfo;
@@ -20,17 +12,15 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     // declare m_MagicFaceVec: proto.game_room.IMagicInfo[];
     declare nJackpotNum: number;
     declare m_ActorTableID: Map<number, number>;
-    /**roomInfo的EnterRule类型 */
-    RoomRuleEnter = RoomRuleEnter
     // 桌子信息
     declare table: GameRoomTable[];
-    declare tableRobot: GameRoomRobotTable;
     m_jackpotDataConfig: Map<number, { time: number, data: JackpotData[] }>;
     bOnline: boolean;
     exitFun:Function; //退出回调
     dataFun:Function; //请求数据回调
     gameType: number = 0; //游戏类型
     roomType: number = 0; //房间类型
+    m_MagicFaceVec: any[];
 
     initData() {
         this.m_RoomInfo = new GameRoomInfo();
@@ -70,31 +60,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                 this.OnMeCreate(data.dict)
             }
         });
-        // app.event.bindEvent({
-        //     eventName: EVENT_ID.EVENT_PLAY_ACTOR_DESTORY,
-        //     callback: (data) => {
-        //         this.OnUserDestory(data.dict)
-        //     }
-        // });
-        // app.event.bindEvent({
-        //     eventName: EVENT_ID.EVENT_PLAY_ACTOR_VARIABLE,
-        //     callback: (data) => {
-        //         let varTB = data.dict
-        //         this.OnUserPropVariable(varTB.actor, varTB.btPropID, varTB.nOldValue, varTB.nNewValue)
-        //     }
-        // });
-        // app.event.bindEvent({
-        //     eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_PUBLIC,
-        //     callback: (data) => {
-        //         this.OnUserRobotCreate(data.dict);
-        //     }
-        // });
-        // app.event.bindEvent({
-        //     eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_DESTORY,
-        //     callback: (data) => {
-        //         this.OnUserRobotDestory(data.dict);
-        //     }
-        // });
+       
     }
 
     initRegister() {
@@ -154,29 +120,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             this.dataFun = null
         }
     }
-    //桌子状态变化
-    OnRecv_RoomTableState(dict: proto.game_room.Itable_state_s) {
-        // dump(dict, "OnRecv_RoomTableState")
-        let uTableID = dict.table_id;
-        let btState = dict.state;
-        if (uTableID < this.m_RoomInfo.nMaxTableCount) {
-            this.table[uTableID].tableState = btState;
-            if (this.getMyTableID() == uTableID) {
-                // 游戏中
-                if (btState == TABLESTATE_PLAY) {
-                    // 空闲
-                    // this.m_pGameSink.OnGameStart()
-                } else if (btState == TABLESTATE_FREE) {
-                    // this.m_pGameSink.OnGameEnd()
-                }
-            }
-        }
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_PLAYROOM_CHANGESTATE,
-            dict: uTableID
-        })
-    }
-
+   
     // 返回配桌之前的判断
     OnRecv_BEFORE_MATCH_RESP(dict: proto.client_proto.IBeforeMatchTableResp) {
         fw.print("roomManager:OnRecv_BEFORE_MATCH_RESP")
@@ -266,14 +210,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         }
     }
 
-    //奖池变动
-    OnRecv_LotteryData(data: proto.game_room.Ilottery_data_s) {
-        this.nJackpotNum = data.gold;
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_GLOBALLATTERY_UPDATE,
-            data: data,
-        });
-    }
+  
     //推送重回房间信息
     OnRecv_COMEBACK_INFO_PUSH(data: proto.client_proto.IComebackRoomInfoPush) {
         // app.event.dispatchEvent({
@@ -293,49 +230,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         this.sendEnterRoomREQ(data.roomId)
     }
 
-    //提示降场
-    OnRecv_TipsDownRoom(data: proto.game_room.Itips_down_room_s) {
-
-    }
-
-    //比赛不充值结算
-    OnRecv_MatchSettle(data: proto.game_room.Iquit_match_ret_s) {
-
-    }
-
-    /**服务器强制解散桌子 */
-    OnRecv_TableDisband(data: proto.game_room.Itable_disband_s) {
-
-    }
-
-    //房间太拥挤，请稍后再试
-    OnRecv_TableDFull(data: proto.game_room.Itable_full_s) {
-        app.popup.showToast({ text: "The current number of players is full, please try again later" })
-        app.popup.closeLoading()
-    }
-
-    //百人排行榜返回
-    OnRecv_GAME_ROOM_C_BAIREN_RANK_RET(data: proto.game_room.Ibairen_rank_s) {
-        data.info.forEach((v: any) => {
-            v.actor = gameCenter.user.getPlayerInfoByChairID(v.chair_id);
-        });
-
-        let useData: any = {};
-        useData.playerInfo = data.info;
-        useData.nPageNum = data.page_num;
-        app.event.dispatchEvent({
-            eventName: "GAME_ROOM_C_BAIREN_RANK_RET",
-            data: useData
-        });
-    }
-
-    //请求搓桌回复
-    OnRecv_JoinQueueRet(dict: proto.game_room.Ijoin_queue_s) {
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_GAME_ROOM_C_JOIN_QUEUE_RET,
-            data: dict
-        });
-    }
+    
 
     //请求房间二级列表配置
     sendRLSMI_SECOND_LIST_REQ(gameType: number,callback:Function) {
@@ -378,34 +273,14 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         return this.sendData(this.cmd.RLSMI_ENTER_ROOM_REQ, sData);
     }
 
-    /**上桌 */
-    sendOnTable() {
-        let sData = proto.game_room.on_table_c.create();
-        sData.table_id = -1;
-        sData.chair_id = -1;
-        return this.sendData(this.cmd.GAME_ROOM_C_ONTABLE, sData);
-    }
-
-    /**请求比赛结算 */
-    sendRequestMatchSettle() {
-        let sData = proto.game_room.quit_match_c.create();
-        return this.sendData(this.cmd.GAME_ROOM_S_QUITDDZMATCH, sData);
-    }
-
+   
     /**玩家处于游戏状态 */
     bPlaying(nUserID?: number) {
         let actor = nUserID ? gameCenter.user.getActorByDBIDEx(nUserID) : gameCenter.user.getActor();
         return actor && actor.tableID != -1;
     }
 
-    // /**退出房间（非游戏状态下发两次退出房间，可能导致Socket被断开） */
-    // sendOutRoom() {
-    //     if (this.bOnline) {
-    //         let sData = proto.game_room.out_room_c.create();
-    //         return this.sendData(this.cmd.GAME_ROOM_C_OUTROOM, sData);
-    //     }
-    //     return true;
-    // }
+   
 
     /**使用魔法表情 */
     sendUseMagic(nActorDBID: number, nMagicID: number, nCount?: number) {
@@ -421,18 +296,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         }
         return false
     }
-    //百人排行榜，大厅功能开关调整
-    send_GAME_ROOM_C_BAIREN_RANK_REQ(data: any) {
-        let sData = proto.game_room.bairen_rank_c.create();
-        sData.page_num = data.nPageNum;
-        sData.count = data.nCount ?? 14;
-        return this.sendData(this.cmd.GAME_ROOM_C_BAIREN_RANK_REQ, sData);
-    }
-    //玩家需要回来状态，暂时用于 teenpatti
-    sendBackGame() {
-        let sData = proto.game_room.actor_im_back_c.create();
-        this.sendData(this.cmd.GAME_ROOM_C_ACTOR_IM_BACK, sData);
-    }
+   
 
     /**获得魔法表情配置 */
     getMagicFace(nMagicID: number) {
@@ -542,291 +406,16 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         }
     }
 
-    // 玩家被销毁
-    OnUserDestory(pActor) {
-        let nTableID = pActor.tableID
-        let nChairID = pActor.chairID
-        if (nTableID != INVAL_TABLEID) {
-            let numnTableID = (nTableID)
-            let numnChairID = (nChairID)
 
-            if (numnTableID >= 0 && numnTableID < (this.m_RoomInfo.nMaxTableCount) && numnChairID >= 0 && numnChairID < (this.m_RoomInfo.nMaxChairCount)) {
-                let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
-                this.m_ActorTableID.delete(nActorDBID)
-                if (this.table[nTableID].getActorDbid(nChairID) == nActorDBID) {
-                    this.table[nTableID].standup(nChairID);
-                    if (nTableID == this.getMyTableID()) {
-                        app.event.dispatchEvent({
-                            eventName: EVENT_ID.EVENT_PLAY_ACTOR_OUTTABLE,
-                            dict: {
-                                nTableID: pActor,
-                                nChairID: nChairID,
-                            }
-                        })
-                    }
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_PLAY_TALBEREF,
-                        dict: {
-                            nTableID: nTableID,
-                        }
-                    })
-                }
-            }
-        }
-    }
-
-    OnUserRobotDestory(pActor) {
-        let nChairID = pActor.chairID
-        let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
-        if (this.tableRobot.getActorDbid(nChairID) == nActorDBID) {
-            this.tableRobot.standup(nChairID);
-        }
-    }
-
-    //玩家属性改变
-    OnUserPropVariable(pActor, propid, nOldValue, nValue) {
-        //位置变化
-        if (propid == ACTOR.ACTOR_PROP_GAME_CHAIR) {
-            //游戏状态变化
-            this.OutOldTable(pActor);
-            if (gameCenter.user.isMe(pActor)) {
-                this.OnMeCreate(pActor);
-            } else {
-                this.OnUserCreate(pActor);
-            }
-        } else if (propid == ACTOR.ACTOR_PROP_GAME_STATE) {
-            let nTableID = pActor.tableID;
-            let nChairID = pActor.chairID;
-            if (nValue == ACTOR.ACTOR_STATE_HAND) {
-                if (nTableID == this.getMyTableID() && nChairID != INVAL_CHAIRID) {
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_PLAY_ACTOR_RAISEHANDS,
-                        dict: {
-                            pActor: pActor,
-                            nChairID: nChairID,
-                        }
-                    });
-                }
-            } else if (nValue == ACTOR.ACTOR_STATE_DROP) {
-                if (nTableID == this.getMyTableID() && nChairID != INVAL_CHAIRID) {
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_PLAY_ACTOR_DROP,
-                        dict: {
-                            pActor: pActor,
-                            nChairID: nChairID,
-                        }
-                    });
-                }
-            } else if (nOldValue == ACTOR.ACTOR_STATE_DROP && nValue == ACTOR.ACTOR_STATE_GAME) {
-                if (nTableID == this.getMyTableID() && nChairID != INVAL_CHAIRID) {
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_PLAY_ACTOR_DROPEND,
-                        dict: {
-                            pActor: pActor,
-                            nChairID: nChairID,
-                        }
-                    });
-                }
-            }
-        }
-    }
-
-    //从老的位置弹起
-    OutOldTable(pActor) {
-        let tableid = -1
-        let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
-
-        if (gameCenter.user.isMe(pActor)) {
-            if (this.m_ActorTableID.has(nActorDBID)) {
-                tableid = this.m_ActorTableID.get(nActorDBID)
-                this.m_ActorTableID.delete(nActorDBID)
-                let OldChairID = INVAL_CHAIRID
-                this.table[tableid].getActorDbids().forEach((v, nChairID) => {
-                    if (v != nActorDBID) {
-                        let pOtherActor = gameCenter.user.getActorByDBIDEx(nActorDBID)
-                        if (pOtherActor) {
-                            app.event.dispatchEvent({
-                                eventName: EVENT_ID.EVENT_PLAY_ACTOR_OUTTABLE,
-                                dict: {
-                                    pActor: pOtherActor,
-                                    nChairID: nChairID,
-                                }
-                            })
-                        }
-                    } else {
-                        OldChairID = nChairID
-                    }
-                })
-
-                if (OldChairID != INVAL_CHAIRID) {
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_PLAY_ACTOR_OUTTABLE,
-                        dict: {
-                            pActor: pActor,
-                            nChairID: OldChairID,
-                        }
-                    })
-                    this.table[tableid].standup(OldChairID);
-                }
-            }
-            else
-                if (this.m_ActorTableID.has(nActorDBID)) {
-                    tableid = this.m_ActorTableID.get(nActorDBID);
-                    this.m_ActorTableID.delete(nActorDBID);
-                    let charid = 0
-                    for (let charid = 0; charid < this.m_RoomInfo.nMaxChairCount; charid++) {
-                        if (this.table[tableid].getActorDbid(charid) == nActorDBID) {
-                            //如果跟自己同桌则退出这个用户
-                            if (this.getMyTableID() == tableid) {
-                                app.event.dispatchEvent({
-                                    eventName: EVENT_ID.EVENT_PLAY_ACTOR_OUTTABLE,
-                                    dict: {
-                                        pActor: pActor,
-                                        nChairID: charid,
-                                    }
-                                })
-                            }
-                            this.table[tableid].standup(charid);
-                            break
-                        }
-                    }
-                }
-        }
-
-        if (tableid != -1) {
-            app.event.dispatchEvent({
-                eventName: EVENT_ID.EVENT_PLAY_TALBEREF,
-                dict: {
-                    nTableID: tableid,
-                }
-            })
-        }
-    }
 
     getRoomInfo() {
         return this.m_RoomInfo
     }
 
-    getRoomKindID() {
-        return this.m_RoomInfo.kindId;
-    }
+   
 
-    getActorCount(uTableID) {
-        if (uTableID < this.m_RoomInfo.nMaxTableCount) {
-            return this.table[uTableID].count + this.tableRobot.count;
-        }
-        return 0;
-    }
-    /**
-     * 获取桌子数据
-     */
-    getTable(tableID) {
-        return this.table[tableID]
-    }
-
-    getRobotTable() {
-        return this.tableRobot
-    }
-    /**
-     * 获得桌子用户
-     * @param tableID 
-     * @returns 
-     */
-    getTableDbids(tableID) {
-        return [...this.table[tableID].getActorDbids(),...this.tableRobot.getActorDbids()]
-    }
-
-
-    /**刷新奖池 */
-    refreshJackpot(ikindId?:number) {
-        let kindId = ikindId ?? this.getRoomKindID();
-        let time = app.func.time();
-        if (!this.m_jackpotDataConfig.has(kindId)) {
-            this.m_jackpotDataConfig.set(kindId, {
-                time: 0,
-                data: null,
-            });
-        }
-        let jackpotData = this.m_jackpotDataConfig.get(kindId);
-        //存储时间 不超过20分钟 不在去服务器拉取新数据 因为服务器20秒刷新一次
-        if (jackpotData.time + 20 >= time) {
-            return false;
-        }
-        jackpotData.time = time;
-        app.http.post({
-            url: httpConfig.path_pay + "Hall/minigamePrize",
-            params: {
-                room_id: kindId,
-                timestamp: time,
-            },
-            callback: (bSuccess: boolean, response: any) => {
-                if (bSuccess) {
-                    if (response.status == 1 && response.data) {
-                        jackpotData.data = response.data;
-                        app.event.dispatchEvent({
-                            eventName: EVENT_ID.EVENT_JACKPOT_REFRESH
-                        });
-                    } else {
-                        jackpotData.time = 0;
-                    }
-                } else {
-                    jackpotData.time = 0;
-                }
-            }
-        });
-        return true;
-    }
-    /**获得奖池数据 */
-    getJackpotData(ikindId?:number): JackpotData[] {
-        return this.m_jackpotDataConfig.get(ikindId ?? this.getRoomKindID())?.data;
-    }
-
-    /**请求记录 */
-    requsetRoomWinGoldLog(kind_id?: number) {
-        let time = Date.parse(new Date().toString());
-        let url = httpConfig.path_pay + "OtherApi/bairenlog";
-        let params = {
-            room_id: kind_id ?? this.getRoomKindID(),
-            timestamp: time,
-        };
-        app.http.post({
-            url: url,
-            params: params,
-            callback: (successed, result) => {
-                fw.print(result);
-                if (successed && result && result.status == 1 && result.data) {
-                    (<any>this).bigWinnerData = result.data;
-                    app.event.dispatchEvent({
-                        eventName: EVENT_ID.EVENT_ROOM_WIN_GOLD_LOG,
-                        dict: result.data,
-                    });
-                }
-            }
-        });
-    }
-    /**获取记录 */
-    getRoomWinGoldLog(): BigWinnerData[] | null {
-        return (<any>this).bigWinnerData;
-    }
-    /**获得房间详细信息 */
-    getRoomInfoDetailed() {
-        return center.roomList.getRoomInfo(this.getRoomKindID());
-    }
-    /**获得继续玩牌限制 */
-    getContinuePlayLimit() {
-        return center.roomList.getEnterRoomLimit(this.getRoomKindID());
-    }
 }
 
-/**roomInfo的EnterRule类型 */
-enum RoomRuleEnter {
-    /**金币 */
-    ROOM_RULE_ENTER_GOLD = 1,
-    /**积分 */
-    ROOM_RULE_ENTER_SCORE = 2,
-    /**VIP经验值 */
-    ROOM_RULE_ENTER_VIPEXP = 3,
-}
 
 enum table_state {
     idle = -1,// 未初始化
@@ -869,34 +458,7 @@ class GameRoomTable {
     }
 }
 
-class GameRoomRobotTable extends GameRoomTable{
-    offsetChairId: number;
-    constructor(offsetChairId,maxChairCount) {
-        super(maxChairCount);
-        this.offsetChairId = offsetChairId;
-    }
 
-    sitdown(chair_id, actor_dbid) {
-        super.sitdown(chair_id-this.offsetChairId, actor_dbid);
-    }
-
-    standup(chair_id) {
-        super.standup(chair_id-this.offsetChairId);
-    }
-
-    getActorDbid(chair_id){
-        return super.getActorDbid(chair_id-this.offsetChairId);
-    }
-
-    allocateChairID() {
-        if(this.count == this._chair.length) return -1;
-        let ret = this._chair.indexOf(INVAL_USERID);
-        if( ret != -1 ) {
-            ret += this.offsetChairId;
-        }
-        return ret
-    }
-}
 class GameRoomInfo {
     defaultGroupType: number;
     gameType: number;

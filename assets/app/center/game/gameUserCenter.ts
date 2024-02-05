@@ -38,12 +38,8 @@ export class GameUserCenter extends GameServerMainInetMsg {
     initRegister() {
         this.bindMsgStructPB(this.cmd.GCSI_GAME_SCENE_PUSH, proto.client_proto.CommonGameScenePush);
         this.bindRecvFunc(this.cmd.GCSI_GAME_SCENE_PUSH, this.OnRecv_ActorPublicInfo.bind(this));
-    //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_PUBLIC, proto.game_actor.public_info_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_PUBLIC, { callback: this.OnRecv_ActorPublicInfo.bind(this), printLog: false });
         this.bindMsgStructPB(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, proto.client_proto.GameUserAttriChangePush);
         this.bindRecvFunc(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, this.OnRecv_ActorVariableInfo.bind(this));
-         //     this.bindMsgStructPB(this.cmd.GAME_ACTOR_DESTORY, proto.game_actor.destory_s);
-    //     this.bindRecvFunc(this.cmd.GAME_ACTOR_DESTORY, { callback: this.OnRecv_ActorDestory.bind(this), printLog: false });
     }
 
     /**获得某桌人数 */
@@ -58,21 +54,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
             return;
         }
         return this.getActorByChairId(nChairID)
-        let nTableID = this.getSelfTableID();
-        let table = gameCenter.room.getTable(nTableID);
-        if(table) {
-            let userID = table.getActorDbid(nChairID)
-            if(userID != INVAL_USERID) {
-                return this.getActorByDBIDEx(userID)
-            }
-        }
-        let robotTable = gameCenter.room.getRobotTable();
-        if(robotTable) {
-            let userID = robotTable.getActorDbid(nChairID);
-            if(userID != INVAL_USERID) {
-                return this.getActorByDBIDEx(userID)
-            }
-        }
+        
     }
     /**通过DBID获得用户 */
     getActorByDBIDEx(nActorDBID: number | string) {
@@ -208,21 +190,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
             data: data
         });
     }
-    /**
-     * 单机游戏机器人创建
-     * @param dict 
-     */
-    OnRecv_RobotActorPublicInfo(dict: proto.game_actor.Ipublic_info_s) {
-        // fw.print(dict, " =======OnRecv_ActorPublicInfo======== ")
-        let nActorDBID = dict.user_id;
-        let actor = this.createActor(nActorDBID);
-        this.initPlayPublicInfo(dict)
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_PUBLIC,
-            dict: actor
-        })
-    }
-
+    
     OnRecv_ActorPrivateInfo(pActor) {
         // fw.print(dict, " =======OnRecv_ActorPrivateInfo======== ")
         let nActorDBID = pActor[PROTO_ACTOR.UAT_UID];
@@ -265,37 +233,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
         }
     }
 
-    OnRecv_ActorDestory(dict: proto.game_actor.Idestory_s) {
-        // dump(dict, " ========OnRecv_ActorDestory====== ")
-        let nActorDBID = dict.user_id;
-        let actor = this.getActorByDBIDEx(nActorDBID);
-        if (actor) {
-            //先发送再删除
-            app.event.dispatchEvent({
-                eventName: EVENT_ID.EVENT_PLAY_ACTOR_DESTORY,
-                dict: actor
-            });
-            this.m_ActorMap.delete(nActorDBID);
-        }
-    }
-    /**
-     * 单机游戏机器人销毁
-     * @param dict 
-     */
-    OnRecv_RobotActorDestory(dict: proto.game_actor.Idestory_s) {
-        // dump(dict, " ========OnRecv_ActorDestory====== ")
-        let nActorDBID = dict.user_id;
-        let actor = this.getActorByDBIDEx(nActorDBID);
-        if (actor) {
-            //先发送再删除
-            app.event.dispatchEvent({
-                eventName: EVENT_ID.EVENT_PLAY_ROBOT_ACTOR_DESTORY,
-                dict: actor
-            });
-            this.m_ActorMap.delete(nActorDBID);
-        }
-    }
-
+   
     /**创建属性结构 */
     createActor(nActorDBID: number) {
         let actor = this.m_ActorMap.get(nActorDBID);

@@ -50,8 +50,6 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     initRegister() {
-        // this.bindMsgStructPB(this.cmd.LSMI_LOGIN_REQ, proto.login_server.login_error_s)
-        // this.bindRecvFunc(this.cmd.LSMI_LOGIN_REQ, this.OnRecv_LoginFail.bind(this))
 
         this.bindMsgStructPB(this.cmd.LSMI_LOGIN_RESP, proto.client_proto.LoginResp)
         this.bindRecvFunc(this.cmd.LSMI_LOGIN_RESP, this.OnRecv_LoginEnd.bind(this))
@@ -62,10 +60,6 @@ export class LoginCenter extends LoginMainInetMsg {
         this.bindMsgStructPB(this.cmd.LSMI_LOGIN_OFFSITE_PUSH, proto.client_proto.LoginOffsitePush)
         this.bindRecvFunc(this.cmd.LSMI_LOGIN_OFFSITE_PUSH, this.OnRecv_LoginOffistePush.bind(this))
         
-
-        // this.bindMsgStructPB(this.cmd.LOGIN_MSGID_TIPS, proto.login_server.login_tips_s)
-        // this.bindRecvFunc(this.cmd.LOGIN_MSGID_TIPS, this.OnRecv_Tips.bind(this))
-
         this.bindMsgStructPB(this.cmd.LSMI_LOGIN_REQ, proto.client_proto.LoginReq)
     }
 
@@ -285,31 +279,7 @@ export class LoginCenter extends LoginMainInetMsg {
         params.extra = JSON.stringify(params.extra)
         return params
     }
-    // 登录提示
-    OnRecv_Tips(dict: proto.login_server.Ilogin_tips_s) {
-        let btType = dict.type
-        switch (btType) {
-            case ERRID.ACCOUNT_INVALID:
-            case ERRID.ACCOUNT_FREEZE:
-            case ERRID.PASSWORD_ERROR:
-            case ERRID.LOGIN_FREQUENT:
-                app.event.dispatchEvent({
-                    //事件名
-                    eventName: EVENT_ID.EVENT_LOGIN_FAIL_TIPS,
-                    //参数可自定义
-                    dict: dict,
-                })
-                this.closeConnect();
-                break;
-        }
-        let tips = dict.tips
-        let msg = tips == "" ? ERRID_MSG.get(dict.type) : tips;
-        if (msg) {
-            app.popup.showToast(msg)
-        } else {
-            app.popup.showToast("UNKOWN ERROR")
-        }
-    }
+
     // 登录结果
     OnRecv_LoginEnd(dict: proto.client_proto.LoginResp) {
         app.gameManager.setServerId(0)
@@ -394,17 +364,17 @@ export class LoginCenter extends LoginMainInetMsg {
      * 登录失败
      * @param dict 
      */
-    OnRecv_LoginFail(dict: proto.login_server.Ilogin_error_s) {
-        /**关闭登录计时器 */
-        this.stopLoginingTimer()
-        this.closeConnect();
-        app.event.dispatchEvent({
-            //事件名
-            eventName: EVENT_ID.EVENT_LOGIN_FAIL,
-            //参数可自定义
-            dict: dict.error_type,
-        })
-    }
+    // OnRecv_LoginFail(dict: proto.login_server.Ilogin_error_s) {
+    //     /**关闭登录计时器 */
+    //     this.stopLoginingTimer()
+    //     this.closeConnect();
+    //     app.event.dispatchEvent({
+    //         //事件名
+    //         eventName: EVENT_ID.EVENT_LOGIN_FAIL,
+    //         //参数可自定义
+    //         dict: dict.error_type,
+    //     })
+    // }
 
     /** 网络断开*/
     inetDisconnected(event: CloseEvent) {
