@@ -1,4 +1,4 @@
-import { _decorator, Node as ccNode,Animation, Vec2,Vec3 } from 'cc';
+import { _decorator, Node as ccNode,Animation, Vec2,Vec3, Quat } from 'cc';
 const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
@@ -71,6 +71,9 @@ export class func_Landlord extends func_GameBase {
         }else{
             a.play(`clock`);
             a.stop()
+            nodeTimer.Items[`Sprite_TimerBG`].setPosition(0,0)
+            nodeTimer.Items[`Sprite_TimerBG`].setRotation(new Quat(0,0,0))
+             
         }
     }
     
@@ -271,11 +274,11 @@ export class func_Landlord extends func_GameBase {
         }else if(ClientChairID == 1){
             let max = cardCount >= 10 ? 10 : cardCount
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(20*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*0.25*2,-45*(Math.floor(i/max)),1))
+                posVecs.push(new Vec3(25*(max -i%max - 1)*-1-yx.config.OUT_CARD_SIZE.width*0.25*2,-45*(Math.floor(i/max)),1))
             }
         }else if(ClientChairID == 2){
             for(var i=0;i<cardCount;i++){
-                posVecs.push(new Vec3(20*(i%10),-45*(Math.floor(i/10)),1))
+                posVecs.push(new Vec3(25*(i%10),-45*(Math.floor(i/10)),1))
             }
         }
         return posVecs

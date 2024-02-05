@@ -470,6 +470,8 @@
       "__id__": 0
     },
     "fileId": "19Y3WjrMNM37O9oGQBw3EF",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -649,6 +651,8 @@
       "__id__": 0
     },
     "fileId": "23pCEhFBlPDLFFCrQr2XJk",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -772,6 +776,8 @@
       "__id__": 0
     },
     "fileId": "3c+BQwoMVFl6hc5knfLeHY",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -845,6 +851,8 @@
       "__id__": 0
     },
     "fileId": "4fR9kmS+lF/4AttXCv3QYK",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2071,6 +2079,8 @@
       "__id__": 0
     },
     "fileId": "ccdJN71W9A1LXcIY0JqLvD",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2320,6 +2330,8 @@
       "__id__": 0
     },
     "fileId": "23aqXNko5E5Ltpm5RzyiM4",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -2661,6 +2673,8 @@
       "__id__": 0
     },
     "fileId": "79mWREj9dEPKdwKF321fMb",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -3261,6 +3275,8 @@
       "__id__": 0
     },
     "fileId": "12RbyHHedEQZsVfeDzUI9Q",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -4096,6 +4112,8 @@
       "__id__": 0
     },
     "fileId": "195JnZUQlJO5YhHxggZutj",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -4357,6 +4375,8 @@
       "__id__": 0
     },
     "fileId": "2alozbarJM+ZxK7ftdjF7G",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -5033,6 +5053,8 @@
       "__id__": 0
     },
     "fileId": "d42z/cugtNPqcs0mFQkzRb",
+    "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": null
   },
   {
@@ -5124,6 +5146,7 @@
     },
     "fileId": "c46/YsCPVOJYA4mWEpNYRx",
     "instance": null,
+    "targetOverrides": null,
     "nestedPrefabInstanceRoots": [
       {
         "__id__": 278
