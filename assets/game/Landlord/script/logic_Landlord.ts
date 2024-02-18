@@ -524,7 +524,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 			var cbQuadrupleCount = analyseResult.cbQuadrupleCount
 			var cbOutCardQuadrupleCount = cbOutCardCount / 4
 			if(cbOutCardQuadrupleCount <= cbQuadrupleCount ){
-				for(var line=cbOutCardQuadrupleCount;cbOutCardQuadrupleCount<=cbQuadrupleCount;line++){
+				for(var line=cbOutCardQuadrupleCount;line<=cbQuadrupleCount;line++){
 					for(var i=cbQuadrupleCount;i>=1;i--){
 						if (i - line < 0 ){
 							break

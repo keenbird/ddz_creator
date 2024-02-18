@@ -957,7 +957,7 @@ export class main_Landlord extends main_GameBase {
     }
     //玩家出牌命令
     didReceiveOutCard(data:proto.client_proto_ddz.IDDZ_S_OutCard){
-        var cardData = cardData = this.logic.resortZOrderForOutCard(data.outcards, data.outcards.length ,data.cardtype)
+        var cardData =  this.logic.resortZOrderForOutCard(data.outcards, data.outcards.length ,data.cardtype)
         var cardType = data.cardtype
         var nChairID = data.outchair
         
@@ -2789,148 +2789,7 @@ export class main_Landlord extends main_GameBase {
             }
         }
     }
-    MSG_GAMESCENE_S(data: proto.game_ab.IMSG_GAMESCENE_S) {
-        //标记完成
-        yx.internet.setTriggerMessageVisible(true);
-    }
-    MSG_FREE_S(data: proto.game_ab.IMSG_FREE_S) {
-        //清理上一局
-        this.clearOneGame();
-        //刷新下注
-        this.updateChipScore();
-        //标记完成
-        yx.internet.setTriggerMessageVisible(true);
-    }
-    MSG_START_S(data: proto.game_ab.IMSG_START_S) {
-        //刷新倍率
-        this.updateMultipleAnim();
-        //刷新庄家牌
-        
-    }
-    MSG_BET_S(data: proto.game_ab.IMSG_BET_S) {
-        //设置区域下注
-        this.player.setAreaChipVisible(data.nChairID, true, Object.assign({ bAnim: true }, data));
-        //隐藏倒计时
-        this.player.setCountdownVisible(data.nChairID, false);
-        //隐藏操作界面
-        if (data.nChairID == yx.internet.nSelfChairID) {
-            this.setOperateVisible(false);
-        }
-        //玩家玩家信息
-        this.player.updateOnePlayer(data.nChairID);
-        //标记完成
-        yx.internet.setTriggerMessageVisible(true);
-    }
-    MSG_BET_PART2_S(data: proto.game_ab.IMSG_BET_PART2_S) {
-        //调整倍率
-        this.updateMultipleAnim();
-        //发牌
-        const nodes = [
-            this.Items.Node_card_a,
-            this.Items.Node_card_b,
-        ];
-        let index = 0;
-        let func = () => {
-            if (index < data.uCards.length) {
-                ++index;
-            } else {
-                //开启倒计时
-                this.player.setCountdownVisible(null, true, data.nLeaveTime);
-                //显示操作界面
-                if (yx.internet.playerState[yx.internet.nSelfChairID] != yx.config.PlayerStates.TimeOut) {
-                    this.setOperateVisible(true);
-                }
-                //标记完成
-                yx.internet.setTriggerMessageVisible(true);
-            }
-        }
-        func();
-    }
-    MSG_END_S(data: proto.game_ab.IMSG_END_S) {
-        //隐藏自己的操作
-        this.setOperateVisible(false);
-        //发牌
-        const nodes = [
-            this.Items.Node_card_a,
-            this.Items.Node_card_b,
-        ];
-        let index = 0;
-        let func = () => {
-            if (index < data.uCards.length) {
-                ++index;
-            } else {
-                app.func.doPromise(resolve => {
-                    //闪牌动画
-                    this.playCardWin(data.nJettonArea, resolve);
-                    //显示玩家赢牌区域
-                    this.player.setChipWinVisible(null, true, data.nJettonArea);
-                }).then(() => {
-                    return app.func.doPromise(resolve => {
-                        let bFirst = true;
-                        //赢筹码动画
-                        for (let nChairID = 0; nChairID < yx.internet.nMaxPlayerCount; ++nChairID) {
-                            let nWinScore = data.nSitUserWinScore[nChairID * 2 + data.nJettonArea - 1];
-                            if (nWinScore > 0) {
-                                if (bFirst) {
-                                    bFirst = false;
-                                    this.player.playWinChipAnim(nChairID, data.nJettonArea, nWinScore, resolve);
-                                } else {
-                                    this.player.playWinChipAnim(nChairID, data.nJettonArea, nWinScore);
-                                }
-                            }
-                        }
-                        bFirst && resolve();
-                    });
-                }).then(() => {
-                    return app.func.doPromise(resolve => {
-                        let bFirst = true;
-                        //输筹码动画
-                        for (let nChairID = 0; nChairID < yx.internet.nMaxPlayerCount; ++nChairID) {
-                            let nLoseScore = data.nSitUserWinScore[nChairID * 2 + data.nJettonArea % 2];
-                            if (nLoseScore < 0) {
-                                if (bFirst) {
-                                    bFirst = false;
-                                    this.player.playLoseChipAnim(nChairID, data.nJettonArea, resolve);
-                                } else {
-                                    this.player.playLoseChipAnim(nChairID, data.nJettonArea);
-                                }
-                            }
-                        }
-                        bFirst && resolve();
-                    });
-                });
-            }
-        }
-        func();
-    }
-    MSG_TIPS_S(data: proto.game_ab.IMSG_TIPS_S) {
-        //TODO
-    }
-    MSG_PLAYER_STATUS_S(data: proto.game_ab.IMSG_PLAYER_STATUS_S) {
-        //刷新玩家状态
-        this.player.updatePlayerState(data.nChairID, data.ucCurState);
-        //自己超时
-        if (data.nChairID == yx.internet.nSelfChairID && data.ucCurState == yx.config.PlayerStates.TimeOut) {
-            //隐藏操作界面
-            this.setOperateVisible(false, true);
-        }
-    }
-    doReconnect(data: proto.game_ab.IMSG_RECONNECT_S) {
-        //清理旧状态
-        this.clearOneGame();
-        //刷新倍率
-        this.updateMultipleAnim();
-        //刷新a牌
-        this.updateTableCard(this.Items.Node_card_a, true, data.uCardData[0]);
-        //刷新庄家牌
-        this.updateTableCard(this.Items.Node_card_banker, true, data.uCardData[1]);
-        //刷新b牌
-        this.updateTableCard(this.Items.Node_card_b, true, data.uCardData[2]);
-        //刷新玩家状态
-        data.btSitUserState.forEach((nState: number, nChairID: number) => {
-            this.player.updatePlayerState(nChairID, nState);
-        });
-    }
+
 }
 
 declare global {
