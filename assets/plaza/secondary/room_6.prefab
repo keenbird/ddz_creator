@@ -145,7 +145,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 75.501,
+      "y": 70,
       "z": 0
     },
     "_lrot": {
@@ -233,8 +233,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 21,
-      "height": 19
+      "width": 22,
+      "height": 21
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -269,7 +269,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "976d4822-3674-4fdc-8f01-dbefc8006e2b@f9941",
+      "__uuid__": "446616b0-b274-4615-bd2c-5554777b7c3b@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -326,7 +326,7 @@
     },
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 11.5,
+      "x": 12,
       "y": 0,
       "z": 0
     },
@@ -453,7 +453,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 212.58,
+      "width": 213.58,
       "height": 30
     },
     "_anchorPoint": {
@@ -636,7 +636,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 34,
-      "height": 35
+      "height": 34
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -671,7 +671,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "168f8bca-751f-4e7b-b2cb-08d5bc63a6a0@f9941",
+      "__uuid__": "59f147d0-2822-4263-bdd1-10dd87435a9d@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,
@@ -798,9 +798,9 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 229,
-      "g": 65,
-      "b": 11,
+      "r": 255,
+      "g": 88,
+      "b": 0,
       "a": 255
     },
     "_string": "0",
@@ -933,7 +933,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 329,
-      "height": 212
+      "height": 215
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -968,7 +968,7 @@
       "a": 255
     },
     "_spriteFrame": {
-      "__uuid__": "69e0b919-bc2d-437e-a250-f8f127ba9067@f9941",
+      "__uuid__": "53e76e1e-22a6-4ae4-8ae9-7f829062d83d@f9941",
       "__expectedType__": "cc.SpriteFrame"
     },
     "_type": 0,

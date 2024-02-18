@@ -33,6 +33,7 @@ export class plaza_secondary extends (fw.FWComponent) {
 			let item = this.Items.gameListItem.clone()
 			this.Items.gameListScrollView.Items.content.addChild(item)
 			item.active = true
+			item.setPosition(-21.5,0)
 			item.Items.lab_nolmal.string = data.typeName
 			item.Items.spr_click_txt.string = data.typeName
 			item.onClickAndScale(() => {
