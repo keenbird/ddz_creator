@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="BUGLY_APPID" >334258e149</string>
+    <bool name="BUGLY_ENABLE_DEBUG">false</bool>
+    <string name="BUGLY_APP_CHANNEL">test</string>
+</resources>

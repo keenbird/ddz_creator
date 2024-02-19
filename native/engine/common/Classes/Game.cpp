@@ -37,9 +37,9 @@ Game::Game() = default;
 
 int Game::init() {
   _windowInfo.title = GAME_NAME;
-  //configurate window size
-  _windowInfo.height = 720;
-  _windowInfo.width  = 1280;
+  // configurate window size
+  // _windowInfo.height = 600;
+  // _windowInfo.width  = 800;
 
 #if CC_DEBUG
   _debuggerInfo.enabled = true;

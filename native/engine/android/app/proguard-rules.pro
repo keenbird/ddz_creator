@@ -31,15 +31,6 @@
 -keep class okio.** { *; }
 -dontwarn okio.**
 
-# Proguard gson for release
--keep class com.google.gson.reflect.TypeToken
--keep class * extends com.google.gson.reflect.TypeToken
--keep public class * implements java.lang.reflect.Type
-
-# Proguard panda for release
--keep class com.panda.** { *; }
--dontwarn com.panda.**
-
 # Proguard Android Webivew for release. you can comment if you are not using a webview
 -keep public class android.net.http.SslError
 -keep public class android.webkit.WebViewClient

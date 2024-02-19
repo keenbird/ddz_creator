@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">india_rummy</string>
-<!--    需要service架包配置-->
-    <string name="facebook_app_id">test—287225909769716</string>
-    <string name="facebook_client_token">test—5e56d4a2ff92db5bc16d826c96f34e6c</string>
-    <string name="facebook_app_scheme">test—fb287225909769716</string>
-    <string name="facebook_content_provider">test—com.facebook.app.FacebookContentProvider287225909769716</string>
-</resources>

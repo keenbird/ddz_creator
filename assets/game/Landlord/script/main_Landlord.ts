@@ -73,6 +73,10 @@ export class main_Landlord extends main_GameBase {
                 this.Items.node_player_2.setPosition(v3(this.Items.node_player_2.getPosition().x+66,this.Items.node_player_2.getPosition().y,1))
 			},0)
 		}
+        if(app.winSize.width > 1560){
+            this.Items.Sprite_bg.obtainComponent(UITransform).setContentSize(app.winSize);
+        }
+        
 	}
     protected initEvents(): boolean | void {
         //玩家金币金币变更

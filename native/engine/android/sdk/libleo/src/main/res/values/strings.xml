@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="CHANNEL_SUB">test</string>
-    <string name="LEO_Policy">http://ydqp.uuy.com/index/policy</string>
-    <string name="LEO_THC">http://ydqp.uuy.com/index/service</string>
-</resources>

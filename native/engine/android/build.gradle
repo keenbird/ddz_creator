@@ -22,7 +22,6 @@ allprojects {
         // jcenter() // keeped as anchor, will be removed soon
         flatDir {
             dirs 'libs'
-            dirs '../sdk/libleo/libs'
         }
     }
 }
