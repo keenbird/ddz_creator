@@ -115,7 +115,7 @@ public class CropImage extends MonitoredActivity {
         mContentResolver = getContentResolver();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.cropimage);
+        // setContentView(R.layout.cropimage);
 
         mImageView = (CropImageView) findViewById(R.id.image);
 

@@ -1,6 +1,7 @@
 import org.apache.tools.ant.taskdefs.condition.Os
 
 apply plugin: 'com.android.application'
+//apply plugin: 'com.google.firebase.crashlytics'
 
 RES_PATH = RES_PATH.replace("\\", "/")
 COCOS_ENGINE_PATH = COCOS_ENGINE_PATH.replace("\\", "/")
@@ -15,7 +16,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
+    ndkVersion '23.1.7779620'
     defaultConfig {
         applicationId APPLICATION_ID
         minSdkVersion PROP_MIN_SDK_VERSION
@@ -101,4 +102,12 @@ dependencies {
     implementation fileTree(dir: "${COCOS_ENGINE_PATH}/cocos/platform/android/java/libs", include: ['*.jar'])
     implementation project(':libservice')
     implementation project(':libcocos')
+//    implementation project(':libsdk')
+//    implementation 'androidx.annotation:annotation-jvm:+'
+    implementation 'com.google.firebase:firebase-functions:20.0.0'
+
+
+    // 权限请求库
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
