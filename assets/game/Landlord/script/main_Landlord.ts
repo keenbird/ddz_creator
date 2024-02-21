@@ -1,4 +1,4 @@
-import { _decorator, Node as ccNode, instantiate, math, ProgressBar,NodeEventType,sp, Animation, AnimationClip, Prefab, tween,v3, UIOpacity, Tween, Sprite, UITransform, Button, Label, Vec3, Vec2, Rect, Size } from 'cc';
+import { _decorator, Node as ccNode, instantiate, math, ProgressBar,NodeEventType,sp, Animation, AnimationClip, Prefab, tween,v3, UIOpacity, Tween, Sprite, UITransform, Button, Label, Vec3, Vec2, Rect, Size,Toggle } from 'cc';
 const { ccclass } = _decorator;
 
 import { yx } from '../yx_Landlord';
@@ -111,7 +111,10 @@ export class main_Landlord extends main_GameBase {
         yx.internet.DDZ_C_USE_MEMORY({
             buse:isUse
         })
-        app.file.setBooleanForKey(`Use_cardRecorder`, isUse, { all: false });
+        // app.file.setBooleanForKey(`Use_cardRecorder`, isUse, { all: false });
+    }
+    onToggleCheckEvent(event){
+        app.file.setBooleanForKey(`Use_cardRecorder`,  event.isChecked, { all: false });
     }
     protected initBtns(): boolean | void {
         this.Items.btn_cardRecord.onClickAndScale(() => {
@@ -122,6 +125,7 @@ export class main_Landlord extends main_GameBase {
                 this.sendUserMemory(true)
             }
         });
+        
         this.Items.Sprite_rule.onClickAndScale(() => {
             yx.internet.DDZ_C_DISMISS({ })
         });
@@ -297,6 +301,9 @@ export class main_Landlord extends main_GameBase {
     //是否展示记牌器
     showCardRecorder(isShow:boolean){
         this.Items.node_card_recorder.active = isShow
+        if(isShow){
+            this.Items.node_card_recorder.Items.Toggle.getComponent(Toggle).isChecked = app.file.getBooleanForKey(`Use_cardRecorder`, false)
+        }
     }
     //是否展示记牌器
     setCardRecorderData(recorderDada : any){
@@ -368,7 +375,7 @@ export class main_Landlord extends main_GameBase {
             let aniNode = instantiate(res);
             if(!fw.isNull(aniNode)){
                 this.viewZOrderNode[this.viewZOrder.Anim].addChild(aniNode)
-                aniNode.Items["BitmapFontLabel_1"].string = "X" + beishu
+                aniNode.Items["BitmapFontLabel_1"].string = "x" + beishu
                 var tScale = yx.config.changeOldResScale
                 aniNode.scale = v3(tScale, tScale, tScale)
                 aniNode.setPosition(new Vec3(0,70,1))
@@ -905,6 +912,8 @@ export class main_Landlord extends main_GameBase {
                     var bmt1 = this.Items.Node_BarStatusDouble.Items.Sprite_BtnNegativeSuper.Items.bmt
                     bmt1.updateSprite(fw.BundleConfig.Landlord.res[`img/table/btn/${data[1] == 4 ? `yxc_img_x4` : `yxc_img_x2`}/spriteFrame`])
                     
+                    this.Items.Node_BarStatusDouble.Items.lab_diamond.string = data[2] +""
+                    console.log("LH1",data)
                 }
                 break;
             }
@@ -2091,7 +2100,7 @@ export class main_Landlord extends main_GameBase {
                             this.player.setPlayerCallStateVisible(i,false)
                             let logicChair = yx.func.getClientChairIDByServerChairID(i)
                             if(logicChair == 0){
-                                this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_Double,data.countdown,null,[yx.internet.ddzBaseInfo.doubletimes,yx.internet.ddzBaseInfo.superdoubletimes],true)
+                                this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_Double,data.countdown,null,[yx.internet.ddzBaseInfo.doubletimes,yx.internet.ddzBaseInfo.superdoubletimes,yx.internet.ddzBaseInfo.superdoubleDiamond],true)
                             }else{
                                 this.player.setPlayerTimerVisible(i,true,data.countdown,null,null,true)
                             }
