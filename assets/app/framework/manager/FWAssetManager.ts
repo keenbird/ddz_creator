@@ -2,7 +2,7 @@ import { _decorator, Component, Node as ccNode, assetManager, AssetManager, Asse
 const { ccclass } = _decorator;
 
 /** js 系统 */
-const system_js = self["System"];
+const system_js = globalThis["System"];
 /**类注册缓存 */
 const script_cache_tab: Record<string, any> = system_js[Reflect.ownKeys(system_js).find((v) => typeof v === "symbol")];
 

@@ -555,17 +555,45 @@ export class LoginCenter extends LoginMainInetMsg {
     }
 
     selectServer(serverData: server_config) {
-        if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
-            app.popup.showDialog({
-                viewConfig: fw.BundleConfig.login.res["testlogin/login_main"],
-            });
-        } else {
-            this.loginPlaza()
+        var enterLoginMain = ()=>{
+            if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
+                app.popup.showDialog({
+                    viewConfig: fw.BundleConfig.login.res["testlogin/login_main"],
+                });
+            } else {
+                this.loginPlaza()
+            }
         }
+        
         //保存配置
         app.file.setStringForKey("LastSelectServer", JSON.stringify(serverData), { all: true });
         //设置service配置
         app.socket.initServerConfig(serverData);
+        if(serverData.Name == "正式服" || serverData.Name == "预发布"){
+            app.http.post({
+                url: serverData.url_payroot + "api/server/iplist",
+                params: {},
+                callback: (bSuccess, response) => {
+                    if (bSuccess) {
+                        if (1 == response.code) {
+                            serverData.url_login = response.data.loginUrl
+                            serverData.port_max = app.func.toNumber(response.data.eport)
+                            serverData.port_min = app.func.toNumber(response.data.sport)
+                            app.socket.initServerConfig(serverData);
+                            enterLoginMain()
+                        } else {
+                            app.popup.showToast("获取网络失败:"+response.msg);
+                            enterLoginMain()
+                        }
+                    } else {
+                        app.popup.showToast("获取网络失败");
+                        enterLoginMain()
+                    }
+                }
+            });
+        }else{
+            enterLoginMain()
+        }
         //请求Sdk开关
         // app.sdk.requestSdkOpenInfo(this.updateServerProxy.bind(this, this.changeToUpdate.bind(this)))
         // //刷新大厅列表排序

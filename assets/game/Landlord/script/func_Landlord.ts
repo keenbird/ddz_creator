@@ -73,6 +73,10 @@ export class func_Landlord extends func_GameBase {
             a.stop()
             nodeTimer.Items[`Sprite_TimerBG`].setPosition(0,0)
             nodeTimer.Items[`Sprite_TimerBG`].setRotation(new Quat(0,0,0))
+            if (nodeTimer["schedule_updateClockTime"]) {
+                nodeTimer.clearIntervalTimer(nodeTimer["schedule_updateClockTime"]);
+                nodeTimer["schedule_updateClockTime"] = null;
+            }
              
         }
     }

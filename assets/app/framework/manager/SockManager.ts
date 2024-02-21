@@ -79,6 +79,7 @@ export class SockManager extends Component {
             url_login: socketData.url_login,
             port_min: socketData.port_min,
             port_max: socketData.port_max,
+            protocol:socketData.protocol ? socketData.protocol : "ws"
         }
     }
 
@@ -90,6 +91,7 @@ export class SockManager extends Component {
         let options: NetConnectOptions = {
             //地址
             host: this.socketData.url_login,
+            protocol:this.socketData.protocol,
             //端口
             port: math.randomRangeInt(this.socketData.port_min, this.socketData.port_max + 1),
             //-1 永久重连，0不自动重连，其他正整数为自动重试次数

@@ -245,7 +245,7 @@ export class DeviceWechat extends DeviceBase {
                         width: width,
                         height: height,
                         lineHeight: 1,
-                        backgroundColor: '#ff000064',
+                        backgroundColor: '#ff000000',
                         color: '#ffffff',
                         textAlign: 'center',
                         fontSize: 1,

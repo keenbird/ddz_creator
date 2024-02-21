@@ -1370,7 +1370,6 @@ export class main_Landlord extends main_GameBase {
         let self = this
         this.updateDisplayOfOutCardBtn()
         if(yx.internet.m_MaxCardInfo.nType == -1){
-            console.log("LH1",yx.func.cardDatasFromVector(this.m_vecPopCache))
             if(this.m_vecPopCache.length == 1 || this.m_vecPopCache.length == 2){
                 this.markRegionCardData(cbCurrentCardData)
             }

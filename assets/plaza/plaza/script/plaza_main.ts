@@ -191,20 +191,32 @@ export class plaza_main extends (fw.FWComponent) {
 		if (app.runtime.lastSceneType != fw.SceneConfigs.plaza.sceneName) {
 			// this.onEnterProcess()
 		}
-		if(app.func.isWeChat() && center.user.getActorProp(PROTO_ACTOR.UAT_FACE_TYPE) == 1){
-			app.native.device.getWechatUserInfo(this.Items.Node_head,()=>{
-				this.Items.Node_head.onClickAndScale(() => {
-					app.popup.showDialog({
-						viewConfig: fw.BundleConfig.plaza.res[`userInfo/userInfo_dialog`]
-					});
-				});
-			})
-		}
+		this.showWechatUserInfo(true)
 		this.updatePlayerInfo()
 		//刷新特殊游戏 新手引导没了不需要了
 		// this.updateSpecialGame();
 		//请求历史单笔最大充值金额
 		// center.giftBag.getMaxPaymentHis();
+	}
+
+	/**是否展示微信的授权按钮 */
+	showWechatUserInfo(isShow:boolean) {
+		if(isShow){
+			if(app.func.isWeChat() && center.user.getActorProp(PROTO_ACTOR.UAT_FACE_TYPE) == 1){
+				app.native.device.getWechatUserInfo(this.Items.Node_head,()=>{
+					this.Items.Node_head.onClickAndScale(() => {
+						app.popup.showDialog({
+							viewConfig: fw.BundleConfig.plaza.res[`userInfo/userInfo_dialog`]
+						});
+					});
+				})
+			}
+		}else{
+			if (app.native.device.btnWechatUserInfo) {
+				app.native.device.btnWechatUserInfo.destroy()
+				app.native.device.btnWechatUserInfo = null
+			}
+		}
 	}
 
 	/**更多 */
@@ -501,6 +513,7 @@ export class plaza_main extends (fw.FWComponent) {
 					visible: (view: ccNode, bActive?: boolean) => {
 						//调整二级界面显隐
 						view.active = bActive ??= !view.active;
+						
 					},
 				}
 				break;
@@ -535,6 +548,7 @@ export class plaza_main extends (fw.FWComponent) {
 	}
 	//当有全屏二级界面的时候，隐藏其他节点(除开二级节点)
 	setPlazaNodeShowup(isShow:boolean) {
+		this.showWechatUserInfo(isShow)
 		if(isShow){
 			for(var i=0;i<this.node.children.length;i++){
 				let node = this.node.children[i]

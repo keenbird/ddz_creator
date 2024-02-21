@@ -36,6 +36,8 @@ export interface socket_config {
     port_min: number,
     /**最大端口 */
     port_max: number,
+    // ws/wss
+    protocol: string,
 }
 export interface server_config extends socket_config {
     /**名称 */
@@ -60,6 +62,7 @@ export const servers_default: server_config =
     url_login: "127.0.0.1",
     port_min: 5001,
     port_max: 5010,
+    protocol: "ws",
     url_facedown: "http://127.0.0.1/Static/",
     url_faceup: "http://127.0.0.1/",
     url_active: "http://127.0.0.1/",
@@ -75,6 +78,7 @@ export const servers: Array<server_config> = [
         url_login: "192.168.1.46",
         port_min: 5001,
         port_max: 5004,
+        protocol: "ws",
         url_facedown: "http://192.168.125.109/Static/",
         url_faceup: "http://192.168.125.109/",
         url_active: "http://192.168.125.109:83/",
@@ -84,21 +88,23 @@ export const servers: Array<server_config> = [
     },
     {
         Name: "预发布",
-        url_login: "http://127.0.0.1",
-        port_min: 5001,
-        port_max: 5010,
-        url_facedown: "http://127.0.0.1/Static/",
-        url_faceup: "http://127.0.0.1/",
-        url_active: "http://127.0.0.1/",
-        url_payroot: "http://127.0.0.1/",
-        url_downRes: "http://127.0.0.1/Static/",
-        url_feedback: "http://127.0.0.1/"
+        url_login: "192.168.1.50",
+        port_min: 11001,
+        port_max: 11001,
+        protocol: "wss",
+        url_facedown: "https://pre-admin-ddz.bhkwx.com/Static/",
+        url_faceup: "https://pre-admin-ddz.bhkwx.com/",
+        url_active: "https://pre-admin-ddz.bhkwx.com:80/",
+        url_payroot: "https://pre-admin-ddz.bhkwx.com/",
+        url_downRes: "https://pre-admin-ddz.bhkwx.com/Static/",
+        url_feedback: "https://pre-admin-ddz.bhkwx.com/"
     },
     {
         Name: "正式服",
         url_login: "http://127.0.0.1",
         port_min: 5001,
         port_max: 5010,
+        protocol: "wss",
         url_facedown: "http://127.0.0.1/Static/",
         url_faceup: "http://127.0.0.1/",
         url_active: "http://127.0.0.1/",
@@ -111,6 +117,7 @@ export const servers: Array<server_config> = [
         url_login: "192.168.1.49",
         port_min: 11001,
         port_max: 11001,
+        protocol: "ws",
         url_facedown: "http://192.168.10.54/Static/",
         url_faceup: "http://192.168.10.54/",
         url_active: "http://192.168.10.54:83/",
@@ -123,6 +130,7 @@ export const servers: Array<server_config> = [
         url_login: "192.168.1.50",
         port_min: 11001,
         port_max: 11001,
+        protocol: "ws",
         url_facedown: "http://192.168.10.54/Static/",
         url_faceup: "http://192.168.10.54/",
         url_active: "http://192.168.10.54:83/",
@@ -132,9 +140,10 @@ export const servers: Array<server_config> = [
     },
     {
         Name: "张探",
-        url_login: "192.168.1.48",
-        port_min: 11001,
-        port_max: 11001,
+        url_login: "120.79.199.50",
+        port_min: 11101,
+        port_max: 11101,
+        protocol: "ws",
         url_facedown: "http://192.168.10.54/Static/",
         url_faceup: "http://192.168.10.54/",
         url_active: "http://192.168.10.54:83/",
