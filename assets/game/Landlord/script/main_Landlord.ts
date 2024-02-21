@@ -1315,7 +1315,7 @@ export class main_Landlord extends main_GameBase {
 	    var [pUnionCard,nUnionCardLen] = this.logic.mergeCardData(pSelectedCard, nSelectedLen, pPopCard, nPopCardLen)
 
         //如果是特殊牌型弹出提示语(双炸、飞机带炸)
-	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen,false)
+	    var unionCardType = this.logic.GetCardType(pUnionCard,nUnionCardLen)
         if(unionCardType == yx.config.OutCardType.Quadplex_Two_special && !yx.config.m_use_serial_bomb){
             //显示特殊牌型提示语
             this.showGameTip("special")

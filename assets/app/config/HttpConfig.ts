@@ -140,9 +140,9 @@ export const servers: Array<server_config> = [
     },
     {
         Name: "张探",
-        url_login: "120.79.199.50",
-        port_min: 11101,
-        port_max: 11101,
+        url_login: "192.168.1.48",
+        port_min: 11001,
+        port_max: 11001,
         protocol: "ws",
         url_facedown: "http://192.168.10.54/Static/",
         url_faceup: "http://192.168.10.54/",

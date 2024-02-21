@@ -387,13 +387,12 @@ export class internet_Landlord extends GameServerMainInetMsg {
                 this.m_MaxCardInfo.cardData = data.turncards[data.turnwinner].data
                 this.m_MaxCardInfo.cardCount = data.turncards[data.turnwinner].data.length
                 this.m_MaxCardInfo.cbChairID = data.turnwinner
-                this.m_MaxCardInfo.nType = yx.main.logic.GetCardType(data.turncards[data.turnwinner].data,data.turncards[data.turnwinner].data.length)
+                this.m_MaxCardInfo.nType = data.turncardtype
             }
         }
     }
     DDZ_S_MSG_GAMEEND(data: proto.client_proto_ddz.IDDZ_S_GameEnd) {
         this.nGameState = yx.config.GameState.SETTLEMENT;
-        
     }
 
     isSelfLandlord():boolean {

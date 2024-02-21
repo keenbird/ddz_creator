@@ -3948,6 +3948,7 @@ $root.client_proto_ddz = (function() {
          * @property {number|null} [turnwinner] DDZ_S_Reconnect turnwinner
          * @property {Array.<client_proto_ddz.IRepeatedInt32>|null} [turncards] DDZ_S_Reconnect turncards
          * @property {Array.<boolean>|null} [passornull] DDZ_S_Reconnect passornull
+         * @property {number|null} [turncardtype] DDZ_S_Reconnect turncardtype
          * @property {client_proto_ddz.IDDZSettle|null} [settleinfo] DDZ_S_Reconnect settleinfo
          */
 
@@ -4146,6 +4147,14 @@ $root.client_proto_ddz = (function() {
         DDZ_S_Reconnect.prototype.passornull = $util.emptyArray;
 
         /**
+         * DDZ_S_Reconnect turncardtype.
+         * @member {number} turncardtype
+         * @memberof client_proto_ddz.DDZ_S_Reconnect
+         * @instance
+         */
+        DDZ_S_Reconnect.prototype.turncardtype = 0;
+
+        /**
          * DDZ_S_Reconnect settleinfo.
          * @member {client_proto_ddz.IDDZSettle|null|undefined} settleinfo
          * @memberof client_proto_ddz.DDZ_S_Reconnect
@@ -4257,8 +4266,10 @@ $root.client_proto_ddz = (function() {
                     writer.bool(message.passornull[i]);
                 writer.ldelim();
             }
+            if (message.turncardtype != null && Object.hasOwnProperty.call(message, "turncardtype"))
+                writer.uint32(/* id 22, wireType 0 =*/176).int32(message.turncardtype);
             if (message.settleinfo != null && Object.hasOwnProperty.call(message, "settleinfo"))
-                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 22, wireType 2 =*/178).fork()).ldelim();
+                $root.client_proto_ddz.DDZSettle.encode(message.settleinfo, writer.uint32(/* id 23, wireType 2 =*/186).fork()).ldelim();
             return writer;
         };
 
@@ -4445,6 +4456,10 @@ $root.client_proto_ddz = (function() {
                         break;
                     }
                 case 22: {
+                        message.turncardtype = reader.int32();
+                        break;
+                    }
+                case 23: {
                         message.settleinfo = $root.client_proto_ddz.DDZSettle.decode(reader, reader.uint32());
                         break;
                     }
@@ -4596,6 +4611,9 @@ $root.client_proto_ddz = (function() {
                     if (typeof message.passornull[i] !== "boolean")
                         return "passornull: boolean[] expected";
             }
+            if (message.turncardtype != null && message.hasOwnProperty("turncardtype"))
+                if (!$util.isInteger(message.turncardtype))
+                    return "turncardtype: integer expected";
             if (message.settleinfo != null && message.hasOwnProperty("settleinfo")) {
                 var error = $root.client_proto_ddz.DDZSettle.verify(message.settleinfo);
                 if (error)
@@ -4722,6 +4740,8 @@ $root.client_proto_ddz = (function() {
                 for (var i = 0; i < object.passornull.length; ++i)
                     message.passornull[i] = Boolean(object.passornull[i]);
             }
+            if (object.turncardtype != null)
+                message.turncardtype = object.turncardtype | 0;
             if (object.settleinfo != null) {
                 if (typeof object.settleinfo !== "object")
                     throw TypeError(".client_proto_ddz.DDZ_S_Reconnect.settleinfo: object expected");
@@ -4767,6 +4787,7 @@ $root.client_proto_ddz = (function() {
                 object.countdown = 0;
                 object.toppoint = 0;
                 object.turnwinner = 0;
+                object.turncardtype = 0;
                 object.settleinfo = null;
             }
             if (message.gameInfo != null && message.hasOwnProperty("gameInfo"))
@@ -4844,6 +4865,8 @@ $root.client_proto_ddz = (function() {
                 for (var j = 0; j < message.passornull.length; ++j)
                     object.passornull[j] = message.passornull[j];
             }
+            if (message.turncardtype != null && message.hasOwnProperty("turncardtype"))
+                object.turncardtype = message.turncardtype;
             if (message.settleinfo != null && message.hasOwnProperty("settleinfo"))
                 object.settleinfo = $root.client_proto_ddz.DDZSettle.toObject(message.settleinfo, options);
             return object;
@@ -8418,6 +8441,9 @@ export namespace client_proto_ddz {
         /** DDZ_S_Reconnect passornull */
         passornull?: (boolean[]|null);
 
+        /** DDZ_S_Reconnect turncardtype */
+        turncardtype?: (number|null);
+
         /** DDZ_S_Reconnect settleinfo */
         settleinfo?: (client_proto_ddz.IDDZSettle|null);
     }
@@ -8493,6 +8519,9 @@ export namespace client_proto_ddz {
 
         /** DDZ_S_Reconnect passornull. */
         public passornull: boolean[];
+
+        /** DDZ_S_Reconnect turncardtype. */
+        public turncardtype: number;
 
         /** DDZ_S_Reconnect settleinfo. */
         public settleinfo?: (client_proto_ddz.IDDZSettle|null);
