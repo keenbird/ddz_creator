@@ -64,6 +64,10 @@ export class main_Landlord extends main_GameBase {
             roomName : yx.internet.roomName,
             roomBase : yx.internet.roomBase,
         });
+        
+        if(yx.internet && yx.internet.reconnectData){
+            this.DDZ_S_MSG_RECONNECT(yx.internet.reconnectData)
+        }
     }
     protected fitSceneNode(){
 		if(app.isIphoneX){
@@ -2806,9 +2810,7 @@ export class main_Landlord extends main_GameBase {
     }
 
     onViewEnter() {
-        if(yx.internet.reconnectData){
-            this.DDZ_S_MSG_RECONNECT(yx.internet.reconnectData)
-        }
+        
 	}
 
 }

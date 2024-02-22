@@ -573,7 +573,9 @@ export class player_Landlord extends player_GameBase {
                         player.Items.Image_dizhu_icon.updateSprite(fw.BundleConfig.Landlord.res[`img/player/yxc_img_nmbz/spriteFrame`]);
                     }
                     if(yx.func.getClientChairIDByServerChairID(nChairID) == 0){
-                        yx.main.resetHandCardPos()
+                        if(yx.main){
+                            yx.main.resetHandCardPos()
+                        }
                     }
                 }
             }

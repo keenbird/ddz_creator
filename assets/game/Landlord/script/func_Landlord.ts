@@ -67,16 +67,15 @@ export class func_Landlord extends func_GameBase {
         a.stop()
         if(isPlay){
             a.play(`clock`);
-            yx.main.sound.playClockEffect()
+            if(yx.main){
+                yx.main.sound.playClockEffect()
+            }
         }else{
             a.play(`clock`);
             a.stop()
             nodeTimer.Items[`Sprite_TimerBG`].setPosition(0,0)
             nodeTimer.Items[`Sprite_TimerBG`].setRotation(new Quat(0,0,0))
-            if (nodeTimer["schedule_updateClockTime"]) {
-                nodeTimer.clearIntervalTimer(nodeTimer["schedule_updateClockTime"]);
-                nodeTimer["schedule_updateClockTime"] = null;
-            }
+            nodeTimer.unscheduleAllCallbacks();
              
         }
     }
@@ -98,10 +97,7 @@ export class func_Landlord extends func_GameBase {
                 }
             }
             if (nodeTimer["clockTime"] <= 0) {
-                if (nodeTimer["schedule_updateClockTime"]) {
-                    nodeTimer.clearIntervalTimer(nodeTimer["schedule_updateClockTime"]);
-                    nodeTimer["schedule_updateClockTime"] = null;
-                }
+                nodeTimer.unscheduleAllCallbacks();
                 if(callback){
                     callback()
                 }
@@ -113,11 +109,10 @@ export class func_Landlord extends func_GameBase {
             
         }
         updateLastTime();
-        if (nodeTimer["schedule_updateClockTime"]) {
-            nodeTimer.clearIntervalTimer(nodeTimer["schedule_updateClockTime"]);
-            nodeTimer["schedule_updateClockTime"] = null;
-        }
-        nodeTimer["schedule_updateClockTime"] = this.setInterval(updateLastTime, 1)
+        nodeTimer.unscheduleAllCallbacks();
+        // nodeTimer["schedule_updateClockTime"] = this.setInterval(updateLastTime, 1)
+
+        nodeTimer.schedule(updateLastTime, 1); // 2 秒后触发计时器
     }
 
     //[[
