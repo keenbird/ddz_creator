@@ -34,7 +34,9 @@ export class internet_Landlord extends GameServerMainInetMsg {
     /**房间基础信息 */
     ddzBaseInfo: proto.client_proto_ddz.IDDZInfo
     /**记牌器数据 */
-    cardRecordData: proto.client_proto_ddz.IDDZ_S_UseMemory.recordindex = []
+    cardRecordDatreconnecta: proto.client_proto_ddz.IDDZ_S_UseMemory.recordindex = []
+    /**断线重连 */
+    reconnectData: proto.client_proto_ddz.IDDZ_S_Reconnect = null
     /**叫分最高值 */
     toppoint: number = 0
     /**是否明牌 */
@@ -356,6 +358,7 @@ export class internet_Landlord extends GameServerMainInetMsg {
         this.nGameState = data.gamestate;
         this.cleanLocalData()
         this.ddzBaseInfo = data.gameInfo
+        this.reconnectData = data
         app.event.dispatchEvent({
             eventName: `GameReconnectRoom`,
             data: data,

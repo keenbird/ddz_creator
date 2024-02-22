@@ -519,6 +519,7 @@ export class main_Landlord extends main_GameBase {
         this.clearOneGame()
         gameCenter.room.sendEnterMatchREQ(app.gameManager.room_id)
     }
+
     //出牌判断，正确则发送出牌命令
     checkPopCard(){
         this.updateDisplayOfOutCardBtn()
@@ -2343,7 +2344,9 @@ export class main_Landlord extends main_GameBase {
             this.player.setPlayerTrusteeship(data.chair,data.trusteeship)
         }
     }
-    DDZ_S_MSG_RECONNECT(reconnData: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+    DDZ_S_MSG_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
+        let reconnData = data
+        yx.internet.reconnectData = null
         this.clearOneGame()
         if(yx.internet.nGameState == yx.config.GameState.FREE){
             return
@@ -2801,6 +2804,12 @@ export class main_Landlord extends main_GameBase {
             }
         }
     }
+
+    onViewEnter() {
+        if(yx.internet.reconnectData){
+            this.DDZ_S_MSG_RECONNECT(yx.internet.reconnectData)
+        }
+	}
 
 }
 
