@@ -191,7 +191,9 @@ export class plaza_main extends (fw.FWComponent) {
 		if (app.runtime.lastSceneType != fw.SceneConfigs.plaza.sceneName) {
 			// this.onEnterProcess()
 		}
-		this.showWechatUserInfo(true)
+		if(this.Items.Node_secondary.children.length == 0){
+			this.showWechatUserInfo(true)
+		}
 		this.updatePlayerInfo()
 		//刷新特殊游戏 新手引导没了不需要了
 		// this.updateSpecialGame();
@@ -513,7 +515,6 @@ export class plaza_main extends (fw.FWComponent) {
 					visible: (view: ccNode, bActive?: boolean) => {
 						//调整二级界面显隐
 						view.active = bActive ??= !view.active;
-						
 					},
 				}
 				break;

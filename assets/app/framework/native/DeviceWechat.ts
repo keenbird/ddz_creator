@@ -215,6 +215,9 @@ export class DeviceWechat extends DeviceBase {
     }
     getWechatUserInfo(parentNode:ccNode,parentClickCallback?:Function) {
         let self = this
+        if(self.btnWechatUserInfo){
+            return
+        }
         wx.getSetting({
             success (res){
               if (res.authSetting['scope.userInfo']) {
