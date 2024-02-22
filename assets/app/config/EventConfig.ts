@@ -1,4 +1,4 @@
-
+import "./../../_init/tool/_FWFunc"
 enum EVENT_ID {
 	EVENT_PLAZA_TIPS_ERROR, //大厅踢人
 	EVENT_GATEWAY_TIPS_ERROR,//中心服错误

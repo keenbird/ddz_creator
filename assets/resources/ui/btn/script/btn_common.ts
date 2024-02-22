@@ -1,8 +1,9 @@
-import { _decorator, Sprite, SpriteFrame, Label,Component } from 'cc';
+import { _decorator, Sprite, SpriteFrame, Label } from 'cc';
+import './../../../../_init/base/_FWComponent'
 const { ccclass } = _decorator;
 
 @ccclass('btn_common')
-export class btn_common extends (Component) {
+export class btn_common extends (fw.FWComponent) {
 	private static res: { [path: string]: SpriteFrame } = {}
 	/**是否手动初始化 */
 	bInit: boolean = false
