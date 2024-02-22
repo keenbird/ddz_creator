@@ -64,9 +64,9 @@ export class main_Landlord extends main_GameBase {
             roomName : yx.internet.roomName,
             roomBase : yx.internet.roomBase,
         });
-        
         if(yx.internet && yx.internet.reconnectData){
             this.DDZ_S_MSG_RECONNECT(yx.internet.reconnectData)
+            yx.internet.reconnectData = null
         }
     }
     protected fitSceneNode(){
@@ -2350,7 +2350,6 @@ export class main_Landlord extends main_GameBase {
     }
     DDZ_S_MSG_RECONNECT(data: proto.client_proto_ddz.IDDZ_S_Reconnect) {
         let reconnData = data
-        yx.internet.reconnectData = null
         this.clearOneGame()
         if(yx.internet.nGameState == yx.config.GameState.FREE){
             return
