@@ -3,7 +3,6 @@ import { EVENT_ID } from "../../config/EventConfig";
 import { GS_PLAZA_MSGID } from "../../config/NetConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 import { ROOMGROUP_GOLD } from "./roomListCenter";
-import { PLAZA_OPERATIONAL_MODULE } from "../userCenter";
 import proto from "../common";
 
 let MAX_TEN_TASK_PRO_COUNT = 16
@@ -332,46 +331,9 @@ export class TaskCenter extends PlazeMainInetMsg {
 
     //判断任务是否启用
     isTaskOpen(taskType) {
-        if (taskType == TaskType.TASK_TYPE_DAY) {
-            return center.user.checkCustomControlOpen(PLAZA_OPERATIONAL_MODULE.DAILY_TASK)
-        } else if (taskType == TaskType.TASK_TYPE_BUYU) {
-            return center.user.checkCustomControlOpen(PLAZA_OPERATIONAL_MODULE.FISH_TASK)
-        } else if (taskType == TaskType.TASK_TYPE_NOVICE) {
-            //新手任务 完成后 功能关闭
-            let taskInfos = []
-            let unfinshAry = []
-            let finshAry = []
-            let alreadyAccessAry = []
-            for (const v of center.task.getTaskViewListByBtType(TaskType.TASK_TYPE_NOVICE)) {
-                let taskTriggerFuncInfo = center.task.getTaskTriggerFuncInfoByTaskListID(v.task_list_id)
-                if (!center.user.isSwitchOpen("btBindPhoneSwitch") && taskTriggerFuncInfo && taskTriggerFuncInfo.func_type.toString() == TaskTriggerFuncType.TASKTRIGGERFUNC_TYPE_BINDPHONE) {
-                    //去除绑定任务
-                } else {
-                    taskInfos.push(v)
-                }
-            }
-
-            for (const i in taskInfos) {
-                let process = center.task.getTaskItem(taskInfos[i].taskListId)
-                if (!process || process && process.now_finish < taskInfos[i].finishTimes) {
-                    unfinshAry.push(taskInfos[i])
-                } else if (process.receive_finish < taskInfos[i].finishTimes) {
-                    finshAry.push(taskInfos[i])
-                } else {
-                    alreadyAccessAry.push(taskInfos[i])
-                }
-            }
-
-            let listNum = taskInfos.length
-            let alreadyAccessNum = alreadyAccessAry.length
-            if (listNum - alreadyAccessNum <= 0) {
-                return false
-            } else {
-                return true
-            }
-        } else {
-            return true
-        }
+        
+            return false
+        
     }
 
     //通过任务id跳转   
