@@ -337,6 +337,18 @@ export class DeviceAndroid extends DeviceBase {
         });
     }
     /**
+     * 获得电量
+     * @returns 
+     */
+     getBatteryLevel(): number {
+        return this.callStaticMethod({
+            strAndroidPackagePath: "com/panda/util",
+            strClassName: "NetUtils",
+            funcName: "getBatteryLevel",
+            strFuncParam: "()I",
+        });
+    }
+    /**
      * 获得手机信号强度
      * @returns 
      */

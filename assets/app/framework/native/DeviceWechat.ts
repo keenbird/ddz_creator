@@ -182,6 +182,14 @@ export class DeviceWechat extends DeviceBase {
         }
         return signalNum;
     }
+    /**
+     * 获得电量
+     * @returns 
+     */
+     getBatteryLevel(): number {
+        const batteryInfo = wx.getBatteryInfoSync();
+        return Math.floor(app.func.toNumber(batteryInfo.level)) * 0.01
+    }
     getTeleSignalStrength(): number {
         return 4;
     }
@@ -213,22 +221,24 @@ export class DeviceWechat extends DeviceBase {
     shareTextToWhatsApp(shareStr: string) {
         return;
     }
-    getWechatUserInfo(parentNode:ccNode,parentClickCallback?:Function) {
+    getWechatUserInfo(parentNode?:ccNode,parentClickCallback?:Function) {
         let self = this
-        if(self.btnWechatUserInfo){
-            return
-        }
         wx.getSetting({
             success (res){
               if (res.authSetting['scope.userInfo']) {
                 // 已经授权，可以直接调用 getUserInfo 获取头像昵称
                 wx.getUserInfo({
-                  success: function(res) {
-                    parentClickCallback?.()
+                  success: function(data) {
+                    parentClickCallback?.(data)
+                    //data.userInfo.avatarUrl
+                    //data.userInfo.nickName
                   }
                 })
               } else {
                 if(!fw.isNull(parentNode)){
+                    if(self.btnWechatUserInfo){
+                        return
+                    }
                     let sysInfo = wx.getSystemInfoSync();
                     let size_scale_width = sysInfo.screenWidth / app.winSize.width
                     let parentNode_width = parentNode.getComponent(UITransform).width * parentNode.scale.x

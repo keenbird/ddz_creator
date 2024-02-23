@@ -94,6 +94,9 @@ export class DeviceIOS extends DeviceBase {
     getWifiLevel(): number {
         throw new Error('Method not implemented.');
     }
+    getBatteryLevel(): number {
+        throw new Error('Method not implemented.');
+    }
     getTeleSignalStrength(): number {
         throw new Error('Method not implemented.');
     }

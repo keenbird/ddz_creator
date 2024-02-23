@@ -87,6 +87,8 @@ export abstract class DeviceBase extends ModuleBase {
     abstract requestPermissions(rationale: string, requestCode: number, ...args: string[]): void;
     /**获得wifi 信号强度 */
     abstract getWifiLevel(): number;
+    /**获得电量 */
+    abstract getBatteryLevel(): number;
     /**获得手机信号强度 */
     //@RequiresPermission(value = "android.permission.ACCESS_FINE_LOCATION")
     abstract getTeleSignalStrength(): number;

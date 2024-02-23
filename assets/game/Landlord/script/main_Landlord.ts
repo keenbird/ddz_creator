@@ -2056,6 +2056,8 @@ export class main_Landlord extends main_GameBase {
             const minutes = now.getMinutes().toString().padStart(2, '0');
             const time = `${hours}:${minutes}`;
             self.Items.Text_Time.string = time
+
+            self.Items.powerBar.getComponent(ProgressBar).progress = app.native.device.getBatteryLevel()
         }
 
         setTimeLabel();

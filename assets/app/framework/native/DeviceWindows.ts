@@ -106,6 +106,9 @@ export class DeviceWindows extends DeviceBase {
     getWifiLevel(): number {
         return 4;
     }
+    getBatteryLevel(): number {
+        return 1;
+    }
     getTeleSignalStrength(): number {
         return 4;
     }
