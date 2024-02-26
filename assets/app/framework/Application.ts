@@ -74,10 +74,10 @@ export class Application extends FWSceneBase {
         //设置常驻节点
         director.addPersistRootNode(this.node);
         //部分独立组件--------began-----------
-        // if (sys.isNative) {
-        //     this.nativeBase = sys.isNative && app.func.isAndroid() ? NativeAndroid : app.func.isIOS() ? NativeIOS : NativeWindows;
         if (app.func.isWeChat()) {
             this.nativeBase = NativeWechat;
+        } else if (sys.isNative) {
+            this.nativeBase = sys.isNative && app.func.isAndroid() ? NativeAndroid : app.func.isIOS() ? NativeIOS : NativeWindows;
         } else {
             this.nativeBase = NativeWindows;
         }

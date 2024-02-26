@@ -340,13 +340,15 @@ export class DeviceAndroid extends DeviceBase {
      * 获得电量
      * @returns 
      */
-     getBatteryLevel(): number {
-        return this.callStaticMethod({
+    getBatteryLevel(): number {
+        var level = this.callStaticMethod({
             strAndroidPackagePath: "com/panda/util",
             strClassName: "NetUtils",
             funcName: "getBatteryLevel",
             strFuncParam: "()I",
         });
+        return Math.floor(app.func.toNumber(level)) * 0.01
+        
     }
     /**
      * 获得手机信号强度

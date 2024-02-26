@@ -3,10 +3,13 @@ package com.panda.util;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
@@ -44,6 +47,19 @@ public class NetUtils {
         int numberOfLevels = 5;
         int level = WifiManager.calculateSignalLevel(wifiInfo.getRssi(), numberOfLevels);
         return level;
+    }
+
+    // 获取电量信息
+    public static int getBatteryLevel() {
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus =  ModuleManager.shared().getActivity().getApplicationContext().registerReceiver(null, ifilter);
+
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+
+        // 计算电量百分比
+        int batteryLevel = (int) ((level / (float) scale) * 100);
+        return batteryLevel;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
