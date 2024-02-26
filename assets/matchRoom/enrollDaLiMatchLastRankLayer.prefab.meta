@@ -1,0 +1,13 @@
+{
+  "ver": "1.1.43",
+  "importer": "prefab",
+  "imported": true,
+  "uuid": "f88db1b7-27b6-43a9-a742-40fcbce8fb43",
+  "files": [
+    ".json"
+  ],
+  "subMetas": {},
+  "userData": {
+    "syncNodeName": "enrollDaLiMatchLastRankLayer"
+  }
+}

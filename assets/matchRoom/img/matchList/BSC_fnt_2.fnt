@@ -1,0 +1,31 @@
+info face="BSC_fnt_2" size=32 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=0,0
+common lineHeight=40 base=26 scaleW=256 scaleH=128 pages=1 packed=0 alphaChnl=1 redChnl=0 greenChnl=0 blueChnl=0
+page id=0 file="BSC_fnt_2.png"
+chars count=25
+char id=120 x=169 y=60 width=20 height=22 xoffset=0 yoffset=18 xadvance=23 page=0 chnl=0 letter="x"
+char id=48 x=136 y=0 width=21 height=30 xoffset=0 yoffset=10 xadvance=24 page=0 chnl=0 letter="0"
+char id=49 x=178 y=0 width=12 height=29 xoffset=0 yoffset=11 xadvance=15 page=0 chnl=0 letter="1"
+char id=50 x=168 y=89 width=20 height=30 xoffset=0 yoffset=10 xadvance=23 page=0 chnl=0 letter="2"
+char id=51 x=157 y=0 width=21 height=30 xoffset=0 yoffset=10 xadvance=24 page=0 chnl=0 letter="3"
+char id=52 x=113 y=0 width=23 height=30 xoffset=0 yoffset=10 xadvance=26 page=0 chnl=0 letter="4"
+char id=53 x=148 y=89 width=20 height=29 xoffset=0 yoffset=11 xadvance=23 page=0 chnl=0 letter="5"
+char id=54 x=155 y=30 width=21 height=30 xoffset=0 yoffset=10 xadvance=24 page=0 chnl=0 letter="6"
+char id=55 x=148 y=60 width=21 height=29 xoffset=0 yoffset=11 xadvance=24 page=0 chnl=0 letter="7"
+char id=56 x=113 y=30 width=21 height=30 xoffset=0 yoffset=10 xadvance=24 page=0 chnl=0 letter="8"
+char id=57 x=134 y=30 width=21 height=30 xoffset=0 yoffset=10 xadvance=24 page=0 chnl=0 letter="9"
+char id=20813 x=39 y=36 width=37 height=38 xoffset=0 yoffset=6 xadvance=40 page=0 chnl=0 letter="免"
+char id=36153 x=76 y=39 width=37 height=38 xoffset=0 yoffset=6 xadvance=40 page=0 chnl=0 letter="费"
+char id=21442 x=0 y=0 width=39 height=38 xoffset=0 yoffset=6 xadvance=42 page=0 chnl=0 letter="参"
+char id=21152 x=112 y=77 width=36 height=36 xoffset=0 yoffset=7 xadvance=39 page=0 chnl=0 letter="加"
+char id=25253 x=76 y=0 width=37 height=39 xoffset=0 yoffset=6 xadvance=40 page=0 chnl=0 letter="报"
+char id=21517 x=76 y=77 width=36 height=36 xoffset=0 yoffset=7 xadvance=39 page=0 chnl=0 letter="名"
+char id=30334 x=39 y=74 width=37 height=35 xoffset=0 yoffset=8 xadvance=40 page=0 chnl=0 letter="百"
+char id=21315 x=0 y=38 width=39 height=37 xoffset=0 yoffset=7 xadvance=42 page=0 chnl=0 letter="千"
+char id=19975 x=39 y=0 width=37 height=36 xoffset=0 yoffset=8 xadvance=40 page=0 chnl=0 letter="万"
+char id=20159 x=0 y=75 width=39 height=38 xoffset=0 yoffset=6 xadvance=42 page=0 chnl=0 letter="亿"
+char id=46 x=169 y=82 width=7 height=7 xoffset=0 yoffset=33 xadvance=10 page=0 chnl=0 letter="."
+char id=62 x=176 y=30 width=16 height=29 xoffset=0 yoffset=12 xadvance=19 page=0 chnl=0 letter=">"
+char id=32 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=10 page=0 chnl=0 letter=" "
+char id=9 x=0 y=0 width=0 height=0 xoffset=0 yoffset=0 xadvance=80 page=0 chnl=0 letter="	"
+
+kernings count=0
