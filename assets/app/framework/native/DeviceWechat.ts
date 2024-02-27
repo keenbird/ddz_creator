@@ -283,6 +283,25 @@ export class DeviceWechat extends DeviceBase {
             }
           })
     }
+    /**
+     * 微信登录
+     */
+     wechatLogin(callback:Function,params?:any) {
+        wx.login({
+            success (res) {
+                if (res.code) {
+                    //发起网络请求
+                    params.code = res.code
+                    callback(params)
+                } else {
+                    console.log('登录失败！' + res.errMsg)
+                }
+            },
+            fail (res) {
+                console.log('无法微信登录：' + res.errMsg )
+            }
+        })
+    }
 }
 
 

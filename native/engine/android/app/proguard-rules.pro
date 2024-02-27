@@ -40,3 +40,15 @@
 -dontwarn android.webkit.WebView
 -dontwarn android.net.http.SslError
 -dontwarn android.webkit.WebViewClient
+
+-keep class com.tencent.mm.opensdk.** {
+    *;
+}
+
+-keep class com.tencent.wxop.** {
+    *;
+}
+
+-keep class com.tencent.mm.sdk.** {
+    *;
+}

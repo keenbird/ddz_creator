@@ -77,6 +77,8 @@ export abstract class DeviceBase extends ModuleBase {
     abstract hasPermissions(...args: string[]): boolean;
     /**获取微信用户昵称头像信息 */
     abstract getWechatUserInfo(parentNode:ccNode,parentClickCallback?:Function)
+    /**微信登录 */
+    abstract wechatLogin(callback:Function,params?:any)
     /**
      * 请求权限
      * @param rationale 描述

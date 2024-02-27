@@ -20,13 +20,8 @@ public class Module {
     public interface MODULE_NAME {
         //请保证唯一性
         static String device = "device";
-        static String bugly = "bugly";
-        static String appsflyer = "appsflyer";
-        static String adjust = "adjust";
-        static String facebook = "facebook";
-        static String leo = "leo";
+        static String wechat = "wechat";
 
-        static String firebase = "firebase";
     }
 
     public interface SDKInterface {

@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.awpanda.pandaddz.R;
 import com.cocos.game.AppActivity;
@@ -44,6 +45,7 @@ public class GameActivity extends AppActivity {
         },10000);
         // DO OTHER INITIALIZATION BELOW
         ModuleManager.shared().init(this);
+
     }
 
     @Override
@@ -116,8 +118,8 @@ public class GameActivity extends AppActivity {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         Log.i(TAG,"onConfigurationChanged");
-        ModuleManager.shared().onConfigurationChanged(newConfig);
-        super.onConfigurationChanged(newConfig);
+        // ModuleManager.shared().onConfigurationChanged(newConfig);
+         super.onConfigurationChanged(newConfig);
     }
 
     @Override

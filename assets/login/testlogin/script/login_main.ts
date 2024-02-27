@@ -1,5 +1,5 @@
 
-import { EditBox, Label, Layout, RichText, _decorator, tween } from 'cc';
+import { EditBox, Label, Layout, RichText, _decorator, tween,sys } from 'cc';
 const { ccclass } = _decorator;
 
 // import { LoginNotice } from './LoginNotice';
@@ -128,7 +128,9 @@ export class login_main extends (fw.FWComponent) {
 
 	/**微信登录 */
 	onLoginWeixin(data: any) {
-        if(app.func.isWeChat){
+        if(sys.isNative){
+			center.login.loginWeChatNative()
+		}else if(app.func.isWeChat){
 			center.login.loginWeChat()
 		}else{
 			this.onClickYouKe()

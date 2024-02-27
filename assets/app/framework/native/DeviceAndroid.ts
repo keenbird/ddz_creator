@@ -5,6 +5,7 @@ import { DeviceBase, LngAndLat } from './DeviceBase';
 
 @ccclass('DeviceAndroid')
 export class DeviceAndroid extends DeviceBase {
+    authorizeLinster: Function;
 
     getSDKtype(): number {
         return (this as any).__getSDKtype ??= this.callStaticMethod({
@@ -61,20 +62,7 @@ export class DeviceAndroid extends DeviceBase {
     }
     /**获取设备唯一ID */
     getHDID(): string {
-        let leoGAID = app.native.leo.getGAID();
-        if (leoGAID == "" || leoGAID.match(/^[0-]+$/)) {
-            let gaid = this.callStaticMethod({
-                strAndroidPackagePath: "com/panda/util",
-                strClassName: "Utils",
-                funcName: "getGAID",
-                strFuncParam: "()Ljava/lang/String;",
-            });
-            if (gaid == "" || gaid.match(/^[0-]+$/)) {
-                return this.getAndroidId();
-            }
-            return gaid;
-        }
-        return leoGAID;
+        return this.getAndroidId();
     }
     /**获取谷歌广告ID */
     getGAID(): string {
@@ -594,5 +582,98 @@ export class DeviceAndroid extends DeviceBase {
             funcName: "compressImage",
             strFuncParam: "(Ljava/lang/String;Ljava/lang/String;)Z",
         }, path, outPath);
+    }
+
+    /**
+     * 微信原生登录
+     */
+     wechatLogin(callback:Function,params?:any) {
+        console.log("wechatAuthorizJS1")
+        if (callback!=null ){
+            this.authorizeLinster = callback
+        }
+        console.log("wechatAuthorizJS")
+        this.callStaticMethod({
+            strAndroidPackagePath: "com/panda/module",
+            strClassName: "Wechat",
+            funcName: "wechatAuthorize",
+            strFuncParam: "(Ljava/lang/String;Ljava/lang/String;)V",
+        }, "", "");
+    }
+
+    /**微信原生登录回调 */
+    @fw.Decorator.TryCatch()
+    wechatCallback(params) {
+        let { event } = params;
+        var strTabel = event.split("#")
+        fw.print(strTabel)
+        var code = Number(strTabel[0]) 
+        if (event){
+            if (this.authorizeLinster!=null){
+                //正在授权
+                if (code==0 ){                   
+                    var getcode=strTabel[2]
+                    this.getToken(getcode)
+                //授权成功
+                }else if( code==1 ){  
+                    // this.authorizeLinster("success",crypto.decodeBase64(strTabel[3]))  
+                //授权被拒绝
+                }else if (code==2 ){  
+                    this.authorizeLinster("fail",strTabel[2])
+                    //取消授权
+                }else if (code==3 ){  
+                    this.authorizeLinster("fail",strTabel[2])
+                //授权失败
+                }else { 
+                    fw.print(strTabel)
+                    if (Number(strTabel[2]) ){
+                        var str=this.codeResult(Number(strTabel[2]))
+                        this.authorizeLinster("fail",str)
+                    }
+                    self.authorizeLinster("fail",strTabel[2])
+                }
+                fw.print(strTabel[1])
+            }
+        }
+    }
+
+    getToken(code){
+        var url = "https://api.weixin.qq.com/sns/oauth2/access_token"+
+        "?appid="+self.app_id+
+        "&secret="+self.app_secret+
+        "&code="+code+
+        "&grant_type=authorization_code"
+
+        app.http.get({
+            url: url,
+            callback: (bSuccess, response) => {
+                if (bSuccess) {
+                    console.log("getToken：",response)
+                } else {
+                    this.authorizeLinster("4#请求失败#"+response)
+                }
+            }
+        });
+    }
+
+    // 返回码说明
+    codeResult(code){
+        var str=""
+        if (code==42003 ){
+            str="code超时"
+        }else if (code==45009 ){
+            str="接口调动频率超过限制"
+        }else if ( code==50001 ){
+            str="接口未授权"
+        }else if ( code==40001 ){
+            str="不合法调用凭证"
+        }else if ( code==40004 ){
+            str="不合法的媒体文件类型"
+        }else if ( code==40066 ){
+            str="不合法的url"
+        }else {
+            str="其他错误"
+        }
+        return str
     }
 }

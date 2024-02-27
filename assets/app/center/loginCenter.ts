@@ -201,7 +201,7 @@ export class LoginCenter extends LoginMainInetMsg {
     // 微信登录
     loginWeChat() {
         let self = this
-        fw.print("loginCenter:loginAccount")
+        fw.print("loginCenter:loginWeChat")
         this.m_eLoginType = LOGINTYPE.WEIXIN
  
         this.m_strLoginMachineName = app.native.device.getMachineName()
@@ -220,20 +220,40 @@ export class LoginCenter extends LoginMainInetMsg {
             login_type: this.m_eLoginType,
             code: "",
         }
-        wx.login({
-            success (res) {
-                if (res.code) {
-                    //发起网络请求
-                    params.code = res.code
-                    self.loginByPhp(params,callback)
-                } else {
-                    console.log('登录失败！' + res.errMsg)
-                }
-            },
-            fail (res) {
-                console.log('无法微信登录：' + res.errMsg )
-            }
-        })
+        
+        app.native.device.wechatLogin((params1)=>{
+            self.loginByPhp(params1,callback)
+        },params)
+    }
+
+    // 微信原生登录
+    loginWeChatNative() {
+        let self = this
+        fw.print("loginCenter:loginWeChatNative")
+        this.m_eLoginType = LOGINTYPE.WEIXIN
+        fw.print("loginCenter:loginWeChatNative1")
+        this.m_strLoginMachineName = app.native.device.getMachineName()
+        fw.print("loginCenter:loginWeChatNative2")
+        this.m_strLoginBuffHD = app.native.device.getHDID()
+        fw.print("loginCenter:loginWeChatNative3")
+        this.m_strLoginUUID = app.native.device.getUUID()
+        fw.print("loginCenter:loginWeChatNative4")
+        var callback = function(bSuccess: boolean, response: any){
+            this.m_strToken = response.data.token
+            this.m_strSessionKey = response.data.thirdData.sessionKey
+            this.m_strOpenId = response.data.thirdData.openid
+            this.m_bReg = response.data.isRegister
+            this.loginToServer()
+        }.bind(this)
+        var params = {
+            channel_id: fw.DEBUG.sChannelID,
+            login_type: this.m_eLoginType,
+            code: "",
+        }
+        fw.print("loginCenter:loginWeChatNative5")
+        app.native.device.wechatLogin((params1)=>{
+            // self.loginByPhp(params1,callback)
+        },params)
     }
 
 

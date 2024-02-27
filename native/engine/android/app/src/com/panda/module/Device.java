@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
+
 public class Device extends Module.ModuleBase implements EasyPermissions.PermissionCallbacks{
     private static final String TAG = Device.class.getSimpleName();
     private static Device mInstance;
@@ -39,20 +40,6 @@ public class Device extends Module.ModuleBase implements EasyPermissions.Permiss
     public void init(Activity activity) {
         super.init(activity);
         EasyPhotos.init(activity);
-        // 获取gaid
-        Executors.newSingleThreadExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    AdvertisingIdClient.AdInfo adInfo = AdvertisingIdClient.getGoogleAdId(activity);
-                    mGAId = adInfo.getId();
-                    mOptOutEnabled = adInfo.isLimitAdTrackingEnabled();
-                    Log.e("MainActivity", "adid:  " + mGAId);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
 
     @Override

@@ -31,7 +31,6 @@ public class ModuleManager {
 
     private WeakReference<GameActivity> mActivity = null;
     private List<Module.ModuleBase> serviceInstances;
-
     private void loadSDKInterface() {
         this.serviceInstances = new ArrayList<>();
         try {
@@ -81,13 +80,15 @@ public class ModuleManager {
     public GameActivity getActivity() { return this.mActivity.get(); }
 
     public void initApplication(Application context) {
-        this.loadSDKInterface();
-        for (Module.SDKInterface sdk : this.serviceInstances) {
-            sdk.initApplication(context);
-        }
+        PDLog.i(Tag,"initApplication");
+
+//        for (Module.SDKInterface sdk : this.serviceInstances) {
+//            sdk.initApplication(context);
+//        }
     }
 
     public void init(GameActivity activity) {
+        this.loadSDKInterface();
         this.mActivity = new WeakReference<>(activity);
         for (Module.SDKInterface sdk : this.serviceInstances) {
             sdk.init(activity);

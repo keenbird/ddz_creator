@@ -121,4 +121,10 @@ export class DeviceIOS extends DeviceBase {
     shareTextToWhatsApp(shareStr: string) {
         throw new Error('Method not implemented.');
     }
+    /**
+     * 微信原生登录
+     */
+     wechatLogin(callback:Function,params?:any) {
+        throw new Error('Method not implemented.');
+    }
 }
