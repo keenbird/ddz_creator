@@ -613,7 +613,6 @@ export class DeviceAndroid extends DeviceBase {
                 //正在授权
                 if (code==0 ){                   
                     var getcode=strTabel[2]
-                    this.getToken(getcode)
                     this.authorizeLinster("success",getcode)
                 //授权成功
                 }else if( code==1 ){  
@@ -638,24 +637,6 @@ export class DeviceAndroid extends DeviceBase {
         }
     }
 
-    getToken(code){
-        var url = "https://api.weixin.qq.com/sns/oauth2/access_token"+
-        "?appid="+self.app_id+
-        "&secret="+self.app_secret+
-        "&code="+code+
-        "&grant_type=authorization_code"
-
-        app.http.get({
-            url: url,
-            callback: (bSuccess, response) => {
-                if (bSuccess) {
-                    console.log("getToken：",response)
-                } else {
-                    this.authorizeLinster("fail","请求失败#")
-                }
-            }
-        });
-    }
 
     // 返回码说明
     codeResult(code){
