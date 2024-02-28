@@ -83,26 +83,8 @@ export class main_Landlord extends main_GameBase {
         
 	}
     protected initEvents(): boolean | void {
-        //玩家金币金币变更
-        this.bindEvent({
-            eventName: ACTOR[ACTOR.ACTOR_PROP_GOLD],
-            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
-                this.updateChipVisible();
-            }
-        });
-        this.bindEvent({
-            eventName: `GameRule`,
-            callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
-                this.updateChipScore();
-            }
-        });
-        // this.bindEvent({
-        //     eventName: `GameReconnectRoom`,
-        //     callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
-        //         //重连
-        //         this.doReconnect(arg1.data);
-        //     }
-        // });
+
+
         this.bindEvent({
             eventName: EVENT_ID.EVENT_TABLE_BASE_INFO,
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam): boolean | void => {
@@ -111,6 +93,7 @@ export class main_Landlord extends main_GameBase {
         });
 
     }
+   
     sendUserMemory(isUse:boolean){
         yx.internet.DDZ_C_USE_MEMORY({
             buse:isUse
@@ -169,8 +152,6 @@ export class main_Landlord extends main_GameBase {
         var per = this.viewZOrderNode[this.viewZOrder.Anim]
         per.removeAllChildren(true);
         //清理桌面牌
-        // this.updateTableCard(null, false);
-        // this.setOperateVisible(false, true);
         this.cleanHandCard()
         this.resetActionBarOnFree();
         this.resetNodeLookCard();
@@ -198,23 +179,23 @@ export class main_Landlord extends main_GameBase {
             // this.showOperateBtn(yx.config.ActionBarStatus.ActionBarStatus_PublicOutCard,15,null)
             // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
             //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23],
-            //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
+            //     cardtype : yx.config.OutCardType.Sequence,
             //     outchair : 2
             // }
             // this.didReceiveOutCard(data)
             // let data2:proto.client_proto_ddz.IDDZ_S_OutCard={
             //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23],
-            //     cardtype : yx.config.OutCardType.Bomb,
+            //     cardtype : yx.config.OutCardType.Sequence,
             //     outchair : 1
             // }
             // this.didReceiveOutCard(data2)
             // this.scheduleOnce(function(){
-            //     // let data:proto.client_proto_ddz.IDDZ_S_OutCard={
-            //     //     outcards : [1,2,3,4,5,6,7,8,9,10,11,12,13],
-            //     //     cardtype : yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs,
-            //     //     outchair : 2
-            //     // }
-            //     // this.didReceiveOutCard(data)
+                // let data3:proto.client_proto_ddz.IDDZ_S_OutCard={
+                //     outcards : [1,3,4,5,6,7,8,9,10,11,12,13],
+                //     cardtype : yx.config.OutCardType.Sequence,
+                //     outchair : 0
+                // }
+                // this.didReceiveOutCard(data3)
             //     yx.internet.nSelfChairID = 0
             //     this.player.initPlayer()
             //     this.didReceiveMingpai(1,[1,2,3,4,5,6,7,8,9,10,11,12,13,17,18,19,20,21,22,23])
@@ -1137,7 +1118,7 @@ export class main_Landlord extends main_GameBase {
                     .start()
             }
             //牌型特效
-            this.playCardTypeEffect(nChairID,cardType,posVecs)
+            this.playCardTypeEffect(nChairID,cardType,posVecs,cardData)
         }
     }
     //展示明牌
@@ -1170,21 +1151,31 @@ export class main_Landlord extends main_GameBase {
         }
     }
     //牌型特效
-    playCardTypeEffect(nChairID:number,cardType:number,posVecs:Vec3[],callback?:Function){
+    playCardTypeEffect(nChairID:number,cardType:number,posVecs:Vec3[],cardData:number[],callback?:Function){
         const ClientChairID = yx.func.getClientChairIDByServerChairID(nChairID);
         var aniName:string = ""
+        var spName:string = ""
+        var isSpine:boolean = false
         var parentNode:ccNode = this.viewZOrderNode[this.viewZOrder.Anim]
         var pos:Vec3= new Vec3(0,0,0)
         if(cardType == yx.config.OutCardType.Sequence){
             parentNode = this.player.getOutCardParent(nChairID)
             var pos1 = posVecs[Math.floor((posVecs.length-1)/2)]
             pos = new Vec3(pos1.x,pos1.y+40,pos1.z)
-            aniName = "ani_node_shunzi"
+            if(this.logic.GetCardFaceValue(cardData[0]) == 0x01){
+                spName = "tongtianshun"
+            }else{
+                spName = "shunzi"
+            }
+            aniName = "node_paixingzi"
+            isSpine = true
         }else if(cardType == yx.config.OutCardType.Sequence_Of_Pairs){
             parentNode = this.player.getOutCardParent(nChairID)
             var pos1 = posVecs[Math.floor((posVecs.length-1)/2)]
             pos = new Vec3(pos1.x,pos1.y+40,pos1.z)
-            aniName = "ani_node_liandui"
+            aniName = "node_paixingzi"
+            spName = "liandui"
+            isSpine = true
         }else if(cardType == yx.config.OutCardType.Sequence_Of_Triplets || cardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards || cardType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs){
             aniName = "ani_node_feiji"
         }else if(cardType == yx.config.OutCardType.softBomb || cardType == yx.config.OutCardType.Bomb || cardType == yx.config.OutCardType.LaiZiBomb ){
@@ -1199,28 +1190,32 @@ export class main_Landlord extends main_GameBase {
                 let aniNode = instantiate(res);
                 if(!fw.isNull(aniNode)){
                     parentNode.addChild(aniNode)
-                    if(aniName == "ani_node_shunzi" || aniName == "ani_node_liandui" ){
-                        if(ClientChairID == 1){
-                            aniNode.Items.Node_zuo.active = false
-                        }else{
-                            aniNode.Items.Node_you.active = false
-                        }
-                    }
-                    aniNode.setPosition(pos)
-                    var tScale = yx.config.changeOldResScale
-                    aniNode.scale = v3(tScale, tScale, tScale)
-                    const a = aniNode.getComponent(Animation);
                     
-                    a.on(Animation.EventType.FINISHED, () => {
-                        aniNode.removeFromParent(true)
-                    });
-                    a.play(aniName);
+                    aniNode.setPosition(pos)
+                    if(isSpine){
+                        const s = aniNode.getComponent(FWSpine);
+                        s.setCompleteListener((x: sp.spine.TrackEntry) => {
+                            aniNode.removeFromParent(true)
+                        });
+                        s.setAnimation(0, spName, false);
+                    }else{
+                        var tScale = yx.config.changeOldResScale
+                        aniNode.scale = v3(tScale, tScale, tScale)
+                        const a = aniNode.getComponent(Animation);
+                        
+                        a.on(Animation.EventType.FINISHED, () => {
+                            aniNode.removeFromParent(true)
+                        });
+                        a.play(aniName);
+                    }
+
                     let soundData:landlordSoundInitData = {
                         nCardType : cardType
                     }
                     this.sound.playCardTypeEffect(soundData)
                 }
             });
+            
         }
         
     }
@@ -2636,178 +2631,6 @@ export class main_Landlord extends main_GameBase {
             }
         });
         
-    }
-
-    //-----------------------------老代码 ------------------------------------//
-    /**刷新倍率动画 */
-    updateMultipleAnim() {
-        (<any>this).multipleState ??= 0;
-        let func = (<any>this).updateMultipleAnimFunc ??= (n: ccNode) => {
-            let spine = n.obtainComponent(FWSpine);
-            switch (yx.internet.nGameState) {
-                case yx.config.GameState.BET1:
-                    app.audio.playEffect(app.game.getRes(`audio/mult`));
-                    spine.setAnimation(0, `2x_`, false);
-                    spine.setCompleteListener(() => {
-                        spine.setCompleteListener(null);
-                        spine.setAnimation(0, `2.25x`, true);
-                    });
-                    break;
-                case yx.config.GameState.BET2:
-                    spine.setAnimation(0, `2.25x_`, false);
-                    spine.setCompleteListener(() => {
-                        spine.setCompleteListener(null);
-                        spine.setAnimation(0, `2x`, true);
-                    });
-                    break;
-                case yx.config.GameState.END:
-                    break;
-                case yx.config.GameState.FREE:
-                default:
-                    spine.setCompleteListener(null);
-                    spine.setAnimation(0, `2x`, false);
-                    break;
-            }
-        }
-        func(this.Items.Node_a.Items.Node_multiple);
-        func(this.Items.Node_b.Items.Node_multiple);
-    }
-    /**操作 */
-    onOperate(nType: number, nJettonScore?: number) {
-        if (fw.isNull(nJettonScore)) {
-            const gameConfig = yx.internet.gameConfig;
-            if (gameConfig) {
-                nJettonScore = gameConfig.nChipScore[this.nChipIndex];
-            } else {
-                nJettonScore = 0;
-            }
-        }
-        const nGold = gameCenter.user.getGold();
-        if (nGold - yx.internet.nJettonScore - nJettonScore < 0) {
-            center.giftBag.showGiftBagDialog(() => {
-                app.popup.showDialog(fw.BundleConfig.plaza.res[`shop/quickRecharge`], {
-                    nRechargeNumMin: (nGold - yx.internet.nJettonScore) / DF_RATE,
-                });
-            });
-            return;
-        }
-        yx.internet.MSG_BET_C({
-            nJettonArea: nType,
-            nJettonScore: nJettonScore,
-        });
-    }
-    /**刷新下注 */
-    updateChipScore() {
-        //刷新
-        let nIndex = 0;
-        const gameConfig = yx.internet.gameConfig;
-        let nDefaultIndex = app.file.getIntegerForKey(`AB_chipIndex`, -1);
-        if (gameConfig) {
-            for (let i = 0, j = gameConfig.nChipScore; i < j.length; ++i) {
-                const nValue = j[i];
-                
-                //是否默认选中
-                if (nDefaultIndex < 0) {
-                    nDefaultIndex = i;
-                }
-                ++nIndex;
-            }
-        } else {
-            this.Items.Label_andar_value.string = ``;
-            this.Items.Label_bahar_value.string = ``;
-        }
-        
-        this.updateChipVisible();
-    }
-    updateChipVisible() {
-        let bNeedChangChip = false;
-        const nLeftGold = gameCenter.user.getGold() - yx.internet.nJettonScore;
-       
-    }
-    /**发牌动画 */
-    playFaPai(startNode: ccNode, targetNode: ccNode, nCardValue: number, callback?: Function) {
-        const n = new ccNode();
-        n.obtainComponent(UITransform);
-        n.parent = this.viewZOrderNode[this.viewZOrder.Anim];
-        n.obtainComponent(Sprite);
-        n.updateSprite(app.game.getRes(`ui/main/img/atlas/poker_bg/spriteFrame`));
-        //调整大小
-        n.setScale(fw.v3(0.25));
-        //调整位置
-        n.setWorldPosition(startNode.worldPosition);
-        app.audio.playEffect(app.game.getRes(`audio/dealcards`));
-        tween(n)
-            .parallel(
-                //注意：这里使用了targetNode的父亲节点的放大缩小比例
-                tween(n).to(0.35, { scale: targetNode.parent.scale }),
-                tween(n).to(0.35, { angle: 180 }),
-                tween(n).to(0.35, { worldPosition: targetNode.worldPosition }),
-            )
-            .delay(0.05)
-            .call(() => {
-                n.removeFromParent(true);
-                this.updateTableCard(targetNode, true, nCardValue);
-                callback?.();
-            })
-            .start();
-    }
-    /**显示区域 */
-    playCardWin(nJettonArea?: number, callback?: Function) {
-        const func = (<any>this).playCardWinFunc ??= (n: ccNode, bVisible: boolean, callback?: Function) => {
-            n.active = bVisible;
-            if (bVisible) {
-                Tween.stopAllByTarget(n);
-                tween(n)
-                    .hide()
-                    .delay(0.25)
-                    .show()
-                    .delay(0.25)
-                    .union()
-                    .repeat(5)
-                    .call(() => {
-                        callback?.();
-                    })
-                    .start();
-            }
-        }
-        func(this.Items.Node_card_banker.Items.Sprite_light, true, () => {
-            callback?.();
-        });
-        func(this.Items.Node_card_a.Items.Sprite_light, nJettonArea == yx.config.JettonArea.BTN_BETA);
-        func(this.Items.Node_card_b.Items.Sprite_light, nJettonArea == yx.config.JettonArea.BTN_BETB);
-    }
-    /**刷新桌面牌 */
-    updateTableCard(card?: ccNode, bVisible?: boolean, nCardValue?: number) {
-        if (fw.isNull(card)) {
-            this.Items.Node_card_a.active = bVisible;
-            this.Items.Node_card_b.active = bVisible;
-            this.Items.Node_card_banker.active = bVisible;
-        } else {
-            card.active = bVisible;
-            yx.func.updateCard(card, nCardValue);
-        }
-    }
-
-    /**刷新桌面牌 */
-    setOperateVisible(bVisible: boolean, bNotAnim?: boolean) {
-        if (bVisible) {
-            this.updateChipVisible();
-            this.Items.Sprite_bottom_bg.active = true;
-            app.audio.playEffect(app.game.getRes(`audio/yourturn`));
-            this.Items.Sprite_bottom_bg.__initPos ??= this.Items.Sprite_bottom_bg.getPosition();
-            this.Items.Sprite_bottom_bg.setPosition(this.Items.Sprite_bottom_bg.__initPos);
-        } else {
-            if (bNotAnim) {
-                this.Items.Sprite_bottom_bg.active = false;
-            } else {
-                tween(this.Items.Sprite_bottom_bg)
-                    .by(0.35, { position: fw.v3(0, -200, 0) })
-                    .call(() => {
-                        this.Items.Sprite_bottom_bg.active = false;
-                    })
-                    .start();
-            }
-        }
     }
 
     onViewEnter() {

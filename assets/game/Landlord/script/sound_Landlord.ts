@@ -356,7 +356,9 @@ export class sound_Landlord  {
             path = js.formatStr(audioPaths["SEQUENCE_TRIPLETS_CARDS"], strSex)
         }
 
-        this.playSound(path)
+        if(path != ''){
+            this.playSound(path)
+        }
         console.log("LH1",path,initData)
     }
 

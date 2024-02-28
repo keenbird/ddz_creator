@@ -845,6 +845,9 @@ export class FWFunctionUI extends (fw.FWComponent) {
                 //动画播放结束
                 data.complete && spine.setCompleteListener((x: sp.spine.TrackEntry) => {
                     data.complete(data, x);
+                    if(data.playDestroy){
+                        node.removeFromParent(true)
+                    }
                 });
                 //回调
                 data.callback && data.callback(data);
@@ -1049,6 +1052,8 @@ declare global {
             callback?: (data: CreateSpineParam) => void
             /**立即创建 */
             bImmediately?: boolean
+            /**播放后销毁节点 */
+            playDestroy?: boolean
         }
         /**滚动数值 */
         type ScrollNumberParam = {

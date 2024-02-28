@@ -2723,16 +2723,16 @@ export class logic_Landlord extends (fw.FWComponent) {
 			}
 		}
 
-		if (((maxCardInfo.nType == yx.config.OutCardType.Single && maxCardInfo.cardData[1] == 0x4F)  //大王
-			|| (maxCardInfo.nType == yx.config.OutCardType.Sequence && this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x01) //通天顺
-			|| (maxCardInfo.nType == yx.config.OutCardType.Double && this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02) //对2
+		if (((maxCardInfo.nType == yx.config.OutCardType.Single && maxCardInfo.cardData[0] == 0x4F)  //大王
+			|| (maxCardInfo.nType == yx.config.OutCardType.Sequence && this.GetCardFaceValue(maxCardInfo.cardData[0]) == 0x01) //通天顺
+			|| (maxCardInfo.nType == yx.config.OutCardType.Double && this.GetCardFaceValue(maxCardInfo.cardData[0]) == 0x02) //对2
 			|| ((maxCardInfo.nType == yx.config.OutCardType.Triplet 
 			|| maxCardInfo.nType == yx.config.OutCardType.Triplet_Attached_Card
 			|| maxCardInfo.nType == yx.config.OutCardType.Triplet_Attached_Pair) 
-			&& this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02)  //三个2
+			&& this.GetCardFaceValue(maxCardInfo.cardData[0]) == 0x02)  //三个2
 			|| ((maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Cards 
 			|| maxCardInfo.nType == yx.config.OutCardType.Quadplex_Attached_Two_Pairs)
-			&& this.GetCardFaceValue(maxCardInfo.cardData[1]) == 0x02) //四个2
+			&& this.GetCardFaceValue(maxCardInfo.cardData[0]) == 0x02) //四个2
 			|| ((maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets 
 			|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Cards 
 			|| maxCardInfo.nType == yx.config.OutCardType.Sequence_Of_Triplets_With_Attached_Pairs
