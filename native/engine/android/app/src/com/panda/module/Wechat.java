@@ -62,47 +62,32 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
     Wechat() {
         super(Module.MODULE_NAME.wechat);
         mInstance = this;
-        System.out.println("wechatAuthorize-1"+isAuthorize);
-
     }
 
-    protected void onCreate(Bundle savedInstanceState) {
-        Log.i(TAG,"WechatonCreate"+ Wechat.shared().app_id +  Wechat.shared().api);
-    }
 
     /**
      * 授权登录
      */
     public static void wechatAuthorize(final String appId,final String appSecert){
-
-        System.out.println("wechatAuthorize0"+isAuthorize);
         isAuthorize = true;
-        System.out.println("wechatAuthorize1"+isAuthorize);
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 // 通过WXAPIFactory工厂，获取IWXAPI的实例
-
                 Message msg = new Message();
                 msg.what = SDK_LOGIN;
-                System.out.println("wechatAuthorize2"+isAuthorize);
                 shareHandler.sendMessage(msg);
-
-
             }
         };
         mActivity.runOnUiThread(runnable);
     }
 
     public static void wechatCallback(final String event){
-        Log.i("","错误号3"  );
         try {
-            Log.i("","错误号4"  );
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("event", event);
             Device.shared().dispatchEventToScript("wechatCallback", jsonObject);
         } catch (Exception e) {
-            Log.i("","错误号5"  );
             e.printStackTrace();
         }
     }
@@ -113,15 +98,11 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
             switch (msg.what) {
                 //授权登录
                 case SDK_LOGIN: {
-                    System.out.println("wechatAuthorize3"+isAuthorize);
                     if(api.isWXAppInstalled()){
-                        System.out.println("wechatAuthorize4"+isAuthorize);
                         Login();
                     }
                     else{
-                        System.out.println("wechatAuthorize-1"+isAuthorize);
                         wechatCallback(FAIL+"#授权失败#"+"没有安装微信");
-                        System.out.println("isAuthorize6"+isAuthorize);
                         isAuthorize = false;
                     }
                     break;
@@ -173,8 +154,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
         req.scope = "snsapi_userinfo";
         req.state = "wechat_sdk";
         //微信向第三方app请求数据，第三方app回应数据之后会切回到微信界面
-        System.out.println("wechatAuthorize5"+isAuthorize);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         api.sendReq(req);
     }
 
@@ -184,14 +163,14 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
      */
     public static void onReq(BaseReq req) {
         Log.i("req=----",""+req);
-//        try {
-//            Intent intent = new Intent(mActivity,Wechat.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            mActivity.startActivity(intent);
-//        }
-//        catch (Exception e) {
-//            Log.i(null,e.getMessage());
-//        }
+        try {
+            Intent intent = new Intent(mActivity,Wechat.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mActivity.startActivity(intent);
+        }
+        catch (Exception e) {
+            Log.i(null,e.getMessage());
+        }
     }
 
     /**
@@ -206,7 +185,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
 //                    @Override
 //                    public void run() {
                         //当前状态为授权状态
-                Log.i("","错误号1" + isAuthorize+isShare );
                         if(isAuthorize && resp.getType() == 1){
                             //获取access_token
                             String code = ((SendAuth.Resp) resp).code;
@@ -214,7 +192,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
                             wechatCallback(HAVING+"#请求参数#"+code);
                             System.out.println("isAuthorize"+isAuthorize);
 
-//                finish();
                             isAuthorize=false;
                         }
                         else if(isShare==true && resp.getType() == 2){
@@ -238,7 +215,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
 //                    public void run() {
                         if(isAuthorize && resp.getType() == 1){
                             wechatCallback(CANCEL+"#取消授权#"+"取消授权");
-                            System.out.println("isAuthorize2"+isAuthorize);
                             isAuthorize=false;
                         }else if(isShare && resp.getType() == 2){
                             wechatCallback(CANCEL+"#取消分享#"+"取消分享");
@@ -261,7 +237,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
 //                    public void run() {
                         if(isAuthorize && resp.getType() == 1){
                             wechatCallback(REFUSE+"#授权被拒绝#"+"授权被拒绝");
-                            System.out.println("isAuthorize3"+isAuthorize);
                             isAuthorize=false;
                         }else if(isShare && resp.getType() == 2){
                             wechatCallback(REFUSE+"#分享被拒绝#"+"分享被拒绝");
@@ -284,7 +259,6 @@ public class Wechat extends Module.ModuleBase implements EasyPermissions.Permiss
 //                    public void run() {
                         if(isAuthorize && resp.getType() == 1){
                             wechatCallback( FAIL+"#授权返回#"+resp.errCode);
-                            System.out.println("isAuthorize4"+isAuthorize);
                             isAuthorize=false;
                         }else if(isShare && resp.getType() == 2){
                             wechatCallback(FAIL+"#分享返回#"+resp.errCode);

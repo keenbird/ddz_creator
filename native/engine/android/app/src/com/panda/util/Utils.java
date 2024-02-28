@@ -60,6 +60,8 @@ import java.util.Map;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static android.provider.Settings.Secure.ANDROID_ID;
+
 public class Utils {
     private static String TAG = Utils.class.getSimpleName();
     private static LocationListener locationListener = null;

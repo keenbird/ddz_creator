@@ -207,7 +207,6 @@ export class LoginCenter extends LoginMainInetMsg {
         this.m_strLoginMachineName = app.native.device.getMachineName()
         this.m_strLoginBuffHD = app.native.device.getHDID()
         this.m_strLoginUUID = app.native.device.getUUID()
-
         var callback = function(bSuccess: boolean, response: any){
             this.m_strToken = response.data.token
             this.m_strSessionKey = response.data.thirdData.sessionKey
@@ -229,30 +228,29 @@ export class LoginCenter extends LoginMainInetMsg {
     // 微信原生登录
     loginWeChatNative() {
         let self = this
-        fw.print("loginCenter:loginWeChatNative")
         this.m_eLoginType = LOGINTYPE.WEIXIN
-        fw.print("loginCenter:loginWeChatNative1")
         this.m_strLoginMachineName = app.native.device.getMachineName()
-        fw.print("loginCenter:loginWeChatNative2")
         this.m_strLoginBuffHD = app.native.device.getHDID()
-        fw.print("loginCenter:loginWeChatNative3")
         this.m_strLoginUUID = app.native.device.getUUID()
-        fw.print("loginCenter:loginWeChatNative4")
         var callback = function(bSuccess: boolean, response: any){
             this.m_strToken = response.data.token
-            this.m_strSessionKey = response.data.thirdData.sessionKey
+            this.m_strSessionKey = response.data.thirdData.access_token
             this.m_strOpenId = response.data.thirdData.openid
             this.m_bReg = response.data.isRegister
             this.loginToServer()
         }.bind(this)
         var params = {
-            channel_id: fw.DEBUG.sChannelID,
+            channel_id: app.native.device.getOperatorsID(),
             login_type: this.m_eLoginType,
             code: "",
         }
-        fw.print("loginCenter:loginWeChatNative5")
-        app.native.device.wechatLogin((params1)=>{
-            // self.loginByPhp(params1,callback)
+        app.native.device.wechatLogin((params1,params2)=>{
+            if(params1 == "success"){
+                params.code = params2
+                self.loginByPhp(params,callback)
+            }else{
+                app.popup.showToast("登录失败:"+params2);
+            }
         },params)
     }
 

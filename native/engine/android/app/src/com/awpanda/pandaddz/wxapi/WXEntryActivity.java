@@ -25,9 +25,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-		api= Wechat.shared().api;//WXAPIFactory.createWXAPI(this, Wechat.shared().app_id);
-//		api.registerApp(Wechat.shared().app_id);
-        Log.i(TAG,"onCreate"+ Wechat.shared().app_id +  Wechat.shared().api);
+		api= Wechat.shared().api;
         this.getWxIntent();
     }
 	
@@ -55,7 +53,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	
 	//第三方应用请求微信的响应结果
 	public void onResp(BaseResp resp) {
-		Log.i(TAG,"onResp"+Wechat.shared().isAuthorize);
+		Log.i(TAG,"onResp");
 
 		Wechat.shared().onResp(resp);
 		finish();

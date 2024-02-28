@@ -614,6 +614,7 @@ export class DeviceAndroid extends DeviceBase {
                 if (code==0 ){                   
                     var getcode=strTabel[2]
                     this.getToken(getcode)
+                    this.authorizeLinster("success",getcode)
                 //授权成功
                 }else if( code==1 ){  
                     // this.authorizeLinster("success",crypto.decodeBase64(strTabel[3]))  
@@ -650,7 +651,7 @@ export class DeviceAndroid extends DeviceBase {
                 if (bSuccess) {
                     console.log("getToken：",response)
                 } else {
-                    this.authorizeLinster("4#请求失败#"+response)
+                    this.authorizeLinster("fail","请求失败#")
                 }
             }
         });
