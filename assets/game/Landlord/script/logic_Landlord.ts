@@ -294,6 +294,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		return cbCardData
 		
 	}
+	//比较两组牌大小
 	CompareCard(cbLCardData:number[], cbLCardCount:number, cbRCardData:number[], cbRCardCount:number,cbInLCardType?:number,cbInRCardType?:number):boolean{
 		var cbLCardType = cbInLCardType ? cbInLCardType :this.GetCardType(cbLCardData, cbLCardCount)
 		var cbRCardType = cbInRCardType ? cbInRCardType : this.GetCardType(cbRCardData, cbRCardCount )
@@ -442,6 +443,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return false
 	}
+	//获取三张组合
 	GetThreeSameGroup_One(AnalyseResult:CardsAnalyseResult,cbCardCount:number):[number[],number]{
 		var cbThreeCardData = []
 		if(yx.config.MAX_COUNT < AnalyseResult.cbTripleCardData.length){
@@ -482,6 +484,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return [cbThreeCardData,cbThreeCount]
 	}
+	//获取癞子值（预留）
 	getLaiZiCardData():number{
 		return 0
 	}
@@ -2051,6 +2054,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
     	return [true,cbHandCardData,cbHandCardCount]
 	}
+	//分析牌组（无序）
 	AnalyzeCardDataUnOrder(orderResult:CardsAnalyseResult,order?:number){
 		if(orderResult == null){
 			return
@@ -2249,6 +2253,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		this.SortCardData(unorderResult.cbQuadrupleCardData,unorderResult.cbQuadrupleCount,order)
 		return unorderResult
 	}
+	//分析手牌牌组（用于搜索提示）
 	AnalyzeHandCardData(cbCardData:number[],cbCardCount:number,order:number):CardsAnalyseResult{
 		var result = this.createCardsAnalyseResult()
 		if(cbCardCount<=0){
@@ -2269,6 +2274,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		result = this.AnalyzeCardData(cbCardData,cbCardCount)
 		return result
 	}
+	//分析牌组
 	AnalyzeCardData(cbCardData:number[],cbCardCount:number,order?:number):CardsAnalyseResult{
 		var result = this.createCardsAnalyseResult()
 		var i = 0
@@ -2340,6 +2346,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return result
 	}
+	//获取牌值类型
 	GetCardType(cbPreCardData:number[],cbCardCount:number) {
 		var  cbCardData = []
    		cbCardData = cbPreCardData.slice();
@@ -2565,6 +2572,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return yx.config.OutCardType.Invalid
 	}
+	//判断是否为三带一
 	GetThreeLineTakeOne(AnalyseResult:AnalyseResultEx,cbCardCount:number){
 		//查找所有三张组合
 		var  cbSameCount = 3
@@ -2612,6 +2620,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return yx.config.OutCardType.Invalid
 	}
+	//获取所有三张牌数据
 	GetThreeSameGroup(AnalyseResult:AnalyseResultEx,cbCardCount:number):[number[],number]{
 		var cbThreeCardData = []
 		if(yx.config.MAX_COUNT < AnalyseResult.cbThreeCardData.length){
@@ -2649,10 +2658,11 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return [cbThreeCardData,cbThreeCount]
 	}
+	//获取花色
 	GetCardColorShape(cbCardData:number) {
 		return cbCardData &  yx.config.CARD_COLOR_MASK
 	}
-
+	//是否为特俗炸弹
 	isSpecialBomb(nCardType:number,bTopSequence:boolean, lastMaxCard:any) {
 		var result = false
 		var nType  = lastMaxCard.nType
@@ -2679,7 +2689,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 
 		return true
 	}
-
+	//判断是否甩牌
 	isShutCardType(cardData:number[],count:number, cardType:number) {
 		var result = false
 		var isContainA = false
@@ -2702,7 +2712,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return result
 	}
-	
+	//判断是否小牌
 	isSmallCard():boolean {
 		var result = false
 		var lastMaxCard = yx.internet.m_MaxCardInfo
@@ -2711,7 +2721,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return result
 	}
-
+	//是否播放压死音效
 	isPlayAffordSound(bNewTurn:boolean):[boolean,number] {
 		var result = false
 		var nType = 0
@@ -2760,7 +2770,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return [result,nType]
 	}
-
+	//拆分牌组（分析牌型用）
 	AnalysebCardData(cbCardData:number[],cbCardCount:number) {
 		var AnalyseResult = this.createTagAnalyseResultEx()
 		var i = 0
@@ -2800,7 +2810,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return AnalyseResult
 	}
-
+	//手牌排序
 	SortCardData(cbCardData:number[],cbCardCount:number,order?:number) {
 		if(cbCardCount == 0 || cbCardCount == 1){
 			return
@@ -2834,6 +2844,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 			  });
 		}
 	}
+	//获取手牌的logic值（如A逻辑值为14，比K大）
 	GetCardLogicValue(cbCardData:number) :number{
 		if(cbCardData == 0x00){
 			return 0x00
@@ -2849,6 +2860,7 @@ export class logic_Landlord extends (fw.FWComponent) {
 		}
 		return cardLogicValue
 	}
+	//获取手牌的面值（如A面值1）
 	GetCardFaceValue(cbCardData:number) :number{
 		return cbCardData & yx.config.CARD_VALUE_MASK
 	}

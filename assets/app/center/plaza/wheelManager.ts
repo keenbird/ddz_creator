@@ -1,4 +1,4 @@
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { GS_PLAZA_MSGID, sint, sint64, slong, stchar, stcharend, uchar, ushort, ushortlen } from "../../config/NetConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
@@ -240,7 +240,7 @@ export class wheelManager extends PlazeMainInetMsg {
 
     checkShowLimit() {
         let nMinGold = this.m_nMinGold
-        let myGold = center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD)
+        let myGold = center.user.getActorProp(PROTO_ACTOR.UAT_GOLD)
         fw.print("wheelManager:checkShowLimit", myGold, nMinGold)
         return myGold < nMinGold
     }

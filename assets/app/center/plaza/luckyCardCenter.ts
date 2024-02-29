@@ -1,4 +1,4 @@
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { LUCKCARD } from '../../../app/config/cmd/LuckyCardCMD';
 import { DF_RATE } from "../../config/ConstantConfig";
 import { EVENT_ID } from "../../config/EventConfig";
@@ -554,7 +554,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
     }
 
     checkShowLimit() {
-        let myGold = center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD)
+        let myGold = center.user.getActorProp(PROTO_ACTOR.UAT_GOLD)
         return (myGold / DF_RATE) < this.mMegaGifConfig.tip_gold_limit
     }
 
@@ -583,7 +583,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
 
     onMegaGiftCfg(dict: proto.plaza_luckcard.Imega_gift_cfg) {
         fw.print(dict, "======onMegaGiftCfg======== ")
-        fw.print(center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD))
+        fw.print(center.user.getActorProp(PROTO_ACTOR.UAT_GOLD))
         this.mMegaGifConfig = dict.mega_cfg
 
         let megaGifPrice: proto.common.IMegaGiftItem[] = []

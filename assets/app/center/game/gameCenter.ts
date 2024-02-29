@@ -1,6 +1,5 @@
 import { _decorator } from "cc";
 import { GameChatCenter } from "./gameChatCenter";
-import { GameLoginCenter } from "./gameLoginCenter";
 import { GameRoomCenter } from "./gameRoomCenter";
 import { GameTipsCenter } from "./gameTipsCenter";
 import { GameUserCenter } from "./gameUserCenter";
@@ -31,7 +30,6 @@ export enum GAME_USER_STATE {
 
 @ccclass('GameCenter')
 export class GameCenter extends (fw.FWComponent) {
-    login: GameLoginCenter;
     user: GameUserCenter;
     room: GameRoomCenter;
     chat: GameChatCenter;
@@ -39,7 +37,6 @@ export class GameCenter extends (fw.FWComponent) {
     onLoad() {
         super.onLoad()
         globalThis.gameCenter = this;
-        this.login = this.obtainComponent(GameLoginCenter);
         this.user = this.obtainComponent(GameUserCenter);
         this.room = this.obtainComponent(GameRoomCenter);
         this.chat = this.obtainComponent(GameChatCenter);

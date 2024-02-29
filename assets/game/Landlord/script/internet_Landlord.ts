@@ -54,6 +54,7 @@ export class internet_Landlord extends GameServerMainInetMsg {
         cbChairID : -1,
         nType : -1
     }
+    cardRecordData: number[];
     
     protected initEvents(): boolean | void {
         this.initMainID( this.mainID);

@@ -193,10 +193,6 @@ export class FWGameManager extends (fw.FWComponent) {
                         //进入游戏的配置是一致的则不需要重新showMain和加载资源
                         //直接进入房间并登录
                         if ( isInRoomScene && isSameGame) {
-                            // //连接房间id
-                            // center.gateway.connectRoom(app.gameManager.gameData.nServerID);
-                            // //登录游戏服
-                            // gameCenter.login.sendLoginGameServer();
                             if(app.gameManager.isComeback){
                                 gameCenter.room.sendEnterRoomREQ(app.gameManager.room_id)
                             }else{

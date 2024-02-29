@@ -221,6 +221,7 @@ const audioPaths = {
 @ccclass('sound_Landlord')
 export class sound_Landlord  {
     logic: logic_Landlord = new logic_Landlord
+    //获取性别路径字符串
     getSexByActor(pActor:any):string{
         let strSex = "man"
         if(pActor){
@@ -228,11 +229,11 @@ export class sound_Landlord  {
         }
         return strSex
     }
-
+    //播放音效
     playSound(path:string){
         app.audio.playEffect(fw.BundleConfig.Landlord.res[path]);
     }
-
+    //播放出牌音效
     playCardTypeSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
         let path = ''
@@ -362,7 +363,7 @@ export class sound_Landlord  {
         console.log("LH1",path,initData)
     }
 
-
+    //播放报警音效
     playAlertorSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
      
@@ -377,7 +378,7 @@ export class sound_Landlord  {
         }
         
     }
-
+    //播放过牌音效
     playPassSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
         //--太小，不压
@@ -391,7 +392,7 @@ export class sound_Landlord  {
             this.playSound(path)
         }
     }
-
+    //播放叫分音效
     playOptSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
        
@@ -415,7 +416,7 @@ export class sound_Landlord  {
             this.playSound(js.formatStr(audioPaths["DOUBLE_SUPER"], strSex))
         }
     }
-
+    //播放春天音效
     playSpringSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
        
@@ -427,7 +428,7 @@ export class sound_Landlord  {
             this.playSound(js.formatStr(audioPaths["SPRINGED"], strSex))
         }
     }
-
+    //播放特殊出牌音效
     playOutCardSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
        
@@ -440,7 +441,7 @@ export class sound_Landlord  {
             this.playSound(path)
         }
     }
-
+    //
     playBaseCardSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
        
@@ -453,7 +454,7 @@ export class sound_Landlord  {
             this.playSound(js.formatStr(audioPaths["BASE_CARD_3"], strSex))  
         }
     }
-
+    //播放比赛叫分音效
     playCallPointSound(initData:landlordSoundInitData){
         let strSex = this.getSexByActor(initData.pActor)
        
@@ -494,19 +495,19 @@ export class sound_Landlord  {
             }
         }
     }
-
+    //播放发牌音效
     playSendCard(){
         this.playSound(audioPaths["EFFECT_CARD"])  
     }
-
+    //播放出牌音效
     playDiscard(){
         this.playSound(audioPaths["EFFECT_DISCARD"])  
     }
-
+    //播放闹钟音效
     playClockEffect(){
         this.playSound(audioPaths["EFFECT_CLOCK"])  
     }
-
+    //播放结束音效
     playSettleEffect(bWin:boolean){
         if(bWin){
             this.playSound(audioPaths["EFFECT_WIN"])  
@@ -515,11 +516,11 @@ export class sound_Landlord  {
         }
         
     }
-
+    //播放春天音效
     playSpringEffect(){
         this.playSound(audioPaths["EFFECT_SPRING"])  
     }
-
+    //播放大牌特效音效
     playCardTypeEffect(initData:landlordSoundInitData){
         if(initData.nCardType == yx.config.OutCardType.Sequence || 
         initData.nCardType == yx.config.OutCardType.Sequence_Of_Pairs ){
@@ -539,7 +540,7 @@ export class sound_Landlord  {
     }
 
   
-
+    //播放甩牌特效音效
     playShutCardSound(){
         this.playSound(audioPaths["EFFECT_SHUTCARD"])  
     }
@@ -547,17 +548,15 @@ export class sound_Landlord  {
     playSendDump(){
         this.playSound(audioPaths["SEND_DUMP"])  
     }
-
+    //播放洗牌音效
     playSortCard(){
         this.playSound(audioPaths["SORT_CARD"])  
     }
 
-
+    //播放得分音效
     playMultiply(){
         this.playSound(audioPaths["MULTIPLY"])  
     }
-
-   
 }
 
 

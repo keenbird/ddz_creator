@@ -21,16 +21,7 @@ export class GatewayCenter extends GatewayMainInetMsg {
         this.initMainID(GS_PLAZA_MSGID.GS_GATEWAY_MSGID_COMMAND);
     }
     initRegister() {
-    //     this.bindMessage({
-    //         struct: proto.gateway_command.gatewaytips_s,
-    //         cmd: this.cmd.GATEWAY_COMMAND_TIPS,
-    //         callback: this.OnRecv_GatewayTips.bind(this)
-    //     });
-    //     this.bindMessage({
-    //         struct: proto.gateway_command.gatewaysocketerror_s,
-    //         cmd: this.cmd.GATEWAY_COMMAND_SOCKETERROR,
-    //         callback: this.OnRecv_GatewaySocketError.bind(this)
-    //     });
+
         this.bindMessage({
             printLog: false,
             struct: proto.client_proto.HeartbeatResp,
@@ -39,20 +30,9 @@ export class GatewayCenter extends GatewayMainInetMsg {
         });
 
         this.bindMsgStructPB(this.cmd.HSMI_HEARTBEAT_REQ, proto.client_proto.HeartbeatReq)
-    //     this.bindMessage({
-    //         struct: proto.gateway_command.gatewayconnect_c,
-    //         cmd: this.cmd.GATEWAY_COMMAND_CONNECTROOM,
-    //     });
+
     }
-    /**连接房间 */
-    connectRoom(nServerID: number) {
-        // let data = proto.gateway_command.gatewayconnect_c.create()
-        // data.server_id = nServerID
-        // this.sendMessage({
-        //     cmd: this.cmd.GATEWAY_COMMAND_CONNECTROOM,
-        //     data: data
-        // });
-    }
+
     /**获取心跳包数据 */
     getHearbeat() {
         let data = proto.client_proto.HeartbeatReq.create()

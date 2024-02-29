@@ -1,7 +1,5 @@
 
 import { _decorator, Component, Node as ccNode, math, isValid } from 'cc';
-import { PlazaCenter } from '../../center/plazaCenter';
-import { UserCenter } from '../../center/userCenter';
 import { httpConfig, server_config, socket_config } from '../../config/HttpConfig';
 import { GS_Head, GS_HeadNull_Size, Root_cmd } from '../../config/NetConfig';
 import { AwBufNetNode } from '../network/awBuf/NetNode';
@@ -48,7 +46,6 @@ class NetTips implements INetworkTips {
     }
 }
 
-const center = [PlazaCenter, UserCenter]
 
 @ccclass('SockManager')
 export class SockManager extends Component {

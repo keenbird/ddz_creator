@@ -4,7 +4,7 @@ const { ccclass } = _decorator;
 import { yx } from '../../../yx_AB';
 import { player_AB } from './player_AB';
 import proto from './../../../protobuf/ab_format';
-import { ACTOR } from '../../../../../app/config/cmd/ActorCMD';
+import { ACTOR, PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
 import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
 import { DF_RATE, DF_SYMBOL } from '../../../../../app/config/ConstantConfig';
 import { main_GameBase } from '../../../../GameBase/ui/main/script/main_GameBase';
@@ -30,7 +30,7 @@ export class main_AB extends main_GameBase {
     protected initEvents(): boolean | void {
         //玩家金币金币变更
         this.bindEvent({
-            eventName: ACTOR[ACTOR.ACTOR_PROP_GOLD],
+            eventName: PROTO_ACTOR[PROTO_ACTOR.UAT_GOLD],
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
                 this.updateChipVisible();
             }

@@ -1,5 +1,5 @@
 import proto from "../common";
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { DF_RATE } from "../../config/ConstantConfig";
 import { GS_PLAZA_MSGID } from "../../config/NetConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
@@ -132,7 +132,7 @@ export class exchangeCenter extends PlazeMainInetMsg {
 
     getCanCashOutGold() {
         let numwithdrawable = parseInt(center.user.getActorProp(ACTOR.ACTOR_PROP_WITHDRAW_GOLD));
-        let numtotal = parseInt(center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD));
+        let numtotal = parseInt(center.user.getActorProp(PROTO_ACTOR.UAT_GOLD));
         let withdrawSwitch = center.user.isSwitchOpen("btWithdrawSwitch");
         let canCashOutGold = 0;
         if (withdrawSwitch) {

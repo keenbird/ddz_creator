@@ -42,12 +42,6 @@ export class GameUserCenter extends GameServerMainInetMsg {
         this.bindRecvFunc(this.cmd.GCSI_USER_ATTRI_CHANGE_PUSH, this.OnRecv_ActorVariableInfo.bind(this));
     }
 
-    /**获得某桌人数 */
-    getActorCount() {
-        let nTableID = this.getSelfTableID();
-        return gameCenter.room.getActorCount(nTableID);
-    }
-
     /**通过ChairID获得用户 */
     getPlayerInfoByChairID(nChairID: number) {
         if (fw.isNull(nChairID)) {
@@ -79,7 +73,7 @@ export class GameUserCenter extends GameServerMainInetMsg {
     /**获取玩家金币 */
     getGold(): number {
         let actor = this.getActor();
-        return actor ? actor[ACTOR.ACTOR_PROP_GOLD] : 0;
+        return actor ? actor[PROTO_ACTOR.UAT_GOLD] : 0;
     }
     /**获取玩家练习币 */
     getPracticeGold(): number {

@@ -3,7 +3,7 @@ import { GS_PLAZA_MSGID } from "../../config/NetConfig";
 import { Node as ccNode }from 'cc';
 import { EVENT_ID } from "../../config/EventConfig";
 import proto from "../common";
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { DF_RATE } from "../../config/ConstantConfig";
 import { httpConfig } from "../../config/HttpConfig";
 
@@ -147,7 +147,7 @@ export class giftBagCenter extends PlazeMainInetMsg {
     async showGiftBagDialog(callbackFunc?: Function, cancelClickFun?: Function, callbsdack?: (view: ccNode, data: FWPopupDialogParam) => void) {
         let recharge_rid = -1
         let count = parseInt(center.user.getActorProp(ACTOR.ACTOR_PROP_BUSET_BUY_COUNT));
-        let myGold = parseInt(center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD));
+        let myGold = parseInt(center.user.getActorProp(PROTO_ACTOR.UAT_GOLD));
         if (this.mIsOpen && count < this.mMaxBuyCount && myGold <= this.mBuyGoldLimit) {
             this.getMaxPaymentHis().then((maxPaymentHis:number = 0)=>{
                 this.mBuyGoldList.forEach((list, index)=>{

@@ -6,12 +6,10 @@ import { player_Landlord } from './player_Landlord';
 import proto from './../protobuf/Landlord_format';
 import { ACTOR, PROTO_ACTOR } from '../../../app/config/cmd/ActorCMD';
 import { FWSpine } from '../../../app/framework/extensions/FWSpine';
-import { DF_RATE, DF_SYMBOL } from '../../../app/config/ConstantConfig';
 import { main_GameBase } from '../../GameBase/ui/main/script/main_GameBase';
 import { logic_Landlord } from './logic_Landlord';
 import { landlordSoundInitData, sound_Landlord } from './sound_Landlord';
 import { EVENT_ID } from '../../../app/config/EventConfig';
-import { forEach } from '../../../../engine/cocos/asset/asset-manager/utilities';
 
 @ccclass('main_Landlord')
 export class main_Landlord extends main_GameBase {

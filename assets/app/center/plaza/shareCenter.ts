@@ -1,6 +1,4 @@
 import { _decorator, js } from 'cc';
-import { ACTOR } from '../../config/cmd/ActorCMD';
-import { DF_RATE } from '../../config/ConstantConfig';
 import { EVENT_ID } from "../../config/EventConfig";
 import { GS_PLAZA_MSGID } from '../../config/NetConfig';
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";

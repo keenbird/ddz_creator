@@ -1,5 +1,5 @@
 import { JsonAsset } from "cc";
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import {  PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { httpConfig } from "../../config/HttpConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
@@ -446,7 +446,7 @@ export class RoomListCenter extends PlazeMainInetMsg {
             let LimitRule = room.LimitRule
             let nSignUpMustGold = (LimitRule[ROOM_RULE_ENTER.gold].nMinValue) //下限
             let nSignUpMustGoldMax = (LimitRule[ROOM_RULE_ENTER.gold].nMaxValue) //上限
-            let gold = (center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD))
+            let gold = (center.user.getActorProp(PROTO_ACTOR.UAT_GOLD))
 
             if (gold < nSignUpMustGold) {
                 return {

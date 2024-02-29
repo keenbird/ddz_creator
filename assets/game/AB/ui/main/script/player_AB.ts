@@ -3,7 +3,7 @@ const { ccclass } = _decorator;
 
 import { yx } from '../../../yx_AB';
 import proto from './../../../protobuf/ab_format';
-import { ACTOR } from '../../../../../app/config/cmd/ActorCMD';
+import { ACTOR, PROTO_ACTOR } from '../../../../../app/config/cmd/ActorCMD';
 import { EVENT_ID } from '../../../../../app/config/EventConfig';
 import { DF_RATE } from '../../../../../app/config/ConstantConfig';
 import { FWSpine } from '../../../../../app/framework/extensions/FWSpine';
@@ -20,7 +20,7 @@ export class player_AB extends player_GameBase {
     protected initEvents(): boolean | void {
         //玩家金币金币变更
         this.bindEvent({
-            eventName: ACTOR[ACTOR.ACTOR_PROP_GOLD],
+            eventName: PROTO_ACTOR[PROTO_ACTOR.UAT_GOLD],
             callback: (arg1: FWDispatchEventParam, arg2: FWBindEventParam) => {
                 //刷新自身金币
                 this.updateOnePlayer(yx.internet.nSelfChairID);
@@ -121,9 +121,9 @@ export class player_AB extends player_GameBase {
                 player.Items.Label_name.active = nServerChairID != yx.internet.nSelfChairID;
                 //金币
                 if (nServerChairID == yx.internet.nSelfChairID) {
-                    player.Items.Label_chip.string = `${(playerInfo[ACTOR.ACTOR_PROP_GOLD] - yx.internet.nJettonScore) / DF_RATE}`;
+                    player.Items.Label_chip.string = `${(playerInfo[PROTO_ACTOR.UAT_GOLD] - yx.internet.nJettonScore) / DF_RATE}`;
                 } else {
-                    player.Items.Label_chip.string = `${playerInfo[ACTOR.ACTOR_PROP_GOLD] / DF_RATE}`;
+                    player.Items.Label_chip.string = `${playerInfo[PROTO_ACTOR.UAT_GOLD] / DF_RATE}`;
                 }
                 player.Items.Node_chip.active = nServerChairID == yx.internet.nSelfChairID;
                 //头像

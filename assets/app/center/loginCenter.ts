@@ -1,11 +1,10 @@
-import { GS_LOGIN_MSGID, GS_PLAZA_MSGID, sint, sint64, slong, stchar, uchar } from "../config/NetConfig";
+import {  GS_PLAZA_MSGID } from "../config/NetConfig";
 import { LoginMainInetMsg } from "../framework/network/awBuf/MainInetMsg";
-import { httpConfig, server_config, servers_default } from "../config/HttpConfig";
+import { httpConfig, server_config } from "../config/HttpConfig";
 import { EVENT_ID } from "../config/EventConfig";
 import proto from "./common";
-import { CPLUSLOGINTYPE, ERRID, ERRID_MSG, LOGINTYPE, LOGINTYPE_STR, PATHS } from "../config/ConstantConfig";
+import { CPLUSLOGINTYPE,  LOGINTYPE, LOGINTYPE_STR, PATHS } from "../config/ConstantConfig";
 import { Node as ccNode, math } from 'cc';
-import { EventParam } from "../framework/manager/FWEventManager";
 
 export class LoginCenter extends LoginMainInetMsg {
     cmd = proto.client_proto.LOGIN_SUB_MSG_ID
@@ -254,50 +253,6 @@ export class LoginCenter extends LoginMainInetMsg {
         },params)
     }
 
-
-    getLoginPhpParams(session_id, extraLoginParams, buffhdEx?) {
-        let buffhd = buffhdEx || app.native.device.getHDID()
-        let params: any = {
-            os: 0,
-            idfa: "",
-            game_id: 0,
-            session_id: session_id,
-            buffhd: buffhd,
-            machinename: app.native.device.getMachineName(),
-            kind_id: 1,
-            user_type: app.native.device.getOperatorsID(),
-            user_sub_type: app.native.device.getOperatorsSubID(),
-            inviter: "",
-            timestamp: app.func.time()
-        }
-        if (app.func.isAndroid()) {
-            // 这里不要修改了 已经上线只能将错就错了 android 和 pc 共用来源
-            params.os = 0;
-            // params.os = 1;
-        }
-        else if (app.func.isIOS()) {
-            params.os = 2;
-            params.idfa = app.native.device.getIDFA()
-        }
-        params.sign = app.http.getSign(params)
-
-        let extra: any = extraLoginParams || {}
-        if (app.func.isAndroid()) {
-            // extra.cpl_device = app.sdk.getDeviceIDParams()
-        }
-
-        let location = app.sdk.getLngAndLat()
-        extra.longlat = {
-            lng: location.lng,
-            lat: location.lat,
-        }
-
-        params.extra = extra
-        app.native.leo.extraLoginParams(params)
-        params.extra = JSON.stringify(params.extra)
-        return params
-    }
-
     // 登录结果
     OnRecv_LoginEnd(dict: proto.client_proto.LoginResp) {
         app.gameManager.setServerId(0)
@@ -343,6 +298,7 @@ export class LoginCenter extends LoginMainInetMsg {
         // })
     }
 
+    //当收到玩家信息的时候再进入大厅
     OnRecv_LoginAttrNtf(dict: proto.client_proto.ILoginAttrNtf) {
         center.user.setLoginActor(dict)
         this.loginPlaza()
@@ -350,7 +306,6 @@ export class LoginCenter extends LoginMainInetMsg {
     //异地登录
     OnRecv_LoginOffistePush(dict: proto.client_proto.ILoginOffsitePush) {
         let interruptCallback = () => {
-            
             fw.scene.changePlazaUpdate();
         }
         app.gameManager.setServerId(0)
@@ -390,23 +345,23 @@ export class LoginCenter extends LoginMainInetMsg {
             fw.scene.changePlazaUpdate();
         }
         let sceneConfig = fw.scene.getSceneConfig();
-        if (sceneConfig == fw.SceneConfigs.update) {
-            app.popup.showTip({
-                text: "Network connection timed out",
-                btnList: [
-                    {
-                        styleId: 3,
-                        callback: timeOutCallback,
-                    },
-                ],
-                closeCallback: timeOutCallback,
-            });
-            return;
-        }
+        // if (sceneConfig == fw.SceneConfigs.update) {
+        //     app.popup.showTip({
+        //         text: "Network connection timed out",
+        //         btnList: [
+        //             {
+        //                 styleId: 3,
+        //                 callback: timeOutCallback,
+        //             },
+        //         ],
+        //         closeCallback: timeOutCallback,
+        //     });
+        //     return;
+        // }
         //登录
         if (sceneConfig == fw.SceneConfigs.login) {
             app.popup.showTip({
-                text: "Network connection timed out",
+                text: "网络已超时",
                 btnList: [
                     {
                         styleId: 3,
@@ -425,11 +380,11 @@ export class LoginCenter extends LoginMainInetMsg {
             fw.scene.changePlazaUpdate();
         }
         app.popup.showTip({
-            title: `Notice`,
-            text: `Network connection interrupted, please retry.`,
+            title: `通知`,
+            text: `网络连接错误,请重试`,
             btnList: [
                 {
-                    text: `OK`,
+                    text: `确定`,
                     styleId: 3,
                     callback: interruptCallback,
                 },
@@ -444,7 +399,7 @@ export class LoginCenter extends LoginMainInetMsg {
             fw.scene.changePlazaUpdate();
         }
         app.popup.showTip({
-            text: "Login timed out",
+            text: "登录超时",
             btnList: [
                 {
                     styleId: 3,
@@ -476,7 +431,7 @@ export class LoginCenter extends LoginMainInetMsg {
         //关闭socket
         app.socket.disconnect();
     }
-
+    //获取停服公告
     showLoginNotice() {
         let channel = app.native.device.getOperatorsID();
         app.http.get({
@@ -547,17 +502,7 @@ export class LoginCenter extends LoginMainInetMsg {
         }
     }
 
-    async isAllowLogin(wflag:number = 1) {
-        // 关闭模拟器校验
-        // if (wflag == 0) {
-        //     if (await app.native.device.checkIsAndroidEMU()) {
-        //         app.popup.showToast(fw.language.get("Network connection error, please contact customer service.-301"))
-        //         return false;
-        //     }
-        // }
-        return true;
-    }
-
+    //处理选服和非选服的进入逻辑
     selectServer(serverData: server_config) {
         var enterLoginMain = ()=>{
             if (fw.DEBUG.bSelectServer || app.func.isBrowser()) {
@@ -605,11 +550,12 @@ export class LoginCenter extends LoginMainInetMsg {
 
         
     }
+    //进入大厅
     loginPlaza(){
         //显示预加载界面
         fw.scene.changeScene(fw.SceneConfigs.plaza);
-
     }
+    
     changeToUpdate(result) {
         if (fw.DEBUG.bServerProxy) {
             let list: any[] = result.data.list;

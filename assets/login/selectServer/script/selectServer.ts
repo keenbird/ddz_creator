@@ -3,8 +3,6 @@ const { ccclass, executeInEditMode, property } = _decorator;
 import { EDITOR } from 'cc/env';
 
 import { servers, servers_default } from '../../../app/config/HttpConfig';
-import { FWSpine } from '../../../app/framework/extensions/FWSpine';
-import { FWTween } from '../../../app/framework/extensions/FWTween';
 
 @ccclass('selectServer')
 export class selectServer extends fw.FWComponent {

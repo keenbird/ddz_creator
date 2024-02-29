@@ -56,54 +56,7 @@ const ERRID_MSG: Map<ACTORTIPS, string> = new Map([
 export const ENCONTAINER_EQUIP = 1	//装备
 export const ENCONTAINER_PACKET = 2	//背包
 
-class HALL_GUIDE_ID {
-    /**
-     * 强制引导用户进入新手房
-     * @returns 
-     */
-    GUIDE_GOTO_ROOM() {
-        let flags = center.user.getActorProp(ACTOR.ACTOR_PROP_NOVICE_GUIDE_FLAGS) ?? 0
-        return (GUIDE.NOVICE_GUIDE_WIN_NEW_ROOM_TWO & flags) == 0
-    }
-    /**
-     * 弱引导用户进入新手房
-     * @returns 
-     */
-    GUIDE_GOTO_ROOM_2() {
-        let flags = center.user.getActorProp(ACTOR.ACTOR_PROP_NOVICE_GUIDE_FLAGS) ?? 0
-        return (GUIDE.NOVICE_GUIDE_WIN_NEW_ROOM_FIVE & flags) == 0
-    }
-    /**
-     * 弱引导用户进入高级场新手房
-     * @returns 
-     */
-    GUIDE_GOTO_HIGH_ROOM() {
-        let flags = center.user.getActorProp(ACTOR.ACTOR_PROP_NOVICE_GUIDE_FLAGS) ?? 0
-        return (GUIDE.NOVICE_GUIDE_WIN_NEW_HIGH_ROOM_ONE & flags) == 0
-    }
-    /**
-     * 引导玩家进入兑换红包 且存在能购买的红包
-     * @returns 
-     */
-    GUIDE_EXCHANGE_RED_PACKET() {
-        let flags = center.user.getActorProp(ACTOR.ACTOR_PROP_GUIDE_ID_FLAGS) ?? 0
-        let flags2 = center.user.getActorProp(ACTOR.ACTOR_PROP_NOVICE_GUIDE_FLAGS) ?? 0
-        return (GUIDE.NOVICE_GUIDE_WIN_NEW_HIGH_ROOM_ONE & flags2) == 0 && (GUIDE.GUIDE_EXCHANGE_RED_PACKET_VALUE & flags) == 0
-    }
 
-    GUIDE_XXL_ENTER_ROOM(flags) {
-        return (GUIDE.GUIDE_XXL_ENTER_ROOM & flags) == 0
-    }
-
-    GUIDE_XXL_JIASU(flags) {
-        return (GUIDE.GUIDE_XXL_JIASU & flags) == 0
-    }
-
-    GUIDE_GUOSHANCHE_GAME() {
-        let flags = center.user.getActorProp(ACTOR.ACTOR_PROP_GUIDE_ID_FLAGS) ?? 0
-        return (GUIDE.GUIDE_GUOSHANCHE_GAME & flags) == 0
-    }
-}
 
 //功能开启标志
 const OPENFLAG_FIRSTRECHARGE = 0x1 //首次充值
@@ -144,17 +97,8 @@ export class UserCenter extends PlazeMainInetMsg {
 
     nRegisterTime = 0 // 用户注册时间
     nNewSevenTimes = 0 // 新版七天生效时间
-    mBankruptGiftBagEndTime = 0 // 破产礼包结束时间
-    mReconnectRoomServerId = 0 // 断线重连serverID
-    mReconnectRoomServerGroupType = 0 // 断线重连groptype
-    mReconnectRoomServerKindID = 0 // 断线重连kind id
-    mReconnectRoomDDZMatchType = 0 // 假比赛断线重连标记
     mActorProrUseChannelid = 0 // 用户注册渠道
     mBackToPlazaHasShow = 0
-    mTransfersFlag = false ////转账指定账号标记 1是 0不是
-    mUserGroupInfo: [] = []
-    mDelServerTime: number = 0//与服务器的时间差
-    serviceEmergencyInfo: any;
     private _mVipLvInfoList: VipLvInfo[] = [];
     private _mVipLvInfo: any
     private _otherInfo: any = {};
@@ -162,16 +106,9 @@ export class UserCenter extends PlazeMainInetMsg {
     mUserInfoFromWebData: any = {};
     mUserInfoFromErrorTime = 0; //webUserData接口拉取数据失败次数
     private _mShareConfig: {};
-    mCustomControlCfg: {};
     nPlazaServerID: any;
     mIsFirstCashAllComplete = false;//当前商城所有配置有返利的金额是否已经充过值
 
-    HALL_GUIDE_ID = HALL_GUIDE_ID;
-    m_PayItemMap: {};
-    m_PayKeyMap: {};
-    mGameWakGuideInfo: {};
-    m_nSelColor: any;
-    mWithdrawGuide: boolean = false;
 
     initData() {
         this.cleanUserData()
@@ -199,12 +136,6 @@ export class UserCenter extends PlazeMainInetMsg {
         });
     }
     initRegister() {
-    //     //玩家私有数据
-    //     this.bindMessage({
-    //         struct: proto.plaza_actorprop.ator_private_info_s,
-    //         cmd: this.cmd.PLAZA_ACTOR_PRIVATE,
-    //         callback: this.OnRecv_ActorPrivateInfo.bind(this)
-    //     });
         //玩家易变属性
         this.bindMessage({
             struct: proto.client_proto.UserAttriChangePush,
@@ -233,7 +164,7 @@ export class UserCenter extends PlazeMainInetMsg {
     }
     /**获取属性事件名 =>（ACTOR[PROTO_ACTOR.UAT_GOLD] 或者 `ACTOR_EVENT_${PROTO_ACTOR.UAT_FACE_URL}`） */
     getActorEventName(actorName: string) {
-        return ACTOR[actorName] ?? `ACTOR_EVENT_${actorName}`;
+        return PROTO_ACTOR[actorName] ?? `ACTOR_EVENT_${actorName}`;
     }
     /**获取自身属性 */
     getActor() {
@@ -453,14 +384,7 @@ export class UserCenter extends PlazeMainInetMsg {
             }
         });
     }
-    /**发送请求获取分享的配置数据 */
-    sendApplyShareGameConfig() {
-        let data = proto.plaza_actorprop.actor_get_share_cfg_c.create()
-        this.sendMessage({
-            cmd: this.cmd.PLAZA_ACTOR_GETSHARECONFIG,
-            data: data
-        });
-    }
+
     /**
      * 绑定手机
      * @param phone 
@@ -640,59 +564,7 @@ export class UserCenter extends PlazeMainInetMsg {
     getActorVipExp() {
         return this._actorProp[ACTOR.ACTOR_PROP_VIPEXP]
     }
-    //得到拉米游戏游玩局数
-    getRummyPlayCount() {
-        return this._actorProp[ACTOR.ACTOR_PROP_RUMMY_PLAY_COUNT] ?? 0
-    }
-    /**
-     * 检测是否存在当前游戏房间配置 如果满足就进入该房间
-     * @returns 
-     */
-    checkReconnectRoom() {
-        let roomInfo = gameCenter.room.getRoomInfo();
-        let roomInfoLen = fw.isNull(roomInfo) ? 0 : Object.keys(roomInfo).length;
-        if (roomInfoLen > 0) {
-            let actor = center.user.getActor();
-            let nthisMoney = actor[PROTO_ACTOR.UAT_GOLD];
-            let room = center.roomList.getRoomInfo(roomInfo.kindId);
-            if (room) {
-                let nMinGold = room.LimitRule[0].nMinValue;
-                if (nthisMoney >= nMinGold) {
-                    // center.roomList.sendGetRoomServerId(roomInfo.kindId);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    /**检测是服务器否存在用户未结束的游戏 如果有就进入这个房间 */
-    checkReconnectRoomLogout() {
-        if (this.mReconnectRoomServerId != 0) {
-            center.roomList.sendGetRoomServerId(this.mReconnectRoomServerKindID);
-            return true;
-        }
-        return false;
-    }
-    //转账指定账号标记
-    getTransfersFlag() {
-        return this.mTransfersFlag
-    }
 
-    //server下发的玩家渠道号，目前只有wingo在用
-    getServerUseChannelid() {
-        return this.mActorProrUseChannelid
-    }
-    // 重连比赛标记
-    getReconnectRoomDDZMatchType() {
-        return this.mReconnectRoomDDZMatchType
-    }
-    /**
-     * 破产礼包结束时间
-     * @returns 
-     */
-    getBankruptGiftBagEndTime() {
-        return this.mBankruptGiftBagEndTime
-    }
 
     /**
      * 玩家易变属性
@@ -700,10 +572,6 @@ export class UserCenter extends PlazeMainInetMsg {
      */
     OnRecv_ActorVariable(dict: proto.client_proto.IUserAttriChangePush) {
         dict.attriList.forEach(v => {
-            // if (v.prop_id == ACTOR.ACTOR_PROP_SERVER_TIME) {
-            //     let nCurTime = app.func.time()
-            //     this.mDelServerTime = v.new_value - nCurTime;
-            // }
             this._actorProp[v.key] = v.valueType == 1 ?  app.func.toNumber(v.value) : v.value
             this.event.dispatchEvent({
                 eventName: v.key,

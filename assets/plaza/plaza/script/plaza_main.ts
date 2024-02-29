@@ -760,9 +760,6 @@ export class plaza_main extends (fw.FWComponent) {
 			eventName: PROTO_ACTOR.UAT_GOLD,
 			callback: this.updateGold.bind(this)
 		});
-		let node_coin = this.Items.node_coin;
-		let pos = node_coin.getComponent(UITransform).convertToWorldSpaceAR(v3(0, 0, 0));
-		center.plaza.setPlazaGoldPos(pos);
 		//钻石
 		this.updateDiamond();
 		center.user.event.bindEvent({

@@ -1,5 +1,5 @@
 
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { GS_PLAZA_MSGID, sint64, slong, uchar } from "../../config/NetConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
@@ -153,7 +153,7 @@ export class choujiangManager extends PlazeMainInetMsg {
     }
     checkShowLimit() {
         let nMinGold = this.m_nMinGold
-        let myGold = center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD)
+        let myGold = center.user.getActorProp(PROTO_ACTOR.UAT_GOLD)
         return myGold < nMinGold
     }
 

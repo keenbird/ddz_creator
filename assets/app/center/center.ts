@@ -4,9 +4,7 @@ const { ccclass } = _decorator;
 
 import { LoginCenter } from "./loginCenter";
 import { UserCenter } from "./userCenter";
-import { PlazaCenter } from "./plazaCenter";
 import { GatewayCenter } from "./gatewayCenter";
-
 import { GameCenter } from "./game/gameCenter";
 
 import { tipsCenter } from "./plaza/tipsCenter";
@@ -30,7 +28,6 @@ import { giftBagCenter } from "./plaza/giftBagCenter";
 export class CenterManager extends (fw.FWComponent) {
     //???
     user: UserCenter
-    plaza: PlazaCenter
     login: LoginCenter
     gateway: GatewayCenter
     //game
@@ -57,7 +54,6 @@ export class CenterManager extends (fw.FWComponent) {
         globalThis.center = this;
         //???
         this.user = this.obtainComponent(UserCenter);
-        this.plaza = this.obtainComponent(PlazaCenter);
         this.login = this.obtainComponent(LoginCenter);
         this.gateway = this.obtainComponent(GatewayCenter);
         //game

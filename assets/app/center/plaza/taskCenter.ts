@@ -1,4 +1,4 @@
-import { ACTOR } from "../../config/cmd/ActorCMD";
+import { ACTOR, PROTO_ACTOR } from "../../config/cmd/ActorCMD";
 import { EVENT_ID } from "../../config/EventConfig";
 import { GS_PLAZA_MSGID } from "../../config/NetConfig";
 import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
@@ -409,7 +409,7 @@ export class TaskCenter extends PlazeMainInetMsg {
         this.checkRefreshSubsydyData()
         if (this.m_SubsydyData.nDayReciveCount < this.m_SubsydyInfo.nSubsidyCount &&
             this.m_SubsydyData.nTotalReciveCount < this.m_SubsydyInfo.nTotalCount &&
-            center.user.getActorProp(ACTOR.ACTOR_PROP_GOLD) < this.m_SubsydyInfo.nCriticalGold) {
+            center.user.getActorProp(PROTO_ACTOR.UAT_GOLD) < this.m_SubsydyInfo.nCriticalGold) {
             return true
         }
         return false
