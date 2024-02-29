@@ -1,6 +1,6 @@
 import { ERRID_MSG } from '../config/ConstantConfig';
 import { EVENT_ID } from '../config/EventConfig';
-import { GS_GATEWAY_MSGID, GS_PLAZA_MSGID, sint64, slong, stchar, uchar } from '../config/NetConfig';
+import {  GS_PLAZA_MSGID, sint64, slong, stchar, uchar } from '../config/NetConfig';
 import { GatewayMainInetMsg } from '../framework/network/awBuf/MainInetMsg';
 import proto from './common';
 
@@ -59,48 +59,8 @@ export class GatewayCenter extends GatewayMainInetMsg {
         data.timestamp = app.func.time(true) * 1000
         return this.getSendData(this.cmd.HSMI_HEARTBEAT_REQ, data);
     }
-    /**提示 */
-    OnRecv_GatewayTips(data: proto.gateway_command.gatewaytips_s) {
-        // fw.print(data.tips);
-        // let tips = data.tips
-        // let msg = tips == "" ? ERRID_MSG.get(data.type) : tips;
-        // if (msg) {
-        //     app.popup.showToast(msg)
-        // } else {
-        //     app.popup.showToast("UNKOWN ERROR")
-        // }
-    }
-    /**错误 */
-    OnRecv_GatewaySocketError(data: proto.gateway_command.Igatewaysocketerror_s) {
-        // //游戏
-        // switch (data.server_type) {
-        //     case CONNPROXY.GAME:
-        //         app.popup.closeLoading();
-        //         gameCenter.room.setRoomOnline(false);
-        //         if(center.roomList.isNeedChangeGameServer()) {
-        //             center.roomList.onChangeGameServer()
-        //             return
-        //         }
-        //         fw.print(`游戏链接断开退出游戏`);
-        //         app.gameManager.exitGame(true);
-        //         break;
-        //     case CONNPROXY.PLAZA:
-        //         app.file.setIntegerForKey(`LoginType`, -1);
-        //         center.login.closeConnect();
-        //         fw.scene.changeScene(fw.SceneConfigs.login);
-        //         app.event.dispatchEvent({
-        //             eventName: EVENT_ID.EVENT_GATEWAY_TIPS_ERROR,
-        //         });
-        //         break;
-        //     case CONNPROXY.LOGIN:
-        //         //TODO
-        //         break;
-        //     default:
-        //         fw.printWarn(`游戏链接断开退出游戏${data.server_type}`);
-        //         break;
 
-        // }
-    }
+  
     /**接受的心跳包 */
     OnRecv_GatewayKeepActive(data: proto.client_proto.HeartbeatResp) {
         this.mServerDelayTime = app.func.time(true) * 1000 - data.svrTimestamp;

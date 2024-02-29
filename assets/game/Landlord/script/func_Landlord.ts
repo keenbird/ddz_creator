@@ -101,9 +101,7 @@ export class func_Landlord extends func_GameBase {
                 if(callback){
                     callback()
                 }
-                // app.event.dispatchEvent({
-                //     eventName: EVENT_ID.EVENT_PLAZA_FIRSTRECHRGE_LASTTIME,
-                // });
+          
             }
             nodeTimer["clockTime"]--;
             

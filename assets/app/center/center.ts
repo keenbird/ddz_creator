@@ -16,18 +16,14 @@ import { goodsCenter } from "./plaza/goodsCenter";
 import { activityCenter } from "./plaza/activityCenter";
 import { RoomListCenter } from "./plaza/roomListCenter";
 import { LuckyCardCenter } from "./plaza/luckyCardCenter";
-import { lucky3PattiCenter } from "./plaza/lucky3PattiCenter";
 import { wheelManager } from "./plaza/wheelManager";
 import { choujiangManager } from "./plaza/choujiangManager";
 import { shareCenter } from "./plaza/shareCenter";
 import { mallCenter } from "./plaza/mallCenter";
-import { christmasCenter } from "./plaza/christmasCenter";
 import { taskActiveCenter } from "./plaza/taskActiveCenter";
 import { exchangeCenter } from "./plaza/exchangeCenter";
-import { scratchCardCenter } from "./plaza/scratchCardCenter";
 import { rankCenter } from "./plaza/rankCenter";
 import { chatCenter } from "./plaza/chatCenter";
-import { userContainerCenter } from "./plaza/userContainerCenter";
 import { giftBagCenter } from "./plaza/giftBagCenter";
 
 @ccclass('CenterManager')
@@ -47,19 +43,15 @@ export class CenterManager extends (fw.FWComponent) {
     activity: activityCenter
     roomList: RoomListCenter
     luckyCard: LuckyCardCenter
-    lucky3pt: lucky3PattiCenter
     jeckpotdraw: wheelManager
     luckdraw: choujiangManager
     share: shareCenter
     mall: mallCenter
-    christmas: christmasCenter
     taskActive: taskActiveCenter
     exchange: exchangeCenter
-    scratchCard: scratchCardCenter
     rank: rankCenter
     chat: chatCenter
     giftBag: giftBagCenter
-    userContainer: userContainerCenter
     /**初始化 */
     onLoad() {
         globalThis.center = this;
@@ -78,19 +70,15 @@ export class CenterManager extends (fw.FWComponent) {
         this.activity = this.obtainComponent(activityCenter);
         this.roomList = this.obtainComponent(RoomListCenter);
         this.luckyCard = this.obtainComponent(LuckyCardCenter);
-        this.lucky3pt = this.obtainComponent(lucky3PattiCenter);
         this.jeckpotdraw = this.obtainComponent(wheelManager);
         this.luckdraw = this.obtainComponent(choujiangManager);
         this.share = this.obtainComponent(shareCenter);
         this.chat = this.obtainComponent(chatCenter)
         this.mall = this.obtainComponent(mallCenter);
-        this.christmas = this.obtainComponent(christmasCenter);
         this.taskActive = this.obtainComponent(taskActiveCenter);
         this.exchange = this.obtainComponent(exchangeCenter);
-        this.scratchCard = this.obtainComponent(scratchCardCenter);
         this.rank = this.obtainComponent(rankCenter);
         this.giftBag = this.obtainComponent(giftBagCenter);
-        this.userContainer = this.obtainComponent(userContainerCenter);
     }
 }
 

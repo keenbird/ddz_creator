@@ -40,60 +40,17 @@ export class login_main extends (fw.FWComponent) {
 				app.popup.closeAllDialog();
 			}
 		});
-		//登录失败返回
-		this.bindEvent({
-			eventName: EVENT_ID.EVENT_LOGIN_FAIL,
-			callback: (params) => {
-				app.popup.closeLoading();
-				if (params.flag == 1) {
-					app.popup.showTip({
-						text: "No such account, please register"
-					});
-				} else if (params.flag == 2) {
-					app.popup.showTip({
-						text: "wrong password"
-					});
-				} else {
-					app.popup.showTip({
-						text: "Something went wrong with login, please login again"
-					});
-				}
-				this.loginFail();
-			}
-		});
+
 		this.bindEvent({
 			eventName: [
-				EVENT_ID.EVENT_LOGIN_PHP_FAIL,
-				EVENT_ID.EVENT_LOGIN_FAIL_TIPS,
 				EVENT_ID.EVENT_PLAZA_TIPS_ERROR,
-				EVENT_ID.EVENT_GATEWAY_TIPS_ERROR,
 			],
 			callback: () => {
 				this.loginFail();
 			}
 		});
-		this.bindEvent({
-			eventName: [
-				EVENT_ID.EVENT_LOGIN_PHP_SUCCESS,
-			],
-			callback: () => {
-				this.loginPhpSuccess();
-			}
-		});
-		this.bindEvent({
-			eventName: EVENT_ID.EVENT_PLAZA_ACTOR_PRIVATE,
-			callback: () => {
-				this.loginProcess("Getting user data...", 70);
-				this.nLoginConfigIndex = 0;
-				//请求活动列表
-				center.activity.requestActivityList();
-				//超时进入大厅
-				this.nEnterTimeOut = this.setTimeout(() => {
-					this.nLoginConfigIndex = 100000;
-					this.enterPlaza();
-				}, 20);
-			}
-		});
+
+		
 		this.bindEvent({
 			eventName: EVENT_ID.EVENT_ROOM_COMBINE_CHANGE,
 			callback: () => {
@@ -175,10 +132,6 @@ export class login_main extends (fw.FWComponent) {
 		this.clearTimeoutTimer(this.nEnterTimeOut);
 	}
 
-	/**php登录成功 */
-	loginPhpSuccess() {
-		this.setOTPTimerVisible(false)
-	}
 
 	/**游客登录 */
 	onClickYouKe() {
@@ -187,25 +140,7 @@ export class login_main extends (fw.FWComponent) {
 		this.Items.youke_edit.getComponent(EditBox).string = lastAccount
 	}
 
-	/**登录 */
-	onClickLogin() {
-		let phone = this.Items.Sprite_num.Items.TEXT_LABEL.string;
-		if (!app.func.isCorrectPhoneNumber(phone)) {
-			app.popup.showToast(`Please input valid number`);
-			return;
-		}
 
-		let token = this.Items.Node_input_OTP.Items.TEXT_LABEL.string;
-		if (token.length != 6) {
-			app.popup.showToast(`Please enter verification code`);
-			return;
-		}
-
-		let extra = {
-			token : token
-		}
-		center.login.doPhpPhoneLogin(phone,extra)
-	}
 	/**获取OTP事件 */
 	onGetOTP() {
 		//请求验证码

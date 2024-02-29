@@ -1,10 +1,11 @@
-import { JsonAsset, sys } from 'cc';
+import { JsonAsset, Node, sys } from 'cc';
 import { _decorator } from 'cc';
 const { ccclass } = _decorator;
 import { DeviceBase, LngAndLat } from './DeviceBase';
 
 @ccclass('DeviceAndroid')
 export class DeviceAndroid extends DeviceBase {
+    
     authorizeLinster: Function;
 
     getSDKtype(): number {
@@ -587,7 +588,7 @@ export class DeviceAndroid extends DeviceBase {
     /**
      * 微信原生登录
      */
-     wechatLogin(callback:Function,params?:any) {
+    wechatLogin(callback:Function,params?:any) {
         console.log("wechatAuthorizJS1")
         if (callback!=null ){
             this.authorizeLinster = callback
@@ -657,5 +658,9 @@ export class DeviceAndroid extends DeviceBase {
             str="其他错误"
         }
         return str
+    }
+
+    getWechatUserInfo(parentNode: Node, parentClickCallback?: Function) {
+        throw new Error('Method not implemented.');
     }
 }

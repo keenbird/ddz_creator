@@ -491,73 +491,8 @@ export class UserCenter extends PlazeMainInetMsg {
             }
         });
     }
-    /**
-     * 绑定邮箱 姓名
-     * @param name 
-     * @param email 
-     */
-    FuncClick_userInfoBind(name: string, email: string) {
-        app.http.post({
-            url: httpConfig.path_pay + "hall/bindParam",
-            params: {
-                user_id: this.getActorProp(PROTO_ACTOR.UAT_UID),
-                email: email,
-                realname: name,
-                timestamp: app.func.time()
-            },
-            callback: (bSuccess, response) => {
-                if (bSuccess) {
-                    if (1 == response.status) {
-                        this.updateUserInfoBind(response.data?.email, response.data?.realname)
-                        this.updateUserPhoneBind(center.user.getActorProp("szPhone"))
-                        app.popup.showToast("Perfect information success")
-                        app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_ACTOR_PERFECT_INFORMATION })
-                    } else {
-                        app.popup.showToast(response.info ?? "Perfect information failed")
-                    }
-                } else {
-                    app.popup.showToast("Perfect information failed")
-                }
-            }
-        });
-    }
-    /**
-     * 更新用户支付信息
-     * @param phone 
-     * @param name 
-     * @param email 
-     */
-    setPayInfo(phone: string, name: string, email: string) {
-        app.http.post({
-            url: httpConfig.path_pay + "Hall/setPaymentInfo",
-            params: {
-                uid: this.getActorProp(PROTO_ACTOR.UAT_UID),
-                phone: phone,
-                email: email,
-                name: name,
-                timestamp: app.func.time()
-            },
-            callback: (bSuccess, response) => {
-                if (bSuccess) {
-                    if (1 == response.status) {
-                        //刷新web数据
-                        if (this.mUserInfoFromWebData) {
-                            this.mUserInfoFromWebData.email = email;
-                            this.mUserInfoFromWebData.realname = name;
-                            this.mUserInfoFromWebData.withdrawphone = phone;
-                        }
-                        this.updateUserInfoBind(email, name);
-                        app.popup.showToast("Perfect information success");
-                        app.event.dispatchEvent({ eventName: EVENT_ID.EVENT_ACTOR_PERFECT_PAYINFORMATION });
-                    } else {
-                        app.popup.showToast(response.info ?? "Perfect information failed");
-                    }
-                } else {
-                    app.popup.showToast("Perfect information failed");
-                }
-            }
-        });
-    }
+
+
     /**
      * 获取用户基础信息from web
      */

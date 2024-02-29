@@ -63,11 +63,7 @@ export class game_GameBase extends FWSceneBase {
         this.internet;
         //显示主界面
         app.game.showMain();
-        //断线重连
-        this.bindEvent({
-            eventName: EVENT_ID.EVENT_PLAZA_ACTOR_PRIVATE,
-            callback: this.onReconnect.bind(this)
-        });
+  
     }
     /**初始化主界面资源 */
     public initMain(): BundleResConfig {

@@ -378,21 +378,7 @@ export class LoginCenter extends LoginMainInetMsg {
         return regLogin
     }
 
-    /**
-     * 登录失败
-     * @param dict 
-     */
-    // OnRecv_LoginFail(dict: proto.login_server.Ilogin_error_s) {
-    //     /**关闭登录计时器 */
-    //     this.stopLoginingTimer()
-    //     this.closeConnect();
-    //     app.event.dispatchEvent({
-    //         //事件名
-    //         eventName: EVENT_ID.EVENT_LOGIN_FAIL,
-    //         //参数可自定义
-    //         dict: dict.error_type,
-    //     })
-    // }
+
 
     /** 网络断开*/
     inetDisconnected(event: CloseEvent) {
@@ -693,38 +679,5 @@ export class LoginCenter extends LoginMainInetMsg {
         })
     }
 
-    doPhpPhoneLogin(phoneNum,extra:{token?:string,pwd?:string} = {}) {
-        extra["isVpn"] = app.native.device.isVpnUsed()
-        let params = center.login.getLoginPhpParams(phoneNum,extra)
-		app.http.post({
-			url: `${httpConfig.path_pay}Login/phonev2`,
-			params: params,
-			callback: async (bSuccess: boolean, response: any) => {
-				if (bSuccess) {
-					if (response.status == 1) {
-						app.event.dispatchEvent(EventParam.FWDispatchEventParam(EVENT_ID.EVENT_LOGIN_PHP_SUCCESS));
-						if (await center.login.isAllowLogin(response.wflag) && app.http.checkPhpSign(response)) {
-							let phoneInfo = {
-								pwd: response.password,
-								phoneNum: phoneNum,
-							};
-							app.file.writeStringToFile({
-								fileData: JSON.stringify(phoneInfo),
-								filePath: PATHS.LoginPhonePWD,
-                                bEncrypt:true,
-							});
-							center.roomList.downloadRoomInfo(response.version);
-                            center.roomList.doPhpQuickRecharge(response.qversion)
-							center.login.loginPhone(response.account, response.password, response.is_reg == 1);
-						}
-					} else {
-						app.popup.showToast(response.info || `Login failed`);
-						app.event.dispatchEvent(EventParam.FWDispatchEventParam(EVENT_ID.EVENT_LOGIN_PHP_FAIL));
-					}
-				} else {
-					app.event.dispatchEvent(EventParam.FWDispatchEventParam(EVENT_ID.EVENT_LOGIN_PHP_FAIL));
-				}
-			}
-		});
-    }
+  
 }

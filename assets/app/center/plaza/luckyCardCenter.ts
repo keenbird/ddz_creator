@@ -481,12 +481,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
         return this.mSelfLuckCardInfosFlag && this.mSelfDBID == center.user.getActorProp(PROTO_ACTOR.UAT_UID)
     }
 
-    onNewFirstRechrgeConfig(dict: proto.plaza_luckcard.first_recharge_cfg) {
-        fw.print(dict, "======onNewFirstRechrgeConfig======== ")
-        this.m_FirstRechrgeConfig = dict.first_cfg
-        this.setFirstRechrgeLastTime()
-        center.user.isFirstCashAllComplete()
-    }
+
 
     getNewFirstRechrgeConfig() {
         return this.m_FirstRechrgeConfig
@@ -534,31 +529,7 @@ export class LuckyCardCenter extends PlazeMainInetMsg {
         return flag
     }
 
-    setFirstRechrgeLastTime() {
-        this.newFirstRechrgeLastTime = 0;
-        let finishTime = center.luckyCard.getNewFirstRechrgeFinishTime();
-        this.newFirstRechrgeLastTime = finishTime - app.func.time();
-        let updateLastTime = () => {
-            this.newFirstRechrgeLastTime--;
-            if (this.newFirstRechrgeLastTime <= 0 || center.user.getIsFirstCashAllComplete()) {
-                if (this.schedule_updateTime) {
-                    this.clearIntervalTimer(this.schedule_updateTime);
-                    this.schedule_updateTime = null;
-                }
 
-                this.notShowBonusReward = true
-                app.event.dispatchEvent({
-                    eventName: EVENT_ID.EVENT_PLAZA_FIRSTRECHRGE_LASTTIME,
-                });
-            }
-        }
-        updateLastTime();
-        if (this.schedule_updateTime) {
-            this.clearIntervalTimer(this.schedule_updateTime);
-            this.schedule_updateTime = null;
-        }
-        this.schedule_updateTime = this.setInterval(updateLastTime, 1)
-    }
 
     getShowBonusRewardStatus() {
         return this.notShowBonusReward

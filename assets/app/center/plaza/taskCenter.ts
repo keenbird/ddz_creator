@@ -554,44 +554,9 @@ export class TaskCenter extends PlazeMainInetMsg {
         return this.sendData(this.cmd.PLAZA_TASK_XXL_GUANKA_REWARD, data)
     }
 
-    OnRecv_TaskXXLGuankaRewardRet(dict: proto.plaza_task.Igs_xxlguankarequestret_s) {
-        fw.print("taskManager:OnRecv_TaskXXLGuankaRewardRet")
-        fw.print(dict, "OnRecv_TaskXXLGuankaRewardRet")
-        let btRet = dict.ret
-        let nGuanKaID = dict.guanka_id
 
-        if (btRet == 1) {
-            app.event.dispatchEvent({
-                eventName: EVENT_ID.EVENT_XXL_SHOW_CHALLENGE_GUANKA,
-                dict: nGuanKaID + 1
-            })
-        } else {
-            app.popup.showToast({ text: "Failed to receive reward" })
-        }
-    }
 
-    OnRecv_TaskXXLGuankaData(dict: proto.plaza_task.Igs_xxlguankadata_s) {
-        fw.print("taskManager:OnRecv_TaskXXLGuankaData")
-        fw.print(dict, "OnRecv_TaskXXLGuankaData")
-        this.mXXLGuankaData = dict
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_XXL_GUANKA_USERDATA
-        })
-    }
 
-    OnRecv_TaskXXLGuankaConfig(dict: proto.plaza_task.Igs_xxlguankaconfig_s) {
-        fw.print("taskManager:OnRecv_TaskXXLGuankaConfig")
-        //fw.print(dict, "OnRecv_TaskXXLGuankaConfig", 10)
-        let GuanKa = dict.list
-        this.mTotalCount = dict.total_count
-        for (const v of GuanKa) {
-            let nGuanKaID = v.guanka_id
-            this.mXXLGuanKaConfigs[nGuanKaID] = v
-        }
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_XXL_GUANKA_CONFIG
-        })
-    }
 
     getXXLGuankaData() {
         return this.mXXLGuankaData
@@ -1036,28 +1001,10 @@ export class TaskCenter extends PlazeMainInetMsg {
         this.sendData(this.cmd.PLAZA_TASK_TEENPATTI_GUANKA_REWARD, data)
     }
 
-    PLAZA_TASK_TEENPATTI_GUANKA_REWARD_RET(dict: proto.plaza_task.Igs_tp_guanka_req_ret_s) {
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_TP_LV_REWARD,
-            dict: dict
-        })
-    }
 
-    PLAZA_TASK_TEENPATTI_GUANKA_DATA(dict: proto.plaza_task.Igs_tp_guanka_data_s) {
-        this.m_tpLvUserData = dict
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_TP_LV_DATA,
-            dict: dict
-        })
-    }
 
-    PLAZA_TASK_TEENPATTI_GUANKA_CONFIG(dict: proto.plaza_task.Igs_tp_guanka_cfg) {
-        this.m_tpLvCfg = dict
-        app.event.dispatchEvent({
-            eventName: EVENT_ID.EVENT_TP_LV_CFG,
-            dict: dict
-        })
-    }
+
+
 
     getTpLvUserData() {
         return this.m_tpLvUserData

@@ -783,7 +783,6 @@ export class plaza_main extends (fw.FWComponent) {
 		}
 		this.Items.Sprite_vip.bindEvent({
 			eventName: [
-				EVENT_ID.EVENT_PLAZA_ACTOR_PRIVATE,
 				EVENT_ID.EVENT_PLAZA_ACTOR_VARIABLE,
 			],
 			callback: () => {
