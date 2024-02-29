@@ -2,7 +2,6 @@ import { PlazeMainInetMsg } from "../../framework/network/awBuf/MainInetMsg";
 import { GS_PLAZA_MSGID } from "../../config/NetConfig";
 import proto from "../common";
 import { EVENT_ID } from "../../config/EventConfig";
-import { ACTOR } from "../../config/cmd/ActorCMD";
 
 export enum RankType {
     xxl_guanka,

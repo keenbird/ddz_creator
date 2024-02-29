@@ -14,7 +14,6 @@ export class GameRoomCenter extends GameServerMainInetMsg {
     declare m_ActorTableID: Map<number, number>;
     // 桌子信息
     declare table: GameRoomTable[];
-    m_jackpotDataConfig: Map<number, { time: number, data: JackpotData[] }>;
     bOnline: boolean;
     exitFun:Function; //退出回调
     dataFun:Function; //请求数据回调
@@ -31,11 +30,9 @@ export class GameRoomCenter extends GameServerMainInetMsg {
         this.nJackpotNum = 0
 
         this.table = [];
-        this.tableRobot = null;
 
         this.bOnline = false;
 
-        this.m_jackpotDataConfig = new Map();
     }
 
     setRoomOnline(bflag: boolean) {
@@ -352,17 +349,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
             // }
         }
     }
-    /**
-     * 机器人创建
-     * @param pActor 
-     */
-    OnUserRobotCreate(pActor) {
-        let nChairID = pActor.chairID
-        if (nChairID != INVAL_CHAIRID) {
-            let nActorDBID = pActor[PROTO_ACTOR.UAT_UID]
-            this.tableRobot.sitdown(nChairID, nActorDBID);
-        }
-    }
+
     
 
     //自己被创建
@@ -385,15 +372,7 @@ export class GameRoomCenter extends GameServerMainInetMsg {
                             nChairID: nChairID,
                         }
                     })
-                    if (pActor[ACTOR.ACTOR_PROP_GAME_STATE] == ACTOR.ACTOR_STATE_HAND) {
-                        app.event.dispatchEvent({
-                            eventName: EVENT_ID.EVENT_PLAY_ACTOR_RAISEHANDS,
-                            dict: {
-                                pActor: pActor,
-                                nChairID: nChairID,
-                            }
-                        })
-                    }
+                    
                     gameCenter.user.isMe(pActor)
                 // }
                 app.event.dispatchEvent({
@@ -471,7 +450,7 @@ class GameRoomInfo {
         this.typeList = dict.typeList
     }
 }
-
+//快充配置
 class RoomQuickRecharge {
     nRID: number;
     nQuickGoodsID: number;
@@ -512,61 +491,6 @@ class RoomQuickRecharge {
 declare global {
     namespace globalThis {
         /**魔法表情 */
-        type type_Iuse_magic_cs = proto.game_room.Iuse_magic_cs
-        /**奖池 */
-        interface SlotPlayOtherJackpotAnimParam {
-            /**玩家ID */
-            user_id: number
-            /**玩家头像 */
-            face: string
-            /**玩家名称 */
-            name: string
-            /**奖池分数 */
-            gold: number
-            /**奖池icon等级 */
-            count: number
-        }
-        interface BigWinnerData {
-            /**名称 */
-            nickname: string
-            /**玩家头像 */
-            facemd5: string
-            /**分数 */
-            jscore: string
-            /**赢金 */
-            wscore: string
-            /**时间 */
-            ctime: string
-        }
-        interface JackpotData {
-            /**玩家ID */
-            user_id: string
-            /**玩家名称 */
-            user_name: string
-            /**玩家头像 */
-            user_face: string
-            /**爆奖时间戳 */
-            time: string
-            /**下注 */
-            jetton_score: string
-            /**玩家总下注（游戏分多区域和单区域下注） */
-            total_jetton_score: string
-            /**赢金 */
-            win_score: string
-            /**总赢金（爆奖 + 其它赢金） */
-            total_win_score: string
-            /**爆奖牌型（每个游戏的含义不一样，需要找服务器确定） */
-            card_type: string
-            /**爆奖时的数据（每个游戏的含义不一样，需要找服务器确定） */
-            card_data: string
-            /**同时有多少人一起瓜分奖池（每个游戏的含义不一样，需要找服务器确定） */
-            user_count: string
-            /**服务器数据库自增id（前端不用管） */
-            id: string
-            /**房间id */
-            room_id: string
-            /**服务器牌局唯一id（前端不用管） */
-            game_inning_id: string
-        }
+        type type_Iuse_magic_cs = proto.game_room.Iuse_magic_cs  
     }
 }
